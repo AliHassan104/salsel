@@ -1,14 +1,13 @@
 package com.salsel.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
@@ -17,6 +16,9 @@ import java.time.LocalTime;
 @Data
 public class TicketDto {
     private Long id;
+
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
     private String shipperName;
     private String shipperContactNumber;
@@ -32,12 +34,9 @@ public class TicketDto {
     private LocalDate pickupDate;
     private LocalTime pickupTime;
     private String assignedTo;
-    private String status;
+    private Boolean status;
     private String category;
     private String ticketFlag;
-    private String createdDate;
-    private String createdTime;
     private String ticketDepartment;
     private String categoryByDevelopment;
-
 }

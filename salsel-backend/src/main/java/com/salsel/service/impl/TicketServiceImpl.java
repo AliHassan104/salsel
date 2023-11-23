@@ -1,9 +1,7 @@
 package com.salsel.service.impl;
 
 import com.salsel.dto.TicketDto;
-import com.salsel.dto.UserDto;
 import com.salsel.model.Ticket;
-import com.salsel.model.User;
 import com.salsel.repository.TicketRepository;
 import com.salsel.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TicketServiceImplementation implements TicketService {
+public class TicketServiceImpl implements TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
