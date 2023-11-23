@@ -44,13 +44,13 @@ public class TicketController {
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<TicketDto> updateAchievementById(@RequestBody TicketDto ticketDto , @PathVariable Long id) throws Exception {
+    public ResponseEntity<TicketDto> updateTicketById(@RequestBody TicketDto ticketDto , @PathVariable Long id) throws Exception {
             return ResponseEntity.ok(ticketService.update(ticketDto , id));
     }
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
-    public ResponseEntity<TicketDto> addAchievements(@RequestBody TicketDto ticketDto) {
+    public ResponseEntity<TicketDto> addTicket(@RequestBody TicketDto ticketDto) {
 
             return ResponseEntity.ok(ticketService.save(ticketDto));
 

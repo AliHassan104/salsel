@@ -17,7 +17,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "tickets")
+@Table(name = "ticket")
 public class Ticket {
 
     @Id
@@ -32,19 +32,26 @@ public class Ticket {
     private String shipperContactNumber;
     private String originCountry;
     private String originCity;
+
     private String pickupAddress;
     private String shipperRefNumber;
     private String recipientsName;
     private String recipientsContactNumber;
+
     private String destinationCountry;
     private String destinationCity;
+
     private String deliveryAddress;
     private LocalDate pickupDate;
     private LocalTime pickupTime;
+
     private String assignedTo;
-    private Boolean status;
+    private String status;
     private String category;
-    private String ticketFlag;
+    private Boolean ticketFlag;
+
+    @OneToOne
+    private User createdBy;
     private String ticketDepartment;
     private String categoryByDevelopment;
 }
