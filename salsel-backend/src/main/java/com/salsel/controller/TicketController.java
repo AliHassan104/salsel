@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/ticket")
 public class TicketController {
@@ -20,9 +22,9 @@ public class TicketController {
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("")
-    public ResponseEntity<Page<TicketDto>> get(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
+    public ResponseEntity<List<TicketDto>> get(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
                                                            @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
-        Page<TicketDto> ticketDtos = ticketService.findPage(pageNumber,pageSize);
+        List<TicketDto> ticketDtos = ticketService.findPage(pageNumber,pageSize);
         return ResponseEntity.ok(ticketDtos);
     }
 
@@ -42,7 +44,7 @@ public class TicketController {
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<TicketDto> updateAchievementById(@RequestBody TicketDto ticketDto , @PathVariable Long id){
+    public ResponseEntity<TicketDto> updateAchievementById(@RequestBody TicketDto ticketDto , @PathVariable Long id) throws Exception {
             return ResponseEntity.ok(ticketService.update(ticketDto , id));
     }
 
