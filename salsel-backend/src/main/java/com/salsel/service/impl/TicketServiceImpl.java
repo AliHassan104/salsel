@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -78,20 +79,17 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> findPage(Integer pageNumber, Integer pageSize) {
+    public Page<TicketDto> findPage(Integer pageNumber, Integer pageSize) {
 
         Page<Ticket> tickets = ticketRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
-
-        return toDtoList(tickets.toList());
+        Page<TicketDto> ticketDtos = tickets.map(ticket -> toDto(ticket));
+        return ticketDtos;
     }
 
-    public List<TicketDto> toDtoList(List<Ticket> ticketList){
-        List<TicketDto> ticketDtoList = new ArrayList<>();
-        for (Ticket ticket : ticketList) {
-            TicketDto ticketDto = toDto(ticket);
-            ticketDtoList.add(ticketDto);
-        }
-        return ticketDtoList;
+    public List<TicketDto> toDtoList(List<Ticket> ticketList) {
+        return ticketList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     public TicketDto toDto(Ticket ticket) {

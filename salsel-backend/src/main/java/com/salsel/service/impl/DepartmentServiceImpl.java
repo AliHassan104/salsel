@@ -37,11 +37,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public void delete(Long id) {
-        departmentRepository.deleteById(id);
-    }
-
-    @Override
     public DepartmentDto update(DepartmentDto departmentDto, Long id) throws Exception {
 
         Department department = departmentRepository.findById(id)
@@ -54,8 +49,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public void delete(Long id) {
+        departmentRepository.deleteById(id);
+    }
+
+    @Override
     public List<DepartmentDto> findByPage(Integer pageNumber, Integer pageSize) {
-        return null;
+        return toDtoList(departmentRepository.findAll());
     }
 
 

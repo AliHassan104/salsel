@@ -13,5 +13,5 @@ public interface TicketService {
     TicketDto save(TicketDto ticketDto);
     void delete(Long id);
     TicketDto update(TicketDto ticketDto , Long id) throws Exception;
-    List<TicketDto> findPage(Integer pageNumber, Integer pageSize);
+    Page<TicketDto> findPage(Integer pageNumber, Integer pageSize);
 }
