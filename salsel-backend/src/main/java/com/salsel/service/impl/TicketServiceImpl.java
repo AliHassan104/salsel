@@ -1,6 +1,7 @@
 package com.salsel.service.impl;
 
 import com.salsel.dto.TicketDto;
+import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Ticket;
 import com.salsel.repository.TicketRepository;
 import com.salsel.service.TicketService;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -43,12 +43,37 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketDto update(TicketDto ticketDto, Long id) throws Exception {
 
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-        if (ticket.isPresent()){
-            return toDto(ticketRepository.save(toEntity(ticketDto)));
-        }else {
-            throw new Exception("");
-        }
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Ticket not found for id => %d", id)));
+
+
+        ticket.setShipperName(ticketDto.getShipperName());
+        ticket.setShipperContactNumber(ticketDto.getShipperName());
+        ticket.setOriginCountry(ticketDto.getOriginCountry());
+        ticket.setOriginCity(ticketDto.getOriginCity());
+
+        ticket.setPickupAddress(ticketDto.getPickupAddress());
+        ticket.setShipperRefNumber(ticketDto.getShipperRefNumber());
+        ticket.setRecipientsName(ticketDto.getRecipientsName());
+
+        ticket.setRecipientsContactNumber(ticketDto.getRecipientsContactNumber());
+        ticket.setDestinationCountry(ticketDto.getDestinationCountry());
+        ticket.setDestinationCity(ticketDto.getDestinationCity());
+
+        ticket.setDeliveryAddress(ticketDto.getDeliveryAddress());
+        ticket.setPickupAddress(ticketDto.getPickupAddress());
+        ticket.setPickupTime(ticketDto.getPickupTime());
+
+        ticket.setAssignedTo(ticketDto.getAssignedTo());
+        ticket.setStatus(ticketDto.getStatus());
+        ticket.setCategory(ticketDto.getCategory());
+
+        ticket.setTicketFlag(ticketDto.getTicketFlag());
+        ticket.setDepartment(ticketDto.getDepartment());
+        ticket.setDepartmentCategory(ticketDto.getDepartmentCategory());
+
+        Ticket updatedTicket = ticketRepository.save(ticket);
+        return toDto(updatedTicket);
 
     }
 
@@ -97,8 +122,8 @@ public class TicketServiceImpl implements TicketService {
 
                 .ticketFlag(ticket.getTicketFlag())
                 .createdBy(ticket.getCreatedBy())
-                .ticketDepartment(ticket.getTicketDepartment())
-                .categoryByDevelopment(ticket.getCategoryByDevelopment())
+                .department(ticket.getDepartment())
+                .departmentCategory(ticket.getDepartmentCategory())
 
                 .build();
     }
@@ -131,8 +156,8 @@ public class TicketServiceImpl implements TicketService {
 
                 .ticketFlag(ticketDto.getTicketFlag())
                 .createdBy(ticketDto.getCreatedBy())
-                .ticketDepartment(ticketDto.getTicketDepartment())
-                .categoryByDevelopment(ticketDto.getCategoryByDevelopment())
+                .department(ticketDto.getDepartment())
+                .departmentCategory(ticketDto.getDepartmentCategory())
 
                 .build();
     }

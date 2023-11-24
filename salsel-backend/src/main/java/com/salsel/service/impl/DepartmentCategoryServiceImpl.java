@@ -1,118 +1,96 @@
 package com.salsel.service.impl;
 
-import com.salsel.dto.TicketDto;
+import com.salsel.dto.DepartmentCategoryDto;
+import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Department;
+import com.salsel.model.DepartmentCategory;
+import com.salsel.model.ProductType;
 import com.salsel.model.Ticket;
+import com.salsel.repository.DepartmentCategoryRepository;
+import com.salsel.repository.DepartmentRepository;
 import com.salsel.service.DepartmentCategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DepartmentCategoryServiceImpl implements DepartmentCategoryService {
+
+    @Autowired
+    private DepartmentCategoryRepository departmentCategoryRepository;
+
+
     @Override
-    public List<TicketDto> findAll() {
-        return null;
+    public List<DepartmentCategoryDto> findAll() {
+        return toDtoList(departmentCategoryRepository.findAll());
     }
 
     @Override
-    public TicketDto findById(Long id) {
-        return null;
+    public DepartmentCategoryDto findById(Long id) {
+        return toDto(departmentCategoryRepository.findById(id).get());
     }
 
     @Override
-    public TicketDto save(TicketDto ticketDto) {
-        return null;
+    public DepartmentCategoryDto save(DepartmentCategoryDto departmentCategoryDto) {
+        return toDto(departmentCategoryRepository.save(toEntity(departmentCategoryDto)));
     }
 
     @Override
     public void delete(Long id) {
-
+        departmentCategoryRepository.deleteById(id);
     }
 
     @Override
-    public TicketDto update(TicketDto ticketDto, Long id) throws Exception {
-        return null;
+    public DepartmentCategoryDto update(DepartmentCategoryDto departmentCategoryDto, Long id) throws Exception {
+
+        DepartmentCategory departmentCategory = departmentCategoryRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("DepartmentCategory not found for id => %d", id)));
+
+        departmentCategory.setName(departmentCategoryDto.getName());
+        departmentCategory.setCode(departmentCategoryDto.getCode());
+        departmentCategory.setDepartment(departmentCategoryDto.getDepartment());
+
+        DepartmentCategory updatedDepartmentCategory = departmentCategoryRepository.save(departmentCategory);
+        return toDto(updatedDepartmentCategory);
     }
 
     @Override
-    public List<TicketDto> findByPage(Integer pageNumber, Integer pageSize) {
-        return null;
+    public List<DepartmentCategoryDto> findByPage(Integer pageNumber, Integer pageSize) {
+        Page<DepartmentCategory> departmentCategories = departmentCategoryRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+        return toDtoList(departmentCategories.toList());
     }
 
-    public List<TicketDto> toDtoList(List<Ticket> ticketList){
-        List<TicketDto> ticketDtoList = new ArrayList<>();
-        for (Ticket ticket : ticketList) {
-            TicketDto ticketDto = toDto(ticket);
-            ticketDtoList.add(ticketDto);
+    public List<DepartmentCategoryDto> toDtoList(List<DepartmentCategory> departmentCategories){
+        List<DepartmentCategoryDto> departmentCategoriesDtos = new ArrayList<>();
+        for (DepartmentCategory departmentCategory : departmentCategories) {
+            DepartmentCategoryDto ticketDto = toDto(departmentCategory);
+            departmentCategoriesDtos.add(ticketDto);
         }
-        return ticketDtoList;
+        return departmentCategoriesDtos;
     }
 
-    public TicketDto toDto(Ticket ticket) {
-        return TicketDto.builder()
-                .id(ticket.getId())
-                .createdAt(ticket.getCreatedAt())
-                .shipperName(ticket.getShipperName())
-
-                .shipperContactNumber(ticket.getShipperContactNumber())
-                .originCountry(ticket.getOriginCountry())
-                .originCity(ticket.getOriginCity())
-
-                .pickupAddress(ticket.getPickupAddress())
-                .shipperRefNumber(ticket.getShipperRefNumber())
-                .recipientsName(ticket.getRecipientsName())
-
-                .recipientsContactNumber(ticket.getRecipientsContactNumber())
-                .destinationCountry(ticket.getDestinationCountry())
-                .destinationCity(ticket.getDestinationCity())
-
-                .deliveryAddress(ticket.getDeliveryAddress())
-                .pickupDate(ticket.getPickupDate())
-                .pickupTime(ticket.getPickupTime())
-
-                .assignedTo(ticket.getAssignedTo())
-                .status(ticket.getStatus())
-                .category(ticket.getCategory())
-
-                .ticketFlag(ticket.getTicketFlag())
-                .createdBy(ticket.getCreatedBy())
-                .ticketDepartment(ticket.getTicketDepartment())
-                .categoryByDevelopment(ticket.getCategoryByDevelopment())
+    public DepartmentCategoryDto toDto(DepartmentCategory departmentCategory) {
+        return DepartmentCategoryDto.builder()
+                .id(departmentCategory.getId())
+                .name(departmentCategory.getName())
+                .code(departmentCategory.getCode())
+                .department(departmentCategory.getDepartment())
 
                 .build();
     }
 
-    public Ticket toEntity(TicketDto ticketDto) {
-        return Ticket.builder()
-                .id(ticketDto.getId())
-                .createdAt(ticketDto.getCreatedAt())
-                .shipperName(ticketDto.getShipperName())
-
-                .shipperContactNumber(ticketDto.getShipperContactNumber())
-                .originCountry(ticketDto.getOriginCountry())
-                .originCity(ticketDto.getOriginCity())
-
-                .pickupAddress(ticketDto.getPickupAddress())
-                .shipperRefNumber(ticketDto.getShipperRefNumber())
-                .recipientsName(ticketDto.getRecipientsName())
-
-                .recipientsContactNumber(ticketDto.getRecipientsContactNumber())
-                .destinationCountry(ticketDto.getDestinationCountry())
-                .destinationCity(ticketDto.getDestinationCity())
-
-                .deliveryAddress(ticketDto.getDeliveryAddress())
-                .pickupDate(ticketDto.getPickupDate())
-                .pickupTime(ticketDto.getPickupTime())
-
-                .assignedTo(ticketDto.getAssignedTo())
-                .status(ticketDto.getStatus())
-                .category(ticketDto.getCategory())
-
-                .ticketFlag(ticketDto.getTicketFlag())
-                .createdBy(ticketDto.getCreatedBy())
-                .ticketDepartment(ticketDto.getTicketDepartment())
-                .categoryByDevelopment(ticketDto.getCategoryByDevelopment())
+    public DepartmentCategory toEntity(DepartmentCategoryDto departmentCategoryDto) {
+        return DepartmentCategory.builder()
+                .id(departmentCategoryDto.getId())
+                .name(departmentCategoryDto.getName())
+                .code(departmentCategoryDto.getCode())
+                .department(departmentCategoryDto.getDepartment())
 
                 .build();
     }

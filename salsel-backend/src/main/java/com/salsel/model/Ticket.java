@@ -52,6 +52,6 @@ public class Ticket {
 
     @OneToOne
     private User createdBy;
-    private String ticketDepartment;
-    private String categoryByDevelopment;
+    private String department;
+    private String departmentCategory;
 }

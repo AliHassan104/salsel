@@ -1,15 +1,10 @@
 package com.salsel.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salsel.dto.TicketDto;
 import com.salsel.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,18 +39,14 @@ public class TicketController {
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<TicketDto> updateTicketById(@RequestBody TicketDto ticketDto , @PathVariable Long id) throws Exception {
+    public ResponseEntity<TicketDto> updateById(@RequestBody TicketDto ticketDto , @PathVariable Long id) throws Exception {
             return ResponseEntity.ok(ticketService.update(ticketDto , id));
     }
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
-    public ResponseEntity<TicketDto> addTicket(@RequestBody TicketDto ticketDto) {
-
+    public ResponseEntity<TicketDto> add(@RequestBody TicketDto ticketDto) {
             return ResponseEntity.ok(ticketService.save(ticketDto));
-
     }
-
-
 
 }

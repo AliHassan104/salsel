@@ -1,122 +1,87 @@
 package com.salsel.service.impl;
 
+import com.salsel.dto.DepartmentDto;
 import com.salsel.dto.TicketDto;
+import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Department;
+import com.salsel.model.DepartmentCategory;
 import com.salsel.model.Ticket;
+import com.salsel.repository.DepartmentRepository;
 import com.salsel.service.DepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
     @Override
-    public List<TicketDto> findAll() {
-        return null;
+    public List<DepartmentDto> findAll() {
+        return toDtoList(departmentRepository.findAll());
     }
 
     @Override
-    public TicketDto findById(Long id) {
-        return null;
+    public DepartmentDto findById(Long id) {
+       return toDto(departmentRepository.findById(id).get());
     }
 
     @Override
-    public TicketDto save(TicketDto ticketDto) {
-        return null;
+    public DepartmentDto save(DepartmentDto departmentDto) {
+       return toDto(departmentRepository.save(toEntity(departmentDto)));
     }
 
     @Override
     public void delete(Long id) {
-
+        departmentRepository.deleteById(id);
     }
 
     @Override
-    public TicketDto update(TicketDto ticketDto, Long id) throws Exception {
-        return null;
+    public DepartmentDto update(DepartmentDto departmentDto, Long id) throws Exception {
+
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Department not found for id => %d", id)));
+
+        department.setName(departmentDto.getName());
+
+        Department updatedDepartment = departmentRepository.save(department);
+        return toDto(updatedDepartment);
     }
 
     @Override
-    public List<TicketDto> findByPage(Integer pageNumber, Integer pageSize) {
+    public List<DepartmentDto> findByPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
 
 
-    public List<TicketDto> toDtoList(List<Ticket> ticketList){
-        List<TicketDto> ticketDtoList = new ArrayList<>();
-        for (Ticket ticket : ticketList) {
-            TicketDto ticketDto = toDto(ticket);
-            ticketDtoList.add(ticketDto);
+    public List<DepartmentDto> toDtoList(List<Department> departments){
+        List<DepartmentDto> departmentDtos = new ArrayList<>();
+        for (Department department : departments) {
+            DepartmentDto ticketDto = toDto(department);
+            departmentDtos.add(ticketDto);
         }
-        return ticketDtoList;
+        return departmentDtos;
     }
 
-    public TicketDto toDto(Ticket ticket) {
-        return TicketDto.builder()
-                .id(ticket.getId())
-                .createdAt(ticket.getCreatedAt())
-                .shipperName(ticket.getShipperName())
-
-                .shipperContactNumber(ticket.getShipperContactNumber())
-                .originCountry(ticket.getOriginCountry())
-                .originCity(ticket.getOriginCity())
-
-                .pickupAddress(ticket.getPickupAddress())
-                .shipperRefNumber(ticket.getShipperRefNumber())
-                .recipientsName(ticket.getRecipientsName())
-
-                .recipientsContactNumber(ticket.getRecipientsContactNumber())
-                .destinationCountry(ticket.getDestinationCountry())
-                .destinationCity(ticket.getDestinationCity())
-
-                .deliveryAddress(ticket.getDeliveryAddress())
-                .pickupDate(ticket.getPickupDate())
-                .pickupTime(ticket.getPickupTime())
-
-                .assignedTo(ticket.getAssignedTo())
-                .status(ticket.getStatus())
-                .category(ticket.getCategory())
-
-                .ticketFlag(ticket.getTicketFlag())
-                .createdBy(ticket.getCreatedBy())
-                .ticketDepartment(ticket.getTicketDepartment())
-                .categoryByDevelopment(ticket.getCategoryByDevelopment())
+    public DepartmentDto toDto(Department department) {
+        return DepartmentDto.builder()
+                .id(department.getId())
+                .name(department.getName())
 
                 .build();
     }
 
-    public Ticket toEntity(TicketDto ticketDto) {
-        return Ticket.builder()
-                .id(ticketDto.getId())
-                .createdAt(ticketDto.getCreatedAt())
-                .shipperName(ticketDto.getShipperName())
-
-                .shipperContactNumber(ticketDto.getShipperContactNumber())
-                .originCountry(ticketDto.getOriginCountry())
-                .originCity(ticketDto.getOriginCity())
-
-                .pickupAddress(ticketDto.getPickupAddress())
-                .shipperRefNumber(ticketDto.getShipperRefNumber())
-                .recipientsName(ticketDto.getRecipientsName())
-
-                .recipientsContactNumber(ticketDto.getRecipientsContactNumber())
-                .destinationCountry(ticketDto.getDestinationCountry())
-                .destinationCity(ticketDto.getDestinationCity())
-
-                .deliveryAddress(ticketDto.getDeliveryAddress())
-                .pickupDate(ticketDto.getPickupDate())
-                .pickupTime(ticketDto.getPickupTime())
-
-                .assignedTo(ticketDto.getAssignedTo())
-                .status(ticketDto.getStatus())
-                .category(ticketDto.getCategory())
-
-                .ticketFlag(ticketDto.getTicketFlag())
-                .createdBy(ticketDto.getCreatedBy())
-                .ticketDepartment(ticketDto.getTicketDepartment())
-                .categoryByDevelopment(ticketDto.getCategoryByDevelopment())
+    public Department toEntity(DepartmentDto departmentDto) {
+        return Department.builder()
+                .id(departmentDto.getId())
+                .name(departmentDto.getName())
 
                 .build();
     }
-
 
 }

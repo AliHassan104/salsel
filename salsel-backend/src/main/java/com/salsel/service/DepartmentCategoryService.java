@@ -1,16 +1,17 @@
 package com.salsel.service;
 
+import com.salsel.dto.DepartmentCategoryDto;
 import com.salsel.dto.TicketDto;
 
 import java.util.List;
 
 public interface DepartmentCategoryService {
 
-    List<TicketDto> findAll();
-    TicketDto findById(Long id);
-    TicketDto save(TicketDto ticketDto);
+    List<DepartmentCategoryDto> findAll();
+    DepartmentCategoryDto findById(Long id);
+    DepartmentCategoryDto save(DepartmentCategoryDto departmentCategoryDto);
     void delete(Long id);
-    TicketDto update(TicketDto ticketDto , Long id) throws Exception;
-    List<TicketDto> findByPage(Integer pageNumber, Integer pageSize);
+    DepartmentCategoryDto update(DepartmentCategoryDto departmentCategoryDto , Long id) throws Exception;
+    List<DepartmentCategoryDto> findByPage(Integer pageNumber, Integer pageSize);
 
 }

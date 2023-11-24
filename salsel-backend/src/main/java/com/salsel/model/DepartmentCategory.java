@@ -23,7 +23,7 @@ public class DepartmentCategory {
 
     private String code;
 
-    @OneToMany
+    @ManyToOne
     private Department department;
 
 }

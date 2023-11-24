@@ -45,6 +45,6 @@ public class TicketDto {
     private String category;
     private Boolean ticketFlag;
     private User createdBy;
-    private String ticketDepartment;
-    private String categoryByDevelopment;
+    private String department;
+    private String departmentCategory;
 }
