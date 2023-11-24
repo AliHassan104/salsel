@@ -1,0 +1,33 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* WebKit/Blink */
+  margin: 0; /* Remove margin */
+}
+
+// input {
+//   border: 1px solid #ccc; /* Regular border color */
+//   transition: border-color 0.3s ease; /* Smooth transition effect */
+// }
+
+// /* Error state */
+// input.ng-invalid.ng-touched {
+//   border-color: #e74c3c; /* Red border color */
+//   box-shadow: 0 0 10px inset #e74c3c; /* Glowing effect */
+// }
+
+.submit-btn {
+  background-color: #93003c;
+  outline: none;
+  border: none;
+  //   padding: 10px 20px;
+  color: #fff;
+  font-size: 14px;
+  width: 120px;
+}
+.submit-btn:hover {
+  background-color: #c10751;
+}
+.editBtn {
+  font-size: 14px;
+  width: 120px;
+}
