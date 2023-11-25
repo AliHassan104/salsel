@@ -1,6 +1,7 @@
 package com.salsel.service.impl;
 
 import com.salsel.dto.DepartmentCategoryDto;
+import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Department;
 import com.salsel.model.DepartmentCategory;
@@ -61,9 +62,12 @@ public class DepartmentCategoryServiceImpl implements DepartmentCategoryService 
     }
 
     @Override
-    public List<DepartmentCategoryDto> findByPage(Integer pageNumber, Integer pageSize) {
+    public Page<DepartmentCategoryDto> findByPage(Integer pageNumber, Integer pageSize) {
+
         Page<DepartmentCategory> departmentCategories = departmentCategoryRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
-        return toDtoList(departmentCategories.toList());
+        Page<DepartmentCategoryDto> departmentCategoryDtos = departmentCategories.map(departmentCategory -> toDto(departmentCategory));
+        return departmentCategoryDtos;
+
     }
 
     public List<DepartmentCategoryDto> toDtoList(List<DepartmentCategory> departmentCategories){

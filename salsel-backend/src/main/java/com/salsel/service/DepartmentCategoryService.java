@@ -2,6 +2,7 @@ package com.salsel.service;
 
 import com.salsel.dto.DepartmentCategoryDto;
 import com.salsel.dto.TicketDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,6 +13,6 @@ public interface DepartmentCategoryService {
     DepartmentCategoryDto save(DepartmentCategoryDto departmentCategoryDto);
     void delete(Long id);
     DepartmentCategoryDto update(DepartmentCategoryDto departmentCategoryDto , Long id) throws Exception;
-    List<DepartmentCategoryDto> findByPage(Integer pageNumber, Integer pageSize);
+    Page<DepartmentCategoryDto> findByPage(Integer pageNumber, Integer pageSize);
 
 }

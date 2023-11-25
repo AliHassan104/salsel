@@ -9,6 +9,9 @@ import com.salsel.model.Ticket;
 import com.salsel.repository.DepartmentRepository;
 import com.salsel.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -54,8 +57,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<DepartmentDto> findByPage(Integer pageNumber, Integer pageSize) {
-        return toDtoList(departmentRepository.findAll());
+    public Page<DepartmentDto> findByPage(Integer pageNumber, Integer pageSize) {
+        Page<Department> departments = departmentRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+        Page<DepartmentDto> departmentDtos = departments.map(department -> toDto(department));
+        return departmentDtos;
     }
 
 
