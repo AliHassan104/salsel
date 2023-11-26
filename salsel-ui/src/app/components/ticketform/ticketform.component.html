@@ -1,0 +1,149 @@
+<div class="">
+    <div class="card">
+        <form action="" [formGroup]="ticketForm" (ngSubmit)="onSubmit(ticketForm.value)">
+            <div class="p-fluid p-formgrid grid">
+                <!-- Shipper Details -->
+                <!-- Shipper Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="shippername">Shipper Name</label>
+                    <input pInputText id="shippername" type="text" formControlName="shipperName" />
+                </div>
+                <!-- Shipper Contact -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="contact">Contact Number</label>
+                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                        formControlName="shipperContactNumber">
+                    </p-inputNumber>
+                </div>
+                <!-- Pickup Address -->
+                <div class="field col-12">
+                    <label htmlFor="address">Pickup Address</label>
+                    <input pInputTextarea id="address" rows="4" formControlName="pickupAddress" />
+                </div>
+                <!-- Shipper Ref Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="contact">Shipper Ref Number</label>
+                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                        formControlName="shipperRefNumber"> </p-inputNumber>
+                </div>
+                <!-- Origin Country -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="ocountry">Origin Country</label>
+                    <p-dropdown [options]="countries" placeholder="Select Country" [filter]="true"
+                        formControlName="originCountry"></p-dropdown>
+                </div>
+                <!-- Origin City -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="oCity">Origin City</label>
+                    <p-dropdown [options]="cities" placeholder="Enter city" formControlName="originCity"
+                        [filter]="true"></p-dropdown>
+                </div>
+                <!-- Recipients Details -->
+                <!-- Recipient Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="recipientname">Recipient Name</label>
+                    <input pInputText id="recipientname" type="text" formControlName="recipientsName" />
+                </div>
+                <!-- Recipient Contact Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="contactR">Contact Number</label>
+                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                        formControlName="recipientsContactNumber">
+                    </p-inputNumber>
+                </div>
+                <!-- Delivery Address -->
+                <div class="field col-12">
+                    <label htmlFor="daddress">Delivery Address</label>
+                    <input pInputTextarea id="daddress" rows="4" formControlName="deliveryAddress" />
+                </div>
+                <!-- Destination Country -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="dcountry">Destination Country</label>
+                    <p-dropdown [options]="countries" placeholder="Select Country" [filter]="true"
+                        formControlName="destinationCountry"></p-dropdown>
+                </div>
+                <!-- Destination City -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="dcity">Destination City</label>
+                    <p-dropdown [filter]="true" [options]="cities" placeholder="Select city"
+                        formControlName="destinationCity"></p-dropdown>
+                </div>
+                <!-- Pickup Date -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="dcity">Pickup Date</label>
+                    <p-calendar [showIcon]="true" formControlName="pickupDate"
+                        [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && ticketForm.get('pickupDate')?.invalid}"></p-calendar>
+                    <small *ngIf="!ticketForm.get('pickupDate')?.valid && ticketForm.get('pickupDate')?.touched"
+                        class="text-red-500">
+                        This field is mandatory
+                    </small>
+                </div>
+                <!-- Pickup Time -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="dcity">Pickup Time</label>
+                    <p-calendar [hourFormat]="12" [timeOnly]="true" formControlName="pickupTime" [showSeconds]="true"
+                        [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && ticketForm.get('pickupDate')?.invalid}"
+                        [required]="true"></p-calendar>
+                    <small *ngIf="!ticketForm.get('pickupDate')?.valid && ticketForm.get('pickupDate')?.touched"
+                        class="text-red-500">
+                        This field is mandatory
+                    </small>
+                </div>
+                <!-- Department -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="department">Department</label>
+                    <p-dropdown [filter]="true" [options]="productType" placeholder="Enter department"
+                        formControlName="department"></p-dropdown>
+                </div>
+                <!-- Department Category -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="departmentCategory">Department Category</label>
+                    <p-dropdown [filter]="true" [options]="serviceType" placeholder="Enter department category"
+                        formControlName="departmentCategory"></p-dropdown>
+                </div>
+                <!-- Assigned to -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="assignedTo">Assigned To</label>
+                    <input pInputText id="assignedTo" type="text" formControlName="assignedTo" />
+                </div>
+                <!-- Category -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="category">Category</label>
+                    <input pInputText id="category" type="text" formControlName="category" />
+                </div>
+                <!-- Created At -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="createdAt">Created At</label>
+                    <p-calendar [showTime]="true" [showSeconds]="true" formControlName="createdAt"></p-calendar>
+                </div>
+                <!-- created By -->
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="createdBy">created By</label>
+                    <input pInputText id="createdBy" type="text" formControlName="createdBy" />
+                </div>
+                <!-- Status -->
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="status">Status</label>
+                    <input pInputText id="status" type="text" formControlName="status" />
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="status">Ticket Flag</label>
+                    <p-dropdown [options]="ticketFlag" placeholder="Select Ticket Flag"
+                        formControlName="ticketFlag"></p-dropdown>
+                </div>
+
+
+
+                <div class="flex justify-content-end w-full">
+                    <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"
+                        *ngIf="editMode" (click)="onCancel()"></button>
+                    <button pButton type="Submit" label="{{!editMode?'Add Ticket
+                        ':'Update'}}" class="mx-3 submit-btn"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

@@ -1,0 +1,239 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>ALL TICKETS</h5>
+            <hr>
+            <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+                styleClass="p-datatable-gridlines" [paginator]="true"
+                [globalFilterFields]="['shipperDetails.shipperName']" responsiveLayout="scroll">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                            (click)="clear(dt1)"></button>
+                        <span class="p-input-icon-left mb-2">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+                                placeholder="Search Keyword" class="w-full" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Shipper Name
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Shipper Contact
+                            </div>
+                        </th>
+                        <th style="min-width: 14rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Pickup Address
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Shipper Ref Number
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Origin Country
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Origin City
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Recipient Name
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Recipient Contact
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Delivery Address
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Destination Country
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Destination City
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Pickup Date
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Pickup Time
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Department
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Department Category
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Assigned To
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Category
+                                <p-columnFilter type="numeric" field="weight" display="menu"
+                                    placeholder="search by weight"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Created At
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Created By
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Status
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Ticket Flag
+                            </div>
+                        </th>
+                        <th style="min-width: 15rem">
+                            <div class="flex justify-content-between align-items-center">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data>
+                    <tr>
+                        <td>
+                            {{data.shipperDetails.shipperName}}
+                        </td>
+                        <td>
+                            {{data.shipperDetails.shipperContact}}
+                        </td>
+                        <td>
+                            {{data.shipperDetails.pickUpAddress}}
+                        </td>
+                        <td>
+                            {{data.shipperDetails.shipperRef}}
+                        </td>
+                        <td>
+                            {{data.shipperDetails.originCountry}}
+                        </td>
+                        <td>
+                            {{data.shipperDetails.originCity}}
+                        </td>
+                        <td>
+                            {{ data.recipientDetails.recipientName }}
+                        </td>
+                        <td>
+                            {{ data.recipientDetails.recipientContact }}
+                        </td>
+                        <td>
+                            {{ data.recipientDetails.deliveryAddress }}
+                        </td>
+                        <td>
+                            {{ data.recipientDetails.destinationCountry }}
+                        </td>
+                        <td>
+                            {{ data.recipientDetails.destinationCity }}
+                        </td>
+                        <td>
+                            {{ data.pickupDateTime }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.productType }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.serviceType }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.pieces }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.weight }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.content }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.amountCurrency.currency }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.amountCurrency.amount }}
+                        </td>
+                        <td>
+                            {{ data.shipmentDetails.dutyTaxBillingTo }}
+                        </td>
+                        <td>
+                            <button pButton pRipple type="button" icon="pi pi-eye
+" class="p-button-rounded p-button-secondary p-button-outlined mx-2" routerLink="{{data._id}}"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit"
+                                class="p-button-rounded p-button-outlined mx-2"
+                                (click)="onEditTicket(data._id)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-times"
+                                class="p-button-rounded p-button-danger p-button-outlined mx-2"
+                                (click)="onDeleteTicket(data._id)"></button>
+                        </td>
+
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="8">No customers found.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="8">Loading customers data. Please wait.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+
+    <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+            <span>Are you sure you want to delete selected ticket?</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                (click)="deleteProductsDialog = false"></button>
+            <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                (click)="confirmDeleteSelected()"></button>
+        </ng-template>
+    </p-dialog>
