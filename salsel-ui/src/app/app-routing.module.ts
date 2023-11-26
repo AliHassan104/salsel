@@ -2,6 +2,7 @@ import { RouterModule } from "@angular/router";
 import { NgModule } from "@angular/core";
 import { NotfoundComponent } from "./components/notfound/notfound.component";
 import { AppLayoutComponent } from "./layout/app.layout.component";
+import { LoginComponent } from "./components/auth/login/login.component";
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
             },
           ],
         },
+        { path: "login", component: LoginComponent },
         { path: "notfound", component: NotfoundComponent },
         { path: "**", redirectTo: "/notfound" },
       ],

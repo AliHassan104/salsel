@@ -23,7 +23,7 @@ export class TicktingService {
 
   //  Get All Tickets
   getTickets() {
-    return this.http.get(`${this.url}notes`);
+    return this.http.get(`http://localhost:8080/api/ticket`);
   }
 
   //   Get Single Ticket

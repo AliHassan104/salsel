@@ -11,10 +11,11 @@ import { EventService } from "./service/event.service";
 import { IconService } from "./service/icon.service";
 import { NodeService } from "./service/node.service";
 import { PhotoService } from "./service/photo.service";
+import { LoginModule } from "./components/auth/login/login.module";
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
-  imports: [AppRoutingModule, AppLayoutModule],
+  imports: [AppRoutingModule, AppLayoutModule, LoginModule],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     CountryService,

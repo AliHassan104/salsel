@@ -1,0 +1,44 @@
+<div class="flex h-screen">
+    <div class="w-full lg:w-4 h-full text-center px-6 py-6 flex flex-column justify-content-center">
+        <div class="flex flex-column align-items-center gap-4">
+            <div class="mb-3 mt-4">
+                <h2>Login to your account</h2>
+                <p>Forgot password? <a class="text-primary hover:underline cursor-pointer font-medium">Click here</a> to
+                    reset.</p>
+            </div>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="flex flex-column align-items-center gap-4">
+                <!-- Username Email -->
+                <input type="text" class="w-20rem"
+                    [ngClass]="{'ng-dirty':loginForm.get('user')?.invalid && loginForm.get('user')?.touched}" pInputText
+                    formControlName="user" placeholder="Username or Email" />
+                <!-- Password -->
+                <div class="w-20rem">
+                    <p-password [toggleMask]="true" class="w-20rem" [inputStyle]="{'width':'20rem'}"
+                        placeholder="Password" [strongRegex]="true" [strongLabel]="true" formControlName="password"
+                        [feedback]="false"></p-password>
+                    <small class="pass smalltext" *ngIf="loginForm.get('password')?.errors?.['pattern']">
+                        <ul class="text-left text-red-500">
+                            <li>At least one lowercase letter</li>
+                            <li>At least one uppercase letter</li>
+                            <li>At least one digit</li>
+                            <li>Minimum length of 8 characters</li>
+                        </ul>
+                    </small>
+                </div>
+                <button pbutton="" label="LOGIN" type="submit" class="p-element w-20rem p-button p-component"><span
+                        class="p-button-label">LOGIN</span></button>
+            </form>
+        </div>
+        <p class="text-color-secondary font-semibold">A problem? <a
+                class="text-primary hover:underline cursor-pointer font-medium">Click here</a> and let us help you.</p>
+    </div>
+    <div class="w-8 hidden lg:flex flex-column justify-content-between align-items-center px-6 py-6 bg-cover bg-norepeat"
+        style="background-image: url('../../../assets/images//Truckload-freight-min-1.jpg');">
+        <div class="mt-auto mb-auto"><span class="block text-white text-7xl font-semibold">INDUSTRY LEADING <br>LOGISTIC
+                FIRM</span></div>
+        <!-- <div class="flex align-items-center gap-5"><span class="text-white font-semibold">Lorem ipsum dolor sit amet,
+                consectetur adipiscing elit.</span><i
+                class="pi pi-github text-3xl p-1 surface-overlay border-circle cursor-pointer"></i><i
+                class="pi pi-twitter text-3xl p-1 surface-overlay border-circle cursor-pointer"></i></div> -->
+    </div>
+</div>

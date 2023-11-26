@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/ticket")
 public class TicketController {
 
     @Autowired
     private TicketService ticketService;
+
 
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN')")
