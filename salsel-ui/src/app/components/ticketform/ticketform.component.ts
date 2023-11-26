@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { CalendarModule } from "primeng/calendar";
 import { TicktingService } from "src/app/service/tickting.service";
 import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/api/ticket";
