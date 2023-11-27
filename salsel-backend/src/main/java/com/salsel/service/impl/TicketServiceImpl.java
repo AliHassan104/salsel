@@ -79,7 +79,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Page<TicketDto> findPage(Integer pageNumber, Integer pageSize) {
+    public Page<TicketDto> findByPage(Integer pageNumber, Integer pageSize) {
 
         Page<Ticket> tickets = ticketRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
         Page<TicketDto> ticketDtos = tickets.map(ticket -> toDto(ticket));

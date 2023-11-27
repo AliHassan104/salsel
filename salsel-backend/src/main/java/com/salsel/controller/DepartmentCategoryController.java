@@ -7,6 +7,7 @@ import com.salsel.model.DepartmentCategory;
 import com.salsel.service.DepartmentCategoryService;
 import com.salsel.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,9 +57,9 @@ public class DepartmentCategoryController {
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("/page")
-    public ResponseEntity<List<DepartmentCategoryDto>> getByPage(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-                                                     @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
-        List<DepartmentCategoryDto> departmentCategoryDtos = departmentCategoryService.findByPage(pageNumber,pageSize);
+    public ResponseEntity<Page<DepartmentCategoryDto>> getByPage(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
+                                                                 @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
+        Page<DepartmentCategoryDto> departmentCategoryDtos = departmentCategoryService.findByPage(pageNumber,pageSize);
         return ResponseEntity.ok(departmentCategoryDtos);
     }
 

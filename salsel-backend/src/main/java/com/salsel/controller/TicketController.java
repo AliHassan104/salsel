@@ -58,7 +58,7 @@ public class TicketController {
     @GetMapping("/page")
     public ResponseEntity<Page<TicketDto>> getByPage(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
                                                @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
-        Page<TicketDto> ticketDtos = ticketService.findPage(pageNumber,pageSize);
+        Page<TicketDto> ticketDtos = ticketService.findByPage(pageNumber,pageSize);
         return ResponseEntity.ok(ticketDtos);
     }
 

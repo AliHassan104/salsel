@@ -8,6 +8,7 @@ import com.salsel.model.Department;
 import com.salsel.service.DepartmentService;
 import com.salsel.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,9 +56,9 @@ public class DepartmentController {
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("/page")
-    public ResponseEntity<List<DepartmentDto>> getByPage(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-                                                                 @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
-        List<DepartmentDto> departmentDtos = departmentService.findByPage(pageNumber,pageSize);
+    public ResponseEntity<Page<DepartmentDto>> getByPage(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
+                                                         @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
+        Page<DepartmentDto> departmentDtos = departmentService.findByPage(pageNumber,pageSize);
         return ResponseEntity.ok(departmentDtos);
     }
 
