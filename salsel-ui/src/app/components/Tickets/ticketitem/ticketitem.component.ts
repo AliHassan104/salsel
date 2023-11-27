@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { TicktingService } from "src/app/service/tickting.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { TicktingService } from "src/app/components/Tickets/tickting.service";
 
 @Component({
   selector: "app-ticketitem",
@@ -10,16 +10,15 @@ import { TicktingService } from "src/app/service/tickting.service";
 export class TicketitemComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
-    private _ticketService: TicktingService
+    private _ticketService: TicktingService,
+    private router: Router
   ) {}
   display: any;
-  sTicket: any;
-  singleTicket;
+  singleTicket: any;
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
-      console.log(a);
 
       this.onView(a);
     });
@@ -29,10 +28,11 @@ export class TicketitemComponent implements OnInit {
   onView(id) {
     this.display = true;
     this._ticketService.getSingleTicket(id).subscribe((res) => {
-      this.sTicket = res;
-      this.singleTicket = this.sTicket.note;
-      console.log(this.singleTicket);
+      this.singleTicket = res;
     });
-    console.log(id);
+  }
+
+  createAwb() {
+    this.router.navigate(["awbcreation"]);
   }
 }

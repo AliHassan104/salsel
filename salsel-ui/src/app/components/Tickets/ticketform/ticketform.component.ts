@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { TicktingService } from "src/app/service/tickting.service";
+import { TicktingService } from "src/app/components/Tickets/tickting.service";
 import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/api/ticket";
 import { MessageService } from "primeng/api";
@@ -15,7 +15,7 @@ import { MessageService } from "primeng/api";
 export class TicketformComponent implements OnInit, OnDestroy {
   editMode;
   editId;
-  sTicket;
+  singleTicket;
   constructor(
     private _ticketService: TicktingService,
     private router: Router,
@@ -31,7 +31,7 @@ export class TicketformComponent implements OnInit, OnDestroy {
     });
   }
 
-  ticketFlag = ["True", "False"];
+  ticketFlag = [true, false];
   ticketForm!: FormGroup;
   selectedCurrency: string;
   currencies = ["SAR", "AED", "BHD", "KWD", "OMR", "SDG", "CNY", "USD"];
@@ -91,6 +91,8 @@ export class TicketformComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
+    console.log(this.editMode);
+
     // Reactive Form
     this.ticketForm = new FormGroup({
       shipperName: new FormControl(null),
@@ -104,14 +106,14 @@ export class TicketformComponent implements OnInit, OnDestroy {
       destinationCountry: new FormControl(null),
       destinationCity: new FormControl(null),
       deliveryAddress: new FormControl(null),
-      pickupDate: new FormControl(null, Validators.required),
-      pickupTime: new FormControl(null, Validators.required),
+      pickupDate: new FormControl(null),
+      pickupTime: new FormControl(null),
       department: new FormControl(null, Validators.required),
       departmentCategory: new FormControl(null, Validators.required),
       assignedTo: new FormControl(null, Validators.required),
       category: new FormControl(null, Validators.required),
-      createdAt: new FormControl(null, Validators.required),
-      createdBy: new FormControl(null, Validators.required),
+      createdAt: new FormControl(null),
+      createdBy: new FormControl(null),
       status: new FormControl(null, Validators.required),
       ticketFlag: new FormControl(null, Validators.required),
     });
@@ -121,40 +123,29 @@ export class TicketformComponent implements OnInit, OnDestroy {
       console.log(this.editId);
     } else {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
-        this.sTicket = res;
-        let sd = this.sTicket.note.shipperDetails;
-        let rd = this.sTicket.note.recipientDetails;
-        let shipmentD = this.sTicket.note.shipmentDetails;
-
+        this.singleTicket = res;
         this.ticketForm.setValue({
-          shipperDetails: {
-            shipperName: sd.shipperName,
-            shipperContact: sd.shipperContact,
-            pickUpAddress: sd.pickUpAddress,
-            shipperRef: sd.shipperRef,
-            originCountry: sd.originCountry,
-            originCity: sd.originCity,
-          },
-          recipientDetails: {
-            recipientName: rd.recipientName,
-            recipientContact: rd.recipientContact,
-            destinationCountry: rd.destinationCountry,
-            destinationCity: rd.destinationCity,
-            deliveryAddress: rd.deliveryAddress,
-          },
-          pickupDateTime: this.sTicket.note.pickupDateTime,
-          shipmentDetails: {
-            productType: shipmentD.productType,
-            serviceType: shipmentD.serviceType,
-            content: shipmentD.content,
-            weight: shipmentD.weight,
-            pieces: shipmentD.pieces,
-            amountCurrency: {
-              currency: shipmentD.amountCurrency.currency,
-              amount: shipmentD.amountCurrency.amount,
-            },
-            dutyTaxBillingTo: shipmentD.dutyTaxBillingTo,
-          },
+          shipperName: this.singleTicket.shipperName,
+          shipperContactNumber: this.singleTicket.shipperContactNumber,
+          pickupAddress: this.singleTicket.pickupAddress,
+          shipperRefNumber: this.singleTicket.shipperRefNumber,
+          originCountry: this.singleTicket.originCountry,
+          originCity: this.singleTicket.originCity,
+          recipientsName: this.singleTicket.recipientsName,
+          recipientsContactNumber: this.singleTicket.recipientsContactNumber,
+          destinationCountry: this.singleTicket.destinationCountry,
+          destinationCity: this.singleTicket.destinationCity,
+          deliveryAddress: this.singleTicket.deliveryAddress,
+          pickupDate: this.singleTicket.pickupDate,
+          pickupTime: this.singleTicket.pickupTime,
+          department: this.singleTicket.department,
+          departmentCategory: this.singleTicket.departmentCategory,
+          assignedTo: this.singleTicket.assignedTo,
+          category: this.singleTicket.category,
+          createdAt: this.singleTicket.createdAt,
+          createdBy: this.singleTicket.createdBy,
+          status: this.singleTicket.status,
+          ticketFlag: this.singleTicket.ticketFlag,
         });
       });
     }
@@ -164,16 +155,17 @@ export class TicketformComponent implements OnInit, OnDestroy {
     if (this.editMode) {
       this.router.navigate(["tickets"]);
       this.http
-        .put<any>(`http://localhost:5000/api/v1/notes/${this.editId}`, data)
+        .put<any>(`http://localhost:8080/api/ticket/${this.editId}`, data)
         .subscribe(() => {
           this.router.navigate(["tickets"]);
         });
     } else {
       // Create Ticket
-      //   this._ticketService.createTicket(data).subscribe();
-      console.log(data);
+      this._ticketService.createTicket(data).subscribe();
+      this.router.navigate(["tickets"]);
       this.ticketForm.reset();
       this.show();
+      console.log(this.ticketForm.value);
     }
   }
 

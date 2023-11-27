@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { NotfoundComponent } from "./components/notfound/notfound.component";
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from "./components/auth/login/login.component";
+import { UserlistModule } from "./components/auth/userlist/userlist.module";
 
 @NgModule({
   imports: [
@@ -27,24 +28,38 @@ import { LoginComponent } from "./components/auth/login/login.component";
                 ),
             },
             {
-              path: "addticket",
+              path: "tickets/addticket",
               loadChildren: () =>
-                import("./components/ticketform/ticketform.module").then(
-                  (m) => m.TicketformModule
-                ),
+                import(
+                  "./components/Tickets/ticketform/ticketform.module"
+                ).then((m) => m.TicketformModule),
             },
             {
               path: "tickets",
               loadChildren: () =>
-                import("./components/ticketsdata/ticketsdata.module").then(
-                  (m) => m.TicketsdataModule
+                import(
+                  "./components/Tickets/ticketsdata/ticketsdata.module"
+                ).then((m) => m.TicketsdataModule),
+            },
+            {
+              path: "tickets/addticket/:id",
+              loadChildren: () =>
+                import(
+                  "./components/Tickets/ticketitem/ticketitem.module"
+                ).then((m) => m.TicketitemModule),
+            },
+            {
+              path: "awbcreation",
+              loadChildren: () =>
+                import("./components/awbcreation/awbcreation.module").then(
+                  (m) => m.AwbcreationModule
                 ),
             },
             {
-              path: "tickets/:id",
+              path: "userslist",
               loadChildren: () =>
-                import("./components/ticketitem/ticketitem.module").then(
-                  (m) => m.TicketitemModule
+                import("./components/auth/userlist/userlist.module").then(
+                  (m) => m.UserlistModule
                 ),
             },
           ],

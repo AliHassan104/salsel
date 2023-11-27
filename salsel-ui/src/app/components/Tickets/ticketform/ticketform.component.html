@@ -1,5 +1,6 @@
 <div class="">
     <div class="card">
+        <h1 class="text-center underline" style="color: #93003c;">Add Ticket</h1>
         <form action="" [formGroup]="ticketForm" (ngSubmit)="onSubmit(ticketForm.value)">
             <div class="p-fluid p-formgrid grid">
                 <!-- Shipper Details -->
@@ -11,9 +12,7 @@
                 <!-- Shipper Contact -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contact">Contact Number</label>
-                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-                        formControlName="shipperContactNumber">
-                    </p-inputNumber>
+                    <input pInputText id="shipperContact" type="text" formControlName="shipperContactNumber" />
                 </div>
                 <!-- Pickup Address -->
                 <div class="field col-12">
@@ -22,9 +21,8 @@
                 </div>
                 <!-- Shipper Ref Number -->
                 <div class="field col-12 md:col-6">
-                    <label htmlFor="contact">Shipper Ref Number</label>
-                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-                        formControlName="shipperRefNumber"> </p-inputNumber>
+                    <label htmlFor="shipperRef">Shipper Ref Number</label>
+                    <input pInputText id="shipperRef" type="text" formControlName="shipperRefNumber" />
                 </div>
                 <!-- Origin Country -->
                 <div class="field col-12 md:col-3">
@@ -47,9 +45,7 @@
                 <!-- Recipient Contact Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contactR">Contact Number</label>
-                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-                        formControlName="recipientsContactNumber">
-                    </p-inputNumber>
+                    <input pInputText id="recipientsContact" type="text" formControlName="recipientsContactNumber" />
                 </div>
                 <!-- Delivery Address -->
                 <div class="field col-12">

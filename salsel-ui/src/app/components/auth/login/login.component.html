@@ -1,16 +1,18 @@
 <div class="flex h-screen">
     <div class="w-full lg:w-4 h-full text-center px-6 py-6 flex flex-column justify-content-center">
         <div class="flex flex-column align-items-center gap-4">
+            <img src="../../../../assets/logo/Logo-4-1.png" alt="" width="200px" height="100px">
             <div class="mb-3 mt-4">
                 <h2>Login to your account</h2>
                 <p>Forgot password? <a class="text-primary hover:underline cursor-pointer font-medium">Click here</a> to
                     reset.</p>
             </div>
-            <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="flex flex-column align-items-center gap-4">
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)"
+                class="flex flex-column align-items-center gap-4">
                 <!-- Username Email -->
                 <input type="text" class="w-20rem"
                     [ngClass]="{'ng-dirty':loginForm.get('user')?.invalid && loginForm.get('user')?.touched}" pInputText
-                    formControlName="user" placeholder="Username or Email" />
+                    formControlName="name" placeholder="Username or Email" />
                 <!-- Password -->
                 <div class="w-20rem">
                     <p-password [toggleMask]="true" class="w-20rem" [inputStyle]="{'width':'20rem'}"

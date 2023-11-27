@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { AuthService } from "../auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-login",
@@ -7,15 +9,13 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
+  constructor(private _authService: AuthService, private router: Router) {}
   loginForm!: FormGroup;
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      user: new FormControl(null, Validators.required),
-      password: new FormControl(null, [
-        Validators.required,
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
-      ]),
+      name: new FormControl(null, Validators.required),
+      password: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -26,9 +26,13 @@ export class LoginComponent implements OnInit {
   //     return null as any;
   //   }
 
-  onLogin() {
+  onLogin(value) {
     if (this.loginForm.valid) {
+      this._authService.login(value).subscribe((res) => {
+        localStorage.setItem("jwt", JSON.stringify(res.jwt));
+      });
       console.log(this.loginForm.value);
+      this.router.navigate([""]);
       this.loginForm.reset();
     }
   }

@@ -3,18 +3,18 @@ export interface Ticket {
   category?: string;
   createdAt?: Date;
   createdBy?: {
-    id: any;
-    name?: string;
-    password?: string;
+    id: 0;
+    name?: "usman";
+    password?: "asdasd";
     roles: [
       {
-        id?: any;
-        name?: string;
+        id?: 0;
+        name?: "sadasda";
         permissions?: [
           {
-            id?: any;
-            name?: string;
-            value?: boolean;
+            id?: 0;
+            name?: "eqweqw";
+            value?: false;
           }
         ];
       }
@@ -29,12 +29,12 @@ export interface Ticket {
   originCity?: string;
   originCountry?: string;
   pickupAddress?: string;
-  pickupDate?: Date;
+  pickupDate?: string;
   pickupTime?: {
-    hour?: string;
-    minute?: string;
+    hour?: "12";
+    minute?: "12";
     nano?: 0;
-    second?: string;
+    second?: "12";
   };
   recipientsContactNumber?: string;
   recipientsName?: string;

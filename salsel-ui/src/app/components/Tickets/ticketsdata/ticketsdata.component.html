@@ -2,10 +2,13 @@
     <div class="col-12">
         <div class="card">
             <h5>ALL TICKETS</h5>
+            <div class="flex justify-content-end">
+                <button pButton label="Add Ticket" class="p-button-outlined mb-2" routerLink="addticket"></button>
+            </div>
             <hr>
             <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
                 styleClass="p-datatable-gridlines" [paginator]="true"
-                [globalFilterFields]="['shipperDetails.shipperName']" responsiveLayout="scroll">
+                [globalFilterFields]="['shipperName','recipientsName']" responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
@@ -102,8 +105,6 @@
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-between align-items-center">
                                 Category
-                                <p-columnFilter type="numeric" field="weight" display="menu"
-                                    placeholder="search by weight"></p-columnFilter>
                             </div>
                         </th>
                         <th style="min-width: 12rem">
@@ -136,78 +137,78 @@
                 <ng-template pTemplate="body" let-data>
                     <tr>
                         <td>
-                            {{data.shipperDetails.shipperName}}
+                            {{data?.shipperName}}
                         </td>
                         <td>
-                            {{data.shipperDetails.shipperContact}}
+                            {{data?.shipperContactNumber}}
                         </td>
                         <td>
-                            {{data.shipperDetails.pickUpAddress}}
+                            {{data?.pickupAddress}}
                         </td>
                         <td>
-                            {{data.shipperDetails.shipperRef}}
+                            {{data?.shipperRefNumber}}
                         </td>
                         <td>
-                            {{data.shipperDetails.originCountry}}
+                            {{data?.originCountry}}
                         </td>
                         <td>
-                            {{data.shipperDetails.originCity}}
+                            {{data?.originCity}}
                         </td>
                         <td>
-                            {{ data.recipientDetails.recipientName }}
+                            {{ data?.recipientsName}}
                         </td>
                         <td>
-                            {{ data.recipientDetails.recipientContact }}
+                            {{ data?.recipientsContactNumber }}
                         </td>
                         <td>
-                            {{ data.recipientDetails.deliveryAddress }}
+                            {{ data?.deliveryAddress }}
                         </td>
                         <td>
-                            {{ data.recipientDetails.destinationCountry }}
+                            {{ data?.destinationCountry }}
                         </td>
                         <td>
-                            {{ data.recipientDetails.destinationCity }}
+                            {{ data?.destinationCity }}
                         </td>
                         <td>
-                            {{ data.pickupDateTime }}
+                            {{ data?.pickupDate}}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.productType }}
+                            {{data?.pickupTime }}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.serviceType }}
+                            {{ data?.department }}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.pieces }}
+                            {{ data?.departmentCategory }}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.weight }}
+                            {{ data?.assignedTo }}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.content }}
+                            {{ data?.category }}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.amountCurrency.currency }}
+                            {{ data?.createdAt}}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.amountCurrency.amount }}
+                            {{ data?.createdBy }}
                         </td>
                         <td>
-                            {{ data.shipmentDetails.dutyTaxBillingTo }}
+                            {{ data?.status }}
+                        </td>
+                        <td>
+                            {{ data?.ticketFlag }}
                         </td>
                         <td>
                             <button pButton pRipple type="button" icon="pi pi-eye
-" class="p-button-rounded p-button-secondary p-button-outlined mx-2" routerLink="{{data._id}}"></button>
+" class="p-button-rounded p-button-secondary p-button-outlined mx-2" routerLink="addticket/{{data.id}}"></button>
                             <button pButton pRipple type="button" icon="pi pi-file-edit"
                                 class="p-button-rounded p-button-outlined mx-2"
-                                (click)="onEditTicket(data._id)"></button>
+                                (click)="onEditTicket(data.id)"></button>
                             <button pButton pRipple type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
-                                (click)="onDeleteTicket(data._id)"></button>
+                                (click)="onDeleteTicket(data.id)"></button>
                         </td>
-
-
-
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">

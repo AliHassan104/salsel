@@ -23,14 +23,14 @@ export class AppMenuComponent implements OnInit {
         label: "Forms",
         items: [
           {
-            label: "All Tickets",
+            label: "Tickets",
             icon: "pi pi-ticket",
             routerLink: "tickets",
           },
           {
-            label: "Add Ticket",
-            icon: "pi pi-fw pi-id-card",
-            routerLink: "addticket",
+            label: "AWB Creation",
+            icon: "pi pi-money-bill",
+            routerLink: "awbcreation",
           },
           {
             label: "User",

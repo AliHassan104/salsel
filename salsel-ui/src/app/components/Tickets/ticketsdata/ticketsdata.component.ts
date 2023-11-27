@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { TicktingService } from "src/app/service/tickting.service";
+import { TicktingService } from "src/app/components/Tickets/tickting.service";
 import { Table } from "primeng/table";
 import { Router } from "@angular/router";
 import { Ticket } from "src/app/api/ticket";
@@ -17,7 +17,7 @@ export class TicketsdataComponent implements OnInit {
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
-  tickets: Ticket[];
+  tickets: any = [];
   data: any = {};
   deleteId: any;
 
@@ -28,8 +28,7 @@ export class TicketsdataComponent implements OnInit {
   //   Get all tickets
   getTickets() {
     this._ticktingService.getTickets().subscribe((res) => {
-      this.data = res;
-      this.tickets = this.data.notes;
+      this.tickets = res;
     });
   }
 
@@ -58,9 +57,8 @@ export class TicketsdataComponent implements OnInit {
 
   //   Edit Ticket
   onEditTicket(id) {
-    console.log(id);
     this._ticktingService.editId.next(id);
-    this.router.navigate(["addticket"]);
+    this.router.navigate(["tickets/addticket"]);
     this._ticktingService.editTicketMode.next(true);
   }
 }

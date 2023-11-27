@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { Ticket } from "../api/ticket";
+import { Ticket } from "../../api/ticket";
 
 @Injectable({
   providedIn: "root",
@@ -12,29 +12,28 @@ export class TicktingService {
   editTicketMode = new BehaviorSubject(false);
   editId = new BehaviorSubject<any>("");
 
-  url = "http://localhost:5000/api/v1/";
+  url = "http://localhost:8080/api/";
 
   // Create Ticket
 
   createTicket(data: Ticket): Observable<any> {
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.http.post<any>(`${this.url}notes/new`, data, { headers });
+    return this.http.post<any>(`${this.url}ticket`, data);
   }
 
   //  Get All Tickets
   getTickets() {
-    return this.http.get(`http://localhost:8080/api/ticket`);
+    return this.http.get(`${this.url}ticket`);
   }
 
   //   Get Single Ticket
 
   getSingleTicket(id) {
-    return this.http.get(`${this.url}notes/${id}`);
+    return this.http.get(`${this.url}ticket/${id}`);
   }
 
   //   Delete Ticket
 
   deleteTicket(id) {
-    return this.http.delete(`${this.url}notes/${id}`);
+    return this.http.delete(`${this.url}ticket/${id}`);
   }
 }

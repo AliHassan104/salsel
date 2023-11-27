@@ -1,0 +1,14 @@
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { AwbcreationComponent } from "./awbcreation.component";
+import { RouterModule } from "@angular/router";
+
+@NgModule({
+  declarations: [],
+  imports: [
+    CommonModule,
+    RouterModule.forChild([{ path: "", component: AwbcreationComponent }]),
+  ],
+  exports: [RouterModule],
+})
+export class AwbcreationroutingModule {}

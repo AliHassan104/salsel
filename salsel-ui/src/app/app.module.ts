@@ -12,6 +12,8 @@ import { IconService } from "./service/icon.service";
 import { NodeService } from "./service/node.service";
 import { PhotoService } from "./service/photo.service";
 import { LoginModule } from "./components/auth/login/login.module";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { LogininterceptorService } from "./components/auth/logininterceptor.service";
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
@@ -25,6 +27,11 @@ import { LoginModule } from "./components/auth/login/login.module";
     NodeService,
     PhotoService,
     ProductService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LogininterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
