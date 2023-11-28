@@ -5,6 +5,7 @@ import { TicktingService } from "src/app/components/Tickets/service/tickting.ser
 import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/api/ticket";
 import { MessageService } from "primeng/api";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-ticketform",
@@ -198,10 +199,7 @@ export class TicketformComponent implements OnInit, OnDestroy {
 
       if (this.editMode) {
         this.http
-          .put<any>(
-            `http://localhost:8080/api/ticket/${this.editId}`,
-            ticketData
-          )
+          .put<any>(`${environment.URL}ticket/${this.editId}`, ticketData)
           .subscribe(() => {
             this.update();
             this.router.navigate(["tickets"]);

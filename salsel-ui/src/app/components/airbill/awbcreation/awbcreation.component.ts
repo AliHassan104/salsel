@@ -6,6 +6,7 @@ import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
 import { Airbill } from "src/app/api/airbill";
 import { TicktingService } from "../../Tickets/service/tickting.service";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-awbcreation",
@@ -272,7 +273,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
 
       if (this.editMode) {
         this.http
-          .put<any>(`http://localhost:8080/api/awb/${this.editId}`, billData)
+          .put<any>(`${environment.URL}awb/${this.editId}`, billData)
           .subscribe(() => {
             this.update();
             this.router.navigate(["airwaybills"]);
