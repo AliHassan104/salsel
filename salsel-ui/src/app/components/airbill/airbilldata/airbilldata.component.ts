@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { Table } from "primeng/table";
-import { AirbillService } from "../airbill.service";
+import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
 
 @Component({
@@ -59,11 +59,10 @@ export class AirbilldataComponent implements OnInit {
 
   //   Edit Ticket
   onEditBill(id) {
-    const queryParams = { updateMode: "true" };
-    this._airbillService.editBillId.next(id);
+    this._airbillService.updateAWB.next(true);
+    const queryParams = { updateMode: "true", id: id };
     this.router.navigate(["airwaybills/createairbill"], {
       queryParams: queryParams,
     });
-    this._airbillService.editBillMode.next(true);
   }
 }

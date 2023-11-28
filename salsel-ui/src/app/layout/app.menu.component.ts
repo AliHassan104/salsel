@@ -34,13 +34,18 @@ export class AppMenuComponent implements OnInit {
           },
           {
             label: "Department",
-            icon: "pi pi-user",
+            icon: "pi pi-database",
             routerLink: "department",
+          },
+          {
+            label: "Department Category",
+            icon: "pi pi-user",
+            routerLink: "department-category",
           },
           {
             label: "User",
             icon: "pi pi-user",
-            routerLink: "table",
+            routerLink: "users-list",
           },
 
           //   {

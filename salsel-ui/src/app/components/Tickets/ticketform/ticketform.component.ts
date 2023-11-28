@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NavigationEnd, Router } from "@angular/router";
-import { TicktingService } from "src/app/components/Tickets/tickting.service";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
 import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/api/ticket";
 import { MessageService } from "primeng/api";
@@ -20,16 +20,9 @@ export class TicketformComponent implements OnInit, OnDestroy {
     private _ticketService: TicktingService,
     private router: Router,
     private http: HttpClient,
-    private messageService: MessageService
-  ) {
-    this._ticketService.editTicketMode.subscribe((res) => {
-      this.editMode = res;
-    });
-
-    this._ticketService.editId.subscribe((res) => {
-      this.editId = res;
-    });
-  }
+    private messageService: MessageService,
+    private route: ActivatedRoute
+  ) {}
 
   ticketFlag = [true, false];
   ticketForm!: FormGroup;
@@ -115,7 +108,17 @@ export class TicketformComponent implements OnInit, OnDestroy {
       ticketFlag: new FormControl(null, Validators.required),
     });
 
-    if (this.editId !== "") {
+    this.route.queryParams.subscribe((params) => {
+      // Retrieve editMode and id from the query parameters
+      if (params["id"] != null) {
+        this.editMode = params["updateMode"] === "true"; // Convert to boolean
+        this.editId = +params["id"]; // Convert to number
+      } else {
+        this.editMode = false;
+      }
+    });
+
+    if (this.editId != null) {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
         let pickDate = new Date(this.singleTicket.pickupDate);
@@ -244,8 +247,5 @@ export class TicketformComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this._ticketService.editTicketMode.next(false);
-    this._ticketService.editId.next("");
-  }
+  ngOnDestroy(): void {}
 }

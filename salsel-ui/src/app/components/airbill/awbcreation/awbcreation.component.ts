@@ -1,11 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { AirbillService } from "../airbill.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
 import { Airbill } from "src/app/api/airbill";
-import { TicktingService } from "../../Tickets/tickting.service";
+import { TicktingService } from "../../Tickets/service/tickting.service";
 
 @Component({
   selector: "app-awbcreation",
@@ -14,34 +14,28 @@ import { TicktingService } from "../../Tickets/tickting.service";
   providers: [MessageService],
 })
 export class AwbcreationComponent implements OnInit, OnDestroy {
-  TicketMode;
+  ticketMode;
   TicketId;
   editMode;
   editId;
   singleBill;
   singleTicket;
+  updateAWB;
+  createAWB;
+
   constructor(
     private _airbillService: AirbillService,
     private _ticketService: TicktingService,
     private router: Router,
     private http: HttpClient,
-    private MessageService: MessageService
+    private MessageService: MessageService,
+    private route: ActivatedRoute
   ) {
-    // EDIT MODE
-    this._airbillService.editBillMode.subscribe((res) => {
-      this.editMode = res;
+    this._airbillService.updateAWB.subscribe((res) => {
+      this.updateAWB = res;
     });
-    // EDIT ID
-    this._airbillService.editBillId.subscribe((res) => {
-      this.editId = res;
-    });
-    // CREATE FROM TICKET ID
-    this._airbillService.createBillThrTickId.subscribe((res) => {
-      this.TicketId = res;
-    });
-    // CREATE FROM TICKET MODE
-    this._airbillService.createBillThrTicMode.subscribe((res) => {
-      this.TicketMode = res;
+    this._airbillService.CreateAWB.subscribe((res) => {
+      this.createAWB = res;
     });
   }
   awbForm!: FormGroup;
@@ -131,8 +125,25 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       status: new FormControl(null, Validators.required),
     });
 
+    // Query Param
+    this.route.queryParams.subscribe((params) => {
+      // Retrieve editMode and id from the query parameters
+      if (params["id"] != null && this.updateAWB == true) {
+        this.editMode = params["updateMode"] === "true"; // Convert to boolean
+        this.editId = +params["id"]; // Convert to number
+      }
+      //   To create AWB form ticket view page
+      else if (params["id"] != null && this.createAWB == true) {
+        this.ticketMode = true;
+        this.TicketId = +params["id"];
+      } else {
+        this.ticketMode = false;
+        this.editMode = false;
+      }
+    });
+
     // FOR EDIT BILL
-    if (this.editId !== "") {
+    if (this.editMode) {
       this._airbillService.getSingleBill(this.editId).subscribe((res) => {
         this.singleBill = res;
         let pickDate = new Date(this.singleBill.pickupDate);
@@ -167,7 +178,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     }
 
     // TO CREATE BILL FROM TICKET VIEW PAGE
-    if (this.TicketId !== "") {
+
+    if (this.ticketMode) {
       this._ticketService.getSingleTicket(this.TicketId).subscribe((res) => {
         this.singleTicket = res;
         let pickDate = new Date(this.singleTicket.pickupDate);
@@ -285,9 +297,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   //   Pop up message
 
   ngOnDestroy(): void {
-    this._airbillService.editBillMode.next(false);
-    this._airbillService.editBillId.next("");
-    this._airbillService.createBillThrTicMode.next(false);
-    this._airbillService.createBillThrTickId.next("");
+    this._airbillService.CreateAWB.next(false);
+    this._airbillService.updateAWB.next(false);
   }
 }

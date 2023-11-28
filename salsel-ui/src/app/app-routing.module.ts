@@ -56,7 +56,7 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                 ).then((m) => m.DepartmentCategoryModule),
             },
             {
-              path: "userslist",
+              path: "users-list",
               loadChildren: () =>
                 import("./components/auth/userlist/userlist.module").then(
                   (m) => m.UserlistModule

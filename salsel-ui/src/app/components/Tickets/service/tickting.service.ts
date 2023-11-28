@@ -1,42 +1,38 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
-import { Ticket } from "src/app/api/ticket";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { Ticket } from "../../../api/ticket";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
 })
-export class AirbillService {
+export class TicktingService {
   constructor(private http: HttpClient) {}
 
-  editBillMode = new BehaviorSubject(false);
-  editBillId = new BehaviorSubject<any>("");
-  createBillThrTickId = new BehaviorSubject<any>("");
-  createBillThrTicMode = new BehaviorSubject(false);
-
-  url = "http://localhost:8080/api/";
+  url = environment.URL;
 
   // Create Ticket
 
-  createBill(data: any): Observable<any> {
-    return this.http.post<any>(`${this.url}awb`, data);
+  createTicket(data: Ticket): Observable<any> {
+    return this.http.post<any>(`${this.url}ticket`, data);
   }
 
   //  Get All Tickets
-  getBills() {
-    return this.http.get(`${this.url}awb`);
+  getTickets() {
+    return this.http.get(`${this.url}ticket`);
   }
 
   //   Get Single Ticket
 
-  getSingleBill(id) {
-    return this.http.get(`${this.url}awb/${id}`);
+  getSingleTicket(id) {
+    return this.http.get(`${this.url}ticket/${id}`);
   }
 
   //   Delete Ticket
 
-  deleteBill(id) {
-    return this.http.delete(`${this.url}awb/${id}`);
+  deleteTicket(id) {
+    return this.http.delete(`${this.url}ticket/${id}`);
   }
 
   //   Get formated Date
