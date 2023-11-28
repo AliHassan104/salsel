@@ -69,6 +69,16 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                   "./components/airbill/airbilldata/airbilldata.module"
                 ).then((m) => m.AirbilldataModule),
             },
+            { path: 'department', 
+              loadChildren: () => 
+                import('./components/department/department.module')
+                .then(m => m.DepartmentModule) 
+            },
+            { path: 'department-category', 
+              loadChildren: () => 
+                import('./components/department-category/department-category.module')
+                .then(m => m.DepartmentCategoryModule) 
+            },
             {
               path: "userslist",
               loadChildren: () =>
@@ -76,6 +86,7 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                   (m) => m.UserlistModule
                 ),
             },
+
           ],
         },
         { path: "login", component: LoginComponent },

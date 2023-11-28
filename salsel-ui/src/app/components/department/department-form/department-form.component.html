@@ -1,0 +1,21 @@
+<div class="">
+    <div class="card">
+        <form action="" [formGroup]="DepartmentForm" (ngSubmit)="onSubmit(DepartmentForm.value)">
+            <div class="p-fluid p-formgrid grid">
+                <!-- Shipper Details -->
+                <ng-container formGroupName="name">
+                    <div class="field col-12">
+                        <label htmlFor="name">Name</label>
+                        <input pInputTextarea id="name" rows="4" formControlName="name" />
+                    </div>
+               </ng-container>
+            
+                <div class="flex justify-content-end w-full">
+                    <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"
+                        *ngIf="editMode" (click)="onCancel()"></button>
+                    <button pButton type="Submit" label="{{!editMode?'Add Department':'Update Department'}}" class="mx-3 submit-btn"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
