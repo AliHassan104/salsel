@@ -14,4 +14,6 @@ export class AuthService {
       headers,
     });
   }
+
+  idLogedIn() {}
 }

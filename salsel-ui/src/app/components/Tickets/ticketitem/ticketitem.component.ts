@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/tickting.service";
-import { AirbillService } from "../../AWB/airbill.service";
+import { AirbillService } from "../../airbill/airbill.service";
 
 @Component({
   selector: "app-ticketitem",

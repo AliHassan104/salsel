@@ -51,23 +51,23 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
             {
               path: "airwaybills/createairbill",
               loadChildren: () =>
-                import("./components/AWB/awbcreation/awbcreation.module").then(
-                  (m) => m.AwbcreationModule
-                ),
+                import(
+                  "./components/airbill/awbcreation/awbcreation.module"
+                ).then((m) => m.AwbcreationModule),
             },
             {
               path: "airwaybills/:billid",
               loadChildren: () =>
                 import(
-                  "./components/AWB/airbilldetails/airbilldetails.module"
+                  "./components/airbill/airbilldetails/airbilldetails.module"
                 ).then((m) => m.AirbilldetailsModule),
             },
             {
               path: "airwaybills",
               loadChildren: () =>
-                import("./components/AWB/airbilldata/airbilldata.module").then(
-                  (m) => m.AirbilldataModule
-                ),
+                import(
+                  "./components/airbill/airbilldata/airbilldata.module"
+                ).then((m) => m.AirbilldataModule),
             },
             {
               path: "userslist",
