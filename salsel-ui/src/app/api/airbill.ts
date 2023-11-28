@@ -1,23 +1,25 @@
-export interface Ticket {
-  assignedTo?: string;
-  category?: string;
-  createdAt?: string;
+export interface Airbill {
+  amount?: number;
+  content?: string;
+  currency?: string;
   deliveryAddress?: string;
-  department?: string;
-  departmentCategory?: string;
   destinationCity?: string;
   destinationCountry?: string;
-  id?: 0;
+  dutyAndTaxesBillTo?: string;
+  id?: number;
   originCity?: string;
   originCountry?: string;
   pickupAddress?: string;
   pickupDate?: string;
   pickupTime?: string;
+  pieces?: number;
+  productType?: string;
   recipientsContactNumber?: string;
   recipientsName?: string;
+  serviceType?: string;
   shipperContactNumber?: string;
   shipperName?: string;
   shipperRefNumber?: string;
-  status?: string;
-  ticketFlag?: boolean;
+  status?: boolean;
+  weight?: number;
 }

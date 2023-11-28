@@ -28,9 +28,9 @@ export class AppMenuComponent implements OnInit {
             routerLink: "tickets",
           },
           {
-            label: "AWB Creation",
+            label: "Air Waybills",
             icon: "pi pi-money-bill",
-            routerLink: "awbcreation",
+            routerLink: "airwaybills",
           },
           {
             label: "User",

@@ -19,7 +19,7 @@ import java.time.LocalTime;
 public class TicketDto {
     private Long id;
 
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @CreationTimestamp
     private LocalDateTime createdAt;
 

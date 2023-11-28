@@ -1,23 +1,25 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { TicktingService } from "src/app/components/Tickets/tickting.service";
-import { Table } from "primeng/table";
 import { Router } from "@angular/router";
-import { Ticket } from "src/app/api/ticket";
+import { Table } from "primeng/table";
+import { AirbillService } from "../airbill.service";
+import { MessageService } from "primeng/api";
 
 @Component({
-  selector: "app-ticketsdata",
-  templateUrl: "./ticketsdata.component.html",
-  styleUrls: ["./ticketsdata.component.scss"],
+  selector: "app-airbilldata",
+  templateUrl: "./airbilldata.component.html",
+  styleUrls: ["./airbilldata.component.scss"],
+  providers: [MessageService],
 })
-export class TicketsdataComponent implements OnInit {
+export class AirbilldataComponent implements OnInit {
   deleteProductsDialog: any;
   constructor(
-    private _ticktingService: TicktingService,
-    private router: Router
+    private _airbillService: AirbillService,
+    private router: Router,
+    private messageSerice: MessageService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
-  tickets: any = [];
+  bills: any = [];
   data: any = {};
   deleteId: any;
 
@@ -27,8 +29,8 @@ export class TicketsdataComponent implements OnInit {
 
   //   Get all tickets
   getTickets() {
-    this._ticktingService.getTickets().subscribe((res) => {
-      this.tickets = res;
+    this._airbillService.getBills().subscribe((res) => {
+      this.bills = res;
     });
   }
 
@@ -42,7 +44,7 @@ export class TicketsdataComponent implements OnInit {
     this.filter.nativeElement.value = "";
   }
   confirmDeleteSelected() {
-    this._ticktingService.deleteTicket(this.deleteId).subscribe((res) => {
+    this._airbillService.deleteBill(this.deleteId).subscribe((res) => {
       this.getTickets();
       this.deleteProductsDialog = false;
     });
@@ -50,18 +52,18 @@ export class TicketsdataComponent implements OnInit {
 
   //   Delete Ticket
 
-  onDeleteTicket(id) {
+  onDeleteBill(id) {
     this.deleteId = id;
     this.deleteProductsDialog = true;
   }
 
   //   Edit Ticket
-  onEditTicket(id) {
+  onEditBill(id) {
     const queryParams = { updateMode: "true" };
-    this._ticktingService.editId.next(id);
-    this.router.navigate(["tickets/createticket"], {
+    this._airbillService.editBillId.next(id);
+    this.router.navigate(["airwaybills/createairbill"], {
       queryParams: queryParams,
     });
-    this._ticktingService.editTicketMode.next(true);
+    this._airbillService.editBillMode.next(true);
   }
 }

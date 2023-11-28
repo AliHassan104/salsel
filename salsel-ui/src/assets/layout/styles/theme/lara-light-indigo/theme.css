@@ -2050,28 +2050,28 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border-radius: 6px;
 }
 .p-button:enabled:hover {
-  background: #4f46e5;
+  background: #c10751;
   color: #ffffff;
-  border-color: #4f46e5;
+  border-color: #c10751;
 }
 .p-button:enabled:active {
-  background: #4338ca;
+  background: #c10751;
   color: #ffffff;
-  border-color: #4338ca;
+  border-color: #c10751;
 }
 .p-button.p-button-outlined {
   background-color: transparent;
-  color: #6366f1;
+  color: #93003c;
   border: 1px solid;
 }
 .p-button.p-button-outlined:enabled:hover {
-  background: rgba(99, 102, 241, 0.04);
-  color: #6366f1;
+  background: #93003c08;
+  color: #93003c;
   border: 1px solid;
 }
 .p-button.p-button-outlined:enabled:active {
-  background: rgba(99, 102, 241, 0.16);
-  color: #6366f1;
+  background: #93003c08;
+  color: #93003c;
   border: 1px solid;
 }
 .p-button.p-button-outlined.p-button-plain {
@@ -7180,7 +7180,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-button:focus {
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #b1b3f8, 0 1px 2px 0 black;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #93003c, 0 1px 2px 0 black;
 }
 .p-button.p-button-secondary:enabled:focus {
   box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #b0b9c6, 0 1px 2px 0 black;

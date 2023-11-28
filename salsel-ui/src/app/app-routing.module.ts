@@ -28,7 +28,7 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                 ),
             },
             {
-              path: "tickets/addticket",
+              path: "tickets/createticket",
               loadChildren: () =>
                 import(
                   "./components/Tickets/ticketform/ticketform.module"
@@ -42,17 +42,31 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                 ).then((m) => m.TicketsdataModule),
             },
             {
-              path: "tickets/addticket/:id",
+              path: "tickets/:id",
               loadChildren: () =>
                 import(
                   "./components/Tickets/ticketitem/ticketitem.module"
                 ).then((m) => m.TicketitemModule),
             },
             {
-              path: "awbcreation",
+              path: "airwaybills/createairbill",
               loadChildren: () =>
-                import("./components/awbcreation/awbcreation.module").then(
+                import("./components/AWB/awbcreation/awbcreation.module").then(
                   (m) => m.AwbcreationModule
+                ),
+            },
+            {
+              path: "airwaybills/:billid",
+              loadChildren: () =>
+                import(
+                  "./components/AWB/airbilldetails/airbilldetails.module"
+                ).then((m) => m.AirbilldetailsModule),
+            },
+            {
+              path: "airwaybills",
+              loadChildren: () =>
+                import("./components/AWB/airbilldata/airbilldata.module").then(
+                  (m) => m.AirbilldataModule
                 ),
             },
             {

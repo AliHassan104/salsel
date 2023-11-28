@@ -13,6 +13,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { MultiSelectModule } from "primeng/multiselect";
 import { AwbcreationroutingModule } from "./awbcreationrouting.module";
+import { ToastModule } from "primeng/toast";
 
 @NgModule({
   declarations: [AwbcreationComponent],
@@ -31,6 +32,7 @@ import { AwbcreationroutingModule } from "./awbcreationrouting.module";
     InputTextareaModule,
     InputTextModule,
     AwbcreationroutingModule,
+    ToastModule,
   ],
 })
 export class AwbcreationModule {}
