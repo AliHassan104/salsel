@@ -28,56 +28,32 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                 ),
             },
             {
-              path: "tickets/createticket",
-              loadChildren: () =>
-                import(
-                  "./components/Tickets/ticketform/ticketform.module"
-                ).then((m) => m.TicketformModule),
-            },
-            {
               path: "tickets",
               loadChildren: () =>
-                import(
-                  "./components/Tickets/ticketsdata/ticketsdata.module"
-                ).then((m) => m.TicketsdataModule),
-            },
-            {
-              path: "tickets/:id",
-              loadChildren: () =>
-                import(
-                  "./components/Tickets/ticketitem/ticketitem.module"
-                ).then((m) => m.TicketitemModule),
-            },
-            {
-              path: "airwaybills/createairbill",
-              loadChildren: () =>
-                import(
-                  "./components/airbill/awbcreation/awbcreation.module"
-                ).then((m) => m.AwbcreationModule),
-            },
-            {
-              path: "airwaybills/:billid",
-              loadChildren: () =>
-                import(
-                  "./components/airbill/airbilldetails/airbilldetails.module"
-                ).then((m) => m.AirbilldetailsModule),
+                import("./components/Tickets/tickets.module").then(
+                  (m) => m.TicketsModule
+                ),
             },
             {
               path: "airwaybills",
               loadChildren: () =>
+                import("./components/airbill/airbill.module").then(
+                  (m) => m.AirbillModule
+                ),
+            },
+            {
+              path: "department",
+              loadChildren: () =>
+                import("./components/department/department.module").then(
+                  (m) => m.DepartmentModule
+                ),
+            },
+            {
+              path: "department-category",
+              loadChildren: () =>
                 import(
-                  "./components/airbill/airbilldata/airbilldata.module"
-                ).then((m) => m.AirbilldataModule),
-            },
-            { path: 'department', 
-              loadChildren: () => 
-                import('./components/department/department.module')
-                .then(m => m.DepartmentModule) 
-            },
-            { path: 'department-category', 
-              loadChildren: () => 
-                import('./components/department-category/department-category.module')
-                .then(m => m.DepartmentCategoryModule) 
+                  "./components/department-category/department-category.module"
+                ).then((m) => m.DepartmentCategoryModule),
             },
             {
               path: "userslist",
@@ -86,7 +62,6 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                   (m) => m.UserlistModule
                 ),
             },
-
           ],
         },
         { path: "login", component: LoginComponent },

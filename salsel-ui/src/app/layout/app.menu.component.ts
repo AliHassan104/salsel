@@ -33,6 +33,11 @@ export class AppMenuComponent implements OnInit {
             routerLink: "airwaybills",
           },
           {
+            label: "Department",
+            icon: "pi pi-user",
+            routerLink: "department",
+          },
+          {
             label: "User",
             icon: "pi pi-user",
             routerLink: "table",
