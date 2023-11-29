@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { Table } from "primeng/table";
 import { Product } from "src/app/api/product";
@@ -78,10 +78,9 @@ export class UserlistComponent {
 
   constructor(
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private fb: FormBuilder
   ) {}
-
-  ngOnInit() {}
 
   openNew() {
     // this.product = {};
@@ -102,32 +101,6 @@ export class UserlistComponent {
     this.deleteProductDialog = true;
     // this.product = { ...product };
   }
-
-  //   confirmDeleteSelected() {
-  //     this.deleteProductsDialog = false;
-  //     this.users = this.users.filter(
-  //       (val) => !this.selectedProducts.includes(val)
-  //     );
-  //     this.messageService.add({
-  //       severity: "success",
-  //       summary: "Successful",
-  //       detail: "Products Deleted",
-  //       life: 3000,
-  //     });
-  //     this.selectedProducts = [];
-  //   }
-
-  //   confirmDelete() {
-  //     this.deleteProductDialog = false;
-  //     this.products = this.products.filter((val) => val.id !== this.product.id);
-  //     this.messageService.add({
-  //       severity: "success",
-  //       summary: "Successful",
-  //       detail: "Product Deleted",
-  //       life: 3000,
-  //     });
-  //     this.product = {};
-  //   }
 
   hideDialog() {
     this.productDialog = false;
@@ -150,5 +123,45 @@ export class UserlistComponent {
 
   getData(event) {
     console.log("get data", event);
+  }
+
+  form: FormGroup;
+
+  categories: string[] = ["Electronics", "Clothing"];
+  subcategories: { [key: string]: string[] } = {
+    Electronics: ["Laptop", "Smartphone"],
+    Clothing: ["Shirt", "Pants"],
+  };
+
+  ngOnInit() {
+    this.form = this.fb.group({
+      category: ["", Validators.required],
+      subcategory: ["", Validators.required],
+    });
+  }
+
+  // Method to update subcategories based on the selected category
+  updateSubcategories() {
+    const category = this.form.get("category").value;
+    const subcategoryControl = this.form.get("subcategory");
+
+    // Clear the existing subcategory value
+    subcategoryControl.setValue("");
+
+    // Update available subcategories based on the selected category
+    const availableSubcategories = this.subcategories[category] || [];
+
+    // Update the pattern for the subcategory validator
+    subcategoryControl.setValidators([
+      Validators.required,
+      Validators.pattern(this.getSubcategoryPattern()),
+    ]);
+    subcategoryControl.updateValueAndValidity();
+  }
+
+  // Method to generate the pattern for the subcategory validator
+  getSubcategoryPattern(): string {
+    const subcategories = [].concat(...Object.values(this.subcategories));
+    return `^(${subcategories.join("|")})$`;
   }
 }

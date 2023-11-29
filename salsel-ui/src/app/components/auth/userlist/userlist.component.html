@@ -164,3 +164,24 @@
         </p-dialog>
     </div>
 </div>
+
+
+
+
+<form [formGroup]="form">
+    <div>
+        <label for="category">Category:</label>
+        <select id="category" formControlName="category" (change)="updateSubcategories()">
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="subcategory">Subcategory:</label>
+        <select id="subcategory" formControlName="subcategory">
+            <option *ngFor="let subcategory of subcategories[form.get('category').value]" [value]="subcategory">
+                {{ subcategory }}
+            </option>
+        </select>
+    </div>
+</form>

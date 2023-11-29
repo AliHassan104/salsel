@@ -92,27 +92,26 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   dutyTaxes = ["Bill Shipper", "Bill Consignee"];
 
   serviceType = [
-    "Standard Shipping",
-    "Express Shipping",
-    "Same-Day Delivery",
+    "Domestic Shipping",
     "International Shipping",
-    "Free Shipping",
+    "Customized Delivery Channel",
+    "Sea Cargo ",
   ];
 
   ngOnInit(): void {
     //Setting Up Reactive Form
     this.awbForm = new FormGroup({
-      shipperName: new FormControl(null, Validators.required),
-      shipperContactNumber: new FormControl(null, Validators.required),
-      pickupAddress: new FormControl(null, Validators.required),
-      shipperRefNumber: new FormControl(null, Validators.required),
-      originCountry: new FormControl(null, Validators.required),
-      originCity: new FormControl(null, Validators.required),
-      recipientsName: new FormControl(null, Validators.required),
-      recipientsContactNumber: new FormControl(null, Validators.required),
-      destinationCountry: new FormControl(null, Validators.required),
-      destinationCity: new FormControl(null, Validators.required),
-      deliveryAddress: new FormControl(null, Validators.required),
+      shipperName: new FormControl(null),
+      shipperContactNumber: new FormControl(null),
+      pickupAddress: new FormControl(null),
+      shipperRefNumber: new FormControl(null),
+      originCountry: new FormControl(null),
+      originCity: new FormControl(null),
+      recipientsName: new FormControl(null),
+      recipientsContactNumber: new FormControl(null),
+      destinationCountry: new FormControl(null),
+      destinationCity: new FormControl(null),
+      deliveryAddress: new FormControl(null),
       pickupDate: new FormControl("", Validators.required),
       pickupTime: new FormControl("", Validators.required),
       productType: new FormControl(null, Validators.required),
@@ -126,7 +125,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       status: new FormControl(null, Validators.required),
     });
 
-    // Query Param
+    // Query Param for edit and create from ticket
     this.route.queryParams.subscribe((params) => {
       // Retrieve editMode and id from the query parameters
       if (params["id"] != null && this.updateAWB == true) {
