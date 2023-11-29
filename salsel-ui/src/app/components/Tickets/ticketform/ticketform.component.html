@@ -73,7 +73,7 @@
                         [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && ticketForm.get('pickupDate')?.invalid}"></p-calendar>
                     <small *ngIf="!ticketForm.get('pickupDate')?.valid && ticketForm.get('pickupDate')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Pickup Time -->
@@ -84,25 +84,41 @@
                         [required]="true"></p-calendar>
                     <small *ngIf="!ticketForm.get('pickupTime')?.valid && ticketForm.get('pickupTime')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Department -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="department">Department</label>
                     <p-dropdown [filter]="true" [options]="productType" placeholder="Enter department"
-                        formControlName="department"></p-dropdown>
+                        formControlName="department"
+                        [ngClass]="{'ng-dirty':ticketForm.get('department')?.touched && ticketForm.get('department')?.invalid}"></p-dropdown>
+                    <small *ngIf="!ticketForm.get('department')?.valid && ticketForm.get('department')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Department Category -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="departmentCategory">Department Category</label>
                     <p-dropdown [filter]="true" [options]="serviceType" placeholder="Enter department category"
-                        formControlName="departmentCategory"></p-dropdown>
+                        formControlName="departmentCategory"
+                        [ngClass]="{'ng-dirty':ticketForm.get('departmentCategory')?.touched && ticketForm.get('departmentCategory')?.invalid}"></p-dropdown>
+                    <small
+                        *ngIf="!ticketForm.get('departmentCategory')?.valid && ticketForm.get('departmentCategory')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Assigned to -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="assignedTo">Assigned To</label>
-                    <input pInputText id="assignedTo" type="text" formControlName="assignedTo" />
+                    <input pInputText id="assignedTo" type="text" formControlName="assignedTo"
+                        [ngClass]="{'ng-dirty':ticketForm.get('assignedTo')?.touched && ticketForm.get('assignedTo')?.invalid}" />
+                    <small *ngIf="!ticketForm.get('assignedTo')?.valid && ticketForm.get('assignedTo')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Created At -->
                 <div class="field col-12 md:col-6">
@@ -112,23 +128,37 @@
                         formControlName="createdAt"></p-calendar>
                     <small *ngIf="!ticketForm.get('createdAt')?.valid && ticketForm.get('createdAt')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Category -->
                 <div class="field col-12 md:col-4">
                     <label htmlFor="category">Category</label>
-                    <input pInputText id="category" type="text" formControlName="category" />
+                    <input pInputText id="category" type="text" formControlName="category"
+                        [ngClass]="{'ng-dirty':ticketForm.get('category')?.touched && ticketForm.get('category')?.invalid}" />
+                    <small *ngIf="!ticketForm.get('category')?.valid && ticketForm.get('category')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Status -->
                 <div class="field col-12 md:col-4">
                     <label htmlFor="status">Status</label>
-                    <input pInputText id="status" type="text" formControlName="status" />
+                    <input pInputText id="status" type="text" formControlName="status"
+                        [ngClass]="{'ng-dirty':ticketForm.get('status')?.touched && ticketForm.get('status')?.invalid}" />
+                    <small *ngIf="!ticketForm.get('status')?.valid && ticketForm.get('status')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <div class="field col-12 md:col-4">
                     <label htmlFor="status">Ticket Flag</label>
-                    <p-dropdown [options]="ticketFlag" placeholder="Select Ticket Flag"
-                        formControlName="ticketFlag"></p-dropdown>
+                    <p-dropdown [options]="ticketFlag" placeholder="Select Ticket Flag" formControlName="ticketFlag"
+                        [ngClass]="{'ng-dirty':ticketForm.get('ticketFlag')?.touched && ticketForm.get('ticketFlag')?.invalid}"></p-dropdown>
+                    <small *ngIf="!ticketForm.get('ticketFlag')?.valid && ticketForm.get('ticketFlag')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
 
 

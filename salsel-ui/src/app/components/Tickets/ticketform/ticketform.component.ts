@@ -213,6 +213,8 @@ export class TicketformComponent implements OnInit, OnDestroy {
       }
     } else {
       this.alert();
+      console.log(this.ticketForm);
+      this.markFormGroupTouched(this.ticketForm);
     }
   }
 
@@ -246,4 +248,15 @@ export class TicketformComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  // Function to mark all controls in a FormGroup as touched
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
+  }
 }

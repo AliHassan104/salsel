@@ -4,7 +4,7 @@ import { MessageService } from "primeng/api";
 import { Table } from "primeng/table";
 import { Product } from "src/app/api/product";
 import { User } from "src/app/api/user";
-import { AuthService } from "../auth.service";
+import { AuthService } from "../service/auth.service";
 
 @Component({
   selector: "app-userlist",
