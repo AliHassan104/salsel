@@ -24,7 +24,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -51,7 +51,14 @@ public class Ticket {
     private Boolean ticketFlag;
 
     @OneToOne
+    @JoinColumn(name = "created_by_user_id")
     private User createdBy;
-    private String department;
-    private String departmentCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @ManyToOne
+    @JoinColumn(name = "department_category_id")
+    private DepartmentCategory departmentCategory;
 }

@@ -1,6 +1,8 @@
 package com.salsel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salsel.model.Department;
+import com.salsel.model.DepartmentCategory;
 import com.salsel.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +47,6 @@ public class TicketDto {
     private String category;
     private Boolean ticketFlag;
     private User createdBy;
-    private String department;
-    private String departmentCategory;
+    private Department department;
+    private DepartmentCategory departmentCategory;
 }
