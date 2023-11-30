@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { TicktingService } from "src/app/components/Tickets/tickting.service";
 import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/api/ticket";
 import { MessageService } from "primeng/api";
@@ -28,7 +27,6 @@ export class ProductComponent {
   mode?: string = 'Create'
 
   constructor(
-    private _ticketService: TicktingService,
     private router: Router,
     private route: ActivatedRoute,
     private messageService: MessageService,
@@ -185,10 +183,5 @@ export class ProductComponent {
       summary: "Warning",
       detail: "Please ensure that all required details are filled out.",
     });
-  }
-
-  ngOnDestroy(): void {
-    this._ticketService.editTicketMode.next(false);
-    this._ticketService.editId.next("");
   }
 }
