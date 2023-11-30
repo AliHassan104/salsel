@@ -1,65 +1,52 @@
 package com.salsel.controller;
 
-import com.salsel.dto.DepartmentCategoryDto;
 import com.salsel.dto.TicketDto;
 import com.salsel.service.TicketService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/api/ticket")
-
+@RequestMapping("/api")
 public class TicketController {
+    private final TicketService ticketService;
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
 
-    @Autowired
-    private TicketService ticketService;
-
-
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("")
-    public ResponseEntity<TicketDto> add(@RequestBody TicketDto ticketDto) {
+    @PostMapping("/ticket")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<TicketDto> createTicket(@RequestBody TicketDto ticketDto) {
         return ResponseEntity.ok(ticketService.save(ticketDto));
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("")
-    public ResponseEntity<List<TicketDto>> getAll() {
-        List<TicketDto> departmentDtos = ticketService.findAll();
-        return ResponseEntity.ok(departmentDtos);
+    @GetMapping("/ticket")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<TicketDto>> getAllTicket() {
+        List<TicketDto> ticketDtoList = ticketService.getAll();
+        return ResponseEntity.ok(ticketDtoList);
     }
 
-
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("/{id}")
-    public ResponseEntity<TicketDto> getById(@PathVariable Long id){
+    @GetMapping("/ticket/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<TicketDto> getTicketById(@PathVariable Long id) {
         TicketDto ticketDto = ticketService.findById(id);
-        return  ResponseEntity.ok(ticketDto);
+        return ResponseEntity.ok(ticketDto);
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<TicketDto> update(@RequestBody TicketDto ticketDto , @PathVariable Long id) throws Exception {
-            return ResponseEntity.ok(ticketService.update(ticketDto , id));
-    }
-
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        ticketService.delete(id);
+    @DeleteMapping("/ticket/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
+        ticketService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("/page")
-    public ResponseEntity<Page<TicketDto>> getByPage(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-                                               @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
-        Page<TicketDto> ticketDtos = ticketService.findByPage(pageNumber,pageSize);
-        return ResponseEntity.ok(ticketDtos);
+    @PutMapping("/ticket/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id,@RequestBody TicketDto ticketDto) {
+        TicketDto updatedTicketDto = ticketService.update(id, ticketDto);
+        return ResponseEntity.ok(updatedTicketDto);
     }
-
 }

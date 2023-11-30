@@ -19,7 +19,6 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "ticket")
 public class Ticket {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,27 +29,45 @@ public class Ticket {
 
     private String shipperName;
     private String shipperContactNumber;
-    private String originCountry;
-    private String originCity;
 
     private String pickupAddress;
     private String shipperRefNumber;
-    private String recipientsName;
-    private String recipientsContactNumber;
-
-    private String destinationCountry;
-    private String destinationCity;
+    private String recipientName;
+    private String recipientContactNumber;
 
     private String deliveryAddress;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
+
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime pickupTime;
 
-    private String assignedTo;
-    private String status;
-    private String category;
-    private Boolean ticketFlag;
+    private String ticketStatus;
+    private Boolean status;
 
-    @OneToOne
+    private String category;
+    private String ticketFlag;
+    private String assignedTo;
+
+
+    @ManyToOne
+    @JoinColumn(name = "origin_country_id")
+    private Country originCountry;
+
+    @ManyToOne
+    @JoinColumn(name = "origin_city_id")
+    private City originCity;
+
+    @ManyToOne
+    @JoinColumn(name = "destination_country_id")
+    private Country destinationCountry;
+
+    @ManyToOne
+    @JoinColumn(name = "destination_city_id")
+    private City destinationCity;
+
+    @ManyToOne
     @JoinColumn(name = "created_by_user_id")
     private User createdBy;
 
