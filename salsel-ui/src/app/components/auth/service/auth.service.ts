@@ -15,5 +15,11 @@ export class AuthService {
     });
   }
 
-  idLogedIn() {}
+  idLoggedIn() {
+    return localStorage.getItem("token") != null;
+  }
+
+  getToken() {
+    return localStorage.getItem("token") || "";
+  }
 }

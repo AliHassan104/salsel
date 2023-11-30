@@ -16,13 +16,25 @@ import { IconService } from "./service/icon.service";
 import { NodeService } from "./service/node.service";
 import { PhotoService } from "./service/photo.service";
 import { LoginModule } from "./components/auth/login/login.module";
-
-import { AuthInterceptorProvider } from "./components/auth/service/logininterceptor.service";
+import { AuthInterceptorProvider } from "./components/auth/service/interceptor.service";
 import { LoaderComponent } from "./components/loader/loader.component";
+import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
+import { ButtonModule } from "primeng/button";
 
 @NgModule({
-  declarations: [AppComponent, NotfoundComponent, LoaderComponent],
-  imports: [CommonModule, AppRoutingModule, AppLayoutModule, LoginModule],
+  declarations: [
+    AppComponent,
+    NotfoundComponent,
+    LoaderComponent,
+    AccessdeniedComponent,
+  ],
+  imports: [
+    CommonModule,
+    AppRoutingModule,
+    AppLayoutModule,
+    LoginModule,
+    ButtonModule,
+  ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     CountryService,

@@ -3,7 +3,8 @@ import { NgModule } from "@angular/core";
 import { NotfoundComponent } from "./components/notfound/notfound.component";
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from "./components/auth/login/login.component";
-import { UserlistModule } from "./components/auth/userlist/userlist.module";
+import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
+import { authGuard } from "./components/auth/guard/auth.guard";
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
         {
           path: "",
           component: AppLayoutComponent,
+          canActivate: [authGuard],
           children: [
             {
               path: "",
@@ -21,11 +23,11 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                 ),
             },
             {
-              path: "user",
+              path: "userslist",
               loadChildren: () =>
-                import("./components/user/user.module").then(
-                  (m) => m.UserModule
-                ),
+                import(
+                  "./components/auth/usermanagement/usermanagement.module"
+                ).then((m) => m.UsermanagementModule),
             },
             {
               path: "tickets",
@@ -55,16 +57,11 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                   "./components/department-category/department-category.module"
                 ).then((m) => m.DepartmentCategoryModule),
             },
-            {
-              path: "users-list",
-              loadChildren: () =>
-                import("./components/auth/userlist/userlist.module").then(
-                  (m) => m.UserlistModule
-                ),
-            },
           ],
+          canActivateChild: [authGuard],
         },
         { path: "login", component: LoginComponent },
+        { path: "access", component: AccessdeniedComponent },
         { path: "notfound", component: NotfoundComponent },
         { path: "**", redirectTo: "/notfound" },
       ],
