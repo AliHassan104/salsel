@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { TicktingService } from "src/app/components/Tickets/tickting.service";
-import { AirbillService } from "../../airbill/airbill.service";
+import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
+import { AirbillService } from "../../airbill/service/airbill.service";
 
 @Component({
   selector: "app-ticketitem",
@@ -17,6 +17,7 @@ export class TicketitemComponent implements OnInit {
   ) {}
   display: any;
   singleTicket: any;
+  id: any;
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((res) => {
@@ -35,11 +36,13 @@ export class TicketitemComponent implements OnInit {
   }
 
   createAwb() {
-    this.router.navigate(["airwaybills/createairbill"]);
-    this._airbillService.createBillThrTickId.next(true);
+    this._airbillService.CreateAWB.next(true);
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
-      this._airbillService.createBillThrTickId.next(a);
+      const queryParams = { id: a };
+      this.router.navigate(["airwaybills/createairbill"], {
+        queryParams: queryParams,
+      });
     });
   }
 }
