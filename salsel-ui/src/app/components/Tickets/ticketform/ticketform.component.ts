@@ -213,7 +213,6 @@ export class TicketformComponent implements OnInit, OnDestroy {
       }
     } else {
       this.alert();
-      console.log(this.ticketForm);
       this.markFormGroupTouched(this.ticketForm);
     }
   }

@@ -36,19 +36,28 @@ export class LoginComponent implements OnInit {
   //   }
 
   onLogin(value) {
-    this._loginService.login(value).subscribe(
-      (res) => {
-        this.token = res;
-        localStorage.setItem("token", this.token.jwt);
-        console.log(this.loginForm.value);
-        this.router.navigate([""]);
-        this.loginForm.reset();
-      },
-      (error) => {
-        console.log(error);
-        this.showError(error);
-      }
-    );
+    if (this.loginForm.valid) {
+      this._loginService.login(value).subscribe(
+        (res) => {
+          this.token = res;
+          localStorage.setItem("token", this.token.jwt);
+          console.log(this.loginForm.value);
+          this.router.navigate([""]);
+          this.loginForm.reset();
+        },
+        (error) => {
+          console.log(error);
+          this.showError(error);
+        }
+      );
+    } else {
+      this.messageService.add({
+        severity: "warn",
+        summary: "Error",
+        detail: "Please fill all fields",
+      });
+      this.markFormGroupTouched(this.loginForm);
+    }
   }
 
   showError(error: any) {
@@ -56,6 +65,17 @@ export class LoginComponent implements OnInit {
       severity: "error",
       summary: "Error",
       detail: error.error.error,
+    });
+  }
+
+  // Function to mark all controls in a FormGroup as touched
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
     });
   }
 }

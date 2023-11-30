@@ -20,6 +20,7 @@ import { AuthInterceptorProvider } from "./components/auth/service/interceptor.s
 import { LoaderComponent } from "./components/loader/loader.component";
 import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
 import { ButtonModule } from "primeng/button";
+import { PermissionsModule } from "./components/permissions/permissions.module";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ButtonModule } from "primeng/button";
     AppLayoutModule,
     LoginModule,
     ButtonModule,
+    PermissionsModule,
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

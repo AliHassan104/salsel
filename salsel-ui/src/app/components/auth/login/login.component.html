@@ -10,14 +10,30 @@
             <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)"
                 class="flex flex-column align-items-center gap-4">
                 <!-- Username Email -->
-                <input type="text" class="w-20rem"
-                    [ngClass]="{'ng-dirty':loginForm.get('user')?.invalid && loginForm.get('user')?.touched}" pInputText
-                    formControlName="name" placeholder="Username or Email" />
+                <div class="w-20rem">
+                    <input type="text" class="w-20rem"
+                        [ngClass]="{'ng-dirty':loginForm.get('name')?.invalid && loginForm.get('name')?.touched}"
+                        pInputText formControlName="name" placeholder="Username or Email" />
+                    <div class="text-left">
+                        <small *ngIf="!loginForm.get('name')?.valid && loginForm.get('name')?.touched"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+                </div>
                 <!-- Password -->
                 <div class="w-20rem">
                     <p-password [toggleMask]="true" class="w-20rem" [inputStyle]="{'width':'20rem'}"
+                        [ngClass]="{'ng-dirty':loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
                         placeholder="Password" [strongRegex]="true" [strongLabel]="true" formControlName="password"
                         [feedback]="false"></p-password>
+                    <div class="text-left">
+                        <small class="alig"
+                            *ngIf="!loginForm.get('password')?.valid && loginForm.get('password')?.touched"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
                 </div>
                 <button pbutton="" label="LOGIN" type="submit" class="p-element w-20rem p-button p-component"><span
                         class="p-button-label">LOGIN</span></button>
