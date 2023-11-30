@@ -86,6 +86,12 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                   (m) => m.UserlistModule
                 ),
             },
+            
+            { path: 'product', 
+            loadChildren: () => 
+              import('./components/product-field/product-field.module')
+              .then(m => m.ProductFieldModule) 
+          },
 
           ],
         },
