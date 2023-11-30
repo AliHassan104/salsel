@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AirbillService } from "../airbill.service";
+import { AirbillService } from "../service/airbill.service";
 
 @Component({
   selector: "app-airbilldetails",

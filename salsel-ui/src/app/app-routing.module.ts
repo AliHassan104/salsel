@@ -3,7 +3,8 @@ import { NgModule } from "@angular/core";
 import { NotfoundComponent } from "./components/notfound/notfound.component";
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from "./components/auth/login/login.component";
-import { UserlistModule } from "./components/auth/userlist/userlist.module";
+import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
+import { authGuard } from "./components/auth/guard/auth.guard";
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
         {
           path: "",
           component: AppLayoutComponent,
+          canActivate: [authGuard],
           children: [
             {
               path: "",
@@ -21,81 +23,52 @@ import { UserlistModule } from "./components/auth/userlist/userlist.module";
                 ),
             },
             {
-              path: "user",
-              loadChildren: () =>
-                import("./components/user/user.module").then(
-                  (m) => m.UserModule
-                ),
-            },
-            {
-              path: "tickets/createticket",
+              path: "userslist",
               loadChildren: () =>
                 import(
-                  "./components/Tickets/ticketform/ticketform.module"
-                ).then((m) => m.TicketformModule),
+                  "./components/auth/usermanagement/usermanagement.module"
+                ).then((m) => m.UsermanagementModule),
             },
             {
               path: "tickets",
               loadChildren: () =>
-                import(
-                  "./components/Tickets/ticketsdata/ticketsdata.module"
-                ).then((m) => m.TicketsdataModule),
-            },
-            {
-              path: "tickets/:id",
-              loadChildren: () =>
-                import(
-                  "./components/Tickets/ticketitem/ticketitem.module"
-                ).then((m) => m.TicketitemModule),
-            },
-            {
-              path: "airwaybills/createairbill",
-              loadChildren: () =>
-                import(
-                  "./components/airbill/awbcreation/awbcreation.module"
-                ).then((m) => m.AwbcreationModule),
-            },
-            {
-              path: "airwaybills/:billid",
-              loadChildren: () =>
-                import(
-                  "./components/airbill/airbilldetails/airbilldetails.module"
-                ).then((m) => m.AirbilldetailsModule),
+                import("./components/Tickets/tickets.module").then(
+                  (m) => m.TicketsModule
+                ),
             },
             {
               path: "airwaybills",
               loadChildren: () =>
-                import(
-                  "./components/airbill/airbilldata/airbilldata.module"
-                ).then((m) => m.AirbilldataModule),
-            },
-            { path: 'department', 
-              loadChildren: () => 
-                import('./components/department/department.module')
-                .then(m => m.DepartmentModule) 
-            },
-            { path: 'department-category', 
-              loadChildren: () => 
-                import('./components/department-category/department-category.module')
-                .then(m => m.DepartmentCategoryModule) 
-            },
-            {
-              path: "userslist",
-              loadChildren: () =>
-                import("./components/auth/userlist/userlist.module").then(
-                  (m) => m.UserlistModule
+                import("./components/airbill/airbill.module").then(
+                  (m) => m.AirbillModule
                 ),
             },
-            
-            { path: 'product', 
-            loadChildren: () => 
+            {
+              path: "department",
+              loadChildren: () =>
+                import("./components/department/department.module").then(
+                  (m) => m.DepartmentModule
+                ),
+            },
+            {
+              path: "department-category",
+              loadChildren: () =>
+                import(
+                  "./components/department-category/department-category.module"
+                ).then((m) => m.DepartmentCategoryModule),
+            },
+
+            { path: 'product',
+            loadChildren: () =>
               import('./components/product-field/product-field.module')
-              .then(m => m.ProductFieldModule) 
+              .then(m => m.ProductFieldModule)
           },
 
           ],
+          canActivateChild: [authGuard],
         },
         { path: "login", component: LoginComponent },
+        { path: "access", component: AccessdeniedComponent },
         { path: "notfound", component: NotfoundComponent },
         { path: "**", redirectTo: "/notfound" },
       ],

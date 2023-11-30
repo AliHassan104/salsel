@@ -1,5 +1,9 @@
 import { NgModule } from "@angular/core";
-import { HashLocationStrategy, LocationStrategy } from "@angular/common";
+import {
+  CommonModule,
+  HashLocationStrategy,
+  LocationStrategy,
+} from "@angular/common";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppLayoutModule } from "./layout/app.layout.module";
@@ -12,12 +16,27 @@ import { IconService } from "./service/icon.service";
 import { NodeService } from "./service/node.service";
 import { PhotoService } from "./service/photo.service";
 import { LoginModule } from "./components/auth/login/login.module";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { LogininterceptorService } from "./components/auth/logininterceptor.service";
+import { AuthInterceptorProvider } from "./components/auth/service/interceptor.service";
+import { LoaderComponent } from "./components/loader/loader.component";
+import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
+import { ButtonModule } from "primeng/button";
+import { PermissionsModule } from "./components/permissions/permissions.module";
 
 @NgModule({
-  declarations: [AppComponent, NotfoundComponent],
-  imports: [AppRoutingModule, AppLayoutModule, LoginModule],
+  declarations: [
+    AppComponent,
+    NotfoundComponent,
+    LoaderComponent,
+    AccessdeniedComponent,
+  ],
+  imports: [
+    CommonModule,
+    AppRoutingModule,
+    AppLayoutModule,
+    LoginModule,
+    ButtonModule,
+    PermissionsModule,
+  ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     CountryService,
@@ -27,11 +46,7 @@ import { LogininterceptorService } from "./components/auth/logininterceptor.serv
     NodeService,
     PhotoService,
     ProductService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LogininterceptorService,
-      multi: true,
-    },
+    AuthInterceptorProvider,
   ],
   bootstrap: [AppComponent],
 })
