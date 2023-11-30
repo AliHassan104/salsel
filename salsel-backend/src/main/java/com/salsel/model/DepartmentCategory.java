@@ -14,16 +14,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "category_department")
 public class DepartmentCategory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-
-    private String code;
+    private Boolean status;
 
     @ManyToOne
+    @JoinColumn(name = "department_id")
     private Department department;
-
 }

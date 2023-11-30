@@ -1,66 +1,72 @@
 package com.salsel.controller;
 
 import com.salsel.dto.DepartmentCategoryDto;
-import com.salsel.dto.DepartmentDto;
-import com.salsel.dto.TicketDto;
-import com.salsel.model.DepartmentCategory;
+import com.salsel.dto.PaginationResponse;
 import com.salsel.service.DepartmentCategoryService;
-import com.salsel.service.DepartmentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/department-category")
+@RequestMapping("/api")
 public class DepartmentCategoryController {
 
-    @Autowired
-    private DepartmentCategoryService departmentCategoryService;
+    private final DepartmentCategoryService departmentCategoryService;
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("")
-    public ResponseEntity<DepartmentCategoryDto> add(@RequestBody DepartmentCategoryDto departmentCategoryDto) {
+    public DepartmentCategoryController(DepartmentCategoryService departmentCategoryService) {
+        this.departmentCategoryService = departmentCategoryService;
+    }
+
+    @PostMapping("/department-category")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<DepartmentCategoryDto> createDepartmentCategory(@RequestBody DepartmentCategoryDto departmentCategoryDto) {
         return ResponseEntity.ok(departmentCategoryService.save(departmentCategoryDto));
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("")
-    public ResponseEntity<List<DepartmentCategoryDto>> getAll() {
-        List<DepartmentCategoryDto> departmentDtos = departmentCategoryService.findAll();
-        return ResponseEntity.ok(departmentDtos);
+    @GetMapping("/department-category")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<DepartmentCategoryDto>> getAllDepartmentCategory() {
+        List<DepartmentCategoryDto> departmentCategoryDtoList = departmentCategoryService.getAll();
+        return ResponseEntity.ok(departmentCategoryDtoList);
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("/{id}")
-    public ResponseEntity<DepartmentCategoryDto> getById(@PathVariable Long id){
+    @GetMapping("/department-category/page")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PaginationResponse> getAllPaginatedDepartment(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "15", required = false) Integer pageSize
+    ) {
+        PaginationResponse paginationResponse = departmentCategoryService.getAllPaginatedDepartmentCategory(pageNumber, pageSize);
+        return ResponseEntity.ok(paginationResponse);
+    }
+
+    @GetMapping("/department-category/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<DepartmentCategoryDto> getDepartmentCategoryById(@PathVariable Long id) {
         DepartmentCategoryDto departmentCategoryDto = departmentCategoryService.findById(id);
-        return  ResponseEntity.ok(departmentCategoryDto);
+        return ResponseEntity.ok(departmentCategoryDto);
     }
 
-
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<DepartmentCategoryDto> update(@RequestBody DepartmentCategoryDto departmentCategoryDto , @PathVariable Long id) throws Exception {
-        return ResponseEntity.ok(departmentCategoryService.update(departmentCategoryDto , id));
+    @GetMapping("/department-category/name/{name}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<DepartmentCategoryDto> getDepartmentCategoryByName(@PathVariable String name) {
+        DepartmentCategoryDto departmentCategoryDto = departmentCategoryService.findByName(name);
+        return ResponseEntity.ok(departmentCategoryDto);
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        departmentCategoryService.delete(id);
+    @DeleteMapping("/department-category/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteDepartmentCategory(@PathVariable Long id) {
+        departmentCategoryService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("/page")
-    public ResponseEntity<Page<DepartmentCategoryDto>> getByPage(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
-                                                                 @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize){
-        Page<DepartmentCategoryDto> departmentCategoryDtos = departmentCategoryService.findByPage(pageNumber,pageSize);
-        return ResponseEntity.ok(departmentCategoryDtos);
+    @PutMapping("/department-category/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<DepartmentCategoryDto> updateDepartmentCategory(@PathVariable Long id,@RequestBody DepartmentCategoryDto departmentCategoryDto) {
+        DepartmentCategoryDto updatedDepartmentCategoryDto = departmentCategoryService.update(id, departmentCategoryDto);
+        return ResponseEntity.ok(updatedDepartmentCategoryDto);
     }
-
 }

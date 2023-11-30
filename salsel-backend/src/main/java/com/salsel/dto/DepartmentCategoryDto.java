@@ -13,12 +13,8 @@ import javax.persistence.ManyToOne;
 @Data
 @Builder
 public class DepartmentCategoryDto {
-
     private Long id;
-
     private String name;
-
-    private String code;
-
+    private Boolean status;
     private Department department;
 }
