@@ -57,6 +57,13 @@ import { authGuard } from "./components/auth/guard/auth.guard";
                   "./components/department-category/department-category.module"
                 ).then((m) => m.DepartmentCategoryModule),
             },
+
+            { path: 'product',
+            loadChildren: () =>
+              import('./components/product-field/product-field.module')
+              .then(m => m.ProductFieldModule)
+          },
+
           ],
           canActivateChild: [authGuard],
         },
