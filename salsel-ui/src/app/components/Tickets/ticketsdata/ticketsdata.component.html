@@ -8,9 +8,8 @@
                 <button pButton label="Create Ticket" class="mb-2" routerLink="createticket"></button>
             </div>
             <hr>
-            <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-                styleClass="p-datatable-gridlines" [paginator]="true"
-                [globalFilterFields]="['shipperName','recipientsName']" responsiveLayout="scroll">
+            <p-table #dt1 [value]="tickets" dataKey="id" [loading]="loading" [rowHover]="true"
+            styleClass="p-datatable-gridlines" [paginator]="false"  responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
@@ -215,15 +214,16 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="8">No customers found.</td>
+                        <td colspan="8">No tickets found.</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="loadingbody">
                     <tr>
-                        <td colspan="8">Loading customers data. Please wait.</td>
+                        <td colspan="8">Loading tickets data. Please wait.</td>
                     </tr>
                 </ng-template>
             </p-table>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="size" [totalRecords]="totalRecords"></p-paginator>
         </div>
 
     </div>

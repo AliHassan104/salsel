@@ -39,7 +39,6 @@ export class ProductComponent {
 
     this.route.queryParams.subscribe(params => {
       this.productFieldId = params['id'];
-      console.log(this.productFieldId);
       if(this.productFieldId){
         this.mode = 'Update';
         this.updateForm(this.productFieldId);
@@ -68,13 +67,11 @@ export class ProductComponent {
   }
 
   removeProductField(index: number, pfvid?: any) {
-    debugger;
     this.productFieldValues.removeAt(index);
 
     if(this.productFieldId){
       this.productService.removeProductFieldValue(this.productFieldId, pfvid).subscribe(res =>{
         if(res.status == 200){
-          console.log("removed");
         }
       })
     }

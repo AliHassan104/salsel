@@ -11,6 +11,7 @@ import { Ticket } from "src/app/api/ticket";
 })
 export class TicketsdataComponent implements OnInit {
   deleteProductsDialog: any;
+  serachText?: string;
   constructor(
     private _ticktingService: TicktingService,
     private router: Router
@@ -19,8 +20,11 @@ export class TicketsdataComponent implements OnInit {
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
   tickets: any = [];
-  data: any = {};
   deleteId: any;
+  page?: any = 0;
+  size?: number = 1;
+  totalRecords?: number;
+  first?: number = 0;
 
   ngOnInit(): void {
     this.getTickets();
@@ -28,14 +32,36 @@ export class TicketsdataComponent implements OnInit {
 
   //   Get all tickets
   getTickets() {
-    this._ticktingService.getTickets().subscribe((res) => {
-      this.tickets = res;
+    let search = {
+      mapper: 'TICKET',
+      searchText: this.serachText,
+    };
+    
+    const queryParams = {
+      page: this.page,
+      size: this.size,
+      sort: 'id',
+      search: JSON.stringify(search),
+    };
+
+    this._ticktingService.getTickets(queryParams).subscribe((res: any) => {
+      if(res && res.body){
+        this.tickets = res.body.content;
+        this.totalRecords = res.body.totalElements;
+      }
     });
   }
 
+  onPageChange(event?: any){
+    this.page = event.first;
+    this.getTickets();
+  }
+
   //   For table filtering purpose
-  onGlobalFilter(table: Table, event: Event) {
-    table.filterGlobal((event.target as HTMLInputElement).value, "contains");
+  onGlobalFilter(table: Table, event: any) {
+    // Update the searchText property in the search object
+    this.serachText = event.target.value;
+    this.getTickets()
   }
 
   clear(table: Table) {

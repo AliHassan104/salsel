@@ -58,7 +58,6 @@ export class DepartmentDataComponent {
 
   //   Edit Ticket
   onEditDepartment(id) {
-    console.log(id);
     this.departmentService.editId.next(id);
     this.router.navigate(["addticket"]);
     this.departmentService.editTicketMode.next(true);
