@@ -1,18 +1,24 @@
 package com.salsel.service.impl;
 
+import com.salsel.criteria.SearchCriteria;
 import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Ticket;
 import com.salsel.repository.TicketRepository;
 import com.salsel.service.TicketService;
+import com.salsel.specification.FilterSpecification;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,9 +27,23 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private TicketRepository ticketRepository;
 
+    @Autowired
+    FilterSpecification<Ticket> ticketFilterSpecification;
+
     @Override
-    public List<TicketDto> findAll() {
-        return toDtoList(ticketRepository.findAll());
+    public Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable) {
+
+        Optional<Page<Ticket>> tickets = null;
+
+        if(StringUtils.isBlank(searchCriteria.getSearchText())){
+            tickets = Optional.of(ticketRepository.findAll(pageable));
+        }else{
+            Specification<Ticket> ticketSpecification = this.ticketFilterSpecification.getSearchSpecification(Ticket.class, searchCriteria);
+            tickets = Optional.of(this.ticketRepository.findAll(ticketSpecification, pageable));
+        }
+
+//        return toDtoList(ticketRepository.findAll());
+        return tickets.isPresent() ? tickets.get() : null;
     }
 
     @Override

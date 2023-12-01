@@ -19,8 +19,6 @@ export class DepartmentCategoryItemComponent {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
-      console.log(a);
-
       this.onView(a);
     });
   }
@@ -33,7 +31,6 @@ export class DepartmentCategoryItemComponent {
     //   this.singleTicket = this.sTicket.note;
     //   console.log(this.singleTicket);
     // });
-    console.log(id);
   }
 
 }

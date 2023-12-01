@@ -55,7 +55,6 @@ export class ProductListComponent {
 
   deleteProductField(id?: any) {
     this.productFieldService.removeProductField(id).subscribe(res =>{
-      debugger;
       if(res.status == 200){
         this.getProductFields();
       }

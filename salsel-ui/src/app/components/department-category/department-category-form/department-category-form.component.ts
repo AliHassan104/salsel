@@ -118,8 +118,6 @@ export class DepartmentCategoryFormComponent {
     });
 
     if (this.editId === "") {
-      console.log("hello");
-      console.log(this.editId);
     } else {
       // this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
       //   this.sTicket = res;

@@ -41,12 +41,10 @@ export class LoginComponent implements OnInit {
         (res) => {
           this.token = res;
           localStorage.setItem("token", this.token.jwt);
-          console.log(this.loginForm.value);
           this.router.navigate([""]);
           this.loginForm.reset();
         },
         (error) => {
-          console.log(error);
           this.showError(error);
         }
       );

@@ -35,18 +35,8 @@ export class DepartmentFormComponent {
     });
 
     if (this.editId === "") {
-      console.log("hello");
-      console.log(this.editId);
     } else {
       this.departmentService.getById(this.editId).subscribe((res) => {
-        console.log(res);
-        
-        // this._department = res;
-        // let sd = this._department;
-
-        // this.ticketForm.setValue({
-        //     name: sd.name,
-        // });
       });
     }
   }
@@ -60,12 +50,10 @@ export class DepartmentFormComponent {
       //     this.router.navigate(["tickets"]);
       //   });
       this.departmentService.update(data).subscribe();
-      console.log(data);
       this.DepartmentForm.reset();
     } else {
       // Create Ticket
       this.departmentService.save(data).subscribe();
-      console.log(data);
       this.DepartmentForm.reset();
     }
   }
