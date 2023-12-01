@@ -22,7 +22,7 @@ export class TicketsdataComponent implements OnInit {
   tickets: any = [];
   deleteId: any;
   page?: any = 0;
-  size?: number = 3;
+  size?: number = 1;
   totalRecords?: number;
   first?: number = 0;
 
