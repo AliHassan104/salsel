@@ -7,6 +7,8 @@ import { MessageService } from "primeng/api";
 import { Airbill } from "src/app/api/airbill";
 import { TicktingService } from "../../Tickets/service/tickting.service";
 import { environment } from "src/environments/environment";
+import { DropdownService } from "src/app/service/dropdown.service";
+import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 
 @Component({
   selector: "app-awbcreation",
@@ -15,22 +17,37 @@ import { environment } from "src/environments/environment";
   providers: [MessageService],
 })
 export class AwbcreationComponent implements OnInit, OnDestroy {
+  //   ALL PRODUCT FIELD FOR DROPDOWNS
+  productFields;
+
+  // DROPDOWNS FORM PRODUCT FIELD
+  currencies;
+  status;
+  dutyTaxes;
+  requestTypes;
+
+  // FOR EDIT AND CREATE AIRBILL FROM TICKET
   ticketMode;
   TicketId;
   editMode;
   editId;
+  createAWB;
+  updateAWB;
+
+  // SINGLE BILL AND TICKET STORE IN IT
   singleBill;
   singleTicket;
-  updateAWB;
-  createAWB;
 
+  //   CONSTRUCTOR
   constructor(
     private _airbillService: AirbillService,
     private _ticketService: TicktingService,
     private router: Router,
     private http: HttpClient,
     private MessageService: MessageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dropdownService: DropdownService,
+    private formService: FormvalidationService
   ) {
     this._airbillService.updateAWB.subscribe((res) => {
       this.updateAWB = res;
@@ -40,10 +57,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     });
   }
   awbForm!: FormGroup;
-  selectedCurrency: string;
-  currencies = ["SAR", "AED", "BHD", "KWD", "OMR", "SDG", "CNY", "USD"];
-
-  status = [true, false];
 
   cities = [
     "New York",
@@ -89,8 +102,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     "Sports and Outdoors",
   ];
 
-  dutyTaxes = ["Bill Shipper", "Bill Consignee"];
-
   serviceType = [
     "Domestic Shipping",
     "International Shipping",
@@ -122,7 +133,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       currency: new FormControl(null, Validators.required),
       amount: new FormControl(null, Validators.required),
       dutyAndTaxesBillTo: new FormControl(null, Validators.required),
-      status: new FormControl(null, Validators.required),
+      //   status: new FormControl(null, Validators.required),
+      requestType: new FormControl(null, Validators.required),
     });
 
     // Query Param for edit and create from ticket
@@ -149,6 +161,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         let pickDate = new Date(this.singleBill.pickupDate);
         let pickTimeArray = this.singleBill.pickupTime;
         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
+
+        // EDIT BILL VALUES SETUP
 
         this.awbForm.setValue({
           shipperName: this.singleBill.shipperName,
@@ -204,6 +218,20 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         });
       });
     }
+
+    // GET VALUES OF DROPDOWNS
+    this.getProductField();
+  }
+
+  // TO GET ALL PRODUCT FIELDS
+
+  getProductField() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productFields = res;
+      this.currencies = this.productFields[4].productFieldValuesList;
+      this.dutyTaxes = this.productFields[3].productFieldValuesList;
+      this.requestTypes = this.productFields[6].productFieldValuesList;
+    });
   }
 
   // Pop up message
@@ -287,14 +315,13 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       }
     } else {
       this.alert();
+      this.formService.markFormGroupTouched(this.awbForm);
     }
   }
 
   onCancel() {
     this.router.navigate(["airwaybills"]);
   }
-
-  //   Pop up message
 
   ngOnDestroy(): void {
     this._airbillService.CreateAWB.next(false);

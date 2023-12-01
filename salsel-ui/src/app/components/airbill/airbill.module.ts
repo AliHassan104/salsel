@@ -24,6 +24,7 @@ import { InputMaskModule } from "primeng/inputmask";
 import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { AirbillroutingModule } from "./airbillrouting.module";
+import { RadioButtonModule } from "primeng/radiobutton";
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { AirbillroutingModule } from "./airbillrouting.module";
     CascadeSelectModule,
     InputTextareaModule,
     AirbillroutingModule,
+    RadioButtonModule,
   ],
 })
 export class AirbillModule {}

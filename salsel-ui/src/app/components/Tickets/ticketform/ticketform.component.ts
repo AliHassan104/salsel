@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
@@ -6,6 +6,8 @@ import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/api/ticket";
 import { MessageService } from "primeng/api";
 import { environment } from "src/environments/environment";
+import { DropdownService } from "src/app/service/dropdown.service";
+import { FormvalidationService } from "../service/formvalidation.service";
 
 @Component({
   selector: "app-ticketform",
@@ -13,22 +15,34 @@ import { environment } from "src/environments/environment";
   styleUrls: ["./ticketform.component.scss"],
   providers: [MessageService],
 })
-export class TicketformComponent implements OnInit, OnDestroy {
+export class TicketformComponent implements OnInit {
+  // ALL PRODUCT FIELDS
+  productFields;
+
+  // DROPDOWN VALUES FROM PRODUCT FIELD
+  status;
+  ticketFlag;
+  categories;
+  assignedTo;
+
+  // FOR EDIT PURPOSE
   editMode;
   editId;
   singleTicket;
+
+  //   FORM GROUP TICKET FORM
+  ticketForm!: FormGroup;
+
+  //   CONSTRUCTOR
   constructor(
     private _ticketService: TicktingService,
     private router: Router,
     private http: HttpClient,
     private messageService: MessageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dropdownService: DropdownService,
+    private formService: FormvalidationService
   ) {}
-
-  ticketFlag = [true, false];
-  ticketForm!: FormGroup;
-  selectedCurrency: string;
-  currencies = ["SAR", "AED", "BHD", "KWD", "OMR", "SDG", "CNY", "USD"];
 
   cities = [
     "New York",
@@ -74,8 +88,6 @@ export class TicketformComponent implements OnInit, OnDestroy {
     "Sports and Outdoors",
   ];
 
-  dutyTaxes = ["Bill Shipper", "Bill Consignee"];
-
   serviceType = [
     "Standard Shipping",
     "Express Shipping",
@@ -85,7 +97,8 @@ export class TicketformComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    // Reactive Form
+    // TICKET FORM CONTROLS
+
     this.ticketForm = new FormGroup({
       shipperName: new FormControl(null, Validators.required),
       shipperContactNumber: new FormControl(null, Validators.required),
@@ -109,6 +122,7 @@ export class TicketformComponent implements OnInit, OnDestroy {
       ticketFlag: new FormControl(null, Validators.required),
     });
 
+    // QUERY PARAMS FOR EDIT PURPOSE
     this.route.queryParams.subscribe((params) => {
       // Retrieve editMode and id from the query parameters
       if (params["id"] != null) {
@@ -119,6 +133,7 @@ export class TicketformComponent implements OnInit, OnDestroy {
       }
     });
 
+    // ON FORM EDIT
     if (this.editId != null) {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
@@ -153,7 +168,25 @@ export class TicketformComponent implements OnInit, OnDestroy {
         });
       });
     }
+
+    // GET ALL DROPDOWNS FROM PRODUCT FIELD UPON PAGE RELOAD
+
+    this.getAllProductFields();
   }
+
+  //   GET ALL PRODUCT FIELD
+
+  getAllProductFields() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productFields = res;
+      this.ticketFlag = this.productFields[1].productFieldValuesList;
+      this.status = this.productFields[2].productFieldValuesList;
+      this.categories = this.productFields[0].productFieldValuesList;
+      this.assignedTo = this.productFields[5].productFieldValuesList;
+    });
+  }
+
+  //  ON TICKET FORM SUBMIT
 
   onSubmit() {
     if (this.ticketForm.valid) {
@@ -213,9 +246,11 @@ export class TicketformComponent implements OnInit, OnDestroy {
       }
     } else {
       this.alert();
-      this.markFormGroupTouched(this.ticketForm);
+      this.formService.markFormGroupTouched(this.ticketForm);
     }
   }
+
+  // PART OF POPUP
 
   onCancel() {
     this.router.navigate(["tickets"]);
@@ -243,19 +278,6 @@ export class TicketformComponent implements OnInit, OnDestroy {
       severity: "error",
       summary: "Warning",
       detail: "Please ensure that all required details are filled out.",
-    });
-  }
-
-  ngOnDestroy(): void {}
-
-  // Function to mark all controls in a FormGroup as touched
-  private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach((control) => {
-      control.markAsTouched();
-
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
     });
   }
 }

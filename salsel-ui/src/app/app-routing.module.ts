@@ -5,6 +5,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from "./components/auth/login/login.component";
 import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
 import { authGuard } from "./components/auth/guard/auth.guard";
+import { PermissionsComponent } from "./components/permissions/permissions.component";
 
 @NgModule({
   imports: [
@@ -58,15 +59,17 @@ import { authGuard } from "./components/auth/guard/auth.guard";
                 ).then((m) => m.DepartmentCategoryModule),
             },
 
-            { path: 'product',
-            loadChildren: () =>
-              import('./components/product-field/product-field.module')
-              .then(m => m.ProductFieldModule)
-          },
-
+            {
+              path: "product",
+              loadChildren: () =>
+                import("./components/product-field/product-field.module").then(
+                  (m) => m.ProductFieldModule
+                ),
+            },
           ],
           canActivateChild: [authGuard],
         },
+        { path: "permissions", component: PermissionsComponent },
         { path: "login", component: LoginComponent },
         { path: "access", component: AccessdeniedComponent },
         { path: "notfound", component: NotfoundComponent },
