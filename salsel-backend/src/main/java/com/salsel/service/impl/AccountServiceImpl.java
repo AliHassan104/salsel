@@ -76,6 +76,7 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setBillingPocName(accountDto.getBillingPocName());
         existingAccount.setSalesAgentName(accountDto.getSalesAgentName());
         existingAccount.setSalesRegion(accountDto.getSalesRegion());
+        existingAccount.setAccountStatus(accountDto.getAccountStatus());
 
         Account updatedAccount = accountRepository.save(existingAccount);
         return toDto(updatedAccount);
@@ -100,6 +101,7 @@ public class AccountServiceImpl implements AccountService {
                 .salesAgentName(account.getSalesAgentName())
                 .salesRegion(account.getSalesRegion())
                 .status(account.getStatus())
+                .accountStatus(account.getAccountStatus())
                 .build();
     }
 
@@ -122,6 +124,7 @@ public class AccountServiceImpl implements AccountService {
                 .salesAgentName(accountDto.getSalesAgentName())
                 .salesRegion(accountDto.getSalesRegion())
                 .status(accountDto.getStatus())
+                .accountStatus(accountDto.getAccountStatus())
                 .build();
     }
 

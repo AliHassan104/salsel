@@ -1,22 +1,18 @@
 package com.salsel.dto;
 
-import com.salsel.model.Role;
+import com.salsel.model.Country;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDto {
+public class CityDto {
     private Long id;
     private String name;
-    private String password;
     private Boolean status;
-    private Set<Role> roles = new HashSet<>();
+    private Country country;
 }

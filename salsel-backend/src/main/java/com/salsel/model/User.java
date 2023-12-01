@@ -22,6 +22,7 @@ public class User {
 
     private String name;
     private String password;
+    private Boolean status;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",

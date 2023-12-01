@@ -19,39 +19,39 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "ticket")
 public class Ticket {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     private String shipperName;
     private String shipperContactNumber;
-    private String originCountry;
-    private String originCity;
 
     private String pickupAddress;
     private String shipperRefNumber;
-    private String recipientsName;
-    private String recipientsContactNumber;
-
-    private String destinationCountry;
-    private String destinationCity;
-
+    private String recipientName;
+    private String recipientContactNumber;
     private String deliveryAddress;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
+
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime pickupTime;
 
-    private String assignedTo;
-    private String status;
     private String category;
-    private Boolean ticketFlag;
-
-    @OneToOne
-    private User createdBy;
+    private String ticketFlag;
+    private String assignedTo;
+    private String originCountry;
+    private String originCity;
+    private String destinationCountry;
+    private String destinationCity;
+    private String createdBy;
     private String department;
     private String departmentCategory;
+    private String ticketStatus;
+    private Boolean status;
 }

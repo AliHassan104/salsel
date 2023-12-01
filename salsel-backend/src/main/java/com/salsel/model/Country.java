@@ -12,16 +12,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "department_category")
-public class DepartmentCategory {
+@Table(name = "country")
+public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private Boolean status;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
 }

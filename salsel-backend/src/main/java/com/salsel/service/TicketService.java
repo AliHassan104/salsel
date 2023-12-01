@@ -12,9 +12,9 @@ import java.util.List;
 public interface TicketService {
 
     Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable);
-    TicketDto findById(Long id);
     TicketDto save(TicketDto ticketDto);
-    void delete(Long id);
-    TicketDto update(TicketDto ticketDto , Long id) throws Exception;
-    Page<TicketDto> findByPage(Integer pageNumber, Integer pageSize);
+    List<TicketDto> getAll();
+    TicketDto findById(Long id);
+    void deleteById(Long id);
+    TicketDto update(Long id, TicketDto ticketDto);
 }
