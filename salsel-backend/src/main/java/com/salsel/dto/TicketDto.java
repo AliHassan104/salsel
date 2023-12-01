@@ -1,7 +1,6 @@
 package com.salsel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.salsel.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,17 +34,16 @@ public class TicketDto {
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime pickupTime;
 
-    private String ticketStatus;
-    private Boolean status;
     private String category;
     private String ticketFlag;
     private String assignedTo;
-
-    private Country originCountry;
-    private City originCity;
-    private Country destinationCountry;
-    private City destinationCity;
-    private User createdBy;
-    private Department department;
-    private DepartmentCategory departmentCategory;
+    private String originCountry;
+    private String originCity;
+    private String destinationCountry;
+    private String destinationCity;
+    private String createdBy;
+    private String department;
+    private String departmentCategory;
+    private String ticketStatus;
+    private Boolean status;
 }

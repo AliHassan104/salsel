@@ -2,8 +2,8 @@ package com.salsel.service.impl;
 
 import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.*;
-import com.salsel.repository.*;
+import com.salsel.model.Ticket;
+import com.salsel.repository.TicketRepository;
 import com.salsel.service.TicketService;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +15,9 @@ import java.util.List;
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
-    private final UserRepository userRepository;
-    private final CountryRepository countryRepository;
-    private final CityRepository cityRepository;
-    private final DepartmentRepository departmentRepository;
-    private final DepartmentCategoryRepository departmentCategoryRepository;
 
-    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository, CountryRepository countryRepository, CityRepository cityRepository, DepartmentRepository departmentRepository, DepartmentCategoryRepository departmentCategoryRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository){
         this.ticketRepository = ticketRepository;
-        this.userRepository = userRepository;
-        this.countryRepository = countryRepository;
-        this.cityRepository = cityRepository;
-        this.departmentRepository = departmentRepository;
-        this.departmentCategoryRepository = departmentCategoryRepository;
     }
 
     @Override
@@ -35,37 +25,6 @@ public class TicketServiceImpl implements TicketService {
     public TicketDto save(TicketDto ticketDto) {
         Ticket ticket = toEntity(ticketDto);
         ticket.setStatus(true);
-
-        Country originCountry = countryRepository.findById(ticket.getOriginCountry().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Origin Country not found for id => %s", ticket.getOriginCity().getId())));
-
-        Country destinationCountry = countryRepository.findById(ticket.getDestinationCountry().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Destination Country not found for id => %s", ticket.getDestinationCountry().getId())));
-
-        City originCity = cityRepository.findById(ticket.getOriginCity().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Origin City not found for id => %s", ticket.getOriginCity().getId())));
-
-        City destinationCity = cityRepository.findById(ticket.getDestinationCity().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Destination City not found for id => %s", ticket.getDestinationCity().getId())));
-
-        User user = userRepository.findById(ticket.getCreatedBy().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("user not found for id => %s", ticket.getCreatedBy().getId())));
-
-        Department department = departmentRepository.findById(ticket.getDepartment().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Department not found for id => %s", ticket.getCreatedBy().getId())));
-
-        DepartmentCategory departmentCategory = departmentCategoryRepository.findById(ticket.getDepartmentCategory().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Department Category not found for id => %s", ticket.getDepartmentCategory().getId())));
-
-
-        ticket.setOriginCity(originCity);
-        ticket.setDestinationCity(destinationCity);
-        ticket.setOriginCountry(originCountry);
-        ticket.setDestinationCountry(destinationCountry);
-        ticket.setCreatedBy(user);
-        ticket.setDepartment(department);
-        ticket.setDepartmentCategory(departmentCategory);
-
         Ticket createdTicket = ticketRepository.save(ticket);
         return toDto(createdTicket);
     }
@@ -116,28 +75,13 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setCategory(ticketDto.getCategory());
         existingTicket.setTicketFlag(ticketDto.getTicketFlag());
         existingTicket.setAssignedTo(ticketDto.getAssignedTo());
-
-        existingTicket.setOriginCity(cityRepository.findById(ticketDto.getOriginCity().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Origin City not found for id => %d", ticketDto.getOriginCity().getId()))));
-
-        existingTicket.setOriginCountry(countryRepository.findById(ticketDto.getOriginCountry().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Origin Country not found for id => %s", ticketDto.getOriginCity().getId()))));
-
-        existingTicket.setDestinationCountry(countryRepository.findById(ticketDto.getDestinationCountry().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Destination Country not found for id => %s", ticketDto.getDestinationCountry().getId()))));
-
-        existingTicket.setDestinationCity(cityRepository.findById(ticketDto.getDestinationCity().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Destination City not found for id => %s", ticketDto.getDestinationCity().getId()))));
-
-        existingTicket.setCreatedBy(userRepository.findById(ticketDto.getCreatedBy().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("user not found for id => %s", ticketDto.getCreatedBy().getId()))));
-
-        existingTicket.setDepartment(departmentRepository.findById(ticketDto.getDepartment().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Department not found for id => %s", ticketDto.getCreatedBy().getId()))));
-
-        existingTicket.setDepartmentCategory(departmentCategoryRepository.findById(ticketDto.getDepartmentCategory().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Department Category not found for id => %s", ticketDto.getDepartmentCategory().getId()))));
-
+        existingTicket.setOriginCity(ticketDto.getOriginCity());
+        existingTicket.setOriginCountry(ticketDto.getOriginCountry());
+        existingTicket.setDestinationCountry(ticketDto.getDestinationCountry());
+        existingTicket.setDestinationCity(ticketDto.getDestinationCity());
+        existingTicket.setCreatedBy(ticketDto.getCreatedBy());
+        existingTicket.setDepartment(ticketDto.getDepartment());
+        existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
 
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return toDto(updatedTicket);

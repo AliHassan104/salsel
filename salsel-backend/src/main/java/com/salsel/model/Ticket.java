@@ -34,7 +34,6 @@ public class Ticket {
     private String shipperRefNumber;
     private String recipientName;
     private String recipientContactNumber;
-
     private String deliveryAddress;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -43,39 +42,16 @@ public class Ticket {
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime pickupTime;
 
-    private String ticketStatus;
-    private Boolean status;
-
     private String category;
     private String ticketFlag;
     private String assignedTo;
-
-
-    @ManyToOne
-    @JoinColumn(name = "origin_country_id")
-    private Country originCountry;
-
-    @ManyToOne
-    @JoinColumn(name = "origin_city_id")
-    private City originCity;
-
-    @ManyToOne
-    @JoinColumn(name = "destination_country_id")
-    private Country destinationCountry;
-
-    @ManyToOne
-    @JoinColumn(name = "destination_city_id")
-    private City destinationCity;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by_user_id")
-    private User createdBy;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @ManyToOne
-    @JoinColumn(name = "department_category_id")
-    private DepartmentCategory departmentCategory;
+    private String originCountry;
+    private String originCity;
+    private String destinationCountry;
+    private String destinationCity;
+    private String createdBy;
+    private String department;
+    private String departmentCategory;
+    private String ticketStatus;
+    private Boolean status;
 }
