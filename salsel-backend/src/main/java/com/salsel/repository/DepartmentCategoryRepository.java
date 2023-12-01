@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.City;
 import com.salsel.model.DepartmentCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,9 @@ public interface DepartmentCategoryRepository extends JpaRepository<DepartmentCa
 
     @Query("SELECT dc FROM DepartmentCategory dc WHERE dc.status = true ORDER BY dc.id DESC")
     List<DepartmentCategory> findAllInDesOrderByIdAndStatus();
+
+    @Query("SELECT dc FROM DepartmentCategory dc WHERE dc.department.id = :departmentCategoryId AND dc.status = true")
+    List<DepartmentCategory> findAllByDepartmentWhereStatusIsTrue(Long departmentCategoryId);
 
     @Query("SELECT dc FROM DepartmentCategory dc WHERE dc.status = true ORDER BY dc.id DESC")
     Page<DepartmentCategory> findAllInDesOrderByIdAndStatus(Pageable page);

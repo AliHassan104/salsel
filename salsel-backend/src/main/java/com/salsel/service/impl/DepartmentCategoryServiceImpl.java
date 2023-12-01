@@ -101,6 +101,18 @@ public class DepartmentCategoryServiceImpl implements DepartmentCategoryService 
     }
 
     @Override
+    public List<DepartmentCategoryDto> getAllByDepartment(Long departmentId) {
+        List<DepartmentCategory> departmentCategoryList = departmentCategoryRepository.findAllByDepartmentWhereStatusIsTrue(departmentId);
+        List<DepartmentCategoryDto> departmentCategoryDtoList = new ArrayList<>();
+
+        for (DepartmentCategory departmentCategory : departmentCategoryList) {
+            DepartmentCategoryDto departmentCategoryDto = toDto(departmentCategory);
+            departmentCategoryDtoList.add(departmentCategoryDto);
+        }
+        return departmentCategoryDtoList;
+    }
+
+    @Override
     public DepartmentCategoryDto findById(Long id) {
         DepartmentCategory departmentCategory = departmentCategoryRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("DepartmentCategory not found for id => %d", id)));

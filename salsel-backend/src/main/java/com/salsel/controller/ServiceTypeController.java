@@ -30,6 +30,13 @@ public class ServiceTypeController {
         return ResponseEntity.ok(serviceTypeDtoList);
     }
 
+    @GetMapping("/service-type/product-type/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ServiceTypeDto>> getAllServiceTypesByProductType(@PathVariable Long id) {
+        List<ServiceTypeDto> serviceTypeDtoList = serviceTypeService.getAllByProductType(id);
+        return ResponseEntity.ok(serviceTypeDtoList);
+    }
+
     @GetMapping("/service-type/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ServiceTypeDto> getServiceTypeById(@PathVariable Long id) {

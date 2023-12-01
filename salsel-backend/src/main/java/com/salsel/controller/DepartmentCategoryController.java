@@ -1,5 +1,6 @@
 package com.salsel.controller;
 
+import com.salsel.dto.CityDto;
 import com.salsel.dto.DepartmentCategoryDto;
 import com.salsel.dto.PaginationResponse;
 import com.salsel.service.DepartmentCategoryService;
@@ -29,6 +30,13 @@ public class DepartmentCategoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<DepartmentCategoryDto>> getAllDepartmentCategory() {
         List<DepartmentCategoryDto> departmentCategoryDtoList = departmentCategoryService.getAll();
+        return ResponseEntity.ok(departmentCategoryDtoList);
+    }
+
+    @GetMapping("/department-category/department/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<DepartmentCategoryDto>> getAllDepartmentCategoriesByDepartment(@PathVariable Long id) {
+        List<DepartmentCategoryDto> departmentCategoryDtoList = departmentCategoryService.getAllByDepartment(id);
         return ResponseEntity.ok(departmentCategoryDtoList);
     }
 

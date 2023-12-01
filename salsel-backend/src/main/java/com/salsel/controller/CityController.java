@@ -30,6 +30,13 @@ public class CityController {
         return ResponseEntity.ok(cityDtoList);
     }
 
+    @GetMapping("/city/country/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<CityDto>> getAllCitiesByCountry(@PathVariable Long id) {
+        List<CityDto> cityDtoList = cityService.getAllByCountry(id);
+        return ResponseEntity.ok(cityDtoList);
+    }
+
     @GetMapping("/city/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CityDto> getCityById(@PathVariable Long id) {
