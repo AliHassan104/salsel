@@ -29,25 +29,25 @@
                 <!-- Origin Country -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="ocountry"><strong>Origin Country</strong></label>
-                    <p-dropdown [options]="countries" placeholder="Select Country" [filter]="true"
-                        formControlName="originCountry"></p-dropdown>
+                    <p-dropdown [options]="countries" placeholder="Select Country" formControlName="originCountry"
+                        (onChange)="getOriginCountry($event)"></p-dropdown>
                 </div>
                 <!-- Origin City -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="oCity"><strong>Origin City</strong></label>
-                    <p-dropdown [options]="cities" placeholder="Enter city" formControlName="originCity"
-                        [filter]="true"></p-dropdown>
+                    <p-dropdown [options]="originCities" placeholder="Enter city"
+                        formControlName="originCity"></p-dropdown>
                 </div>
                 <!-- Recipients Details -->
                 <!-- Recipient Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="recipientname"><strong>Recipient Name</strong></label>
-                    <input pInputText id="recipientname" type="text" formControlName="recipientsName" />
+                    <input pInputText id="recipientname" type="text" formControlName="recipientName" />
                 </div>
                 <!-- Recipient Contact Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contactR"><strong>Contact Number</strong></label>
-                    <input pInputText id="recipientsContact" type="text" formControlName="recipientsContactNumber" />
+                    <input pInputText id="recipientsContact" type="text" formControlName="recipientContactNumber" />
                 </div>
                 <!-- Delivery Address -->
                 <div class="field col-12">
@@ -57,13 +57,13 @@
                 <!-- Destination Country -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="dcountry"><strong>Destination Country</strong></label>
-                    <p-dropdown [options]="countries" placeholder="Select Country" [filter]="true"
-                        formControlName="destinationCountry"></p-dropdown>
+                    <p-dropdown [options]="countries" placeholder="Select Country" formControlName="destinationCountry"
+                        (onChange)="getDestinationCountry($event)"></p-dropdown>
                 </div>
                 <!-- Destination City -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="dcity"><strong>Destination City</strong></label>
-                    <p-dropdown [filter]="true" [options]="cities" placeholder="Select city"
+                    <p-dropdown [options]="destinationCities" placeholder="Select city"
                         formControlName="destinationCity"></p-dropdown>
                 </div>
                 <!-- Pickup Date -->
@@ -90,9 +90,9 @@
                 <!-- Department -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="department"><strong>Department</strong></label>
-                    <p-dropdown [filter]="true" [options]="productType" placeholder="Enter department"
-                        formControlName="department"
-                        [ngClass]="{'ng-dirty':ticketForm.get('department')?.touched && ticketForm.get('department')?.invalid}"></p-dropdown>
+                    <p-dropdown [options]="department" placeholder="Enter department" formControlName="department"
+                        [ngClass]="{'ng-dirty':ticketForm.get('department')?.touched && ticketForm.get('department')?.invalid}"
+                        (onChange)="getDepartment($event)"></p-dropdown>
                     <small *ngIf="!ticketForm.get('department')?.valid && ticketForm.get('department')?.touched"
                         class="text-red-500">
                         Required
@@ -101,7 +101,7 @@
                 <!-- Department Category -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="departmentCategory"><strong>Department Category</strong></label>
-                    <p-dropdown [filter]="true" [options]="serviceType" placeholder="Enter department category"
+                    <p-dropdown [options]="departmentCategory" placeholder="Enter department category"
                         formControlName="departmentCategory"
                         [ngClass]="{'ng-dirty':ticketForm.get('departmentCategory')?.touched && ticketForm.get('departmentCategory')?.invalid}"></p-dropdown>
                     <small
@@ -113,8 +113,7 @@
                 <!-- Assigned to -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="assignedTo"><strong>Assigned To</strong></label>
-                    <p-dropdown [options]="assignedTo" optionLabel="name" placeholder="Assigned To"
-                        formControlName="assignedTo"
+                    <p-dropdown [options]="assignedTo" placeholder="Assigned To" formControlName="assignedTo"
                         [ngClass]="{'ng-dirty':ticketForm.get('assignedTo')?.touched && ticketForm.get('assignedTo')?.invalid}"></p-dropdown>
                     <small *ngIf="!ticketForm.get('assignedTo')?.valid && ticketForm.get('assignedTo')?.touched"
                         class="text-red-500">
@@ -135,8 +134,7 @@
                 <!-- Category -->
                 <div class="field col-12 md:col-4">
                     <label htmlFor="category"><strong>Category</strong></label>
-                    <p-dropdown [options]="categories" optionLabel="name" placeholder="Select category"
-                        formControlName="category"
+                    <p-dropdown [options]="categories" placeholder="Select category" formControlName="category"
                         [ngClass]="{'ng-dirty':ticketForm.get('category')?.touched && ticketForm.get('category')?.invalid}"></p-dropdown>
                     <small *ngIf="!ticketForm.get('category')?.valid && ticketForm.get('category')?.touched"
                         class="text-red-500">
@@ -145,9 +143,8 @@
                 </div>
                 <!-- Status -->
                 <div class="field col-12 md:col-4">
-                    <label htmlFor="status"><strong>Status</strong></label>
-                    <p-dropdown [options]="status" optionLabel="name" placeholder="Select Ticket Status"
-                        formControlName="status"
+                    <label htmlFor="status"><strong>Ticket Status</strong></label>
+                    <p-dropdown [options]="status" placeholder="Select Ticket Status" formControlName="ticketStatus"
                         [ngClass]="{'ng-dirty':ticketForm.get('status')?.touched && ticketForm.get('status')?.invalid}"></p-dropdown>
                     <small *ngIf="!ticketForm.get('status')?.valid && ticketForm.get('status')?.touched"
                         class="text-red-500">
@@ -156,8 +153,7 @@
                 </div>
                 <div class="field col-12 md:col-4">
                     <label htmlFor="status"><strong>Ticket Flag</strong></label>
-                    <p-dropdown [options]="ticketFlag" optionLabel="name" placeholder="Select Ticket Flag"
-                        formControlName="ticketFlag"
+                    <p-dropdown [options]="ticketFlag" placeholder="Select Ticket Flag" formControlName="ticketFlag"
                         [ngClass]="{'ng-dirty':ticketForm.get('ticketFlag')?.touched && ticketForm.get('ticketFlag')?.invalid}"></p-dropdown>
                     <small *ngIf="!ticketForm.get('ticketFlag')?.valid && ticketForm.get('ticketFlag')?.touched"
                         class="text-red-500">

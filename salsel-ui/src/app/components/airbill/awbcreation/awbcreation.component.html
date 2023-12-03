@@ -26,14 +26,14 @@
                 <!-- Origin Country -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="ocountry">Origin Country</label>
-                    <p-dropdown [options]="countries" placeholder="Select Country" [filter]="true"
-                        formControlName="originCountry"></p-dropdown>
+                    <p-dropdown [options]="countries" placeholder="Select Country" formControlName="originCountry"
+                        (onChange)="getOriginCountry($event)"></p-dropdown>
                 </div>
                 <!-- Origin City -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="oCity">Origin City</label>
-                    <p-dropdown [options]="cities" placeholder="Enter city" formControlName="originCity"
-                        [filter]="true"></p-dropdown>
+                    <p-dropdown [options]="originCities" placeholder="Enter city"
+                        formControlName="originCity"></p-dropdown>
                 </div>
                 <!-- Recipients Details -->
                 <!-- Recipient Name -->
@@ -55,12 +55,12 @@
                 <div class="field col-12 md:col-3">
                     <label htmlFor="dcountry">Destination Country</label>
                     <p-dropdown [options]="countries" placeholder="Select Country" [filter]="true"
-                        formControlName="destinationCountry"></p-dropdown>
+                        formControlName="destinationCountry" (onChange)="getDestinationCountry($event)"></p-dropdown>
                 </div>
                 <!-- Destination City -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="dcity">Destination City</label>
-                    <p-dropdown [filter]="true" [options]="cities" placeholder="Select city"
+                    <p-dropdown [options]="destinationCities" placeholder="Select city"
                         formControlName="destinationCity"></p-dropdown>
                 </div>
                 <!-- Pickup Date -->
@@ -87,10 +87,9 @@
                 <!-- Product Type -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="producttype">Product Type</label>
-                    <p-dropdown [filter]="true" [options]="productType" placeholder="Select Product Type"
-                        formControlName="productType"
+                    <p-dropdown [options]="productType" placeholder="Select Product Type" formControlName="productType"
                         [ngClass]="{'ng-dirty':awbForm.get('productType')?.touched && awbForm.get('productType')?.invalid}"
-                        [required]="true"></p-dropdown>
+                        [required]="true" (onChange)="getProductType($event)"></p-dropdown>
                     <small *ngIf="!awbForm.get('productType')?.valid && awbForm.get('productType')?.touched"
                         class="text-red-500">
                         Field is required
@@ -99,8 +98,7 @@
                 <!-- Service Type -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="servicetype">Service Type</label>
-                    <p-dropdown [filter]="true" [options]="serviceType" placeholder="Select Service Type"
-                        formControlName="serviceType"
+                    <p-dropdown [options]="serviceType" placeholder="Select Service Type" formControlName="serviceType"
                         [ngClass]="{'ng-dirty':awbForm.get('serviceType')?.touched && awbForm.get('serviceType')?.invalid}"
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('serviceType')?.valid && awbForm.get('serviceType')?.touched"
@@ -142,8 +140,8 @@
                 <!-- Currency -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="currency">Currency</label>
-                    <p-dropdown filter="true" [options]="currencies" class="w-4" optionLabel="name"
-                        formControlName="currency" placeholder="Select a currency"
+                    <p-dropdown [options]="currencies" class="w-4" formControlName="currency"
+                        placeholder="Select a currency"
                         [ngClass]="{'ng-dirty':awbForm.get('currency')?.touched && awbForm.get('currency')?.invalid}"
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('currency')?.valid && awbForm.get('currency')?.touched"
@@ -177,7 +175,7 @@
                 <!-- Duty & Taxes Bill To -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="dutytaxes">Duty and Taxes Bill To</label>
-                    <p-dropdown [options]="dutyTaxes" optionLabel="name" placeholder="Select Billing to"
+                    <p-dropdown [options]="dutyTaxes" placeholder="Select Billing to"
                         formControlName="dutyAndTaxesBillTo"
                         [ngClass]="{'ng-dirty':awbForm.get('dutyAndTaxesBillTo')?.touched && awbForm.get('dutyAndTaxesBillTo')?.invalid}"
                         [required]="true"></p-dropdown>
@@ -190,8 +188,7 @@
                 <!-- Request Type -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="requesttype">Request Type</label>
-                    <p-dropdown [options]="requestTypes" optionLabel="name" placeholder="Select Request Type"
-                        formControlName="requestType"
+                    <p-dropdown [options]="requestTypes" placeholder="Select Request Type" formControlName="requestType"
                         [ngClass]="{'ng-dirty':awbForm.get('requestType')?.touched && awbForm.get('requestType')?.invalid}"
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('requestType')?.valid && awbForm.get('requestType')?.touched"

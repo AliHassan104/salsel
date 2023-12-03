@@ -30,7 +30,7 @@ public class TicketController {
     }
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("")
+    @GetMapping("/ticket")
     public ResponseEntity<Page<Ticket>> getAllTickets(@RequestParam("search") String search,
                                                @RequestParam(value = "page") int page,
                                                @RequestParam(value = "size") int size,

@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
 import { Table } from "primeng/table";
 import { Router } from "@angular/router";
-import { Ticket } from "src/app/api/ticket";
 
 @Component({
   selector: "app-ticketsdata",
@@ -22,7 +21,7 @@ export class TicketsdataComponent implements OnInit {
   tickets: any = [];
   deleteId: any;
   page?: any = 0;
-  size?: number = 1;
+  size?: number = 5;
   totalRecords?: number;
   first?: number = 0;
 
@@ -33,26 +32,25 @@ export class TicketsdataComponent implements OnInit {
   //   Get all tickets
   getTickets() {
     let search = {
-      mapper: 'TICKET',
       searchText: this.serachText,
     };
-    
+
     const queryParams = {
       page: this.page,
       size: this.size,
-      sort: 'id',
+      sort: "id",
       search: JSON.stringify(search),
     };
 
     this._ticktingService.getTickets(queryParams).subscribe((res: any) => {
-      if(res && res.body){
+      if (res && res.body) {
         this.tickets = res.body.content;
         this.totalRecords = res.body.totalElements;
       }
     });
   }
 
-  onPageChange(event?: any){
+  onPageChange(event?: any) {
     this.page = event.first;
     this.getTickets();
   }
@@ -61,7 +59,7 @@ export class TicketsdataComponent implements OnInit {
   onGlobalFilter(table: Table, event: any) {
     // Update the searchText property in the search object
     this.serachText = event.target.value;
-    this.getTickets()
+    this.getTickets();
   }
 
   clear(table: Table) {
@@ -80,6 +78,7 @@ export class TicketsdataComponent implements OnInit {
   onDeleteTicket(id) {
     this.deleteId = id;
     this.deleteProductsDialog = true;
+    console.log(this.deleteId);
   }
 
   //   Edit Ticket

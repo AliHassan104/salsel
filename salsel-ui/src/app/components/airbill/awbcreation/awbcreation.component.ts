@@ -18,13 +18,18 @@ import { FormvalidationService } from "../../Tickets/service/formvalidation.serv
 })
 export class AwbcreationComponent implements OnInit, OnDestroy {
   //   ALL PRODUCT FIELD FOR DROPDOWNS
-  productFields;
+  productFields?;
 
   // DROPDOWNS FORM PRODUCT FIELD
-  currencies;
-  status;
-  dutyTaxes;
-  requestTypes;
+  currencies?;
+  status?;
+  dutyTaxes?;
+  requestTypes?;
+  countries;
+  originCities?;
+  destinationCities?;
+  productType?;
+  serviceType?;
 
   // FOR EDIT AND CREATE AIRBILL FROM TICKET
   ticketMode;
@@ -33,6 +38,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   editId;
   createAWB;
   updateAWB;
+  productTypeId;
+  serviceTypeId;
 
   // SINGLE BILL AND TICKET STORE IN IT
   singleBill;
@@ -58,57 +65,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   }
   awbForm!: FormGroup;
 
-  cities = [
-    "New York",
-    "Los Angeles",
-    "Chicago",
-    "Houston",
-    "London",
-    "Manchester",
-    "Birmingham",
-    "Glasgow",
-    "Toronto",
-    "Vancouver",
-    "Montreal",
-    "Calgary",
-    "Sydney",
-    "Melbourne",
-    "Brisbane",
-    "Perth",
-    "Berlin",
-    "Hamburg",
-    "Munich",
-    "Cologne",
-  ];
-
-  countries = [
-    "Australia",
-    "Brazil",
-    "China",
-    "Egypt",
-    "France",
-    "Germany",
-    "India",
-    "Japan",
-    "Spain",
-    "United States",
-  ];
-
-  productType = [
-    "Electronics",
-    "Clothing",
-    "Home and Kitchen",
-    "Books",
-    "Sports and Outdoors",
-  ];
-
-  serviceType = [
-    "Domestic Shipping",
-    "International Shipping",
-    "Customized Delivery Channel",
-    "Sea Cargo ",
-  ];
-
   ngOnInit(): void {
     //Setting Up Reactive Form
     this.awbForm = new FormGroup({
@@ -123,8 +79,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       destinationCountry: new FormControl(null),
       destinationCity: new FormControl(null),
       deliveryAddress: new FormControl(null),
-      pickupDate: new FormControl("", Validators.required),
-      pickupTime: new FormControl("", Validators.required),
+      pickupDate: new FormControl(null, Validators.required),
+      pickupTime: new FormControl(null, Validators.required),
       productType: new FormControl(null, Validators.required),
       serviceType: new FormControl(null, Validators.required),
       content: new FormControl(null, Validators.required),
@@ -133,7 +89,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       currency: new FormControl(null, Validators.required),
       amount: new FormControl(null, Validators.required),
       dutyAndTaxesBillTo: new FormControl(null, Validators.required),
-      //   status: new FormControl(null, Validators.required),
       requestType: new FormControl(null, Validators.required),
     });
 
@@ -157,6 +112,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     // FOR EDIT BILL
     if (this.editMode) {
       this._airbillService.getSingleBill(this.editId).subscribe((res) => {
+        this.getAllCities();
+        this.getAllServiceTypes();
         this.singleBill = res;
         let pickDate = new Date(this.singleBill.pickupDate);
         let pickTimeArray = this.singleBill.pickupTime;
@@ -178,7 +135,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           deliveryAddress: this.singleBill.deliveryAddress,
           pickupDate: pickDate,
           pickupTime: pickTime,
-          status: this.singleBill.status,
           dutyAndTaxesBillTo: this.singleBill.dutyAndTaxesBillTo,
           weight: this.singleBill.weight,
           amount: this.singleBill.amount,
@@ -187,6 +143,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           pieces: this.singleBill.pieces,
           serviceType: this.singleBill.serviceType,
           productType: this.singleBill.productType,
+          requestType: "Pick-up",
         });
       });
     }
@@ -195,12 +152,11 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
 
     if (this.ticketMode) {
       this._ticketService.getSingleTicket(this.TicketId).subscribe((res) => {
+        this.getAllCities();
         this.singleTicket = res;
         let pickDate = new Date(this.singleTicket.pickupDate);
         let pickTimeArray = this.singleTicket.pickupTime;
-        let pickTime = new Date(
-          `2023-11-12 ${pickTimeArray[0]}:${pickTimeArray[1]}:${pickTimeArray[2]}`
-        );
+        let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
         this.awbForm.patchValue({
           shipperName: this.singleTicket.shipperName,
           shipperContactNumber: this.singleTicket.shipperContactNumber,
@@ -208,8 +164,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           shipperRefNumber: this.singleTicket.shipperRefNumber,
           originCountry: this.singleTicket.originCountry,
           originCity: this.singleTicket.originCity,
-          recipientsName: this.singleTicket.recipientsName,
-          recipientsContactNumber: this.singleTicket.recipientsContactNumber,
+          recipientsName: this.singleTicket.recipientName,
+          recipientsContactNumber: this.singleTicket.recipientContactNumber,
           destinationCountry: this.singleTicket.destinationCountry,
           destinationCity: this.singleTicket.destinationCity,
           deliveryAddress: this.singleTicket.deliveryAddress,
@@ -220,44 +176,97 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     }
 
     // GET VALUES OF DROPDOWNS
-    this.getProductField();
+    this.getAllProductField();
   }
 
   // TO GET ALL PRODUCT FIELDS
 
-  getProductField() {
+  getAllProductField() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
-      this.currencies = this.productFields[4].productFieldValuesList;
-      this.dutyTaxes = this.productFields[3].productFieldValuesList;
-      this.requestTypes = this.productFields[6].productFieldValuesList;
+      //   Currencies
+      this.currencies = this.dropdownService.extractNames(
+        this.productFields[3].productFieldValuesList
+      );
+      //   Duty Taxes
+      this.dutyTaxes = this.dropdownService.extractNames(
+        this.productFields[4].productFieldValuesList
+      );
+      //   Request Types
+      this.requestTypes = this.dropdownService.extractNames(
+        this.productFields[7].productFieldValuesList
+      );
+    });
+
+    // Get All Countries
+
+    this.dropdownService.getAllCountries().subscribe((res) => {
+      this.countries = res;
+      this.countries = this.dropdownService.extractNames(this.countries);
+    });
+
+    // GET ALL PRODUCT TYPES
+    this.dropdownService.getAllProductTypes().subscribe((res) => {
+      this.productType = res;
+      this.productType = this.dropdownService.extractNames(this.productType);
     });
   }
 
-  // Pop up message
-  success() {
-    this.MessageService.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Ticket added succesfully",
+  // GET PRODUCT TYPE BY SELECT FROM DROPDOWN
+  getProductType(data) {
+    this.dropdownService.getAllServiceTypes().subscribe((res) => {
+      this.serviceType = res;
+      let filterProductType = this.serviceType.filter(
+        (type) => type.productType.name == data.value
+      );
+      this.serviceType = this.dropdownService.extractNames(filterProductType);
     });
   }
 
-  update() {
-    this.MessageService.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Ticket Updated succesfully",
+  //   GET ALL CITIES
+
+  getAllCities() {
+    this.dropdownService.getAllCities().subscribe((res) => {
+      this.destinationCities = res;
+      this.originCities = res;
+      this.destinationCities = this.dropdownService.extractNames(
+        this.destinationCities
+      );
+      this.originCities = this.dropdownService.extractNames(this.originCities);
     });
   }
 
-  alert() {
-    this.MessageService.add({
-      severity: "error",
-      summary: "Warning",
-      detail: "Please ensure that all required details are filled out.",
+  //   GET ALL SERVICE TYPES
+  getAllServiceTypes() {
+    this.dropdownService.getAllServiceTypes().subscribe((res) => {
+      this.serviceType = res;
+      this.serviceType = this.dropdownService.extractNames(this.serviceType);
     });
   }
+
+  //   GET DESTINATION COUNTRY FROM DROPDOWN
+  getDestinationCountry(country) {
+    this.dropdownService.getAllCities().subscribe((res) => {
+      this.destinationCities = res;
+      let filterCities = this.destinationCities.filter(
+        (city) => city.country.name == country.value
+      );
+      this.destinationCities = this.dropdownService.extractNames(filterCities);
+    });
+  }
+
+  //   GET ORGIN COUNTRYFROM DROPDOWN
+  getOriginCountry(country) {
+    this.dropdownService.getAllCities().subscribe((res) => {
+      this.originCities = res;
+      let filterCities = this.originCities.filter(
+        (city) => city.country.name == country.value
+      );
+      this.originCities = this.dropdownService.extractNames(filterCities);
+    });
+  }
+
+  //   ON SUBMIT OF FORM
 
   onSubmit() {
     if (this.awbForm.valid) {
@@ -296,6 +305,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         pieces: formValue.pieces,
         serviceType: formValue.serviceType,
         productType: formValue.productType,
+        requestType: formValue.requestType,
       };
 
       if (this.editMode) {
@@ -321,6 +331,31 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
 
   onCancel() {
     this.router.navigate(["airwaybills"]);
+  }
+
+  // Pop up message
+  success() {
+    this.MessageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Ticket added succesfully",
+    });
+  }
+
+  update() {
+    this.MessageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Ticket Updated succesfully",
+    });
+  }
+
+  alert() {
+    this.MessageService.add({
+      severity: "error",
+      summary: "Warning",
+      detail: "Please ensure that all required details are filled out.",
+    });
   }
 
   ngOnDestroy(): void {

@@ -9,7 +9,7 @@
             </div>
             <hr>
             <p-table #dt1 [value]="bills" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-                styleClass="p-datatable-gridlines" [paginator]="true"
+                styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
                 [globalFilterFields]="['shipperName','recipientsName']" responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -24,6 +24,11 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
+                        <th style="min-width: 5rem">
+                            <div class="flex justify-content-between align-items-center">
+                                #
+                            </div>
+                        </th>
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-between align-items-center">
                                 Shipper Name
@@ -129,11 +134,6 @@
                                 Duty and Taxes Bill To
                             </div>
                         </th>
-                        <th style="min-width: 12rem">
-                            <div class="flex justify-content-between align-items-center">
-                                Status
-                            </div>
-                        </th>
                         <th style="min-width: 15rem">
                             <div class="flex justify-content-between align-items-center">
                                 Actions
@@ -143,6 +143,9 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-data>
                     <tr>
+                        <td>
+                            {{data?.id}}
+                        </td>
                         <td>
                             {{data?.shipperName}}
                         </td>
@@ -207,9 +210,6 @@
                             {{ data?.dutyAndTaxesBillTo }}
                         </td>
                         <td>
-                            {{ data?.status}}
-                        </td>
-                        <td>
                             <button pButton pRipple type="button" icon="pi pi-eye
 " class="p-button-rounded p-button-secondary p-button-outlined mx-2" routerLink="{{data.id}}"></button>
                             <button pButton pRipple type="button" icon="pi pi-file-edit"
@@ -222,12 +222,12 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="8">No customers found.</td>
+                        <td colspan="8">No Air Waybills found.</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="loadingbody">
                     <tr>
-                        <td colspan="8">Loading customers data. Please wait.</td>
+                        <td colspan="8">Loading Air Waybills data. Please wait.</td>
                     </tr>
                 </ng-template>
             </p-table>

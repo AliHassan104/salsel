@@ -22,4 +22,5 @@ export interface Airbill {
   shipperRefNumber?: string;
   status?: boolean;
   weight?: number;
+  requestType?: string;
 }

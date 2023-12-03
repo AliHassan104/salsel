@@ -20,16 +20,21 @@ export class TicketformComponent implements OnInit {
   productFields;
 
   // DROPDOWN VALUES FROM PRODUCT FIELD
-  status;
-  ticketFlag;
-  categories;
-  assignedTo;
+  status?;
+  ticketFlag?;
+  categories?;
+  assignedTo?;
+  countries?;
+  destinationCities?;
+  originCities?;
+  department?;
+  departmentCategory?;
 
   // FOR EDIT PURPOSE
   editMode;
   editId;
   singleTicket;
-
+  depart;
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
 
@@ -44,81 +49,29 @@ export class TicketformComponent implements OnInit {
     private formService: FormvalidationService
   ) {}
 
-  cities = [
-    "New York",
-    "Los Angeles",
-    "Chicago",
-    "Houston",
-    "London",
-    "Manchester",
-    "Birmingham",
-    "Glasgow",
-    "Toronto",
-    "Vancouver",
-    "Montreal",
-    "Calgary",
-    "Sydney",
-    "Melbourne",
-    "Brisbane",
-    "Perth",
-    "Berlin",
-    "Hamburg",
-    "Munich",
-    "Cologne",
-  ];
-
-  countries = [
-    "Australia",
-    "Brazil",
-    "China",
-    "Egypt",
-    "France",
-    "Germany",
-    "India",
-    "Japan",
-    "Spain",
-    "United States",
-  ];
-
-  productType = [
-    "Electronics",
-    "Clothing",
-    "Home and Kitchen",
-    "Books",
-    "Sports and Outdoors",
-  ];
-
-  serviceType = [
-    "Standard Shipping",
-    "Express Shipping",
-    "Same-Day Delivery",
-    "International Shipping",
-    "Free Shipping",
-  ];
-
   ngOnInit(): void {
     // TICKET FORM CONTROLS
 
     this.ticketForm = new FormGroup({
-      shipperName: new FormControl(null, Validators.required),
-      shipperContactNumber: new FormControl(null, Validators.required),
-      pickupAddress: new FormControl(null, Validators.required),
-      shipperRefNumber: new FormControl(null, Validators.required),
-      originCountry: new FormControl(null, Validators.required),
-      originCity: new FormControl(null, Validators.required),
-      recipientsName: new FormControl(null, Validators.required),
-      recipientsContactNumber: new FormControl(null, Validators.required),
-      destinationCountry: new FormControl(null, Validators.required),
-      destinationCity: new FormControl(null, Validators.required),
-      deliveryAddress: new FormControl(null, Validators.required),
-      pickupDate: new FormControl("", Validators.required),
-      pickupTime: new FormControl("", Validators.required),
+      shipperName: new FormControl(null),
+      shipperContactNumber: new FormControl(null),
+      pickupAddress: new FormControl(null),
+      shipperRefNumber: new FormControl(null),
+      originCountry: new FormControl(null),
+      originCity: new FormControl(null),
+      recipientName: new FormControl(null),
+      recipientContactNumber: new FormControl(null),
+      destinationCountry: new FormControl(null),
+      destinationCity: new FormControl(null),
+      deliveryAddress: new FormControl(null),
+      pickupDate: new FormControl(null, Validators.required),
+      pickupTime: new FormControl(null, Validators.required),
       department: new FormControl(null, Validators.required),
       departmentCategory: new FormControl(null, Validators.required),
       assignedTo: new FormControl(null, Validators.required),
       category: new FormControl(null, Validators.required),
       createdAt: new FormControl(null, Validators.required),
-      status: new FormControl(null, Validators.required),
+      ticketStatus: new FormControl(null, Validators.required),
       ticketFlag: new FormControl(null, Validators.required),
     });
 
@@ -133,16 +86,21 @@ export class TicketformComponent implements OnInit {
       }
     });
 
+    // GET ALL DROPDOWNS FROM PRODUCT FIELD UPON PAGE RELOAD
+
+    this.getAllProductFields();
+
     // ON FORM EDIT
     if (this.editId != null) {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
+        this.getCitiesAndDeptCatgories();
+        console.log(res);
+
         this.singleTicket = res;
         let pickDate = new Date(this.singleTicket.pickupDate);
         let cretedAt = new Date(this.singleTicket.createdAt);
         let pickTimeArray = this.singleTicket.pickupTime;
-        let pickTime = new Date(
-          `2023-11-12 ${pickTimeArray[0]}:${pickTimeArray[1]}:${pickTimeArray[2]}`
-        );
+        let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
 
         this.ticketForm.setValue({
           shipperName: this.singleTicket.shipperName,
@@ -151,8 +109,8 @@ export class TicketformComponent implements OnInit {
           shipperRefNumber: this.singleTicket.shipperRefNumber,
           originCountry: this.singleTicket.originCountry,
           originCity: this.singleTicket.originCity,
-          recipientsName: this.singleTicket.recipientsName,
-          recipientsContactNumber: this.singleTicket.recipientsContactNumber,
+          recipientName: this.singleTicket.recipientName,
+          recipientContactNumber: this.singleTicket.recipientContactNumber,
           destinationCountry: this.singleTicket.destinationCountry,
           destinationCity: this.singleTicket.destinationCity,
           deliveryAddress: this.singleTicket.deliveryAddress,
@@ -163,15 +121,11 @@ export class TicketformComponent implements OnInit {
           assignedTo: this.singleTicket.assignedTo,
           category: this.singleTicket.category,
           createdAt: cretedAt,
-          status: this.singleTicket.status,
+          ticketStatus: this.singleTicket.ticketStatus,
           ticketFlag: this.singleTicket.ticketFlag,
         });
       });
     }
-
-    // GET ALL DROPDOWNS FROM PRODUCT FIELD UPON PAGE RELOAD
-
-    this.getAllProductFields();
   }
 
   //   GET ALL PRODUCT FIELD
@@ -179,10 +133,92 @@ export class TicketformComponent implements OnInit {
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
-      this.ticketFlag = this.productFields[1].productFieldValuesList;
-      this.status = this.productFields[2].productFieldValuesList;
-      this.categories = this.productFields[0].productFieldValuesList;
-      this.assignedTo = this.productFields[5].productFieldValuesList;
+      this.ticketFlag = this.dropdownService.extractNames(
+        this.productFields[1].productFieldValuesList
+      );
+
+      this.status = this.dropdownService.extractNames(
+        this.productFields[2].productFieldValuesList
+      );
+      this.categories = this.dropdownService.extractNames(
+        this.productFields[0].productFieldValuesList
+      );
+      this.assignedTo = this.dropdownService.extractNames(
+        this.productFields[6].productFieldValuesList
+      );
+    });
+
+    // Get All Countries
+
+    this.dropdownService.getAllCountries().subscribe((res) => {
+      this.countries = res;
+      this.countries = this.dropdownService.extractNames(this.countries);
+    });
+
+    // Get All Departments
+    this.dropdownService.getAllDepartments().subscribe((res) => {
+      this.department = res;
+      this.department = this.dropdownService.extractNames(this.department);
+    });
+  }
+
+  //   GET ALL CITIES,DEPARTMENT CATEGORIES
+  getCitiesAndDeptCatgories() {
+    this.dropdownService.getAllCities().subscribe((res) => {
+      this.destinationCities = res;
+      this.originCities = res;
+      this.destinationCities = this.dropdownService.extractNames(
+        this.destinationCities
+      );
+      this.originCities = this.dropdownService.extractNames(this.originCities);
+    });
+
+    this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
+      this.departmentCategory = res;
+      this.departmentCategory = this.dropdownService.extractNames(
+        this.departmentCategory
+      );
+    });
+  }
+
+  //   GET DEPARTMENT
+  getDepartment(department) {
+    if (department.value == "Customer Service") {
+      this.ticketForm.get("departmentCategory")?.disable();
+    }
+    this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
+      this.departmentCategory = res;
+      let filterDepartments = this.departmentCategory.filter(
+        (city) => city.department.name == department.value
+      );
+
+      this.departmentCategory =
+        this.dropdownService.extractNames(filterDepartments);
+      console.log(this.departmentCategory);
+    });
+  }
+
+  //   GET DESTINATION COUNTRY FROM DROPDOWN
+  getDestinationCountry(country) {
+    this.dropdownService.getAllCities().subscribe((res) => {
+      this.destinationCities = res;
+      let filterCities = this.destinationCities.filter(
+        (city) => city.country.name == country.value
+      );
+      this.destinationCities = this.dropdownService.extractNames(filterCities);
+      console.log(this.destinationCities);
+    });
+  }
+
+  //   GET ORGIN COUNTRYFROM DROPDOWN
+  getOriginCountry(country) {
+    this.dropdownService.getAllCities().subscribe((res) => {
+      this.originCities = res;
+      let filterCities = this.originCities.filter(
+        (city) => city.country.name == country.value
+      );
+      this.originCities = this.dropdownService.extractNames(filterCities);
+      console.log(this.originCities);
     });
   }
 
@@ -215,8 +251,8 @@ export class TicketformComponent implements OnInit {
         shipperRefNumber: formValue.shipperRefNumber,
         originCountry: formValue.originCountry,
         originCity: formValue.originCity,
-        recipientsName: formValue.recipientsName,
-        recipientsContactNumber: formValue.recipientsContactNumber,
+        recipientName: formValue.recipientName,
+        recipientContactNumber: formValue.recipientContactNumber,
         destinationCountry: formValue.destinationCountry,
         destinationCity: formValue.destinationCity,
         deliveryAddress: formValue.deliveryAddress,
@@ -224,7 +260,7 @@ export class TicketformComponent implements OnInit {
         pickupTime: ticketTime,
         category: formValue.category,
         createdAt: formattedCreatedAt,
-        status: formValue.status,
+        ticketStatus: formValue.ticketStatus,
         ticketFlag: formValue.ticketFlag,
         department: formValue.department,
         departmentCategory: formValue.departmentCategory,
@@ -239,6 +275,7 @@ export class TicketformComponent implements OnInit {
           });
       } else {
         //   Create Ticket
+
         this._ticketService.createTicket(ticketData).subscribe();
         this.success();
         this.router.navigate(["tickets"]);
