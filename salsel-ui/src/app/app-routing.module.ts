@@ -66,6 +66,20 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                   (m) => m.ProductFieldModule
                 ),
             },
+            {
+              path: "country",
+              loadChildren: () =>
+                import("./components/country/country.module").then(
+                  (m) => m.CountryModule
+                ),
+            },
+            {
+              path: "city",
+              loadChildren: () =>
+                import("./components/City/city.module").then(
+                  (m) => m.CityModule
+                ),
+            },
           ],
           canActivateChild: [authGuard],
         },

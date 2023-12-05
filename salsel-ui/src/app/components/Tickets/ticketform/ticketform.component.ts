@@ -94,7 +94,6 @@ export class TicketformComponent implements OnInit {
     if (this.editId != null) {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.getCitiesAndDeptCatgories();
-        console.log(res);
 
         this.singleTicket = res;
         let pickDate = new Date(this.singleTicket.pickupDate);
@@ -183,18 +182,24 @@ export class TicketformComponent implements OnInit {
 
   //   GET DEPARTMENT
   getDepartment(department) {
-    if (department.value == "Customer Service") {
-      this.ticketForm.get("departmentCategory")?.disable();
-    }
+    // if (department.value == "Customer Service") {
+    //   this.ticketForm.get("departmentCategory")?.disable();
+    // }
     this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
       this.departmentCategory = res;
       let filterDepartments = this.departmentCategory.filter(
         (city) => city.department.name == department.value
       );
 
+      // Disable
+      if (filterDepartments.length == 0) {
+        this.ticketForm.get("departmentCategory")?.disable();
+      } else {
+        this.ticketForm.get("departmentCategory")?.enable();
+      }
+
       this.departmentCategory =
         this.dropdownService.extractNames(filterDepartments);
-      console.log(this.departmentCategory);
     });
   }
 
@@ -206,7 +211,6 @@ export class TicketformComponent implements OnInit {
         (city) => city.country.name == country.value
       );
       this.destinationCities = this.dropdownService.extractNames(filterCities);
-      console.log(this.destinationCities);
     });
   }
 
@@ -218,7 +222,6 @@ export class TicketformComponent implements OnInit {
         (city) => city.country.name == country.value
       );
       this.originCities = this.dropdownService.extractNames(filterCities);
-      console.log(this.originCities);
     });
   }
 

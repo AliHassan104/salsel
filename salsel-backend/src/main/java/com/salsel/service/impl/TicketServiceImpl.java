@@ -35,7 +35,7 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     public TicketDto save(TicketDto ticketDto) {
         Ticket ticket = toEntity(ticketDto);
-        ticket.status(true);
+        ticket.setStatus(true);
         Ticket createdTicket = ticketRepository.save(ticket);
         return toDto(createdTicket);
     }

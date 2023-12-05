@@ -24,11 +24,11 @@ export class AirbilldataComponent implements OnInit {
   deleteId: any;
 
   ngOnInit(): void {
-    this.getTickets();
+    this.getAirbills();
   }
 
   //   Get all tickets
-  getTickets() {
+  getAirbills() {
     this._airbillService.getBills().subscribe((res) => {
       this.bills = res;
     });
@@ -45,7 +45,7 @@ export class AirbilldataComponent implements OnInit {
   }
   confirmDeleteSelected() {
     this._airbillService.deleteBill(this.deleteId).subscribe((res) => {
-      this.getTickets();
+      this.getAirbills();
       this.deleteProductsDialog = false;
     });
   }

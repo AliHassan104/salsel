@@ -47,6 +47,16 @@ export class AppMenuComponent implements OnInit {
             icon: "pi pi-user",
             routerLink: "department-category",
           },
+          {
+            label: "Country",
+            icon: "pi pi-flag-fill",
+            routerLink: "country",
+          },
+          {
+            label: "City",
+            icon: "pi pi-building",
+            routerLink: "city",
+          },
 
           //   {
           //     label: "Float Label",

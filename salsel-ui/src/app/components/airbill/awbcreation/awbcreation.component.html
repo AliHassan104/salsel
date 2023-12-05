@@ -1,5 +1,8 @@
 <div class="">
     <div class="card">
+        <h1 class="mb-5"
+            style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+            {{editMode?"Update AWB":"Create AWB"}}</h1>
         <form action="" [formGroup]="awbForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
                 <!-- Shipper Details -->
@@ -70,7 +73,7 @@
                         [ngClass]="{'ng-dirty':awbForm.get('pickupDate')?.touched && awbForm.get('pickupDate')?.invalid}"></p-calendar>
                     <small *ngIf="!awbForm.get('pickupDate')?.valid && awbForm.get('pickupDate')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Pickup Time -->
@@ -81,7 +84,7 @@
                         [required]="true"></p-calendar>
                     <small *ngIf="!awbForm.get('pickupTime')?.valid && awbForm.get('pickupTime')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Product Type -->
@@ -92,7 +95,7 @@
                         [required]="true" (onChange)="getProductType($event)"></p-dropdown>
                     <small *ngIf="!awbForm.get('productType')?.valid && awbForm.get('productType')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Service Type -->
@@ -103,7 +106,7 @@
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('serviceType')?.valid && awbForm.get('serviceType')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Pieces -->
@@ -113,7 +116,7 @@
                         [ngClass]="{'ng-dirty':awbForm.get('pieces')?.touched && awbForm.get('pieces')?.invalid}"
                         [required]="true" />
                     <small *ngIf="!awbForm.get('pieces')?.valid && awbForm.get('pieces')?.touched" class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Weight -->
@@ -123,7 +126,7 @@
                         [ngClass]="{'ng-dirty':awbForm.get('weight')?.touched && awbForm.get('weight')?.invalid}"
                         [required]="true" />
                     <small *ngIf="!awbForm.get('weight')?.valid && awbForm.get('weight')?.touched" class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Content -->
@@ -134,7 +137,7 @@
                         [required]="true" />
                     <small *ngIf="!awbForm.get('content')?.valid && awbForm.get('content')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Currency -->
@@ -146,7 +149,7 @@
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('currency')?.valid && awbForm.get('currency')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Amount -->
@@ -158,7 +161,7 @@
                         [required]="true">
                     </p-inputNumber>
                     <small *ngIf="!awbForm.get('amount')?.valid && awbForm.get('amount')?.touched" class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Status -->
@@ -169,7 +172,7 @@
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('status')?.valid && awbForm.get('pickupTstatusime')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div> -->
                 <!-- Duty & Taxes Bill To -->
@@ -182,7 +185,7 @@
                     <small
                         *ngIf="!awbForm.get('dutyAndTaxesBillTo')?.valid && awbForm.get('dutyAndTaxesBillTo')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
                 <!-- Request Type -->
@@ -193,7 +196,7 @@
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('requestType')?.valid && awbForm.get('requestType')?.touched"
                         class="text-red-500">
-                        Field is required
+                        Required
                     </small>
                 </div>
 

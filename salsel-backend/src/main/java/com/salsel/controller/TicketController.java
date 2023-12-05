@@ -32,8 +32,8 @@ public class TicketController {
     //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("/ticket")
     public ResponseEntity<Page<Ticket>> getAllTickets(@RequestParam("search") String search,
-                                               @RequestParam(value = "page") int page,
-                                               @RequestParam(value = "size") int size,
+                                               @RequestParam(value = "page", defaultValue = "0") int page,
+                                               @RequestParam(value = "size", defaultValue = "10") int size,
                                                @RequestParam(value = "sort", defaultValue = "id") String sort) throws JsonProcessingException, JsonProcessingException {
         SearchCriteria searchCriteria = new ObjectMapper().readValue(search, SearchCriteria.class);
         Page<Ticket> departmentDtos = ticketService.findAll(searchCriteria, PageRequest.of(page, size,  Sort.by(sort).descending()));

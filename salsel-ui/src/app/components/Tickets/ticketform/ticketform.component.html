@@ -105,7 +105,7 @@
                         formControlName="departmentCategory"
                         [ngClass]="{'ng-dirty':ticketForm.get('departmentCategory')?.touched && ticketForm.get('departmentCategory')?.invalid}"></p-dropdown>
                     <small
-                        *ngIf="!ticketForm.get('departmentCategory')?.valid && ticketForm.get('departmentCategory')?.touched"
+                        *ngIf="!ticketForm.get('departmentCategory')?.valid && ticketForm.get('departmentCategory')?.touched && !ticketForm.get('departmentCategory')?.disabled"
                         class="text-red-500">
                         Required
                     </small>

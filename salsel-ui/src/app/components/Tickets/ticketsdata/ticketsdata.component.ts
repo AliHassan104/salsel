@@ -21,7 +21,7 @@ export class TicketsdataComponent implements OnInit {
   tickets: any = [];
   deleteId: any;
   page?: any = 0;
-  size?: number = 5;
+  size?: number = 1;
   totalRecords?: number;
   first?: number = 0;
 
@@ -78,7 +78,6 @@ export class TicketsdataComponent implements OnInit {
   onDeleteTicket(id) {
     this.deleteId = id;
     this.deleteProductsDialog = true;
-    console.log(this.deleteId);
   }
 
   //   Edit Ticket
