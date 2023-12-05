@@ -20,6 +20,8 @@ import { LoaderComponent } from "./components/loader/loader.component";
 import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
 import { ButtonModule } from "primeng/button";
 import { PermissionsModule } from "./components/permissions/permissions.module";
+import { AccountListComponent } from './components/accounts/account-list/account-list.component';
+import { AccountFormComponent } from './components/accounts/account-form/account-form.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { PermissionsModule } from "./components/permissions/permissions.module";
     NotfoundComponent,
     LoaderComponent,
     AccessdeniedComponent,
+    AccountListComponent,
+    AccountFormComponent,
   ],
   imports: [
     CommonModule,
