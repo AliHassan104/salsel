@@ -21,7 +21,7 @@ export class TicketsdataComponent implements OnInit {
   tickets: any = [];
   deleteId: any;
   page?: any = 0;
-  size?: number = 10;
+  size?: number = 1;
   totalRecords?: number;
 
   ngOnInit(): void {

@@ -3,10 +3,12 @@ import { CommonModule } from "@angular/common";
 import { AccountFormComponent } from "./account-form/account-form.component";
 import { AccountListComponent } from "./account-list/account-list.component";
 import { Route, RouterModule } from "@angular/router";
+import { AccountViewComponent } from "./account-view/account-view.component";
 
 const routes: Route[] = [
   { path: "", component: AccountListComponent },
-  { path: "addcountry", component: AccountFormComponent },
+  { path: "addaccount", component: AccountFormComponent },
+  { path: ":id", component: AccountViewComponent },
 ];
 
 @NgModule({

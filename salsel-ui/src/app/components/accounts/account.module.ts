@@ -26,9 +26,10 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { PaginatorModule } from "primeng/paginator";
+import { AccountViewComponent } from './account-view/account-view.component';
 
 @NgModule({
-  declarations: [AccountListComponent, AccountFormComponent],
+  declarations: [AccountListComponent, AccountFormComponent, AccountViewComponent],
   imports: [
     CommonModule,
     AccountRoutingModule,
