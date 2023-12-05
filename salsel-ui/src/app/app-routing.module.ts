@@ -80,6 +80,13 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                   (m) => m.CityModule
                 ),
             },
+            {
+              path: "account",
+              loadChildren: () =>
+                import("./components/accounts/account.module").then(
+                  (m) => m.AccountModule
+                ),
+            },
           ],
           canActivateChild: [authGuard],
         },
