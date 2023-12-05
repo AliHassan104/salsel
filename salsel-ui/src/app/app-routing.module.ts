@@ -80,6 +80,20 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                   (m) => m.CityModule
                 ),
             },
+            {
+              path: "product-type",
+              loadChildren: () =>
+                import("./components/product-type/product-type.module").then(
+                  (m) => m.ProductTypeModule
+                ),
+            },
+            {
+              path: "service-type",
+              loadChildren: () =>
+                import("./components/service-type/service-type.module").then(
+                  (m) => m.ServiceTypeModule
+                ),
+            },
           ],
           canActivateChild: [authGuard],
         },
