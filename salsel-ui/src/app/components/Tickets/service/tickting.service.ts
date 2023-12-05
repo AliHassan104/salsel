@@ -20,7 +20,7 @@ export class TicktingService {
 
   //  Get All Tickets
   getTickets(params?: any) {
-    return this.http.get(`${this.url}ticket`,  { params, observe: 'response' });
+    return this.http.get(`${this.url}ticket`, { params, observe: "response" });
   }
 
   //   Get Single Ticket

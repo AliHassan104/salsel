@@ -101,6 +101,24 @@ export class TicketformComponent implements OnInit {
         let pickTimeArray = this.singleTicket.pickupTime;
         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
 
+        // FOR DEPARTMENT CATEGORY
+        this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
+          this.departmentCategory = res;
+          let filterDepartments = this.departmentCategory.filter(
+            (city) => city.department.name == this.singleTicket.department
+          );
+
+          // Disable
+          if (filterDepartments.length == 0) {
+            this.ticketForm.get("departmentCategory")?.disable();
+          } else {
+            this.ticketForm.get("departmentCategory")?.enable();
+          }
+
+          this.departmentCategory =
+            this.dropdownService.extractNames(filterDepartments);
+        });
+
         this.ticketForm.setValue({
           shipperName: this.singleTicket.shipperName,
           shipperContactNumber: this.singleTicket.shipperContactNumber,
@@ -171,20 +189,10 @@ export class TicketformComponent implements OnInit {
       );
       this.originCities = this.dropdownService.extractNames(this.originCities);
     });
-
-    this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
-      this.departmentCategory = res;
-      this.departmentCategory = this.dropdownService.extractNames(
-        this.departmentCategory
-      );
-    });
   }
 
   //   GET DEPARTMENT
   getDepartment(department) {
-    // if (department.value == "Customer Service") {
-    //   this.ticketForm.get("departmentCategory")?.disable();
-    // }
     this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
       this.departmentCategory = res;
       let filterDepartments = this.departmentCategory.filter(
