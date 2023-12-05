@@ -1,6 +1,7 @@
 package com.salsel.repository;
 
 import com.salsel.model.Awb;
+import com.salsel.model.ProductFieldValues;
 import com.salsel.model.ProductType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,4 +22,7 @@ public interface ProductTypeRepository extends JpaRepository<ProductType,Long> {
     List<ProductType> findAllInDesOrderByIdAndStatus();
 
     Optional<ProductType> findByCode(String code);
+
+    @Query("SELECT pt FROM ProductType pt WHERE pt.id = :id AND pt.status = true")
+    ProductType findByIdWhereStatusIsTrue(@Param("id") Long id);
 }

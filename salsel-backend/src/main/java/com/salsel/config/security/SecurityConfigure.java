@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,7 +19,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebSecurity
-@EnableWebMvc
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 
@@ -29,6 +29,10 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/webjars/**",
+            "/api/awb-pdf/awb/{id}",
+            "/static/**",
+            "/styles.css"
+
     };
 
     @Autowired
@@ -64,4 +68,11 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web
+//                .ignoring()
+//                .antMatchers("/resources/**"); // #3
+//    }
 }

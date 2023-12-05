@@ -1,6 +1,7 @@
 package com.salsel.repository;
 
 import com.salsel.model.Account;
+import com.salsel.model.Awb;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,7 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     void setStatusInactive(@Param("id") Long id);
     @Query("SELECT ac FROM Account ac WHERE ac.status = true ORDER BY ac.id DESC")
     List<Account> findAllInDesOrderByIdAndStatus();
+
+    @Query("SELECT a FROM Account a WHERE a.id = :id AND a.status = true")
+    Account findByIdWhereStatusIsTrue(@Param("id") Long id);
 }

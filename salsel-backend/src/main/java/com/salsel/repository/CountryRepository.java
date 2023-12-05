@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.City;
 import com.salsel.model.Country;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,4 +29,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
     @Query("SELECT con FROM Country con WHERE con.name LIKE %:searchName% AND con.status = true")
     Page<Country> findCountryByName(@Param("searchName") String searchName, Pageable page);
+
+    @Query("SELECT c FROM Country c WHERE c.id = :id AND c.status = true")
+    Country findByIdWhereStatusIsTrue(@Param("id") Long id);
 }

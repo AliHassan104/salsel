@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Department;
 import com.salsel.model.ProductField;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,6 +16,8 @@ public interface ProductFieldRepository extends JpaRepository<ProductField, Long
     List<ProductField> findByProductFieldValuesList_Id(Long productFieldValueId);
     List<ProductField> findAllByStatusOrderBySequenceAsc(String Status);
     ProductField findByName(String name);
+    @Query("SELECT pf FROM ProductField pf WHERE pf.id = :id AND pf.status = Active")
+    ProductField findByIdWhereStatusIsTrue(@Param("id") Long id);
     @Query("SELECT pf FROM ProductField pf WHERE pf.name LIKE %:searchName%")
     List<ProductField> findProductFieldsByName(@Param("searchName") String searchName);
     @Modifying

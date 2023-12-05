@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.ServiceType;
 import com.salsel.model.Ticket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
     @Modifying
     @Query("UPDATE Ticket t SET t.status = false WHERE t.id = :id")
     void setStatusInactive(@Param("id") Long id);
+
+    @Query("SELECT t FROM Ticket t WHERE t.id = :id AND t.status = true")
+    Ticket findByIdWhereStatusIsTrue(@Param("id") Long id);
 
     @Query("SELECT t FROM Ticket t WHERE t.status = true ORDER BY t.id DESC")
     List<Ticket> findAllInDesOrderByIdAndStatus();

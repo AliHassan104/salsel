@@ -17,4 +17,8 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
 
     @Query("SELECT a FROM Awb a WHERE a.status = true ORDER BY a.id DESC")
     List<Awb> findAllInDesOrderByIdAndStatus();
+
+    @Query("SELECT a FROM Awb a WHERE a.id = :awbId AND a.status = true")
+    Awb findByIdWhereStatusIsTrue(@Param("awbId") Long awbId);
+
 }

@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Account;
 import com.salsel.model.City;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,7 @@ public interface CityRepository extends JpaRepository<City,Long> {
 
     @Query("SELECT c FROM City c WHERE c.name LIKE %:searchName% AND c.status = true")
     Page<City> findCityByName(@Param("searchName") String searchName, Pageable page);
+
+    @Query("SELECT c FROM City c WHERE c.id = :id AND c.status = true")
+    City findByIdWhereStatusIsTrue(@Param("id") Long id);
 }
