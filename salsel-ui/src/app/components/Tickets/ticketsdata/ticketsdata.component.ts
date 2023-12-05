@@ -21,9 +21,8 @@ export class TicketsdataComponent implements OnInit {
   tickets: any = [];
   deleteId: any;
   page?: any = 0;
-  size?: number = 1;
+  size?: number = 10;
   totalRecords?: number;
-  first?: number = 0;
 
   ngOnInit(): void {
     this.getTickets();
@@ -51,7 +50,8 @@ export class TicketsdataComponent implements OnInit {
   }
 
   onPageChange(event?: any) {
-    this.page = event.first;
+    debugger;
+    this.page = event.page;
     this.getTickets();
   }
 
