@@ -1,7 +1,12 @@
 <div class="grid">
     <div class="col-12">
         <div class="card">
-            <h5>DEPARTMENT</h5>
+            <h1 class="m-0"
+                style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+                All Departments</h1>
+            <div class="flex justify-content-end">
+                <button pButton label="Add Department" class="mb-2" routerLink="form"></button>
+            </div>
             <hr>
             <p-table #dt1 [value]="departments" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
                 styleClass="p-datatable-gridlines" [paginator]="true"
@@ -35,26 +40,26 @@
                         </th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-data>
+                <ng-template pTemplate="body" let-department>
                     <tr>
 
                         <td>
-                            {{data.name}}
+                            {{department.name}}
                         </td>
 
                         <td>
 
                             <button pButton pRipple type="button" icon="pi pi-eye" 
                             class="p-button-rounded p-button-secondary p-button-outlined mx-2" 
-                            routerLink="{{data._id}}"></button>
+                            routerLink="{{department.id}}"></button>
 
                             <button pButton pRipple type="button" icon="pi pi-file-edit"
                                 class="p-button-rounded p-button-outlined mx-2"
-                                (click)="onEditTicket(data._id)"></button>
+                                (click)="editDepartment(department.id)"></button>
 
                             <button pButton pRipple type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
-                                (click)="onDeleteTicket(data._id)"></button>
+                                (click)="deleteDepartment(department.id)"></button>
 
                         </td>
 
@@ -62,12 +67,12 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="8">No customers found.</td>
+                        <td colspan="8">No department found.</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="loadingbody">
                     <tr>
-                        <td colspan="8">Loading customers data. Please wait.</td>
+                        <td colspan="8">Loading departments data. Please wait.</td>
                     </tr>
                 </ng-template>
             </p-table>
@@ -75,14 +80,14 @@
 
     </div>
 
-    <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+    <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
         <div class="flex align-items-center justify-content-center">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-            <span>Are you sure you want to delete selected ticket?</span>
+            <span>Are you sure you want to delete selected department?</span>
         </div>
         <ng-template pTemplate="footer">
             <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                (click)="deleteProductsDialog = false"></button>
+                (click)="deleteDialog = false"></button>
             <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                 (click)="confirmDeleteSelected()"></button>
         </ng-template>

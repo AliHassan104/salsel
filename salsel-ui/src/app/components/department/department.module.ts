@@ -18,15 +18,15 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { DepartmentRoutingModule } from './department-routing.module';
-import { DepartmentDataComponent } from './department-data/department-data.component';
-import { DepartmentFormComponent } from './department-form/department-form.component';
-import { DepartmentItemComponent } from './department-item/department-item.component';
+import { DepartmentItemComponent } from './view/department-item.component';
+import { DepartmentComponent } from './update/department.component';
+import { DepartmentListComponent } from './list/department-list.component';
 
 @NgModule({
   declarations: [
-    DepartmentDataComponent,
-    DepartmentFormComponent,
-    DepartmentItemComponent
+    DepartmentListComponent,
+    DepartmentItemComponent,
+    DepartmentComponent
   ],
   imports: [
     CommonModule,
