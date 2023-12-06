@@ -1,92 +1,134 @@
 body {
   font-family: Arial, sans-serif;
   width: 100%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .info {
-  width: 100vh;
+margin:auto;
+  width: 600px;
   gap: 10px;
   padding: 20px;
   border: 1px solid #ccc;
   background-color: white;
   border-radius: 15px;
+  z-index: 999;
 }
 
-.info .img {
+.img {
+  position: relative;
   display: flex;
   justify-content: space-between;
+  height: 130px;
+}
+.img1 {
+  height: 60%;
+    width: 30%;
+    position: absolute;
+    left: 0px;
+    top: 31px;
 }
 
-.info .img .img1 {
-  margin-top: 17px;
+.img2 {
+  height: 130px;
+  width: 130px;
+  position: absolute;
+  right: 0;
+  z-index:1001;
 }
 
 .content {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
   position: relative;
-  padding: 10px 0;
+  height: 213px;
 }
 
 .content p {
-  font-weight: bold;
-  font-size: 14px;
-  margin-left: 26px;
-  color: gray;
-  line-height: 1.7;
-  margin-top: 20px;
+      position: absolute;
+      left: 30px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #5c5b5b;
+      line-height: 1.6;
+      top: 33px;
 }
 
 .img-3 {
-  margin-right: 42px;
+  position: absolute;
+  z-index: 1000;
+  right: -147px;
+  height: 27%;
+  width: 66%;
+  -webkit-transform: rotate(90deg);
+  transform:rotate(90deg);
+  rotate:90deg;
+  top: 82px;
 }
 
 .barcode-num {
   position: absolute;
   right: -46px;
   top: 41px;
-  transform: rotate(270deg);
+  transform: rotate(270deg) !important;
 }
 
 .footer {
-  display: flex;
-  justify-content: space-between;
   margin-top: 20px;
   position: relative;
   padding: 10px 0;
+  height: 147px;
+}
+.para {
+  position: absolute;
+  left: 13px;
+  top: 15px;
 }
 .bar1 {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 21px;
   margin-left: 26px;
   color: gray;
   margin: 0 0 8px 26px;
 }
 .bar2 {
   font-weight: bold;
-  font-size: 25px;
+  font-size: 37px;
   margin: 0 0 8px 26px;
 }
 
 .footer .code {
-  margin: 0%;
+  position: absolute;
+  top: 20px;
+  right: 7px;
 }
 
-.footer .code h1 {
-  font-size: 25px;
-  padding: 10px 20px;
-  background-color: rgba(0, 0, 0, 0.889);
+.heading {
+  padding: 16px 35px;
+  background-color: #000000;
   color: white;
-  letter-spacing: 4px;
   margin: -4px 18px 0 0;
+  z-index:12000;
+}
+
+.heading h1 {
+  margin: 0%;
+  font-size: 25px;
+   letter-spacing: 4px;
 }
 .footer .code p {
-  margin-left: 18px;
+  margin-left: 26px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 9px;
+  font-size: 21px;
+}
+
+.footer-img {
+  position: relative;
+  height: 200px;
+}
+
+.img-4 {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  height: 55%;
+  width: 101%;
 }
