@@ -1,66 +1,62 @@
 body {
   font-family: Arial, sans-serif;
-  width: 100%;
+    margin: 0;
+    padding: 0%;
+    box-sizing: border-box;
 }
 
 .info {
-margin:auto;
-  width: 600px;
+width: 700px;
+  margin: auto;
   gap: 10px;
   padding: 20px;
-  border: 1px solid #ccc;
   background-color: white;
   border-radius: 15px;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .img {
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  height: 130px;
+    height: 130px;
 }
 .img1 {
-  height: 60%;
-    width: 30%;
-    position: absolute;
-    left: 0px;
-    top: 31px;
+ height: 115px;
+   width: 252px;
+   position: absolute;
+   left: -24px;
+   top: 13px;
 }
 
 .img2 {
-  height: 130px;
-  width: 130px;
-  position: absolute;
-  right: 0;
-  z-index:1001;
+   height: 150px;
+    width: 150px;
+    position: absolute;
+    right: 0;
+    top:-20px;
+    z-index: 1000;
 }
 
 .content {
   position: relative;
-  height: 213px;
+  height: 274px;
 }
 
 .content p {
       position: absolute;
-      left: 30px;
-      font-weight: bold;
-      font-size: 18px;
-      color: #5c5b5b;
-      line-height: 1.6;
-      top: 33px;
+        left: 39px;
+        font-weight: bold;
+        font-size: 20px;
+        color: #5c5b5b;
+        line-height: 1.7;
+        top: 33px;
 }
 
 .img-3 {
-  position: absolute;
-  z-index: 1000;
-  right: -147px;
-  height: 27%;
-  width: 66%;
-  -webkit-transform: rotate(90deg);
-  transform:rotate(90deg);
-  rotate:90deg;
-  top: 82px;
+       position: absolute;
+        right: 32px;
+        height: 161%;
+        width: 8%;
+        top: -88px;
 }
 
 .barcode-num {
@@ -74,7 +70,7 @@ margin:auto;
   margin-top: 20px;
   position: relative;
   padding: 10px 0;
-  height: 147px;
+  height: 200px;
 }
 .para {
   position: absolute;
@@ -114,10 +110,10 @@ margin:auto;
    letter-spacing: 4px;
 }
 .footer .code p {
-  margin-left: 26px;
-  font-weight: bold;
-  margin-top: 9px;
-  font-size: 21px;
+ margin-left: 28px;
+   font-weight: bold;
+   margin-top: 9px;
+   font-size: 21px;
 }
 
 .footer-img {
@@ -127,8 +123,8 @@ margin:auto;
 
 .img-4 {
   position: absolute;
-  top: 18px;
-  left: 0;
-  height: 55%;
-  width: 101%;
+    top: 18px;
+    left: -210px;
+    height: 48%;
+    width: 160%;
 }
