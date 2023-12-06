@@ -1,6 +1,7 @@
 package com.salsel.utils;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -16,10 +17,11 @@ public class EmailUtils {
     public EmailUtils(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
+
     @Value("${spring.mail.username}")
     private String sender;
     @Async
-    public void sendWelcomeEmail(String sender, String userEmail, String awbNumber, String shipmentDetails) {
+    public void sendEmail(String sender, String userEmail, String awbNumber, byte[] pdfBytes) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -31,13 +33,16 @@ public class EmailUtils {
             String emailContent = "Dear Customer,\n\n"
                     + "Thank you for choosing Salsel Express! We are delighted to welcome you.\n\n"
                     + "Your Air Waybill (AWB) details:\n"
-                    + "AWB Number: " + awbNumber + "\n"
-                    + "Shipment Details: " + shipmentDetails + "\n\n"
+                    + "AWB Number: " + awbNumber + "\n\n"
                     + "We appreciate your business and look forward to serving you.\n\n"
                     + "Best regards,\n"
                     + "Salsel Express Team";
 
             helper.setText(emailContent);
+
+            // Attach the PDF
+            helper.addAttachment("AWB_Details.pdf", new ByteArrayResource(pdfBytes));
+
             javaMailSender.send(message);
 
         } catch (MessagingException e) {
@@ -45,5 +50,6 @@ public class EmailUtils {
             System.err.println("Error sending email: " + e.getMessage());
         }
     }
+
 
 }

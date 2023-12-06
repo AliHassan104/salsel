@@ -2,6 +2,7 @@ package com.salsel.service;
 
 import com.salsel.dto.AwbDto;
 
+import java.io.OutputStream;
 import java.util.List;
 
 public interface AwbService {

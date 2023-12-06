@@ -20,7 +20,7 @@ public class AwbController {
 
     @PostMapping("/awb")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<AwbDto> createAccount(@RequestBody AwbDto awbDto) {
+    public ResponseEntity<AwbDto> createAwb(@RequestBody AwbDto awbDto) {
         return ResponseEntity.ok(awbService.save(awbDto));
     }
 

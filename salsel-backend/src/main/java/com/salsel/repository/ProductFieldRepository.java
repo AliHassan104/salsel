@@ -1,6 +1,5 @@
 package com.salsel.repository;
 
-import com.salsel.model.Department;
 import com.salsel.model.ProductField;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

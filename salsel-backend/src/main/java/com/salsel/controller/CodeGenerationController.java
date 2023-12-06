@@ -38,6 +38,24 @@ public class CodeGenerationController {
         }
     }
 
+    @GetMapping("/generate-vertical-barcode/awb/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> generateVerticalBarcode(HttpServletResponse response, @PathVariable Long id) {
+        try {
+            String data = "900000001";
+            boolean success = codeGenerationService.generateBarcodeVertical(data, id, response.getOutputStream());
+
+            if (success) {
+                return ResponseEntity.ok("Barcode generated successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to generate barcode");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while generating barcode");
+        }
+    }
+
     @GetMapping("/generate-qr-code/awb/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> generateQRCode(HttpServletResponse response, @PathVariable Long id) {
