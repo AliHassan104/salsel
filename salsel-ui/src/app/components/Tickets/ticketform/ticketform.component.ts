@@ -150,18 +150,25 @@ export class TicketformComponent implements OnInit {
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
+
+      //   Categories From Product Field
+      this.categories = this.dropdownService.extractNames(
+        this.productFields.filter((data) => data.name == "Category")[0]
+          .productFieldValuesList
+      );
+
       this.ticketFlag = this.dropdownService.extractNames(
-        this.productFields[1].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Ticket Flag")[0]
+          .productFieldValuesList
       );
 
       this.status = this.dropdownService.extractNames(
-        this.productFields[2].productFieldValuesList
-      );
-      this.categories = this.dropdownService.extractNames(
-        this.productFields[0].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Ticket Status")[0]
+          .productFieldValuesList
       );
       this.assignedTo = this.dropdownService.extractNames(
-        this.productFields[6].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Assigned To")[0]
+          .productFieldValuesList
       );
     });
 

@@ -110,15 +110,18 @@ export class AccountFormComponent implements OnInit {
       this.productFields = res;
 
       this.accountTypes = this.dropdownService.extractNames(
-        this.productFields[8].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Account Types")[0]
+          .productFieldValuesList
       );
 
       this.salesRegion = this.dropdownService.extractNames(
-        this.productFields[9].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Sales Region")[0]
+          .productFieldValuesList
       );
 
       this.salesAgents = this.dropdownService.extractNames(
-        this.productFields[10].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Sales Agent")[0]
+          .productFieldValuesList
       );
     });
 

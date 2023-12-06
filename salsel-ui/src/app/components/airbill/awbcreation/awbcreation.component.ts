@@ -186,15 +186,19 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       this.productFields = res;
       //   Currencies
       this.currencies = this.dropdownService.extractNames(
-        this.productFields[3].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Currency")[0]
+          .productFieldValuesList
       );
       //   Duty Taxes
       this.dutyTaxes = this.dropdownService.extractNames(
-        this.productFields[4].productFieldValuesList
+        this.productFields.filter(
+          (data) => data.name == "Duty And Tax Billing"
+        )[0].productFieldValuesList
       );
       //   Request Types
       this.requestTypes = this.dropdownService.extractNames(
-        this.productFields[7].productFieldValuesList
+        this.productFields.filter((data) => data.name == "Request Type")[0]
+          .productFieldValuesList
       );
     });
 
