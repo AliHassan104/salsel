@@ -1,0 +1,30 @@
+<div class="">
+    <div class="card">
+        <h1 class="mb-5"
+            style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+            {{editMode?"Update Country":"Add Country"}}</h1>
+        <form action="" [formGroup]="countryForm" (ngSubmit)="onSubmit(countryForm.value)">
+            <div class="p-fluid p-formgrid grid">
+                <!-- Country Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="name">Country</label>
+                    <input pInputText id="name" type="text" formControlName="name" placeholder="Enter Country Name "
+                        [ngClass]="{'ng-dirty':countryForm.get('name')?.touched && countryForm.get('name')?.invalid}" />
+                    <small *ngIf="!countryForm.get('name')?.valid && countryForm.get('name')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
+                <div class="flex justify-content-end w-full">
+                    <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"
+                        *ngIf="editMode" (click)="onCancel()"></button>
+                    <button pButton [label]="editMode?'Update':'Add'" type="Submit" class="mx-3 submit-btn"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

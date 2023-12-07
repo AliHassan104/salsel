@@ -5,6 +5,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from "./components/auth/login/login.component";
 import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
 import { authGuard } from "./components/auth/guard/auth.guard";
+import { PermissionsComponent } from "./components/permissions/permissions.component";
 
 @NgModule({
   imports: [
@@ -58,15 +59,52 @@ import { authGuard } from "./components/auth/guard/auth.guard";
                 ).then((m) => m.DepartmentCategoryModule),
             },
 
-            { path: 'product',
-            loadChildren: () =>
-              import('./components/product-field/product-field.module')
-              .then(m => m.ProductFieldModule)
-          },
-
+            {
+              path: "product",
+              loadChildren: () =>
+                import("./components/product-field/product-field.module").then(
+                  (m) => m.ProductFieldModule
+                ),
+            },
+            {
+              path: "country",
+              loadChildren: () =>
+                import("./components/country/country.module").then(
+                  (m) => m.CountryModule
+                ),
+            },
+            {
+              path: "city",
+              loadChildren: () =>
+                import("./components/City/city.module").then(
+                  (m) => m.CityModule
+                ),
+            },
+            {
+              path: "product-type",
+              loadChildren: () =>
+                import("./components/product-type/product-type.module").then(
+                  (m) => m.ProductTypeModule
+                ),
+            },
+            {
+              path: "service-type",
+              loadChildren: () =>
+                import("./components/service-type/service-type.module").then(
+                  (m) => m.ServiceTypeModule
+                ),
+            },
+            {
+              path: "account",
+              loadChildren: () =>
+                import("./components/accounts/account.module").then(
+                  (m) => m.AccountModule
+                ),
+            },
           ],
           canActivateChild: [authGuard],
         },
+        { path: "permissions", component: PermissionsComponent },
         { path: "login", component: LoginComponent },
         { path: "access", component: AccessdeniedComponent },
         { path: "notfound", component: NotfoundComponent },

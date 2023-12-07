@@ -1,0 +1,214 @@
+<div class="">
+    <div class="card">
+        <h1 class="mb-5"
+            style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+            {{editMode?"Update AWB":"Create AWB"}}</h1>
+        <form action="" [formGroup]="awbForm" (ngSubmit)="onSubmit()">
+            <div class="p-fluid p-formgrid grid">
+                <!-- Shipper Details -->
+                <!-- Shipper Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="shippername">Shipper Name</label>
+                    <input pInputText id="shippername" type="text" formControlName="shipperName" />
+                </div>
+                <!-- Shipper Contact -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="contact">Contact Number</label>
+                    <input pInputText id="shipperContact" type="text" formControlName="shipperContactNumber" />
+                </div>
+                <!-- Pickup Address -->
+                <div class="field col-12">
+                    <label htmlFor="address">Pickup Address</label>
+                    <input pInputTextarea id="address" rows="4" formControlName="pickupAddress" />
+                </div>
+                <!-- Shipper Ref Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="shipperRef">Shipper Ref Number</label>
+                    <input pInputText id="shipperRef" type="text" formControlName="shipperRefNumber" />
+                </div>
+                <!-- Origin Country -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="ocountry">Origin Country</label>
+                    <p-dropdown [options]="countries" placeholder="Select Country" formControlName="originCountry"
+                        (onChange)="getOriginCountry($event)"></p-dropdown>
+                </div>
+                <!-- Origin City -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="oCity">Origin City</label>
+                    <p-dropdown [options]="originCities" placeholder="Enter city"
+                        formControlName="originCity"></p-dropdown>
+                </div>
+                <!-- Recipients Details -->
+                <!-- Recipient Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="recipientname">Recipient Name</label>
+                    <input pInputText id="recipientname" type="text" formControlName="recipientsName" />
+                </div>
+                <!-- Recipient Contact Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="contactR">Contact Number</label>
+                    <input pInputText id="recipientsContact" type="text" formControlName="recipientsContactNumber" />
+                </div>
+                <!-- Delivery Address -->
+                <div class="field col-12">
+                    <label htmlFor="daddress">Delivery Address</label>
+                    <input pInputTextarea id="daddress" rows="4" formControlName="deliveryAddress" />
+                </div>
+                <!-- Destination Country -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="dcountry">Destination Country</label>
+                    <p-dropdown [options]="countries" placeholder="Select Country" [filter]="true"
+                        formControlName="destinationCountry" (onChange)="getDestinationCountry($event)"></p-dropdown>
+                </div>
+                <!-- Destination City -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="dcity">Destination City</label>
+                    <p-dropdown [options]="destinationCities" placeholder="Select city"
+                        formControlName="destinationCity"></p-dropdown>
+                </div>
+                <!-- Pickup Date -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="dcity">Pickup Date</label>
+                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="pickupDate"
+                        [ngClass]="{'ng-dirty':awbForm.get('pickupDate')?.touched && awbForm.get('pickupDate')?.invalid}"></p-calendar>
+                    <small *ngIf="!awbForm.get('pickupDate')?.valid && awbForm.get('pickupDate')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Pickup Time -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="dcity">Pickup Time</label>
+                    <p-calendar [hourFormat]="24" [timeOnly]="true" formControlName="pickupTime" [showSeconds]="true"
+                        [ngClass]="{'ng-dirty':awbForm.get('pickupTime')?.touched && awbForm.get('pickupTime')?.invalid}"
+                        [required]="true"></p-calendar>
+                    <small *ngIf="!awbForm.get('pickupTime')?.valid && awbForm.get('pickupTime')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Product Type -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="producttype">Product Type</label>
+                    <p-dropdown [options]="productType" placeholder="Select Product Type" formControlName="productType"
+                        [ngClass]="{'ng-dirty':awbForm.get('productType')?.touched && awbForm.get('productType')?.invalid}"
+                        [required]="true" (onChange)="getProductType($event)"></p-dropdown>
+                    <small *ngIf="!awbForm.get('productType')?.valid && awbForm.get('productType')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Service Type -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="servicetype">Service Type</label>
+                    <p-dropdown [options]="serviceType" placeholder="Select Service Type" formControlName="serviceType"
+                        [ngClass]="{'ng-dirty':awbForm.get('serviceType')?.touched && awbForm.get('serviceType')?.invalid}"
+                        [required]="true"></p-dropdown>
+                    <small *ngIf="!awbForm.get('serviceType')?.valid && awbForm.get('serviceType')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Pieces -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="pieces">Pieces</label>
+                    <input pInputText id="pieces" type="number" formControlName="pieces"
+                        [ngClass]="{'ng-dirty':awbForm.get('pieces')?.touched && awbForm.get('pieces')?.invalid}"
+                        [required]="true" />
+                    <small *ngIf="!awbForm.get('pieces')?.valid && awbForm.get('pieces')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Weight -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="weight">Weight</label>
+                    <input pInputText id="weight" type="text" formControlName="weight"
+                        [ngClass]="{'ng-dirty':awbForm.get('weight')?.touched && awbForm.get('weight')?.invalid}"
+                        [required]="true" />
+                    <small *ngIf="!awbForm.get('weight')?.valid && awbForm.get('weight')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Content -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="content">Content</label>
+                    <input pInputText id="content" type="text" formControlName="content"
+                        [ngClass]="{'ng-dirty':awbForm.get('content')?.touched && awbForm.get('content')?.invalid}"
+                        [required]="true" />
+                    <small *ngIf="!awbForm.get('content')?.valid && awbForm.get('content')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Currency -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="currency">Currency</label>
+                    <p-dropdown [options]="currencies" class="w-4" formControlName="currency"
+                        placeholder="Select a currency"
+                        [ngClass]="{'ng-dirty':awbForm.get('currency')?.touched && awbForm.get('currency')?.invalid}"
+                        [required]="true"></p-dropdown>
+                    <small *ngIf="!awbForm.get('currency')?.valid && awbForm.get('currency')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Amount -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="amount">Amount</label>
+                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                        placeholder="Enter Amount" formControlName="amount"
+                        [ngClass]="{'ng-dirty':awbForm.get('amount')?.touched && awbForm.get('amount')?.invalid}"
+                        [required]="true">
+                    </p-inputNumber>
+                    <small *ngIf="!awbForm.get('amount')?.valid && awbForm.get('amount')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Status -->
+                <!-- <div class="field col-12 md:col-6">
+                    <label htmlFor="status">Status</label>
+                    <p-dropdown [options]="status" placeholder="Select status" formControlName="status"
+                        [ngClass]="{'ng-dirty':awbForm.get('status')?.touched && awbForm.get('status')?.invalid}"
+                        [required]="true"></p-dropdown>
+                    <small *ngIf="!awbForm.get('status')?.valid && awbForm.get('pickupTstatusime')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div> -->
+                <!-- Duty & Taxes Bill To -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="dutytaxes">Duty and Taxes Bill To</label>
+                    <p-dropdown [options]="dutyTaxes" placeholder="Select Billing to"
+                        formControlName="dutyAndTaxesBillTo"
+                        [ngClass]="{'ng-dirty':awbForm.get('dutyAndTaxesBillTo')?.touched && awbForm.get('dutyAndTaxesBillTo')?.invalid}"
+                        [required]="true"></p-dropdown>
+                    <small
+                        *ngIf="!awbForm.get('dutyAndTaxesBillTo')?.valid && awbForm.get('dutyAndTaxesBillTo')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Request Type -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="requesttype">Request Type</label>
+                    <p-dropdown [options]="requestTypes" placeholder="Select Request Type" formControlName="requestType"
+                        [ngClass]="{'ng-dirty':awbForm.get('requestType')?.touched && awbForm.get('requestType')?.invalid}"
+                        [required]="true"></p-dropdown>
+                    <small *ngIf="!awbForm.get('requestType')?.valid && awbForm.get('requestType')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
+                <div class="flex justify-content-end w-full">
+                    <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"
+                        *ngIf="editMode" (click)="onCancel()"></button>
+                    <button pButton [label]="editMode?'Update':'Create'" type="Submit" class="mx-3 submit-btn"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

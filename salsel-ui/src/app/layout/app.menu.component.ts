@@ -22,11 +22,11 @@ export class AppMenuComponent implements OnInit {
             icon: "pi pi-user",
             routerLink: "userslist",
           },
-        ],
-      },
-      {
-        label: "Forms",
-        items: [
+          {
+            label: "Account",
+            icon: "pi pi-users",
+            routerLink: "account",
+          },
           {
             label: "Tickets",
             icon: "pi pi-ticket",
@@ -46,6 +46,26 @@ export class AppMenuComponent implements OnInit {
             label: "Department Category",
             icon: "pi pi-user",
             routerLink: "department-category",
+          },
+          {
+            label: "Country",
+            icon: "pi pi-flag-fill",
+            routerLink: "country",
+          },
+          {
+            label: "City",
+            icon: "pi pi-building",
+            routerLink: "city",
+          },
+          {
+            label: "Product Type",
+            icon: "pi pi-building",
+            routerLink: "product-type/list",
+          },
+          {
+            label: "Service Type",
+            icon: "pi pi-building",
+            routerLink: "service-type/list",
           },
 
           //   {

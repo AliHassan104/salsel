@@ -9,7 +9,6 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppLayoutModule } from "./layout/app.layout.module";
 import { NotfoundComponent } from "./components/notfound/notfound.component";
 import { ProductService } from "./service/product.service";
-import { CountryService } from "./service/country.service";
 import { CustomerService } from "./service/customer.service";
 import { EventService } from "./service/event.service";
 import { IconService } from "./service/icon.service";
@@ -39,7 +38,6 @@ import { PermissionsModule } from "./components/permissions/permissions.module";
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    CountryService,
     CustomerService,
     EventService,
     IconService,

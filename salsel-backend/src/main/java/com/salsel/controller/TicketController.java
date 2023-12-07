@@ -29,8 +29,8 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.save(ticketDto));
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
-    @GetMapping("")
+        @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
+    @GetMapping("/ticket")
     public ResponseEntity<Page<Ticket>> getAllTickets(@RequestParam("search") String search,
                                                @RequestParam(value = "page") int page,
                                                @RequestParam(value = "size") int size,

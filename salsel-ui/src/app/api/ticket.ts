@@ -13,11 +13,12 @@ export interface Ticket {
   pickupAddress?: string;
   pickupDate?: string;
   pickupTime?: string;
-  recipientsContactNumber?: string;
-  recipientsName?: string;
+  recipientContactNumber?: string;
+  recipientName?: string;
   shipperContactNumber?: string;
   shipperName?: string;
   shipperRefNumber?: string;
-  status?: string;
-  ticketFlag?: boolean;
+  ticketStatus?: string;
+  ticketFlag?: string;
+  status?: true;
 }
