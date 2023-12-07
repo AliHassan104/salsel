@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Account;
 import com.salsel.model.ServiceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,8 +17,12 @@ public interface ServiceTypeRepository extends JpaRepository<ServiceType,Long> {
     @Query("UPDATE ServiceType st SET st.status = false WHERE st.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    @Query("SELECT st FROM ServiceType st WHERE st.status = true ORDER BY st.id DESC")
-    List<ServiceType> findAllInDesOrderByIdAndStatus();
+    @Modifying
+    @Query("UPDATE ServiceType st SET st.status = true WHERE st.id = :id")
+    void setStatusActive(@Param("id") Long id);
+
+    @Query("SELECT st FROM ServiceType st WHERE st.status = :status ORDER BY st.id DESC")
+    List<ServiceType> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
     Optional<ServiceType> findByCode(String code);
 }

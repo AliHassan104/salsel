@@ -25,8 +25,8 @@ public class CityController {
 
     @GetMapping("/city")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<CityDto>> getAllCity() {
-        List<CityDto> cityDtoList = cityService.getAll();
+    public ResponseEntity<List<CityDto>> getAllCity(@RequestParam(value = "status") Boolean status) {
+        List<CityDto> cityDtoList = cityService.getAll(status);
         return ResponseEntity.ok(cityDtoList);
     }
 
@@ -48,6 +48,13 @@ public class CityController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteCity(@PathVariable Long id) {
         cityService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/city/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateCityStatusToActive(@PathVariable Long id) {
+        cityService.setToActiveById(id);
         return ResponseEntity.ok().build();
     }
 

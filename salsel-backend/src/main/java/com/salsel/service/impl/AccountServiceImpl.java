@@ -29,8 +29,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountDto> getAll() {
-        List<Account> accounts = accountRepository.findAllInDesOrderByIdAndStatus();
+    public List<AccountDto> getAll(Boolean status) {
+        List<Account> accounts = accountRepository.findAllInDesOrderByIdAndStatus(status);
         List<AccountDto> accountDtoList = new ArrayList<>();
 
         for (Account account : accounts) {
@@ -53,6 +53,14 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
         accountRepository.setStatusInactive(account.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
+        accountRepository.setStatusActive(account.getId());
     }
 
     @Override

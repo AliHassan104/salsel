@@ -28,8 +28,8 @@ public class DepartmentController {
 
     @GetMapping("/department")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<DepartmentDto>> getAllDepartment() {
-        List<DepartmentDto> departmentDtoList = departmentService.getAll();
+    public ResponseEntity<List<DepartmentDto>> getAllDepartment(@RequestParam(value = "status") Boolean status) {
+        List<DepartmentDto> departmentDtoList = departmentService.getAll(status);
         return ResponseEntity.ok(departmentDtoList);
     }
 
@@ -69,6 +69,13 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Long id,@RequestBody DepartmentDto departmentDto) {
         DepartmentDto updatedDepartmentDto = departmentService.update(id, departmentDto);
         return ResponseEntity.ok(updatedDepartmentDto);
+    }
+
+    @PutMapping("/department/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateDepartmentStatusToActive(@PathVariable Long id) {
+        departmentService.setToActiveById(id);
+        return ResponseEntity.ok().build();
     }
 
 }

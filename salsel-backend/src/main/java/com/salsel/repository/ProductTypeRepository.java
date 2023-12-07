@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Account;
 import com.salsel.model.Awb;
 import com.salsel.model.ProductType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,8 +18,12 @@ public interface ProductTypeRepository extends JpaRepository<ProductType,Long> {
     @Query("UPDATE ProductType pt SET pt.status = false WHERE pt.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    @Query("SELECT pt FROM ProductType pt WHERE pt.status = true ORDER BY pt.id DESC")
-    List<ProductType> findAllInDesOrderByIdAndStatus();
+    @Modifying
+    @Query("UPDATE ProductType pt SET pt.status = true WHERE pt.id = :id")
+    void setStatusActive(@Param("id") Long id);
+
+    @Query("SELECT pt FROM ProductType pt WHERE pt.status = :status ORDER BY pt.id DESC")
+    List<ProductType> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
     Optional<ProductType> findByCode(String code);
 }

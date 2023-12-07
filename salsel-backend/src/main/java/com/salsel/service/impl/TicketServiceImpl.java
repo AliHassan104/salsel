@@ -57,8 +57,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getAll() {
-        List<Ticket> ticketList = ticketRepository.findAllInDesOrderByIdAndStatus();
+    public List<TicketDto> getAll(Boolean status) {
+        List<Ticket> ticketList = ticketRepository.findAllInDesOrderByIdAndStatus(status);
         List<TicketDto> ticketDtoList = new ArrayList<>();
 
         for (Ticket ticket : ticketList) {
@@ -81,6 +81,14 @@ public class TicketServiceImpl implements TicketService {
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Ticket not found for id => %d", id)));
         ticketRepository.setStatusInactive(ticket.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Ticket not found for id => %d", id)));
+        ticketRepository.setStatusActive(ticket.getId());
     }
 
     @Override

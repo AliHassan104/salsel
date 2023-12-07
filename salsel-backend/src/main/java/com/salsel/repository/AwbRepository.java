@@ -15,6 +15,10 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
     @Query("UPDATE Awb a SET a.status = false WHERE a.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    @Query("SELECT a FROM Awb a WHERE a.status = true ORDER BY a.id DESC")
-    List<Awb> findAllInDesOrderByIdAndStatus();
+    @Modifying
+    @Query("UPDATE Awb a SET a.status = true WHERE a.id = :id")
+    void setStatusActive(@Param("id") Long id);
+
+    @Query("SELECT a FROM Awb a WHERE a.status = :status ORDER BY a.id DESC")
+    List<Awb> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 }

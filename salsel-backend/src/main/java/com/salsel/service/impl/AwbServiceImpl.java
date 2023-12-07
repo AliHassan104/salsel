@@ -30,8 +30,8 @@ public class AwbServiceImpl implements AwbService {
     }
 
     @Override
-    public List<AwbDto> getAll() {
-        List<Awb> awbList = awbRepository.findAllInDesOrderByIdAndStatus();
+    public List<AwbDto> getAll(Boolean status) {
+        List<Awb> awbList = awbRepository.findAllInDesOrderByIdAndStatus(status);
         List<AwbDto> awbDtoList = new ArrayList<>();
 
         for (Awb awb : awbList) {
@@ -54,6 +54,14 @@ public class AwbServiceImpl implements AwbService {
         Awb awb = awbRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", id)));
         awbRepository.setStatusInactive(awb.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Awb awb = awbRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", id)));
+        awbRepository.setStatusActive(awb.getId());
     }
 
     @Override

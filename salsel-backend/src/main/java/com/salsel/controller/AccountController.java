@@ -25,8 +25,8 @@ public class AccountController {
 
     @GetMapping("/account")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<AccountDto>> getAllAccounts() {
-        List<AccountDto> accountDtoList = accountService.getAll();
+    public ResponseEntity<List<AccountDto>> getAllAccounts(@RequestParam(value = "status") Boolean status) {
+        List<AccountDto> accountDtoList = accountService.getAll(status);
         return ResponseEntity.ok(accountDtoList);
     }
 
@@ -41,6 +41,13 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/account/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateAccountStatusToActive(@PathVariable Long id) {
+        accountService.setToActiveById(id);
         return ResponseEntity.ok().build();
     }
 

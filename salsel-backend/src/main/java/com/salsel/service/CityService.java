@@ -7,9 +7,10 @@ import java.util.List;
 
 public interface CityService {
     CityDto save(CityDto cityDto);
-    List<CityDto> getAll();
+    List<CityDto> getAll(Boolean status);
     CityDto findById(Long id);
     CityDto findByName(String name);
     void deleteById(Long id);
+    void setToActiveById(Long id);
     CityDto update(Long id, CityDto cityDto);
 }

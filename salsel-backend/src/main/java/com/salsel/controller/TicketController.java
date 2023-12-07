@@ -60,4 +60,11 @@ public class TicketController {
         TicketDto updatedTicketDto = ticketService.update(id, ticketDto);
         return ResponseEntity.ok(updatedTicketDto);
     }
+
+    @PutMapping("/ticket/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateTicketStatusToActive(@PathVariable Long id) {
+        ticketService.setToActiveById(id);
+        return ResponseEntity.ok().build();
+    }
 }

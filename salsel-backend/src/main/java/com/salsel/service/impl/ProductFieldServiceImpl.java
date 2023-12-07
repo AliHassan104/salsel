@@ -133,6 +133,20 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         return null;
     }
 
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Optional<ProductField> optionalProductField = productFieldRepository.findById(id);
+
+        if(optionalProductField.isPresent()) {
+            ProductField productField = optionalProductField.get();
+            productFieldRepository.setStatusActive(id);;
+        }
+        else {
+            throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
+        }
+    }
+
     @Transactional
     @Override
     public ProductFieldDto updatedProductField(Long id, ProductField productField) {

@@ -26,8 +26,8 @@ public class AwbController {
 
     @GetMapping("/awb")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<AwbDto>> getAllAwb() {
-        List<AwbDto> awbDtoList = awbService.getAll();
+    public ResponseEntity<List<AwbDto>> getAllAwb(@RequestParam(value = "status") Boolean status) {
+        List<AwbDto> awbDtoList = awbService.getAll(status);
         return ResponseEntity.ok(awbDtoList);
     }
 
@@ -42,6 +42,13 @@ public class AwbController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteAwb(@PathVariable Long id) {
         awbService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/awb/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateAwbStatusToActive(@PathVariable Long id) {
+        awbService.setToActiveById(id);
         return ResponseEntity.ok().build();
     }
 

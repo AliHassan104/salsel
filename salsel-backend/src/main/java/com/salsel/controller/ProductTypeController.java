@@ -25,8 +25,8 @@ public class ProductTypeController {
 
     @GetMapping("/product-type")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ProductTypeDto>> getAllProductType() {
-        List<ProductTypeDto> productTypeDtoList = productTypeService.getAll();
+    public ResponseEntity<List<ProductTypeDto>> getAllProductType(@RequestParam(value = "status") Boolean status) {
+        List<ProductTypeDto> productTypeDtoList = productTypeService.getAll(status);
         return ResponseEntity.ok(productTypeDtoList);
     }
 
@@ -56,5 +56,12 @@ public class ProductTypeController {
     public ResponseEntity<ProductTypeDto> updateProductType(@PathVariable Long id, @RequestBody ProductTypeDto productTypeDto) {
         ProductTypeDto updatedProductTypeDto = productTypeService.update(id, productTypeDto);
         return ResponseEntity.ok(updatedProductTypeDto);
+    }
+
+    @PutMapping("/product-type/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateProductTypeStatusToActive(@PathVariable Long id) {
+        productTypeService.setToActiveById(id);
+        return ResponseEntity.ok().build();
     }
 }

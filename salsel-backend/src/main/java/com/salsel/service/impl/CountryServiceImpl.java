@@ -33,8 +33,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public List<CountryDto> getAll() {
-        List<Country> countryList = countryRepository.findAllInDesOrderByIdAndStatus();
+    public List<CountryDto> getAll(Boolean status) {
+        List<Country> countryList = countryRepository.findAllInDesOrderByIdAndStatus(status);
         List<CountryDto> countryDtoList = new ArrayList<>();
 
         for (Country country : countryList) {
@@ -110,6 +110,14 @@ public class CountryServiceImpl implements CountryService {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Country not found for id => %d", id)));
         countryRepository.setStatusInactive(country.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Country country = countryRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Country not found for id => %d", id)));
+        countryRepository.setStatusActive(country.getId());
     }
 
     @Override

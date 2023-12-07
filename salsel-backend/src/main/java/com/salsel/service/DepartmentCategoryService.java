@@ -7,11 +7,12 @@ import java.util.List;
 
 public interface DepartmentCategoryService {
     DepartmentCategoryDto save(DepartmentCategoryDto departmentCategoryDto);
-    List<DepartmentCategoryDto> getAll();
+    List<DepartmentCategoryDto> getAll(Boolean status);
     PaginationResponse getAllPaginatedDepartmentCategory(Integer pageNumber, Integer pageSize);
     PaginationResponse searchByName(String name, Integer pageNumber, Integer pageSize);
     DepartmentCategoryDto findById(Long id);
     DepartmentCategoryDto findByName(String name);
     void deleteById(Long id);
+    void setToActiveById(Long id);
     DepartmentCategoryDto update(Long id, DepartmentCategoryDto departmentCategoryDto);
 }

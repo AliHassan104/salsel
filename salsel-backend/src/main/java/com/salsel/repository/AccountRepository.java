@@ -14,6 +14,9 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     @Modifying
     @Query("UPDATE Account ac SET ac.status = false WHERE ac.id = :id")
     void setStatusInactive(@Param("id") Long id);
-    @Query("SELECT ac FROM Account ac WHERE ac.status = true ORDER BY ac.id DESC")
-    List<Account> findAllInDesOrderByIdAndStatus();
+    @Modifying
+    @Query("UPDATE Account ac SET ac.status = true WHERE ac.id = :id")
+    void setStatusActive(@Param("id") Long id);
+    @Query("SELECT ac FROM Account ac WHERE ac.status = :status ORDER BY ac.id DESC")
+    List<Account> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 }

@@ -39,8 +39,8 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<CityDto> getAll() {
-        List<City> cityList = cityRepository.findAllInDesOrderByIdAndStatus();
+    public List<CityDto> getAll(Boolean status) {
+        List<City> cityList = cityRepository.findAllInDesOrderByIdAndStatus(status);
         List<CityDto> cityDtoList = new ArrayList<>();
 
         for (City city : cityList) {
@@ -70,6 +70,14 @@ public class CityServiceImpl implements CityService {
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("City not found for id => %d", id)));
         cityRepository.setStatusInactive(city.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        City city = cityRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("City not found for id => %d", id)));
+        cityRepository.setStatusActive(city.getId());
     }
 
     @Override

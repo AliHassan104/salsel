@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Account;
 import com.salsel.model.DepartmentCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,12 @@ public interface DepartmentCategoryRepository extends JpaRepository<DepartmentCa
     @Query("UPDATE DepartmentCategory dc SET dc.status = false WHERE dc.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    @Query("SELECT dc FROM DepartmentCategory dc WHERE dc.status = true ORDER BY dc.id DESC")
-    List<DepartmentCategory> findAllInDesOrderByIdAndStatus();
+    @Modifying
+    @Query("UPDATE DepartmentCategory dc SET dc.status = true WHERE dc.id = :id")
+    void setStatusActive(@Param("id") Long id);
+
+    @Query("SELECT dc FROM DepartmentCategory dc WHERE dc.status = :status ORDER BY dc.id DESC")
+    List<DepartmentCategory> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
     @Query("SELECT dc FROM DepartmentCategory dc WHERE dc.status = true ORDER BY dc.id DESC")
     Page<DepartmentCategory> findAllInDesOrderByIdAndStatus(Pageable page);

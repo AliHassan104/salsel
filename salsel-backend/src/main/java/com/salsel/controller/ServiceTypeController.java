@@ -25,8 +25,8 @@ public class ServiceTypeController {
 
     @GetMapping("/service-type")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ServiceTypeDto>> getAllServiceType() {
-        List<ServiceTypeDto> serviceTypeDtoList = serviceTypeService.getAll();
+    public ResponseEntity<List<ServiceTypeDto>> getAllServiceType(@RequestParam(value = "status") Boolean status) {
+        List<ServiceTypeDto> serviceTypeDtoList = serviceTypeService.getAll(status);
         return ResponseEntity.ok(serviceTypeDtoList);
     }
 
@@ -56,5 +56,12 @@ public class ServiceTypeController {
     public ResponseEntity<ServiceTypeDto> updateServiceType(@PathVariable Long id, @RequestBody ServiceTypeDto serviceTypeDto) {
         ServiceTypeDto updatedServiceTypeDto = serviceTypeService.update(id, serviceTypeDto);
         return ResponseEntity.ok(updatedServiceTypeDto);
+    }
+
+    @PutMapping("/service-type/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateServiceTypeStatusToActive(@PathVariable Long id) {
+        serviceTypeService.setToActiveById(id);
+        return ResponseEntity.ok().build();
     }
 }

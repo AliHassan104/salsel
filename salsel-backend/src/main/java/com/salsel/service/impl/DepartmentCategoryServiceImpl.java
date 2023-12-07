@@ -43,8 +43,8 @@ public class DepartmentCategoryServiceImpl implements DepartmentCategoryService 
     }
 
     @Override
-    public List<DepartmentCategoryDto> getAll() {
-        List<DepartmentCategory> departmentCategoryList = departmentCategoryRepository.findAllInDesOrderByIdAndStatus();
+    public List<DepartmentCategoryDto> getAll(Boolean status) {
+        List<DepartmentCategory> departmentCategoryList = departmentCategoryRepository.findAllInDesOrderByIdAndStatus(status);
         List<DepartmentCategoryDto> departmentCategoryDtoList = new ArrayList<>();
 
         for (DepartmentCategory departmentCategory : departmentCategoryList) {
@@ -120,6 +120,14 @@ public class DepartmentCategoryServiceImpl implements DepartmentCategoryService 
         DepartmentCategory departmentCategory = departmentCategoryRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("DepartmentCategory not found for id => %d", id)));
         departmentCategoryRepository.setStatusInactive(departmentCategory.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        DepartmentCategory departmentCategory = departmentCategoryRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("DepartmentCategory not found for id => %d", id)));
+        departmentCategoryRepository.setStatusActive(departmentCategory.getId());
     }
 
     @Override

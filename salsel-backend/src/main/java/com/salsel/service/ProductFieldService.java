@@ -15,6 +15,7 @@ public interface ProductFieldService {
     List<ProductFieldDto> searchByName(String name);
     List<ProductFieldDto> getProductFieldByProductFieldValueId(Long productFieldValueId);
     String deleteById(Long id);
+    void setToActiveById(Long id);
     ProductFieldDto updatedProductField(Long id, ProductField productField);
     void deleteProductFieldValuesById(Long id, Long pfvId);
 }

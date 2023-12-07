@@ -34,8 +34,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<DepartmentDto> getAll() {
-        List<Department> departmentList = departmentRepository.findAllInDesOrderByIdAndStatus();
+    public List<DepartmentDto> getAll(Boolean status) {
+        List<Department> departmentList = departmentRepository.findAllInDesOrderByIdAndStatus(status);
         List<DepartmentDto> departmentDtoList = new ArrayList<>();
 
         for (Department department : departmentList) {
@@ -111,6 +111,14 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Department not found for id => %d", id)));
         departmentRepository.setStatusInactive(department.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Department not found for id => %d", id)));
+        departmentRepository.setStatusActive(department.getId());
     }
 
     @Override

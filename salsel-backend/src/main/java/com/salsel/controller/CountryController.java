@@ -26,8 +26,8 @@ public class CountryController {
 
     @GetMapping("/country")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<CountryDto>> getAllCountry() {
-        List<CountryDto> countryDtoList = countryService.getAll();
+    public ResponseEntity<List<CountryDto>> getAllCountry(@RequestParam(value = "status") Boolean status) {
+        List<CountryDto> countryDtoList = countryService.getAll(status);
         return ResponseEntity.ok(countryDtoList);
     }
 
@@ -70,6 +70,13 @@ public class CountryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteCountry(@PathVariable Long id) {
         countryService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/country/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateCountryStatusToActive(@PathVariable Long id) {
+        countryService.setToActiveById(id);
         return ResponseEntity.ok().build();
     }
 

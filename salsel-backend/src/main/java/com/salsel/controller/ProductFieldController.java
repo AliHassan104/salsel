@@ -82,4 +82,11 @@ public class ProductFieldController {
         ProductFieldDto updatedPfDto = productFieldService.updatedProductField(id, productField);
         return ResponseEntity.ok(updatedPfDto);
     }
+
+    @PutMapping("/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateProductFieldStatusToActive(@PathVariable Long id) {
+        productFieldService.setToActiveById(id);
+        return ResponseEntity.ok().build();
+    }
 }

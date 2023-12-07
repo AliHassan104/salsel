@@ -13,8 +13,9 @@ public interface TicketService {
 
     Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable);
     TicketDto save(TicketDto ticketDto);
-    List<TicketDto> getAll();
+    List<TicketDto> getAll(Boolean status);
     TicketDto findById(Long id);
     void deleteById(Long id);
+    void setToActiveById(Long id);
     TicketDto update(Long id, TicketDto ticketDto);
 }

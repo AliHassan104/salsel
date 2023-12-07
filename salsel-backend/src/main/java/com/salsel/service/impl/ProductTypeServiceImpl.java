@@ -31,8 +31,8 @@ public class ProductTypeServiceImpl implements ProductTypeService {
     }
 
     @Override
-    public List<ProductTypeDto> getAll() {
-        List<ProductType> productTypeList = productTypeRepository.findAllInDesOrderByIdAndStatus();
+    public List<ProductTypeDto> getAll(Boolean status) {
+        List<ProductType> productTypeList = productTypeRepository.findAllInDesOrderByIdAndStatus(status);
         List<ProductTypeDto> productTypeDtoList = new ArrayList<>();
 
         for (ProductType productType : productTypeList) {
@@ -62,6 +62,14 @@ public class ProductTypeServiceImpl implements ProductTypeService {
         ProductType productType = productTypeRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("ProductType not found for id => %d", id)));
         productTypeRepository.setStatusInactive(productType.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        ProductType productType = productTypeRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("ProductType not found for id => %d", id)));
+        productTypeRepository.setStatusActive(productType.getId());
     }
 
     @Override

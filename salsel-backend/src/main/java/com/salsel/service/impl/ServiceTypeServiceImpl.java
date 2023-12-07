@@ -37,8 +37,8 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     }
 
     @Override
-    public List<ServiceTypeDto> getAll() {
-        List<ServiceType> serviceTypeList = serviceTypeRepository.findAllInDesOrderByIdAndStatus();
+    public List<ServiceTypeDto> getAll(Boolean status) {
+        List<ServiceType> serviceTypeList = serviceTypeRepository.findAllInDesOrderByIdAndStatus(status);
         List<ServiceTypeDto> serviceTypeDtoList = new ArrayList<>();
 
         for (ServiceType serviceType : serviceTypeList) {
@@ -68,6 +68,14 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
         ServiceType serviceType = serviceTypeRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("ServiceType not found for id => %d", id)));
         serviceTypeRepository.setStatusInactive(serviceType.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        ServiceType serviceType = serviceTypeRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("ServiceType not found for id => %d", id)));
+        serviceTypeRepository.setStatusActive(serviceType.getId());
     }
 
     @Override

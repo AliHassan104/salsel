@@ -27,8 +27,8 @@ public class DepartmentCategoryController {
 
     @GetMapping("/department-category")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<DepartmentCategoryDto>> getAllDepartmentCategory() {
-        List<DepartmentCategoryDto> departmentCategoryDtoList = departmentCategoryService.getAll();
+    public ResponseEntity<List<DepartmentCategoryDto>> getAllDepartmentCategory(@RequestParam(value = "status") Boolean status) {
+        List<DepartmentCategoryDto> departmentCategoryDtoList = departmentCategoryService.getAll(status);
         return ResponseEntity.ok(departmentCategoryDtoList);
     }
 
@@ -68,5 +68,12 @@ public class DepartmentCategoryController {
     public ResponseEntity<DepartmentCategoryDto> updateDepartmentCategory(@PathVariable Long id,@RequestBody DepartmentCategoryDto departmentCategoryDto) {
         DepartmentCategoryDto updatedDepartmentCategoryDto = departmentCategoryService.update(id, departmentCategoryDto);
         return ResponseEntity.ok(updatedDepartmentCategoryDto);
+    }
+
+    @PutMapping("/department-category/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateDepartmentCategoryStatusToActive(@PathVariable Long id) {
+        departmentCategoryService.setToActiveById(id);
+        return ResponseEntity.ok().build();
     }
 }

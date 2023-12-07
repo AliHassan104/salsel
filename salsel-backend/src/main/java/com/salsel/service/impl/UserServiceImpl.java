@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAll() {
-        List<User> userList = userRepository.findAllInDesOrderByIdAndStatus();
+    public List<UserDto> getAll(Boolean status) {
+        List<User> userList = userRepository.findAllInDesOrderByIdAndStatus(status);
         List<UserDto> userDtoList = new ArrayList<>();
 
         for (User user : userList) {
@@ -79,6 +79,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", id)));
         userRepository.setStatusInactive(user.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", id)));
+        userRepository.setStatusActive(user.getId());
     }
 
     @Override

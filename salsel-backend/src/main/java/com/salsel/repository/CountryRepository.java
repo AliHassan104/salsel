@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Account;
 import com.salsel.model.Country;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,12 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
     @Query("UPDATE Country con SET con.status = false WHERE con.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    @Query("SELECT c FROM Country c WHERE c.status = true ORDER BY c.id DESC")
-    List<Country> findAllInDesOrderByIdAndStatus();
+    @Modifying
+    @Query("UPDATE Country con SET con.status = true WHERE con.id = :id")
+    void setStatusActive(@Param("id") Long id);
+
+    @Query("SELECT c FROM Country c WHERE c.status = :status ORDER BY c.id DESC")
+    List<Country> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
     @Query("SELECT c FROM Country c WHERE c.status = true ORDER BY c.id DESC")
     Page<Country> findAllInDesOrderByIdAndStatus(Pageable page);

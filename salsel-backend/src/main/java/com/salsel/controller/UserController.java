@@ -19,8 +19,8 @@ public class UserController {
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> userDtoList = userService.getAll();
+    public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam(value = "status") Boolean status) {
+        List<UserDto> userDtoList = userService.getAll(status);
         return ResponseEntity.ok(userDtoList);
     }
 
@@ -49,5 +49,12 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         UserDto updatedUserDto = userService.update(id, userDto);
         return ResponseEntity.ok(updatedUserDto);
+    }
+
+    @PutMapping("/user/status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateUserStatusToActive(@PathVariable Long id) {
+        userService.setToActiveById(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -6,9 +6,10 @@ import java.util.List;
 
 public interface ProductTypeService {
     ProductTypeDto save(ProductTypeDto productTypeDto);
-    List<ProductTypeDto> getAll();
+    List<ProductTypeDto> getAll(Boolean status);
     ProductTypeDto findById(Long id);
     ProductTypeDto findByCode(String code);
     void deleteById(Long id);
+    void setToActiveById(Long id);
     ProductTypeDto update(Long id, ProductTypeDto productTypeDto);
 }
