@@ -4,7 +4,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.salsel.repository.AwbRepository;
 import com.salsel.service.CodeGenerationService;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +17,6 @@ import java.nio.file.Paths;
 
 @Service
 public class CodeGenerationServiceImpl implements CodeGenerationService {
-    private final AwbRepository awbRepository;
-    public CodeGenerationServiceImpl(AwbRepository awbRepository) {
-        this.awbRepository = awbRepository;
-    }
     @Override
     public Boolean generateBarcodeVertical(String data, Long awbId, OutputStream outputStream) {
         try {
@@ -84,9 +79,6 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-        finally {
-
         }
     }
 

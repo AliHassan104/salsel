@@ -15,6 +15,7 @@ import java.time.LocalTime;
 @Data
 public class AwbDto {
     private Long id;
+    private Long uniqueNumber;
     private String shipperName;
     private String shipperContactNumber;
     private String originCountry;

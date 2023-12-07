@@ -115,7 +115,7 @@ public class AwbServiceImpl implements AwbService {
             codeGenerationService.generateQRCode(qrCodeData, awbId, qrCodeOutputStream);
 
             // Wait for barcode generation to complete
-//            barcodeGenerationFuture.join();
+            barcodeGenerationFuture.join();
 
             // Generate PDF
             byte[] pdfBytes = pdfGenerationService.generatePdf("Awb", model);
@@ -195,6 +195,7 @@ public class AwbServiceImpl implements AwbService {
     public AwbDto toDto(Awb awb) {
         return AwbDto.builder()
                 .id(awb.getId())
+                .uniqueNumber(awb.getUniqueNumber())
                 .shipperName(awb.getShipperName())
                 .shipperContactNumber(awb.getShipperContactNumber())
                 .originCountry(awb.getOriginCountry())
@@ -223,6 +224,7 @@ public class AwbServiceImpl implements AwbService {
     public Awb toEntity(AwbDto awbDto) {
         return Awb.builder()
                 .id(awbDto.getId())
+                .uniqueNumber(awbDto.getUniqueNumber())
                 .shipperName(awbDto.getShipperName())
                 .shipperContactNumber(awbDto.getShipperContactNumber())
                 .originCountry(awbDto.getOriginCountry())

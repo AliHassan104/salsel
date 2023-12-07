@@ -21,6 +21,7 @@ public class Awb {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long uniqueNumber;
     private String shipperName;
     private String shipperContactNumber;
     private String originCountry;
