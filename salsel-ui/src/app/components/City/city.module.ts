@@ -6,9 +6,9 @@ import { InputTextModule } from "primeng/inputtext";
 import { ToastModule } from "primeng/toast";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DialogModule } from "primeng/dialog";
-import { CityFormComponent } from "./city-form/city-form.component";
+import { CityFormComponent } from "./update/city-form.component";
 import { CityRoutingModule } from "./city-routing.module";
-import { CityListComponent } from "./city-list/city-list.component";
+import { CityListComponent } from "./list/city-list.component";
 import { DropdownModule } from "primeng/dropdown";
 
 @NgModule({

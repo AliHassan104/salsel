@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { CalendarModule } from "primeng/calendar";
@@ -14,19 +14,18 @@ import { MultiSelectModule } from "primeng/multiselect";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { DepartmentCategoryRoutingModule } from './department-category-routing.module';
-import { DepartmentCategoryItemComponent } from './department-category-item/department-category-item.component';
-import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
-import { DepartmentCategoryDataComponent } from './list/department-category-data.component';
-import { DepartmentCategoryComponent } from './update/department-category.component';
-
+import { DepartmentCategoryRoutingModule } from "./department-category-routing.module";
+import { DepartmentCategoryItemComponent } from "./view/department-category-item.component";
+import { TableModule } from "primeng/table";
+import { DialogModule } from "primeng/dialog";
+import { DepartmentCategoryDataComponent } from "./list/department-category-data.component";
+import { DepartmentCategoryComponent } from "./update/department-category.component";
 
 @NgModule({
   declarations: [
     DepartmentCategoryItemComponent,
     DepartmentCategoryDataComponent,
-    DepartmentCategoryComponent
+    DepartmentCategoryComponent,
   ],
   imports: [
     CommonModule,
@@ -44,7 +43,7 @@ import { DepartmentCategoryComponent } from './update/department-category.compon
     InputTextareaModule,
     MultiSelectModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
-export class DepartmentCategoryModule { }
+export class DepartmentCategoryModule {}

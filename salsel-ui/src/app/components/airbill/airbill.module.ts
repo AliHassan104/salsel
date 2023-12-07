@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { AwbcreationComponent } from "./awbcreation/awbcreation.component";
-import { AirbilldetailsComponent } from "./airbilldetails/airbilldetails.component";
-import { AirbilldataComponent } from "./airbilldata/airbilldata.component";
+import { AwbcreationComponent } from "./update/awbcreation.component";
+import { AirbilldetailsComponent } from "./view/airbilldetails.component";
+import { AirbilldataComponent } from "./list/airbilldata.component";
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
