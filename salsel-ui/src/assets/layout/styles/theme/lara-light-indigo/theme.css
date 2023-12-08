@@ -857,6 +857,12 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
+.custom-dropdown .p-dropdown {
+  background-color: transparent;
+  color: #93003c;
+  border: 1px solid #93003c;
+}
+
 .p-dropdown {
   background: #ffffff;
   border: 1px solid #ced4da;
@@ -864,9 +870,29 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
     box-shadow 0.2s;
   border-radius: 6px;
 }
+.custom-dropdown .p-dropdown:not(.p-disabled):hover {
+  background: #4e04220a;
+  color: #93003c;
+  border: 1px solid;
+}
 .p-dropdown:not(.p-disabled):hover {
   border-color: #6366f1;
 }
+.custom-dropdown .p-dropdown:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem rgba(254, 199, 201, 0.169);
+  border-color: rgb(147, 38, 38);
+}
+
+.custom-dropdown
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item.p-highlight {
+  color: #93003c;
+  background: #d1d1d121;
+}
+
 .p-dropdown:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
@@ -876,6 +902,19 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 .p-dropdown.p-dropdown-clearable .p-dropdown-label {
   padding-right: 1.75rem;
 }
+
+.custom-dropdown .p-dropdown .p-dropdown-label {
+  background: transparent;
+  border: 0 none;
+  font-weight: 700;
+  color: #93003c;
+}
+
+.custom-dropdown .p-icon {
+  color: #93003c;
+  font-weight: 700;
+}
+
 .p-dropdown .p-dropdown-label {
   background: transparent;
   border: 0 none;
@@ -937,7 +976,6 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 }
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
   color: #4338ca;
-  background: #eef2ff;
 }
 .p-dropdown-panel
   .p-dropdown-items

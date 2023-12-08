@@ -13,8 +13,9 @@ export class CityService {
 
   //   GET ALL COUNTRIES
 
-  getAllCities() {
-    return this.http.get(`${this.url}city`);
+  getAllCities(status: boolean) {
+    const params = { status: status.toString() };
+    return this.http.get(`${this.url}city`, { params });
   }
   // ADD CITY
 
