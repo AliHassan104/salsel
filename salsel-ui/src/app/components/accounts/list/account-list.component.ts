@@ -2,31 +2,70 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { AccountService } from "../service/account.service";
 import { Table } from "primeng/table";
 import { Router } from "@angular/router";
+import { DropdownService } from "src/app/service/dropdown.service";
+import { MessageService } from "primeng/api";
+import { IAccountData } from "src/app/components/accounts/model/accountValuesDto";
 
 @Component({
   selector: "app-account-list",
   templateUrl: "./account-list.component.html",
   styleUrls: ["./account-list.component.scss"],
+  providers: [MessageService],
 })
 export class AccountListComponent implements OnInit {
   @ViewChild("filter") filter!: ElementRef;
+  //   Activity Work
+  productField?;
+  status?;
+  selectedStatus: string = "Active";
+  activeStatus: boolean = true;
+
   deleteId: any;
 
-  constructor(private accountService: AccountService, private router: Router) {}
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    private dropdownService: DropdownService,
+    private messageService: MessageService
+  ) {}
 
-  accounts?;
-
+  accounts?: IAccountData[];
   deleteAccountDialog;
   loading;
 
   ngOnInit(): void {
     this.getAllAccount();
+    this.getAllProductFields();
   }
 
   //   GET ALL ACCOUNTS
   getAllAccount() {
-    this.accountService.getAllAccounts().subscribe((res) => {
-      this.accounts = res;
+    const params = { status: this.activeStatus };
+    this.accountService.getAllAccounts(params).subscribe((res) => {
+      if (res && res.body) {
+        this.accounts = res.body;
+      }
+    });
+  }
+
+  onStatusChange(data) {
+    if (data == "Active") {
+      this.activeStatus = true;
+      this.getAllAccount();
+    } else {
+      this.activeStatus = false;
+      this.getAllAccount();
+    }
+  }
+
+  //   Get All Product Fields
+  getAllProductFields() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productField = res;
+      this.status = this.dropdownService.extractNames(
+        this.productField.filter((data) => data.name == "Status")[0]
+          .productFieldValuesList
+      );
     });
   }
 
@@ -44,6 +83,7 @@ export class AccountListComponent implements OnInit {
 
   confirmDeleteSelected() {
     this.accountService.deleteAccount(this.deleteId).subscribe((res) => {
+      this.alert();
       this.getAllAccount();
       this.deleteAccountDialog = false;
     });
@@ -59,8 +99,32 @@ export class AccountListComponent implements OnInit {
   //   Edit Account
   onEditAccount(id) {
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["account/addaccount"], {
+    this.router.navigate(["account"], {
       queryParams: queryParams,
+    });
+  }
+
+  onActiveAccount(id) {
+    this.accountService.updateAccountStatus(id).subscribe((res) => {
+      this.success();
+      this.selectedStatus = "Active";
+      this.onStatusChange(this.selectedStatus);
+    });
+  }
+
+  success() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Activation Successfull",
+    });
+  }
+
+  alert() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Deactivation Successfull",
     });
   }
 }

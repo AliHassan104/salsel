@@ -2,12 +2,12 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Table } from "primeng/table";
 import { Router } from "@angular/router";
 import { ProductFieldService } from "../service/product-service.service";
-import { IProductFieldDto } from "src/app/api/productFieldDto";
+import { IProductFieldDto } from "src/app/components/product-field/model/productFieldDto";
 
 @Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.scss']
+  selector: "app-product-list",
+  templateUrl: "./product-list.component.html",
+  styleUrls: ["./product-list.component.scss"],
 })
 export class ProductListComponent {
   deleteProductsDialog: any;
@@ -29,7 +29,7 @@ export class ProductListComponent {
   getProductFields() {
     this.productFields = [];
     this.productFieldService.getProductFields().subscribe((res) => {
-      if(res && res.body){
+      if (res && res.body) {
         this.productFields = res.body;
       }
     });
@@ -54,16 +54,16 @@ export class ProductListComponent {
   //   Delete Ticket
 
   deleteProductField(id?: any) {
-    this.productFieldService.removeProductField(id).subscribe(res =>{
-      if(res.status == 200){
+    this.productFieldService.removeProductField(id).subscribe((res) => {
+      if (res.status == 200) {
         this.getProductFields();
       }
-    })
+    });
   }
 
   //   Edit Ticket
   editProductField(id?: any) {
     const queryParams = { id: id };
-    this.router.navigate(["product"], {queryParams: queryParams,})
+    this.router.navigate(["product"], { queryParams: queryParams });
   }
 }

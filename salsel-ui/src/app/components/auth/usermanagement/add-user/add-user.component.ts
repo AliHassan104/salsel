@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { Ticket } from "src/app/api/ticket";
+import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
 import { environment } from "src/environments/environment";
 

@@ -6,9 +6,9 @@ import { TicketformComponent } from "./update/ticketform.component";
 import { TicketitemComponent } from "./view/ticketitem.component";
 
 const routes: Route[] = [
-  { path: "", component: TicketsdataComponent },
-  { path: "createticket", component: TicketformComponent },
-  { path: ":id", component: TicketitemComponent },
+  { path: "", component: TicketformComponent },
+  { path: "list", component: TicketsdataComponent },
+  { path: "list/:id", component: TicketitemComponent },
 ];
 
 @NgModule({

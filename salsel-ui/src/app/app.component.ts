@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { PrimeNGConfig } from "primeng/api";
-import { LoaderService } from "./components/loader/loader.service";
+import { LoaderService } from "./components/loader/service/loader.service";
 
 @Component({
   selector: "app-root",

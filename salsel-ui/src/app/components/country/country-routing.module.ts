@@ -5,8 +5,8 @@ import { CountryFormComponent } from "./update/country-form.component";
 import { Route, RouterModule } from "@angular/router";
 
 const routes: Route[] = [
-  { path: "", component: CountryListComponent },
-  { path: "addcountry", component: CountryFormComponent },
+  { path: "", component: CountryFormComponent },
+  { path: "list", component: CountryListComponent },
 ];
 
 @NgModule({

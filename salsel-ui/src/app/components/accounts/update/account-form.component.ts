@@ -1,3 +1,4 @@
+import { IAccountData } from "../model/accountValuesDto";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
@@ -5,7 +6,8 @@ import { AccountService } from "../service/account.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
-import { AccountFormData } from "src/app/api/account";
+import { CityService } from "../../City/service/city.service";
+import { CountryService } from "../../country/service/country.service";
 
 @Component({
   selector: "app-account-form",
@@ -24,9 +26,10 @@ export class AccountFormComponent implements OnInit {
   salesRegion?;
   salesAgents?;
 
-  singleAccount;
+  singleAccount: IAccountData;
   editMode;
   editId: any;
+  params: any = { status: true };
 
   constructor(
     private messageService: MessageService,
@@ -34,11 +37,33 @@ export class AccountFormComponent implements OnInit {
     private route: ActivatedRoute,
     private dropdownService: DropdownService,
     private formService: FormvalidationService,
-    private router: Router
+    private router: Router,
+    private cityService: CityService,
+    private countryService: CountryService
   ) {}
 
   ngOnInit(): void {
     // Form Setup
+    this.FormSetup();
+
+    // QUERY PARAMS FOR EDIT PURPOSE
+    this.queryParamsId();
+
+    this.getAllProductFields();
+  }
+
+  //   Get All Cities
+  getAllCities(countryName) {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
+      this.cities = res;
+      let filterCities = this.cities.filter(
+        (city) => city.country.name == countryName
+      );
+      this.cities = this.dropdownService.extractNames(filterCities);
+    });
+  }
+
+  FormSetup() {
     this.accountForm = new FormGroup({
       accountNumber: new FormControl(null, Validators.required),
       accountType: new FormControl(null, Validators.required),
@@ -56,8 +81,32 @@ export class AccountFormComponent implements OnInit {
       salesRegion: new FormControl(null, Validators.required),
       salesAgentName: new FormControl(null, Validators.required),
     });
+  }
 
-    // QUERY PARAMS FOR EDIT PURPOSE
+  // Forms Values Edit
+  editForm() {
+    this.accountForm.setValue({
+      accountNumber: this.singleAccount.accountNumber,
+      accountType: this.singleAccount.accountType,
+      customerName: this.singleAccount.customerName,
+      contactNumber: this.singleAccount.contactNumber,
+      address: this.singleAccount.address,
+      businessActivity: this.singleAccount.businessActivity,
+      projectName: this.singleAccount.projectName,
+      tradeLicenseNo: this.singleAccount.tradeLicenseNo,
+      taxDocumentNo: this.singleAccount.taxDocumentNo,
+      county: this.singleAccount.county,
+      city: this.singleAccount.city,
+      custName: this.singleAccount.custName,
+      billingPocName: this.singleAccount.billingPocName,
+      salesRegion: this.singleAccount.salesRegion,
+      salesAgentName: this.singleAccount.salesAgentName,
+    });
+  }
+
+  //   Get id from query params
+
+  queryParamsId() {
     this.route.queryParams.subscribe((params) => {
       // Retrieve editMode and id from the query parameters
       if (params["id"] != null) {
@@ -71,37 +120,10 @@ export class AccountFormComponent implements OnInit {
     if (this.editId != null) {
       this.accountService.getSingleAccount(this.editId).subscribe((res) => {
         this.singleAccount = res;
-        this.getAllCities();
-
-        this.accountForm.setValue({
-          accountNumber: this.singleAccount.accountNumber,
-          accountType: this.singleAccount.accountType,
-          customerName: this.singleAccount.customerName,
-          contactNumber: this.singleAccount.contactNumber,
-          address: this.singleAccount.address,
-          businessActivity: this.singleAccount.businessActivity,
-          projectName: this.singleAccount.projectName,
-          tradeLicenseNo: this.singleAccount.tradeLicenseNo,
-          taxDocumentNo: this.singleAccount.taxDocumentNo,
-          county: this.singleAccount.county,
-          city: this.singleAccount.city,
-          custName: this.singleAccount.custName,
-          billingPocName: this.singleAccount.billingPocName,
-          salesRegion: this.singleAccount.salesRegion,
-          salesAgentName: this.singleAccount.salesAgentName,
-        });
+        this.getAllCities(this.singleAccount.county);
+        this.editForm();
       });
     }
-
-    this.getAllProductFields();
-  }
-
-  //   Get All Cities
-  getAllCities() {
-    this.dropdownService.getAllCities().subscribe((res) => {
-      this.cities = res;
-      this.cities = this.dropdownService.extractNames(this.cities);
-    });
   }
 
   //   GET ALL PRODUCT FIELDS
@@ -125,7 +147,7 @@ export class AccountFormComponent implements OnInit {
       );
     });
 
-    this.dropdownService.getAllCountries().subscribe((res) => {
+    this.countryService.getAllCountries(this.params).subscribe((res) => {
       this.countries = res;
       this.countries = this.dropdownService.extractNames(this.countries);
     });
@@ -133,7 +155,7 @@ export class AccountFormComponent implements OnInit {
 
   //   GET COUNTRY FROM DROPDOWN
   getCountry(country) {
-    this.dropdownService.getAllCities().subscribe((res) => {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
       this.cities = res;
       let filterCities = this.cities.filter(
         (city) => city.country.name == country.value
@@ -142,15 +164,17 @@ export class AccountFormComponent implements OnInit {
     });
   }
 
-  onSubmit(data: AccountFormData) {
+  onSubmit(data: IAccountData) {
     if (this.accountForm.valid) {
       if (this.editMode) {
         this.accountService.editAccount(this.editId, data).subscribe((res) => {
-          this.router.navigate(["account"]);
+          this.accountForm.reset();
+          this.router.navigate(["account/list"]);
         });
       } else {
         this.accountService.addAccount(data).subscribe((res) => {
-          this.router.navigate(["account"]);
+          this.accountForm.reset();
+          this.router.navigate(["account/list"]);
         });
       }
     } else {
@@ -169,6 +193,6 @@ export class AccountFormComponent implements OnInit {
 
   //   On cancel edit request
   onCancel() {
-    this.router.navigate(["account"]);
+    this.router.navigate(["account/list"]);
   }
 }

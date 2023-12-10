@@ -3,11 +3,15 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
 import { HttpClient } from "@angular/common/http";
-import { Ticket } from "src/app/api/ticket";
+import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { MessageService } from "primeng/api";
 import { environment } from "src/environments/environment";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { FormvalidationService } from "../service/formvalidation.service";
+import { CountryService } from "../../country/service/country.service";
+import { CityService } from "../../City/service/city.service";
+import { DepartmentService } from "../../department/service/department.service";
+import { DepartmentCategoryService } from "../../department-category/service/department-category.service";
 
 @Component({
   selector: "app-ticketform",
@@ -16,6 +20,8 @@ import { FormvalidationService } from "../service/formvalidation.service";
   providers: [MessageService],
 })
 export class TicketformComponent implements OnInit {
+  params = { status: true };
+
   // ALL PRODUCT FIELDS
   productFields;
 
@@ -33,8 +39,8 @@ export class TicketformComponent implements OnInit {
   // FOR EDIT PURPOSE
   editMode;
   editId;
-  singleTicket;
-  depart;
+  singleTicket: Ticket;
+
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
 
@@ -46,12 +52,30 @@ export class TicketformComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute,
     private dropdownService: DropdownService,
-    private formService: FormvalidationService
+    private formService: FormvalidationService,
+    private countryService: CountryService,
+    private cityService: CityService,
+    private departmentService: DepartmentService,
+    private departmentCategoryService: DepartmentCategoryService
   ) {}
 
   ngOnInit(): void {
     // TICKET FORM CONTROLS
 
+    this.ticketFormSetup();
+
+    // QUERY PARAMS FOR EDIT PURPOSE
+    this.queryParamSetup();
+
+    // GET ALL DROPDOWNS FROM PRODUCT FIELD UPON PAGE RELOAD
+
+    this.getAllProductFields();
+
+    // ON FORM EDIT
+    this.editForm();
+  }
+
+  ticketFormSetup() {
     this.ticketForm = new FormGroup({
       shipperName: new FormControl(null),
       shipperContactNumber: new FormControl(null),
@@ -74,8 +98,9 @@ export class TicketformComponent implements OnInit {
       ticketStatus: new FormControl(null, Validators.required),
       ticketFlag: new FormControl(null, Validators.required),
     });
+  }
 
-    // QUERY PARAMS FOR EDIT PURPOSE
+  queryParamSetup() {
     this.route.queryParams.subscribe((params) => {
       // Retrieve editMode and id from the query parameters
       if (params["id"] != null) {
@@ -85,39 +110,22 @@ export class TicketformComponent implements OnInit {
         this.editMode = false;
       }
     });
+  }
 
-    // GET ALL DROPDOWNS FROM PRODUCT FIELD UPON PAGE RELOAD
-
-    this.getAllProductFields();
-
-    // ON FORM EDIT
+  editForm() {
     if (this.editId != null) {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
-        this.getCitiesAndDeptCatgories();
-
         this.singleTicket = res;
+        this.getAllCitiesAndDepartmentCategories(
+          this.singleTicket.destinationCountry,
+          this.singleTicket.originCountry,
+          this.singleTicket.department
+        );
+
         let pickDate = new Date(this.singleTicket.pickupDate);
         let cretedAt = new Date(this.singleTicket.createdAt);
         let pickTimeArray = this.singleTicket.pickupTime;
         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
-
-        // FOR DEPARTMENT CATEGORY
-        this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
-          this.departmentCategory = res;
-          let filterDepartments = this.departmentCategory.filter(
-            (city) => city.department.name == this.singleTicket.department
-          );
-
-          // Disable
-          if (filterDepartments.length == 0) {
-            this.ticketForm.get("departmentCategory")?.disable();
-          } else {
-            this.ticketForm.get("departmentCategory")?.enable();
-          }
-
-          this.departmentCategory =
-            this.dropdownService.extractNames(filterDepartments);
-        });
 
         this.ticketForm.setValue({
           shipperName: this.singleTicket.shipperName,
@@ -174,53 +182,88 @@ export class TicketformComponent implements OnInit {
 
     // Get All Countries
 
-    this.dropdownService.getAllCountries().subscribe((res) => {
+    this.countryService.getAllCountries(this.params).subscribe((res) => {
       this.countries = res;
       this.countries = this.dropdownService.extractNames(this.countries);
     });
 
     // Get All Departments
-    this.dropdownService.getAllDepartments().subscribe((res) => {
-      this.department = res;
+    this.departmentService.getDepartments(this.params).subscribe((res) => {
+      this.department = res.body;
       this.department = this.dropdownService.extractNames(this.department);
     });
   }
 
   //   GET ALL CITIES,DEPARTMENT CATEGORIES
-  getCitiesAndDeptCatgories() {
-    this.dropdownService.getAllCities().subscribe((res) => {
+  getAllCitiesAndDepartmentCategories(
+    destinationCountry: any,
+    originCountry: any,
+    department: any
+  ) {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
       this.destinationCities = res;
       this.originCities = res;
-      this.destinationCities = this.dropdownService.extractNames(
-        this.destinationCities
+      //   Destination Cities
+      let filterDestinationCities = this.destinationCities.filter(
+        (value) => value.country.name == destinationCountry
       );
-      this.originCities = this.dropdownService.extractNames(this.originCities);
+      this.destinationCities = this.dropdownService.extractNames(
+        filterDestinationCities
+      );
+
+      //   Origin Cities
+      let filterOriginCities = this.originCities.filter(
+        (value) => value.country.name == originCountry
+      );
+      this.originCities = this.dropdownService.extractNames(filterOriginCities);
     });
+
+    // FOR DEPARTMENT CATEGORY
+    this.departmentCategoryService
+      .getDepartmentCategories(this.params)
+      .subscribe((res) => {
+        this.departmentCategory = res.body;
+        let filterDepartments = this.departmentCategory.filter(
+          (city) => city.department.name == department
+        );
+
+        // Disable
+        if (filterDepartments.length == 0) {
+          this.ticketForm.get("departmentCategory")?.disable();
+        } else {
+          this.ticketForm.get("departmentCategory")?.enable();
+        }
+
+        this.departmentCategory =
+          this.dropdownService.extractNames(filterDepartments);
+      });
   }
 
   //   GET DEPARTMENT
   getDepartment(department) {
-    this.dropdownService.getAllDepartmentCategories().subscribe((res) => {
-      this.departmentCategory = res;
-      let filterDepartments = this.departmentCategory.filter(
-        (city) => city.department.name == department.value
-      );
+    this.departmentCategoryService
+      .getDepartmentCategories(this.params)
+      .subscribe((res) => {
+        this.departmentCategory = res.body;
+        let filterDepartments = this.departmentCategory.filter(
+          (city) => city.department.name == department.value
+        );
 
-      // Disable
-      if (filterDepartments.length == 0) {
-        this.ticketForm.get("departmentCategory")?.disable();
-      } else {
-        this.ticketForm.get("departmentCategory")?.enable();
-      }
+        // Disable
+        if (filterDepartments.length == 0) {
+          this.ticketForm.get("departmentCategory")?.disable();
+        } else {
+          this.ticketForm.get("departmentCategory")?.enable();
+        }
 
-      this.departmentCategory =
-        this.dropdownService.extractNames(filterDepartments);
-    });
+        this.departmentCategory =
+          this.dropdownService.extractNames(filterDepartments);
+      });
   }
 
   //   GET DESTINATION COUNTRY FROM DROPDOWN
   getDestinationCountry(country) {
-    this.dropdownService.getAllCities().subscribe((res) => {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
       this.destinationCities = res;
       let filterCities = this.destinationCities.filter(
         (city) => city.country.name == country.value
@@ -231,7 +274,7 @@ export class TicketformComponent implements OnInit {
 
   //   GET ORGIN COUNTRYFROM DROPDOWN
   getOriginCountry(country) {
-    this.dropdownService.getAllCities().subscribe((res) => {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
       this.originCities = res;
       let filterCities = this.originCities.filter(
         (city) => city.country.name == country.value
@@ -289,14 +332,14 @@ export class TicketformComponent implements OnInit {
           .put<any>(`${environment.URL}ticket/${this.editId}`, ticketData)
           .subscribe(() => {
             this.update();
-            this.router.navigate(["tickets"]);
+            this.router.navigate(["ticket/list"]);
           });
       } else {
         //   Create Ticket
 
         this._ticketService.createTicket(ticketData).subscribe();
         this.success();
-        this.router.navigate(["tickets"]);
+        this.router.navigate(["ticket/list"]);
         this.ticketForm.reset();
       }
     } else {
@@ -308,7 +351,7 @@ export class TicketformComponent implements OnInit {
   // PART OF POPUP
 
   onCancel() {
-    this.router.navigate(["tickets"]);
+    this.router.navigate(["ticket/list"]);
   }
 
   //   Pop up message

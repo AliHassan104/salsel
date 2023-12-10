@@ -7,7 +7,7 @@ import {
 } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, finalize } from "rxjs";
-import { LoaderService } from "../../loader/loader.service";
+import { LoaderService } from "../../loader/service/loader.service";
 import { AuthService } from "./auth.service";
 
 @Injectable({

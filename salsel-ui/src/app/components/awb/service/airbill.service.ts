@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Ticket } from "src/app/api/ticket";
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -22,8 +21,8 @@ export class AirbillService {
   }
 
   //  Get All Tickets
-  getBills() {
-    return this.http.get(`${this.url}awb`);
+  getBills(params: any) {
+    return this.http.get(`${this.url}awb`, { params });
   }
 
   //   Get Single Ticket
@@ -36,6 +35,11 @@ export class AirbillService {
 
   deleteBill(id) {
     return this.http.delete(`${this.url}awb/${id}`);
+  }
+
+  //   Update Bill Sttaus
+  updateBillStatus(id) {
+    return this.http.put(`${this.url}awb/status/${id}`, {});
   }
 
   //   Get formated Date

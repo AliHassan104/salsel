@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
-import { AirbillService } from "../../airbill/service/airbill.service";
+import { AirbillService } from "../../awb/service/airbill.service";
 
 @Component({
   selector: "app-ticketitem",
@@ -40,7 +40,7 @@ export class TicketitemComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
       const queryParams = { id: a };
-      this.router.navigate(["airwaybills/createairbill"], {
+      this.router.navigate(["awb"], {
         queryParams: queryParams,
       });
     });

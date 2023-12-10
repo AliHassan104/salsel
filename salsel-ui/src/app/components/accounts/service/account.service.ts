@@ -1,8 +1,11 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { IAccountData } from "src/app/components/accounts/model/accountValuesDto";
 import { environment } from "src/environments/environment";
 
+export type EntityAccountType = HttpResponse<IAccountData>;
+export type EntityAccountFieldResponseType = HttpResponse<IAccountData[]>;
 @Injectable({
   providedIn: "root",
 })
@@ -13,19 +16,24 @@ export class AccountService {
 
   //   GET ALL ACCOUNTS
 
-  getAllAccounts() {
-    return this.http.get(`${this.url}account`);
+  getAllAccounts(params: any): Observable<EntityAccountFieldResponseType> {
+    return this.http.get<IAccountData[]>(`${this.url}account`, {
+      params,
+      observe: "response",
+    });
   }
 
   // ADD ACCOUNT
 
-  addAccount(data: any): Observable<any> {
-    return this.http.post(`${this.url}account`, data);
+  addAccount(accountDto: IAccountData): Observable<EntityAccountType> {
+    return this.http.post(`${this.url}account`, accountDto, {
+      observe: "response",
+    });
   }
 
   // DELETE ACCOUNT
 
-  deleteAccount(id: any) {
+  deleteAccount(id?: any) {
     return this.http.delete(`${this.url}account/${id}`);
   }
 
@@ -37,5 +45,10 @@ export class AccountService {
   //   GET SINGLE ACCOUNT
   getSingleAccount(id: any) {
     return this.http.get(`${this.url}account/${id}`);
+  }
+
+  //   Update Account Status
+  updateAccountStatus(id) {
+    return this.http.put(`${this.url}account/status/${id}`, {});
   }
 }

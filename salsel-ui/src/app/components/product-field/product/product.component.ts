@@ -1,30 +1,35 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { Ticket } from "src/app/api/ticket";
+import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { MessageService } from "primeng/api";
 import { environment } from "src/environments/environment";
-import { IProductFieldValuesDto } from "src/app/api/productFieldValuesDto";
-import { IProductFieldDto } from "src/app/api/productFieldDto";
+import { IProductFieldValuesDto } from "src/app/components/product-field/model/productFieldValuesDto";
+import { IProductFieldDto } from "src/app/components/product-field/model/productFieldDto";
 import { ProductFieldService } from "../service/product-service.service";
 import { an } from "@fullcalendar/core/internal-common";
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss'],
-  providers: [MessageService]
+  selector: "app-product",
+  templateUrl: "./product.component.html",
+  styleUrls: ["./product.component.scss"],
+  providers: [MessageService],
 })
 export class ProductComponent {
-
   productFieldForm: FormGroup;
   types = ["DROPDOWN", "MULTIDROPDOWN"];
   status = ["Active", "Inactive"];
   productFieldDto?: IProductFieldDto;
   submitForm?: boolean = false;
   productFieldId?: any;
-  mode?: string = 'Create'
+  mode?: string = "Create";
 
   constructor(
     private router: Router,
@@ -32,15 +37,13 @@ export class ProductComponent {
     private messageService: MessageService,
     private fb: FormBuilder,
     private productService?: ProductFieldService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-
-    this.route.queryParams.subscribe(params => {
-      this.productFieldId = params['id'];
-      if(this.productFieldId){
-        this.mode = 'Update';
+    this.route.queryParams.subscribe((params) => {
+      this.productFieldId = params["id"];
+      if (this.productFieldId) {
+        this.mode = "Update";
         this.updateForm(this.productFieldId);
       }
     });
@@ -49,16 +52,16 @@ export class ProductComponent {
       name: [null, Validators.required],
       sequence: [null, Validators.required],
       type: [null, Validators.required],
-      productFieldStatus: ['Active', Validators.required],
+      productFieldStatus: ["Active", Validators.required],
       productFieldValues: this.fb.array([this.createProductField()]),
     });
-  };
+  }
 
   createProductField(): FormGroup {
     return this.fb.group({
       id: [null],
       name: [null, Validators.required],
-      status: ['Active', Validators.required],
+      status: ["Active", Validators.required],
     });
   }
 
@@ -69,34 +72,40 @@ export class ProductComponent {
   removeProductField(index: number, pfvid?: any) {
     this.productFieldValues.removeAt(index);
 
-    if(this.productFieldId){
-      this.productService.removeProductFieldValue(this.productFieldId, pfvid).subscribe(res =>{
-        if(res.status == 200){
-        }
-      })
+    if (this.productFieldId) {
+      this.productService
+        .removeProductFieldValue(this.productFieldId, pfvid)
+        .subscribe((res) => {
+          if (res.status == 200) {
+          }
+        });
     }
   }
 
   get productFieldValues() {
-    return (this.productFieldForm.get('productFieldValues') as FormArray);
+    return this.productFieldForm.get("productFieldValues") as FormArray;
   }
 
   isTypeSelected(): boolean {
-    const typeControl = this.productFieldForm.get('type');
-    return typeControl && typeControl.value !== null && typeControl.value !== '';
+    const typeControl = this.productFieldForm.get("type");
+    return (
+      typeControl && typeControl.value !== null && typeControl.value !== ""
+    );
   }
 
-  getProductFieldById(id?: any){
-    this.productService.getProductFieldById(id).subscribe(res =>{
-      if(res && res.body){
-        this.productFieldDto = res.body
+  getProductFieldById(id?: any) {
+    this.productService.getProductFieldById(id).subscribe((res) => {
+      if (res && res.body) {
+        this.productFieldDto = res.body;
         this.patchFormWithDto();
       }
-    })
+    });
   }
 
   patchFormWithDto() {
-    const productFieldValuesArray = this.productFieldForm.get('productFieldValues') as FormArray;
+    const productFieldValuesArray = this.productFieldForm.get(
+      "productFieldValues"
+    ) as FormArray;
     productFieldValuesArray.clear();
     this.productFieldForm.patchValue({
       name: this.productFieldDto.name,
@@ -106,39 +115,44 @@ export class ProductComponent {
     });
 
     this.productFieldDto.productFieldValuesList.forEach((value) => {
-      productFieldValuesArray.push(this.fb.group({
-        id: value.id,
-        name: value.name,
-        status: value.status
-      }));
+      productFieldValuesArray.push(
+        this.fb.group({
+          id: value.id,
+          name: value.name,
+          status: value.status,
+        })
+      );
     });
   }
 
   onSubmit() {
-    if(this.submitForm && this.productFieldForm.valid){
+    if (this.submitForm && this.productFieldForm.valid) {
       this.productFieldDto = this.createFromForm();
-      this.productService.addProductFields(this.productFieldDto).subscribe(res =>{
-        if(res && res.body){
-          this.router.navigate(["product/product-list"])
-        }
-      })
+      this.productService
+        .addProductFields(this.productFieldDto)
+        .subscribe((res) => {
+          if (res && res.body) {
+            this.router.navigate(["product/product-list"]);
+          }
+        });
     }
     this.submitForm = false;
   }
 
-  createFromForm(){
+  createFromForm() {
     const formValue = this.productFieldForm.value;
 
-    const productFieldValuesList: IProductFieldValuesDto[] = formValue.productFieldValues.map((values: any) => {
-      return {
-        id: values.id? values.id : undefined,
-        name: values.name,
-        status: values.status,
-      };
-    });
+    const productFieldValuesList: IProductFieldValuesDto[] =
+      formValue.productFieldValues.map((values: any) => {
+        return {
+          id: values.id ? values.id : undefined,
+          name: values.name,
+          status: values.status,
+        };
+      });
 
     const productFieldDto: IProductFieldDto = {
-      id: this.productFieldId? this.productFieldId : undefined,
+      id: this.productFieldId ? this.productFieldId : undefined,
       name: formValue.name,
       sequence: formValue.sequence,
       type: formValue.type,
@@ -149,7 +163,7 @@ export class ProductComponent {
     return productFieldDto;
   }
 
-  updateForm(id?: any){
+  updateForm(id?: any) {
     this.getProductFieldById(id);
   }
 

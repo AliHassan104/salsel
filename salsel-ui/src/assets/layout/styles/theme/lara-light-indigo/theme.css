@@ -876,7 +876,7 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
   border: 1px solid;
 }
 .p-dropdown:not(.p-disabled):hover {
-  border-color: #6366f1;
+  border-color: #93003c;
 }
 .custom-dropdown .p-dropdown:not(.p-disabled).p-focus {
   outline: 0 none;
@@ -918,6 +918,9 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 .p-dropdown .p-dropdown-label {
   background: transparent;
   border: 0 none;
+}
+.custom-dropdown .p-dropdown .p-dropdown-label.p-placeholder {
+  color: #93003c;
 }
 .p-dropdown .p-dropdown-label.p-placeholder {
   color: #6c757d;
@@ -1326,7 +1329,7 @@ p-inputswitch.ng-dirty.ng-invalid > .p-inputswitch {
   border-radius: 6px;
 }
 .p-inputtext:enabled:hover {
-  border-color: #6366f1;
+  border-color: #93003c;
 }
 .p-inputtext:enabled:focus {
   outline: 0 none;

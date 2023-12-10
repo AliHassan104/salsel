@@ -13,8 +13,7 @@ export class CityService {
 
   //   GET ALL COUNTRIES
 
-  getAllCities(status: boolean) {
-    const params = { status: status.toString() };
+  getAllCities(params: any) {
     return this.http.get(`${this.url}city`, { params });
   }
   // ADD CITY
@@ -37,5 +36,10 @@ export class CityService {
   //   GET SINGLE CITY
   getSingleCity(id: any) {
     return this.http.get(`${this.url}city/${id}`);
+  }
+
+  //   Update City Status
+  updateCityStatus(id: any) {
+    return this.http.put(`${this.url}city/status/${id}`, {});
   }
 }

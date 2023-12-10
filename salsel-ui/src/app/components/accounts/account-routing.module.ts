@@ -6,9 +6,9 @@ import { Route, RouterModule } from "@angular/router";
 import { AccountViewComponent } from "./view/account-view.component";
 
 const routes: Route[] = [
-  { path: "", component: AccountListComponent },
-  { path: "addaccount", component: AccountFormComponent },
-  { path: ":id", component: AccountViewComponent },
+  { path: "", component: AccountFormComponent },
+  { path: "list", component: AccountListComponent },
+  { path: "list/:id", component: AccountViewComponent },
 ];
 
 @NgModule({

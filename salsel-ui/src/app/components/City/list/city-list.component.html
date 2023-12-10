@@ -5,7 +5,7 @@
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
                 Cities List</h1>
             <div class="flex justify-content-end">
-                <button pButton label="Add City" class="mb-2" routerLink="addcity"></button>
+                <button pButton label="Add City" class="mb-2" routerLink="/city"></button>
             </div>
             <hr>
             <p-table #dt1 [value]="cities" dataKey="id" [rows]="10" [loading]="loading" [rowHover]="true"

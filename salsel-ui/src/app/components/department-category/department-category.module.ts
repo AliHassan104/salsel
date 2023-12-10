@@ -15,18 +15,14 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { DepartmentCategoryRoutingModule } from "./department-category-routing.module";
-import { DepartmentCategoryItemComponent } from "./view/department-category-item.component";
 import { TableModule } from "primeng/table";
 import { DialogModule } from "primeng/dialog";
 import { DepartmentCategoryDataComponent } from "./list/department-category-data.component";
 import { DepartmentCategoryComponent } from "./update/department-category.component";
+import { ToastModule } from "primeng/toast";
 
 @NgModule({
-  declarations: [
-    DepartmentCategoryItemComponent,
-    DepartmentCategoryDataComponent,
-    DepartmentCategoryComponent,
-  ],
+  declarations: [DepartmentCategoryDataComponent, DepartmentCategoryComponent],
   imports: [
     CommonModule,
     DepartmentCategoryRoutingModule,
@@ -44,6 +40,7 @@ import { DepartmentCategoryComponent } from "./update/department-category.compon
     MultiSelectModule,
     FormsModule,
     ReactiveFormsModule,
+    ToastModule,
   ],
 })
 export class DepartmentCategoryModule {}

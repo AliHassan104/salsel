@@ -38,7 +38,9 @@ export class CityListComponent {
   //   GET ALL COUNTIRES DATA
 
   getAllCities() {
-    this._cityService.getAllCities(this.activeStatus).subscribe((res) => {
+    const params = { status: this.activeStatus };
+
+    this._cityService.getAllCities(params).subscribe((res) => {
       this.cities = res;
     });
   }
@@ -94,15 +96,17 @@ export class CityListComponent {
   //   Edit Ticket
   onEditCity(id) {
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["city/addcity"], {
+    this.router.navigate(["city"], {
       queryParams: queryParams,
     });
   }
 
   onActiveCity(id) {
-    this.success();
-    this.selectedStatus = "Active";
-    this.onStatusChange(this.selectedStatus);
+    this._cityService.updateCityStatus(id).subscribe((res) => {
+      this.success();
+      this.selectedStatus = "Active";
+      this.onStatusChange(this.selectedStatus);
+    });
   }
 
   success() {

@@ -1,8 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { TableModule } from "primeng/table";
 import { DialogModule } from "primeng/dialog";
-
 
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { CalendarModule } from "primeng/calendar";
@@ -17,17 +16,13 @@ import { MultiSelectModule } from "primeng/multiselect";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { DepartmentRoutingModule } from './department-routing.module';
-import { DepartmentItemComponent } from './view/department-item.component';
-import { DepartmentComponent } from './update/department.component';
-import { DepartmentListComponent } from './list/department-list.component';
+import { DepartmentRoutingModule } from "./department-routing.module";
+import { DepartmentComponent } from "./update/department.component";
+import { DepartmentListComponent } from "./list/department-list.component";
+import { ToastModule } from "primeng/toast";
 
 @NgModule({
-  declarations: [
-    DepartmentListComponent,
-    DepartmentItemComponent,
-    DepartmentComponent
-  ],
+  declarations: [DepartmentListComponent, DepartmentComponent],
   imports: [
     CommonModule,
     DepartmentRoutingModule,
@@ -44,7 +39,8 @@ import { DepartmentListComponent } from './list/department-list.component';
     InputTextareaModule,
     MultiSelectModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    ToastModule,
+  ],
 })
-export class DepartmentModule { }
+export class DepartmentModule {}

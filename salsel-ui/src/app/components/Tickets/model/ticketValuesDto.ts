@@ -7,7 +7,7 @@ export interface Ticket {
   departmentCategory?: string;
   destinationCity?: string;
   destinationCountry?: string;
-  id?: 0;
+  id?: number;
   originCity?: string;
   originCountry?: string;
   pickupAddress?: string;

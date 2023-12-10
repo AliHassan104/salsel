@@ -5,8 +5,8 @@ import { CityFormComponent } from "./update/city-form.component";
 import { Route, RouterModule } from "@angular/router";
 
 const routes: Route[] = [
-  { path: "", component: CityListComponent },
-  { path: "addcity", component: CityFormComponent },
+  { path: "", component: CityFormComponent },
+  { path: "list", component: CityListComponent },
 ];
 
 @NgModule({

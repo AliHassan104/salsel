@@ -13,8 +13,8 @@ export class CountryService {
 
   //   GET ALL COUNTRIES
 
-  getAllCountries() {
-    return this.http.get(`${this.url}country`);
+  getAllCountries(params: any) {
+    return this.http.get(`${this.url}country`, { params });
   }
   // ADD COUNTRY
 
@@ -36,5 +36,9 @@ export class CountryService {
   //   GET SINGLE COUNTRY
   getSingleCountry(id: any) {
     return this.http.get(`${this.url}country/${id}`);
+  }
+
+  updateCountryStatus(id: any) {
+    return this.http.put(`${this.url}country/status/${id}`, {});
   }
 }

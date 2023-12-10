@@ -14,7 +14,7 @@ import { ProgressBarModule } from "primeng/progressbar";
 import { ToastModule } from "primeng/toast";
 import { SliderModule } from "primeng/slider";
 import { RatingModule } from "primeng/rating";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { CalendarModule } from "primeng/calendar";
@@ -34,6 +34,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
   ],
   imports: [
     CommonModule,
+    FormsModule,
     TableModule,
     ReactiveFormsModule,
     RatingModule,

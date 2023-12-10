@@ -25,46 +25,46 @@ export class AppMenuComponent implements OnInit {
           {
             label: "Account",
             icon: "pi pi-users",
-            routerLink: "account",
+            routerLink: "account/list",
           },
           {
-            label: "Tickets",
+            label: "Ticket",
             icon: "pi pi-ticket",
-            routerLink: "tickets",
+            routerLink: "ticket/list",
           },
           {
-            label: "Air Waybills",
+            label: "Air Waybill",
             icon: "pi pi-money-bill",
-            routerLink: "airwaybills",
+            routerLink: "awb/list",
           },
           {
             label: "Department",
             icon: "pi pi-database",
-            routerLink: "department",
+            routerLink: "department/list",
           },
           {
             label: "Department Category",
             icon: "pi pi-user",
-            routerLink: "department-category",
+            routerLink: "department-category/list",
           },
           {
             label: "Country",
             icon: "pi pi-flag-fill",
-            routerLink: "country",
+            routerLink: "country/list",
           },
           {
             label: "City",
             icon: "pi pi-building",
-            routerLink: "city",
+            routerLink: "city/list",
           },
           {
             label: "Product Type",
-            icon: "pi pi-building",
+            icon: "pi pi-box",
             routerLink: "product-type/list",
           },
           {
             label: "Service Type",
-            icon: "pi pi-building",
+            icon: "pi pi-cog",
             routerLink: "service-type/list",
           },
 

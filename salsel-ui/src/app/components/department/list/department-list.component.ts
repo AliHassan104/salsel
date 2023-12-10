@@ -1,15 +1,23 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { Table } from 'primeng/table';
-import { IDepartment } from 'src/app/api/department.model';
-import { DepartmentService } from '../service/department.service';
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { Table } from "primeng/table";
+import { IDepartment } from "src/app/components/department/model/department.model";
+import { DepartmentService } from "../service/department.service";
+import { MessageService } from "primeng/api";
+import { DropdownService } from "src/app/service/dropdown.service";
 
 @Component({
-  selector: 'app-department-list',
-  templateUrl: './department-list.component.html',
-  styleUrls: ['./department-list.component.scss']
+  selector: "app-department-list",
+  templateUrl: "./department-list.component.html",
+  styleUrls: ["./department-list.component.scss"],
+  providers: [MessageService],
 })
 export class DepartmentListComponent {
+  productField?;
+  status?;
+  selectedStatus: string = "Active";
+  activeStatus: boolean = true;
+
   deleteDialog: any;
   departments?: IDepartment[];
   data: any = {};
@@ -17,21 +25,46 @@ export class DepartmentListComponent {
 
   constructor(
     private departmentService: DepartmentService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService,
+    private dropdownService: DropdownService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
 
   ngOnInit(): void {
     this.getDepartments();
+    this.getAllProductFields();
   }
 
   getDepartments() {
-    this.departmentService.getDepartments().subscribe((res) => {
-      if(res && res.body){
+    const params = { status: this.activeStatus };
+    this.departmentService.getDepartments(params).subscribe((res) => {
+      if (res && res.body) {
         this.departments = res.body;
-        console.log(this.departments)
+        console.log(this.departments);
       }
+    });
+  }
+
+  onStatusChange(data) {
+    if (data == "Active") {
+      this.activeStatus = true;
+      this.getDepartments();
+    } else {
+      this.activeStatus = false;
+      this.getDepartments();
+    }
+  }
+
+  //   Get All Product Fields
+  getAllProductFields() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productField = res;
+      this.status = this.dropdownService.extractNames(
+        this.productField.filter((data) => data.name == "Status")[0]
+          .productFieldValuesList
+      );
     });
   }
 
@@ -45,13 +78,13 @@ export class DepartmentListComponent {
   }
   confirmDeleteSelected() {
     this.departmentService.removeDepartment(this.deleteId).subscribe((res) => {
-      if(res.status == 200){
+      if (res.status == 200) {
+        this.alert();
         this.getDepartments();
         this.deleteDialog = false;
       }
     });
   }
-
 
   deleteDepartment(id?: any) {
     this.deleteId = id;
@@ -60,6 +93,30 @@ export class DepartmentListComponent {
 
   editDepartment(id?: any) {
     const queryParams = { id: id };
-    this.router.navigate(["department/form"], {queryParams: queryParams});
+    this.router.navigate(["department"], { queryParams: queryParams });
+  }
+
+  onActiveDepartment(id) {
+    this.departmentService.updateDepartmentStatus(id).subscribe((res) => {
+      this.success();
+      this.selectedStatus = "Active";
+      this.onStatusChange(this.selectedStatus);
+    });
+  }
+
+  success() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Activation Successfull",
+    });
+  }
+
+  alert() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Deactivation Successfull",
+    });
   }
 }

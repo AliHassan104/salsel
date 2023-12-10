@@ -28,70 +28,138 @@
                 <!-- Customer Name-->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="customerName"><strong>Customer Namer</strong></label>
-                    <input pInputText id="customerName" type="text" formControlName="customerName" />
+                    <input pInputText id="customerName" type="text" formControlName="customerName"
+                        [ngClass]="{'ng-dirty':accountForm.get('customerName')?.touched && accountForm.get('customerName')?.invalid}" />
+                    <small *ngIf="!accountForm.get('customerName')?.valid && accountForm.get('customerName')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Contact Number-->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contact"><strong>Contact Number</strong></label>
-                    <input pInputText id="contactNumber" type="text" formControlName="contactNumber" />
+                    <input pInputText id="contactNumber" type="text" formControlName="contactNumber"
+                        [ngClass]="{'ng-dirty':accountForm.get('contactNumber')?.touched && accountForm.get('contactNumber')?.invalid}" />
+                    <small *ngIf="!accountForm.get('contactNumber')?.valid && accountForm.get('contactNumber')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Address -->
                 <div class="field col-12">
                     <label htmlFor="address"><strong>Address</strong></label>
-                    <input pInputTextarea id="address" rows="4" formControlName="address" />
+                    <input pInputTextarea id="address" rows="4" formControlName="address"
+                        [ngClass]="{'ng-dirty':accountForm.get('address')?.touched && accountForm.get('address')?.invalid}" />
+                    <small *ngIf="!accountForm.get('address')?.valid && accountForm.get('address')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Business Activity-->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="businessActivity"><strong>Business Activity</strong></label>
-                    <input pInputText id="businessActivity" type="text" formControlName="businessActivity" />
+                    <input pInputText id="businessActivity" type="text" formControlName="businessActivity"
+                        [ngClass]="{'ng-dirty':accountForm.get('businessActivity')?.touched && accountForm.get('businessActivity')?.invalid}" />
+                    <small
+                        *ngIf="!accountForm.get('businessActivity')?.valid && accountForm.get('businessActivity')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Project Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="projectName"><strong>Project Name</strong></label>
-                    <input pInputText id="projectName" type="text" formControlName="projectName" />
+                    <input pInputText id="projectName" type="text" formControlName="projectName"
+                        [ngClass]="{'ng-dirty':accountForm.get('projectName')?.touched && accountForm.get('projectName')?.invalid}" />
+                    <small *ngIf="!accountForm.get('projectName')?.valid && accountForm.get('projectName')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Trade License Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="tradeLicenseNo"><strong>Trade License Number</strong></label>
-                    <input pInputText id="tradeLicenseNo" type="text" formControlName="tradeLicenseNo" />
+                    <input pInputText id="tradeLicenseNo" type="text" formControlName="tradeLicenseNo"
+                        [ngClass]="{'ng-dirty':accountForm.get('tradeLicenseNo')?.touched && accountForm.get('tradeLicenseNo')?.invalid}" />
+                    <small
+                        *ngIf="!accountForm.get('tradeLicenseNo')?.valid && accountForm.get('tradeLicenseNo')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Tax Document Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="taxDocumentNo"><strong>Tax Document Number</strong></label>
-                    <input pInputText id="taxDocumentNo" type="text" formControlName="taxDocumentNo" />
+                    <input pInputText id="taxDocumentNo" type="text" formControlName="taxDocumentNo"
+                        [ngClass]="{'ng-dirty':accountForm.get('taxDocumentNo')?.touched && accountForm.get('taxDocumentNo')?.invalid}" />
+                    <small *ngIf="!accountForm.get('taxDocumentNo')?.valid && accountForm.get('taxDocumentNo')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Country -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="country"><strong>Country</strong></label>
                     <p-dropdown [options]="countries" placeholder="Select Country" formControlName="county"
-                        (onChange)="getCountry($event)"></p-dropdown>
+                        (onChange)="getCountry($event)"
+                        [ngClass]="{'ng-dirty':accountForm.get('county')?.touched && accountForm.get('county')?.invalid}"></p-dropdown>
+                    <small *ngIf="!accountForm.get('county')?.valid && accountForm.get('county')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!--City -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="City"><strong>City</strong></label>
-                    <p-dropdown [options]="cities" placeholder="Select city" formControlName="city"></p-dropdown>
+                    <p-dropdown [options]="cities" placeholder="Select city" formControlName="city"
+                        [ngClass]="{'ng-dirty':accountForm.get('city')?.touched && accountForm.get('city')?.invalid}"></p-dropdown>
+                    <small *ngIf="!accountForm.get('city')?.valid && accountForm.get('city')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Cust Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="custName"><strong>Cust Name</strong></label>
-                    <input pInputText id="custName" type="text" formControlName="custName" />
+                    <input pInputText id="custName" type="text" formControlName="custName"
+                        [ngClass]="{'ng-dirty':accountForm.get('custName')?.touched && accountForm.get('custName')?.invalid}" />
+                    <small *ngIf="!accountForm.get('custName')?.valid && accountForm.get('custName')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Billing POC Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="billingPocName"><strong>Billing POC Name</strong></label>
-                    <input pInputText id="billingPocName" type="text" formControlName="billingPocName" />
+                    <input pInputText id="billingPocName" type="text" formControlName="billingPocName"
+                        [ngClass]="{'ng-dirty':accountForm.get('billingPocName')?.touched && accountForm.get('billingPocName')?.invalid}" />
+                    <small
+                        *ngIf="!accountForm.get('billingPocName')?.valid && accountForm.get('billingPocName')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!--Sales Region -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="salesRegion"><strong>Sales Region</strong></label>
-                    <p-dropdown [options]="salesRegion" placeholder="Select Sales Region"
-                        formControlName="salesRegion"></p-dropdown>
+                    <p-dropdown [options]="salesRegion" placeholder="Select Sales Region" formControlName="salesRegion"
+                        [ngClass]="{'ng-dirty':accountForm.get('salesRegion')?.touched && accountForm.get('salesRegion')?.invalid}"></p-dropdown>
+                    <small *ngIf="!accountForm.get('salesRegion')?.valid && accountForm.get('salesRegion')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
                 <!-- Sales Agent Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="salesAgentName"><strong>Sales Agent</strong></label>
                     <p-dropdown [options]="salesAgents" placeholder="Select Sales Agent"
-                        formControlName="salesAgentName" (onChange)="getCountry($event)"></p-dropdown>
+                        formControlName="salesAgentName"
+                        [ngClass]="{'ng-dirty':accountForm.get('salesAgentName')?.touched && accountForm.get('salesAgentName')?.invalid}"></p-dropdown>
+                    <small
+                        *ngIf="!accountForm.get('salesAgentName')?.valid && accountForm.get('salesAgentName')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
 
                 <div class="flex justify-content-end w-full">

@@ -1,4 +1,4 @@
-export interface Airbill {
+export interface IAwbDto {
   amount?: number;
   content?: string;
   currency?: string;

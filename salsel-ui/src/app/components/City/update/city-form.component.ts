@@ -5,7 +5,7 @@ import { CityService } from "../service/city.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
-import { Country } from "../../../api/customer";
+import { Country } from "../../../Api/customer";
 
 @Component({
   selector: "app-city-form",
@@ -22,6 +22,7 @@ export class CityFormComponent implements OnInit {
 
   editMode;
   editId;
+  params = { status: true };
 
   constructor(
     private countryService: CountryService,
@@ -34,12 +35,23 @@ export class CityFormComponent implements OnInit {
 
   ngOnInit(): void {
     // REACTIVE FORM SETUP
+    this.formSetup();
+
+    //Query Params
+    this.queryParamSetup();
+    this.editForm();
+
+    this.getAllCountries();
+  }
+
+  formSetup() {
     this.cityForm = new FormGroup({
       name: new FormControl(null, Validators.required),
       country: new FormControl(null, Validators.required),
     });
+  }
 
-    //Query Params
+  queryParamSetup() {
     this.route.queryParams.subscribe((params) => {
       if (params["id"] != null) {
         this.editMode = params["updateMode"] === "true"; // Convert to boolean
@@ -48,12 +60,15 @@ export class CityFormComponent implements OnInit {
         this.editMode = false;
       }
     });
+  }
+
+  editForm() {
     if (this.editMode) {
       this.cityService.getSingleCity(this.editId).subscribe((res) => {
         this.singleCity = res;
 
         //For Country
-        this.countryService.getAllCountries().subscribe((res) => {
+        this.countryService.getAllCountries(this.params).subscribe((res) => {
           this.editedCountry = res;
           this.editedCountry = this.editedCountry.filter(
             (country) => country.name == this.singleCity.country.name
@@ -68,13 +83,11 @@ export class CityFormComponent implements OnInit {
         });
       });
     }
-
-    this.getAllCountries();
   }
 
   //   GET ALL COUNTRIES
   getAllCountries() {
-    this.countryService.getAllCountries().subscribe((res) => {
+    this.countryService.getAllCountries(this.params).subscribe((res) => {
       this.countries = res;
     });
   }
@@ -91,11 +104,13 @@ export class CityFormComponent implements OnInit {
 
       if (this.editMode) {
         this.cityService.editCity(this.editId, data).subscribe((res) => {
-          this.router.navigate(["city"]);
+          this.cityForm.reset();
+          this.router.navigate(["city/list"]);
         });
       } else {
         this.cityService.addCity(data).subscribe((res) => {
-          this.router.navigate(["city"]);
+          this.cityForm.reset();
+          this.router.navigate(["city/list"]);
         });
       }
     } else {
@@ -114,6 +129,6 @@ export class CityFormComponent implements OnInit {
 
   //   On cancel edit request
   onCancel() {
-    this.router.navigate(["country"]);
+    this.router.navigate(["city/list"]);
   }
 }

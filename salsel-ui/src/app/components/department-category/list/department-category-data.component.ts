@@ -1,38 +1,70 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { Table } from 'primeng/table';
-import { IDepartment } from 'src/app/api/department.model';
-import { DepartmentService } from '../../department/service/department.service';
-import { IDepartmentCategory } from 'src/app/api/department-category.model';
-import { DepartmentCategoryService } from '../service/department-category.service';
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { Table } from "primeng/table";
+import { IDepartmentCategory } from "src/app/components/department-category/model/department-category.model";
+import { DepartmentCategoryService } from "../service/department-category.service";
+import { MessageService } from "primeng/api";
+import { DropdownService } from "src/app/service/dropdown.service";
 
 @Component({
-  selector: 'app-department-category-data',
-  templateUrl: './department-category-data.component.html',
-  styleUrls: ['./department-category-data.component.scss']
+  selector: "app-department-category-data",
+  templateUrl: "./department-category-data.component.html",
+  styleUrls: ["./department-category-data.component.scss"],
+  providers: [MessageService],
 })
 export class DepartmentCategoryDataComponent {
+  productField?;
+  status?;
+  selectedStatus: string = "Active";
+  activeStatus: boolean = true;
+
   deleteDialog: any;
   departmentCategories?: IDepartmentCategory[];
   deleteId: any;
 
   constructor(
     private departmentCategoryService: DepartmentCategoryService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService,
+    private dropdownService: DropdownService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
 
   ngOnInit(): void {
     this.getDepartmentCategories();
+    this.getAllProductFields();
   }
 
   getDepartmentCategories() {
-    this.departmentCategoryService.getDepartmentCategories().subscribe((res) => {
-      if(res && res.body){
-        this.departmentCategories = res.body;
-        console.log(this.departmentCategories)
-      }
+    const params = { status: this.activeStatus };
+    this.departmentCategoryService
+      .getDepartmentCategories(params)
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.departmentCategories = res.body;
+        }
+      });
+  }
+
+  onStatusChange(data) {
+    if (data == "Active") {
+      this.activeStatus = true;
+      this.getDepartmentCategories();
+    } else {
+      this.activeStatus = false;
+      this.getDepartmentCategories();
+    }
+  }
+
+  //   Get All Product Fields
+  getAllProductFields() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productField = res;
+      this.status = this.dropdownService.extractNames(
+        this.productField.filter((data) => data.name == "Status")[0]
+          .productFieldValuesList
+      );
     });
   }
 
@@ -45,14 +77,15 @@ export class DepartmentCategoryDataComponent {
     this.filter.nativeElement.value = "";
   }
   confirmDeleteSelected() {
-    this.departmentCategoryService.removeDepartmentCategory(this.deleteId).subscribe((res) => {
-      if(res.status == 200){
-        this.getDepartmentCategories();
-        this.deleteDialog = false;
-      }
-    });
+    this.departmentCategoryService
+      .removeDepartmentCategory(this.deleteId)
+      .subscribe((res) => {
+        if (res.status == 200) {
+          this.getDepartmentCategories();
+          this.deleteDialog = false;
+        }
+      });
   }
-
 
   deleteDepartmentCategory(id?: any) {
     this.deleteId = id;
@@ -61,6 +94,34 @@ export class DepartmentCategoryDataComponent {
 
   editDepartmentCategory(id?: any) {
     const queryParams = { id: id };
-    this.router.navigate(["department-category/form"], {queryParams: queryParams});
+    this.router.navigate(["department-category"], {
+      queryParams: queryParams,
+    });
+  }
+
+  onActiveDepartmentCategory(id) {
+    this.departmentCategoryService
+      .updateDepartmentCategoryStatus(id)
+      .subscribe((res) => {
+        this.success();
+        this.selectedStatus = "Active";
+        this.onStatusChange(this.selectedStatus);
+      });
+  }
+
+  success() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Activation Successfull",
+    });
+  }
+
+  alert() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Deactivation Successfull",
+    });
   }
 }

@@ -31,16 +31,16 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 ).then((m) => m.UsermanagementModule),
             },
             {
-              path: "tickets",
+              path: "ticket",
               loadChildren: () =>
                 import("./components/Tickets/tickets.module").then(
                   (m) => m.TicketsModule
                 ),
             },
             {
-              path: "airwaybills",
+              path: "awb",
               loadChildren: () =>
-                import("./components/airbill/airbill.module").then(
+                import("./components/awb/airbill.module").then(
                   (m) => m.AirbillModule
                 ),
             },

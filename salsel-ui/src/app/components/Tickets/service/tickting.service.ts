@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { Ticket } from "../../../api/ticket";
+import { Ticket } from "../model/ticketValuesDto";
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -33,6 +33,11 @@ export class TicktingService {
 
   deleteTicket(id) {
     return this.http.delete(`${this.url}ticket/${id}`);
+  }
+
+  //   Update Ticket Status
+  updateTicketStatus(id) {
+    return this.http.put(`${this.url}ticket/status/${id}`, {});
   }
 
   //   Get formated Date

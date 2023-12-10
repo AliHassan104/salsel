@@ -27,11 +27,20 @@ export class CountryFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.formSetup();
+
+    //Query Params
+    this.queryParamSetup();
+    this.editForm();
+  }
+
+  formSetup() {
     this.countryForm = new FormGroup({
       name: new FormControl(null, Validators.required),
     });
+  }
 
-    //Query Params
+  queryParamSetup() {
     this.route.queryParams.subscribe((params) => {
       if (params["id"] != null) {
         this.editMode = params["updateMode"] === "true"; // Convert to boolean
@@ -40,6 +49,9 @@ export class CountryFormComponent implements OnInit {
         this.editMode = false;
       }
     });
+  }
+
+  editForm() {
     if (this.editMode) {
       this.countryService.getSingleCountry(this.editId).subscribe((res) => {
         this.singleCountry = res;
@@ -55,11 +67,13 @@ export class CountryFormComponent implements OnInit {
     if (this.countryForm.valid) {
       if (this.editMode) {
         this.countryService.editCountry(this.editId, data).subscribe((res) => {
-          this.router.navigate(["country"]);
+          this.countryForm.reset();
+          this.router.navigate(["country/list"]);
         });
       } else {
         this.countryService.addCountry(data).subscribe((res) => {
-          this.router.navigate(["country"]);
+          this.countryForm.reset();
+          this.router.navigate(["country/list"]);
         });
       }
     } else {
@@ -78,6 +92,6 @@ export class CountryFormComponent implements OnInit {
 
   //   On cancel edit request
   onCancel() {
-    this.router.navigate(["country"]);
+    this.router.navigate(["country/list"]);
   }
 }

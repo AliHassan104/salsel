@@ -4,11 +4,16 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
-import { Airbill } from "src/app/api/airbill";
 import { TicktingService } from "../../Tickets/service/tickting.service";
 import { environment } from "src/environments/environment";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
+import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
+import { CountryService } from "../../country/service/country.service";
+import { CityService } from "../../City/service/city.service";
+import { ProductTypeService } from "../../product-type/service/product-type.service";
+import { ServiceTypeService } from "../../service-type/service/service-type.service";
+import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 
 @Component({
   selector: "app-awbcreation",
@@ -42,8 +47,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   serviceTypeId;
 
   // SINGLE BILL AND TICKET STORE IN IT
-  singleBill;
-  singleTicket;
+  singleBill?: IAwbDto;
+  singleTicket?: Ticket;
 
   //   CONSTRUCTOR
   constructor(
@@ -54,7 +59,11 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     private MessageService: MessageService,
     private route: ActivatedRoute,
     private dropdownService: DropdownService,
-    private formService: FormvalidationService
+    private formService: FormvalidationService,
+    private countryService: CountryService,
+    private cityService: CityService,
+    private productTypeService: ProductTypeService,
+    private serviceTypeService: ServiceTypeService
   ) {
     this._airbillService.updateAWB.subscribe((res) => {
       this.updateAWB = res;
@@ -63,10 +72,28 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       this.createAWB = res;
     });
   }
+
+  params = { status: true };
   awbForm!: FormGroup;
 
   ngOnInit(): void {
     //Setting Up Reactive Form
+    this.awbFormSetup();
+
+    // Query Param for edit and create from ticket
+    this.queryParamsSetup();
+
+    // FOR EDIT BILL
+    this.UpdateBill();
+
+    // Create From Ticket
+    this.CreateAwbFromTicket();
+
+    // GET VALUES OF DROPDOWNS
+    this.getAllProductField();
+  }
+
+  awbFormSetup() {
     this.awbForm = new FormGroup({
       shipperName: new FormControl(null),
       shipperContactNumber: new FormControl(null),
@@ -91,8 +118,9 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       dutyAndTaxesBillTo: new FormControl(null, Validators.required),
       requestType: new FormControl(null, Validators.required),
     });
+  }
 
-    // Query Param for edit and create from ticket
+  queryParamsSetup() {
     this.route.queryParams.subscribe((params) => {
       // Retrieve editMode and id from the query parameters
       if (params["id"] != null && this.updateAWB == true) {
@@ -108,13 +136,62 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         this.editMode = false;
       }
     });
+  }
 
-    // FOR EDIT BILL
+  getAllProductField() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productFields = res;
+
+      this.currencies = this.dropdownService.extractNames(
+        this.productFields.filter((data) => data.name == "Currency")[0]
+          .productFieldValuesList
+      );
+
+      this.dutyTaxes = this.dropdownService.extractNames(
+        this.productFields.filter(
+          (data) => data.name == "Duty And Tax Billing"
+        )[0].productFieldValuesList
+      );
+
+      this.requestTypes = this.dropdownService.extractNames(
+        this.productFields.filter((data) => data.name == "Request Type")[0]
+          .productFieldValuesList
+      );
+    });
+
+    // Get All Countries
+
+    this.countryService.getAllCountries(this.params).subscribe((res) => {
+      this.countries = res;
+      this.countries = this.dropdownService.extractNames(this.countries);
+    });
+
+    // GET ALL PRODUCT TYPES
+    this.productTypeService.getProductTypes(this.params).subscribe((res) => {
+      this.productType = res.body;
+      this.productType = this.dropdownService.extractNames(this.productType);
+    });
+  }
+
+  getProductType(data) {
+    this.serviceTypeService.getServiceTypes(this.params).subscribe((res) => {
+      this.serviceType = res.body;
+      let filterServiceType = this.serviceType.filter(
+        (type) => type.productType.name == data.value
+      );
+      this.serviceType = this.dropdownService.extractNames(filterServiceType);
+    });
+  }
+
+  UpdateBill() {
     if (this.editMode) {
       this._airbillService.getSingleBill(this.editId).subscribe((res) => {
-        this.getAllCities();
-        this.getAllServiceTypes();
         this.singleBill = res;
+        this.getAllServiceTypes(this.singleBill.productType);
+        this.getAllCities(
+          this.singleBill.destinationCountry,
+          this.singleBill.originCountry
+        );
         let pickDate = new Date(this.singleBill.pickupDate);
         let pickTimeArray = this.singleBill.pickupTime;
         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
@@ -147,13 +224,16 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         });
       });
     }
+  }
 
-    // TO CREATE BILL FROM TICKET VIEW PAGE
-
+  CreateAwbFromTicket() {
     if (this.ticketMode) {
       this._ticketService.getSingleTicket(this.TicketId).subscribe((res) => {
-        this.getAllCities();
         this.singleTicket = res;
+        this.getAllCities(
+          this.singleTicket.destinationCountry,
+          this.singleTicket.originCountry
+        );
         let pickDate = new Date(this.singleTicket.pickupDate);
         let pickTimeArray = this.singleTicket.pickupTime;
         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
@@ -174,83 +254,40 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         });
       });
     }
-
-    // GET VALUES OF DROPDOWNS
-    this.getAllProductField();
   }
 
-  // TO GET ALL PRODUCT FIELDS
-
-  getAllProductField() {
-    this.dropdownService.getAllProductFields().subscribe((res) => {
-      this.productFields = res;
-      //   Currencies
-      this.currencies = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Currency")[0]
-          .productFieldValuesList
-      );
-      //   Duty Taxes
-      this.dutyTaxes = this.dropdownService.extractNames(
-        this.productFields.filter(
-          (data) => data.name == "Duty And Tax Billing"
-        )[0].productFieldValuesList
-      );
-      //   Request Types
-      this.requestTypes = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Request Type")[0]
-          .productFieldValuesList
-      );
-    });
-
-    // Get All Countries
-
-    this.dropdownService.getAllCountries().subscribe((res) => {
-      this.countries = res;
-      this.countries = this.dropdownService.extractNames(this.countries);
-    });
-
-    // GET ALL PRODUCT TYPES
-    this.dropdownService.getAllProductTypes().subscribe((res) => {
-      this.productType = res;
-      this.productType = this.dropdownService.extractNames(this.productType);
-    });
-  }
-
-  // GET PRODUCT TYPE BY SELECT FROM DROPDOWN
-  getProductType(data) {
-    this.dropdownService.getAllServiceTypes().subscribe((res) => {
-      this.serviceType = res;
-      let filterProductType = this.serviceType.filter(
-        (type) => type.productType.name == data.value
-      );
-      this.serviceType = this.dropdownService.extractNames(filterProductType);
-    });
-  }
-
-  //   GET ALL CITIES
-
-  getAllCities() {
-    this.dropdownService.getAllCities().subscribe((res) => {
+  getAllCities(destinationCountry: any, originCountry: any) {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
       this.destinationCities = res;
       this.originCities = res;
-      this.destinationCities = this.dropdownService.extractNames(
-        this.destinationCities
+      //   Destination Cities
+      let filterDestinationCities = this.destinationCities.filter(
+        (value) => value.country.name == destinationCountry
       );
-      this.originCities = this.dropdownService.extractNames(this.originCities);
+      this.destinationCities = this.dropdownService.extractNames(
+        filterDestinationCities
+      );
+
+      //   Origin Cities
+      let filterOriginCities = this.originCities.filter(
+        (value) => value.country.name == originCountry
+      );
+      this.originCities = this.dropdownService.extractNames(filterOriginCities);
     });
   }
 
-  //   GET ALL SERVICE TYPES
-  getAllServiceTypes() {
-    this.dropdownService.getAllServiceTypes().subscribe((res) => {
-      this.serviceType = res;
-      this.serviceType = this.dropdownService.extractNames(this.serviceType);
+  getAllServiceTypes(productType: any) {
+    this.serviceTypeService.getServiceTypes(this.params).subscribe((res) => {
+      this.serviceType = res.body;
+      let filterServiceType = this.serviceType.filter(
+        (type) => type.productType.name == productType
+      );
+      this.serviceType = this.dropdownService.extractNames(filterServiceType);
     });
   }
 
-  //   GET DESTINATION COUNTRY FROM DROPDOWN
   getDestinationCountry(country) {
-    this.dropdownService.getAllCities().subscribe((res) => {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
       this.destinationCities = res;
       let filterCities = this.destinationCities.filter(
         (city) => city.country.name == country.value
@@ -259,9 +296,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     });
   }
 
-  //   GET ORGIN COUNTRYFROM DROPDOWN
   getOriginCountry(country) {
-    this.dropdownService.getAllCities().subscribe((res) => {
+    this.cityService.getAllCities(this.params).subscribe((res) => {
       this.originCities = res;
       let filterCities = this.originCities.filter(
         (city) => city.country.name == country.value
@@ -269,8 +305,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       this.originCities = this.dropdownService.extractNames(filterCities);
     });
   }
-
-  //   ON SUBMIT OF FORM
 
   onSubmit() {
     if (this.awbForm.valid) {
@@ -286,7 +320,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
 
       //   To save time
       const formValue = this.awbForm.value;
-      const billData: Airbill = {
+      const billData: IAwbDto = {
         shipperName: formValue.shipperName,
         shipperContactNumber: formValue.shipperContactNumber,
         pickupAddress: formValue.pickupAddress,
@@ -317,13 +351,13 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           .put<any>(`${environment.URL}awb/${this.editId}`, billData)
           .subscribe(() => {
             this.update();
-            this.router.navigate(["airwaybills"]);
+            this.router.navigate(["awb/list"]);
           });
       } else {
         //   Create Ticket
         this._airbillService.createBill(billData).subscribe((res) => {
           this.success();
-          this.router.navigate(["airwaybills"]);
+          this.router.navigate(["awb/list"]);
           this.awbForm.reset();
         });
       }
@@ -334,7 +368,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   }
 
   onCancel() {
-    this.router.navigate(["airwaybills"]);
+    this.router.navigate(["awb/list"]);
   }
 
   // Pop up message
