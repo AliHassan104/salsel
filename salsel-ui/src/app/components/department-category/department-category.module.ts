@@ -20,6 +20,7 @@ import { DialogModule } from "primeng/dialog";
 import { DepartmentCategoryDataComponent } from "./list/department-category-data.component";
 import { DepartmentCategoryComponent } from "./update/department-category.component";
 import { ToastModule } from "primeng/toast";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [DepartmentCategoryDataComponent, DepartmentCategoryComponent],
@@ -41,6 +42,7 @@ import { ToastModule } from "primeng/toast";
     FormsModule,
     ReactiveFormsModule,
     ToastModule,
+    TooltipModule,
   ],
 })
 export class DepartmentCategoryModule {}

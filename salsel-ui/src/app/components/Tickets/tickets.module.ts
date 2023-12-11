@@ -27,6 +27,7 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { PaginatorModule } from "primeng/paginator";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { PaginatorModule } from "primeng/paginator";
     InputTextareaModule,
     RadioButtonModule,
     PaginatorModule,
+    TooltipModule,
   ],
 })
 export class TicketsModule {}

@@ -168,16 +168,19 @@
                             {{data?.salesRegion}}
                         </td>
                         <td class="text-center">
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-eye
+                            <button pTooltip="View" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-eye
                             " class="p-button-rounded p-button-secondary p-button-outlined mx-1"
                                 routerLink="{{data.id}}"></button>
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-file-edit"
-                                class="p-button-rounded p-button-outlined mx-1"
+                            <button pTooltip="Edit" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-1"
                                 (click)="onEditAccount(data.id)"></button>
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-times"
+                            <button pTooltip="Deactivate" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-1"
                                 (click)="onDeleteAccount(data.id)"></button>
-                            <button *ngIf="!activeStatus" pButton pRipple type="button" icon="pi pi-check"
+                            <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
+                                type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveAccount(data.id)"></button>
                         </td>

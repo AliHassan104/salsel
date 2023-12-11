@@ -20,6 +20,7 @@ import { DepartmentRoutingModule } from "./department-routing.module";
 import { DepartmentComponent } from "./update/department.component";
 import { DepartmentListComponent } from "./list/department-list.component";
 import { ToastModule } from "primeng/toast";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [DepartmentListComponent, DepartmentComponent],
@@ -41,6 +42,7 @@ import { ToastModule } from "primeng/toast";
     FormsModule,
     ReactiveFormsModule,
     ToastModule,
+    TooltipModule,
   ],
 })
 export class DepartmentModule {}

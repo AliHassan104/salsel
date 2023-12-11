@@ -25,6 +25,7 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { AirbillroutingModule } from "./airbillrouting.module";
 import { RadioButtonModule } from "primeng/radiobutton";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
     InputTextareaModule,
     AirbillroutingModule,
     RadioButtonModule,
+    TooltipModule,
   ],
 })
 export class AirbillModule {}

@@ -48,18 +48,18 @@ export class TicketsdataComponent implements OnInit {
     };
 
     const queryParams = {
-      page: this.page,
-      size: this.size,
-      sort: "id",
-      search: JSON.stringify(search),
+      //   page: this.page,
+      //   size: this.size,
+      //   sort: "id",
+      //   search: JSON.stringify(search),
       status: this.activeStatus,
     };
 
     this._ticktingService.getTickets(queryParams).subscribe((res: any) => {
       if (res && res.body) {
-        this.tickets = res.body.content;
+        this.tickets = res.body;
         this.totalRecords = res.body.totalElements;
-        console.log(res.body.content);
+        console.log(res.body);
       }
     });
   }

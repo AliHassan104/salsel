@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { TableModule } from "primeng/table";
 import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
@@ -12,17 +12,15 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { MultiSelectModule } from "primeng/multiselect";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ToastModule } from "primeng/toast";
-import { ProductTypeComponent } from './update/product-type.component';
-import { ProductTypeListComponent } from './list/product-type-list.component';
-import { ProductTypeRoutingModule } from './product-type-routing-module';
+import { ProductTypeComponent } from "./update/product-type.component";
+import { ProductTypeListComponent } from "./list/product-type-list.component";
+import { ProductTypeRoutingModule } from "./product-type-routing-module";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [
-    ProductTypeComponent,
-    ProductTypeListComponent
-  ],
+  declarations: [ProductTypeComponent, ProductTypeListComponent],
   imports: [
     CommonModule,
     ProductTypeRoutingModule,
@@ -41,6 +39,7 @@ import { ProductTypeRoutingModule } from './product-type-routing-module';
     FormsModule,
     ReactiveFormsModule,
     ToastModule,
-  ]
+    TooltipModule,
+  ],
 })
-export class ProductTypeModule { }
+export class ProductTypeModule {}

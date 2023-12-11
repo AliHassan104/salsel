@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { TableModule } from "primeng/table";
 import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
@@ -12,17 +12,15 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { MultiSelectModule } from "primeng/multiselect";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ToastModule } from "primeng/toast";
-import { ServiceTypeListComponent } from './list/service-type-list.component';
-import { ServiceTypeRoutingModule } from './service-type-routing-module';
-import { ServiceTypeComponent } from './update/service-type.component';
+import { ServiceTypeListComponent } from "./list/service-type-list.component";
+import { ServiceTypeRoutingModule } from "./service-type-routing-module";
+import { ServiceTypeComponent } from "./update/service-type.component";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [
-    ServiceTypeComponent,
-    ServiceTypeListComponent
-  ],
+  declarations: [ServiceTypeComponent, ServiceTypeListComponent],
   imports: [
     CommonModule,
     ServiceTypeRoutingModule,
@@ -41,6 +39,7 @@ import { ServiceTypeComponent } from './update/service-type.component';
     FormsModule,
     ReactiveFormsModule,
     ToastModule,
-  ]
+    TooltipModule,
+  ],
 })
-export class ServiceTypeModule { }
+export class ServiceTypeModule {}

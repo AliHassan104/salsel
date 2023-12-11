@@ -27,6 +27,7 @@ import { PaginatorModule } from "primeng/paginator";
 import { AccountListComponent } from "./list/account-list.component";
 import { AccountFormComponent } from "./update/account-form.component";
 import { AccountViewComponent } from "./view/account-view.component";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { AccountViewComponent } from "./view/account-view.component";
     InputTextareaModule,
     RadioButtonModule,
     PaginatorModule,
+    TooltipModule,
   ],
 })
 export class AccountModule {}

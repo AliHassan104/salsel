@@ -10,6 +10,7 @@ import { CountryFormComponent } from "./update/country-form.component";
 import { DialogModule } from "primeng/dialog";
 import { CountryListComponent } from "./list/country-list.component";
 import { DropdownModule } from "primeng/dropdown";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [CountryListComponent, CountryFormComponent],
@@ -24,6 +25,7 @@ import { DropdownModule } from "primeng/dropdown";
     CountryRoutingModule,
     DialogModule,
     DropdownModule,
+    TooltipModule,
   ],
 })
 export class CountryModule {}

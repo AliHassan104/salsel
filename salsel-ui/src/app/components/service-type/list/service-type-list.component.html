@@ -69,15 +69,17 @@
 
                         <td>
 
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-file-edit"
-                                class="p-button-rounded p-button-outlined mx-2"
+                            <button pTooltip="Edit" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-2"
                                 (click)="editServiceType(serviceType.id)"></button>
 
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-times"
+                            <button pTooltip="Deactivate" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
                                 (click)="deleteServiceType(serviceType.id)"></button>
 
-                            <button *ngIf="!activeStatus" pButton pRipple type="button" icon="pi pi-check"
+                            <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
+                                type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveServiceType(serviceType.id)"></button>
 

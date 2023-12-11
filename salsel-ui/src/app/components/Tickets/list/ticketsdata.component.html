@@ -8,8 +8,9 @@
                 <button pButton label="Create Ticket" class="mb-2" routerLink="/ticket"></button>
             </div>
             <hr>
-            <p-table #dt1 [value]="tickets" dataKey="id" [loading]="loading" [rowHover]="true"
-                styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+            <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+                styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
+                responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <div class="mb-2">
@@ -215,15 +216,18 @@
                             {{ data?.ticketFlag }}
                         </td>
                         <td>
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-eye
+                            <button pTooltip="View" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-eye
 " class="p-button-rounded p-button-secondary p-button-outlined mx-2" routerLink="{{data.id}}"></button>
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-file-edit"
-                                class="p-button-rounded p-button-outlined mx-2"
+                            <button pTooltip="Edit" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-2"
                                 (click)="onEditTicket(data.id)"></button>
-                            <button *ngIf="activeStatus" pButton pRipple type="button" icon="pi pi-times"
+                            <button pTooltip="Deactivate" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
                                 (click)="onDeleteTicket(data.id)"></button>
-                            <button *ngIf="!activeStatus" pButton pRipple type="button" icon="pi pi-check"
+                            <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
+                                type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveTicket(data.id)"></button>
                         </td>
@@ -241,8 +245,8 @@
                     </tr>
                 </ng-template>
             </p-table>
-            <p-paginator (onPageChange)="onPageChange($event)" [first]="page" [rows]="size"
-                [totalRecords]="totalRecords"></p-paginator>
+            <!-- <p-paginator (onPageChange)="onPageChange($event)" [first]="page" [rows]="size"
+                [totalRecords]="totalRecords"></p-paginator> -->
         </div>
 
     </div>
@@ -250,7 +254,7 @@
     <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
         <div class="flex align-items-center justify-content-center">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-            <span>Are you sure you want to delete selected ticket?</span>
+            <span>Are you sure you want to deactivate selected ticket?</span>
         </div>
         <ng-template pTemplate="footer">
             <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
