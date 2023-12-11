@@ -29,15 +29,23 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.save(ticketDto));
     }
 
-        @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
+//    @GetMapping("/ticket")
+//    public ResponseEntity<Page<Ticket>> getAllTickets(@RequestParam("search") String search,
+//                                               @RequestParam(value = "page") int page,
+//                                               @RequestParam(value = "size") int size,
+//                                               @RequestParam(value = "sort", defaultValue = "id") String sort) throws JsonProcessingException, JsonProcessingException {
+//        SearchCriteria searchCriteria = new ObjectMapper().readValue(search, SearchCriteria.class);
+//        Page<Ticket> departmentDtos = ticketService.findAll(searchCriteria, PageRequest.of(page, size,  Sort.by(sort).descending()));
+//        return ResponseEntity.ok(departmentDtos);
+//    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("/ticket")
-    public ResponseEntity<Page<Ticket>> getAllTickets(@RequestParam("search") String search,
-                                               @RequestParam(value = "page") int page,
-                                               @RequestParam(value = "size") int size,
-                                               @RequestParam(value = "sort", defaultValue = "id") String sort) throws JsonProcessingException, JsonProcessingException {
-        SearchCriteria searchCriteria = new ObjectMapper().readValue(search, SearchCriteria.class);
-        Page<Ticket> departmentDtos = ticketService.findAll(searchCriteria, PageRequest.of(page, size,  Sort.by(sort).descending()));
-        return ResponseEntity.ok(departmentDtos);
+    public ResponseEntity<List<TicketDto>> getAllTickets(@RequestParam(value = "status") Boolean status){
+        List<TicketDto> ticketDtoList = ticketService.getAll(status);
+        return ResponseEntity.ok(ticketDtoList);
     }
 
     @GetMapping("/ticket/{id}")
