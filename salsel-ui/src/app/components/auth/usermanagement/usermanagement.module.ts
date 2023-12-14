@@ -17,10 +17,11 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { DialogModule } from "primeng/dialog";
 import { TagModule } from "primeng/tag";
 import { UsermanagroutingModule } from "./usermanagrouting.module";
-import { UserlistComponent } from "./userlist/userlist.component";
-import { UserComponent } from "./user/user.component";
-import { AddUserComponent } from "./add-user/add-user.component";
+import { UserlistComponent } from "./list/userlist.component";
+import { UserComponent } from "./view/user.component";
+import { AddUserComponent } from "./update/add-user.component";
 import { PasswordModule } from "primeng/password";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [UserlistComponent, UserComponent, AddUserComponent],
@@ -45,6 +46,7 @@ import { PasswordModule } from "primeng/password";
     DialogModule,
     TagModule,
     PasswordModule,
+    TooltipModule,
   ],
 })
 export class UsermanagementModule {}

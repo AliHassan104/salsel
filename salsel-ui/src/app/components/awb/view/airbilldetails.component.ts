@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AirbillService } from "../service/airbill.service";
 
@@ -7,7 +7,7 @@ import { AirbillService } from "../service/airbill.service";
   templateUrl: "./airbilldetails.component.html",
   styleUrls: ["./airbilldetails.component.scss"],
 })
-export class AirbilldetailsComponent {
+export class AirbilldetailsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private _airbillService: AirbillService,

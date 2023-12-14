@@ -25,7 +25,7 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "userslist",
+              path: "user",
               loadChildren: () =>
                 import(
                   "./components/auth/usermanagement/usermanagement.module"
@@ -115,6 +115,7 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
             {
               path: "permissions",
               component: PermissionsComponent,
+              canActivate: [AuthGuardService],
             },
           ],
         },

@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { UserlistComponent } from "./userlist/userlist.component";
-import { UserComponent } from "./user/user.component";
+import { UserlistComponent } from "./list/userlist.component";
+import { UserComponent } from "./view/user.component";
 import { Route, RouterModule } from "@angular/router";
-import { AddUserComponent } from "./add-user/add-user.component";
+import { AddUserComponent } from "./update/add-user.component";
 
 const routes: Route[] = [
   { path: "", component: AddUserComponent },

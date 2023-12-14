@@ -3,17 +3,17 @@
         <h1 class="mb-5"
             style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
             {{editMode?"Update User":"Add User"}}</h1>
-        <form action="" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <form action="" [formGroup]="userForm" (ngSubmit)="onSubmit(userForm.value)">
             <div class="p-fluid p-formgrid grid">
                 <!-- User Details -->
                 <!-- Email -->
-                <div class="field col-12 md:col-6">
+                <!-- <div class="field col-12 md:col-6">
                     <label htmlFor="email"><strong>Email</strong></label>
                     <input pInputText id="email" type="text" formControlName="email" placeholder="Enter Email" />
                     <small *ngIf="!userForm.get('email')?.valid && userForm.get('email')?.touched" class="text-red-500">
                         Required
                     </small>
-                </div>
+                </div> -->
                 <!-- Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Name</strong></label>
@@ -42,27 +42,24 @@
                     </small>
                 </div>
                 <!-- Phone Number -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="name"><strong>Phone Number</strong></label>
-                    <input pInputText id="name" type="text" formControlName="phoneNumber"
+                <!-- <div class="field col-12 md:col-6">
+                    <label htmlFor="phoneNumber"><strong>Phone Number</strong></label>
+                    <input pInputText id="phoneNumber" type="text" formControlName="phoneNumber"
                         placeholder="Enter Phone Number" />
                     <small *ngIf="!userForm.get('phoneNumber')?.valid && userForm.get('phoneNumber')?.touched"
                         class="text-red-500">
                         Required
                     </small>
-                </div>
+                </div> -->
                 <!-- Role -->
-                <div class="field col-12 md:col-3">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="department"><strong>Role</strong></label>
-                    <p-dropdown [options]="roles" placeholder="Select Role" formControlName="role"
+                    <p-dropdown [options]="roles" optionLabel="name" placeholder="Select Role" formControlName="role"
                         [ngClass]="{'ng-dirty':userForm.get('role')?.touched && userForm.get('role')?.invalid}"></p-dropdown>
                     <small *ngIf="!userForm.get('role')?.valid && userForm.get('role')?.touched" class="text-red-500">
                         Required
                     </small>
                 </div>
-
-
-
 
                 <div class="flex justify-content-end w-full">
                     <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"

@@ -1,0 +1,111 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h1 class="m-0"
+                style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+                All Users</h1>
+            <div class="flex justify-content-end">
+                <button pButton label="Add User" class="mb-2" routerLink="/user"></button>
+            </div>
+            <hr>
+            <p-table #dt1 [value]="users" dataKey="id" [rows]="5" [loading]="loading" styleClass="p-datatable-gridlines"
+                [paginator]="true" [globalFilterFields]="['name']" responsiveLayout="scroll">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="mb-2">
+                            <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                                (click)="clear(dt1)"></button>
+                            <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
+                                (ngModelChange)="onStatusChange($event)"
+                                placeholder="Select Active InActive List"></p-dropdown>
+                        </div>
+
+                        <span class="p-input-icon-left mb-2">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+                                placeholder="Search Keyword" class="w-full" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 5rem">
+                            <div class="flex justify-content-center align-items-center">
+                                #
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Name
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Role
+                            </div>
+                        </th>
+                        <th style="min-width: 14rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-user>
+                    <tr>
+                        <td>
+                            {{ user?.id }}
+                        </td>
+                        <td>
+                            {{ user?.name }}
+                        </td>
+                        <td>
+                            {{ user?.roles[0].name }}
+                        </td>
+                        <td>
+                            <button *ngIf="activeStatus" pTooltip="View" tooltipPosition="bottom" pButton pRipple
+                                type="button" icon="pi pi-eye
+" class="p-button-rounded p-button-secondary p-button-outlined" routerLink="{{user.id}}"></button>
+                            <button [disabled]="user?.roles[0].name == 'ROLE_ADMIN'" *ngIf="activeStatus"
+                                pTooltip="Edit" tooltipPosition="bottom" pButton pRipple type="button"
+                                icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-2"
+                                (click)="onEditUser(user.id)"></button>
+                            <button [disabled]="user?.roles[0].name == 'ROLE_ADMIN'" pTooltip="Deactivate"
+                                tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple type="button"
+                                icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined"
+                                (click)="onDeleteUser(user.id)"></button>
+                            <button pTooltip="Activate" pTooltip="Activate" tooltipPosition="bottom"
+                                tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple type="button"
+                                icon="pi pi-check" class="p-button-rounded p-button-success p-button-outlined mx-2"
+                                (click)="onActiveUser(user.id)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td style="text-align: start;" colspan="8">{{activeStatus?'No user found.':'No inactive user
+                            found.'}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td style="text-align: start;" colspan="8">Loading users data. Please wait.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+
+    <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+            <span>Are you sure you want to delete selected user?</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                (click)="deleteDialog = false"></button>
+            <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                (click)="confirmDeleteSelected()"></button>
+        </ng-template>
+    </p-dialog>

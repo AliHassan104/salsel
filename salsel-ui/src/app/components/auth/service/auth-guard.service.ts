@@ -109,6 +109,10 @@ export class AuthGuardService implements CanActivate {
       url: ["/permissions"],
       permissions: "Permission",
     };
+    const userObj = {
+      url: ["/user", "/user/list", "/user/list/:id"],
+      permissions: "User",
+    };
 
     return [
       dashboardObj,
@@ -121,6 +125,8 @@ export class AuthGuardService implements CanActivate {
       ServiceTypeObj,
       departmentCategoryObj,
       departmentObj,
+      permissionsObj,
+      userObj,
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {
