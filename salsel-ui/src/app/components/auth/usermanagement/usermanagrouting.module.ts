@@ -6,9 +6,9 @@ import { Route, RouterModule } from "@angular/router";
 import { AddUserComponent } from "./add-user/add-user.component";
 
 const routes: Route[] = [
-  { path: "", component: UserlistComponent },
-  { path: "user", component: UserComponent },
-  { path: "adduser", component: AddUserComponent },
+  { path: "", component: AddUserComponent },
+  { path: "list", component: UserlistComponent },
+  { path: "list/:id", component: UserComponent },
 ];
 
 @NgModule({

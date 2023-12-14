@@ -1,1 +1,40 @@
-<p>Login</p>
+<div class="">
+    <div class="card">
+        <h1 class="mb-5"
+            style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+            Add Permission To Role</h1>
+        <form action="" [formGroup]="permissionsForm" (ngSubmit)="onSubmit()">
+            <div class="p-fluid p-formgrid grid">
+                <!-- Roles -->
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="department"><strong>Select Role</strong></label>
+                    <p-dropdown [options]="roles" optionLabel="name" placeholder="Select Role " formControlName="role"
+                        (onChange)="onRoleChange($event)"
+                        [ngClass]="{'ng-dirty':permissionsForm.get('role')?.touched && permissionsForm.get('role')?.invalid}"></p-dropdown>
+                    <small *ngIf="!permissionsForm.get('role')?.valid && permissionsForm.get('role')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+            </div>
+            <div class="p-fluid p-formgrid grid mt-5 mx-auto">
+                <!-- Permissions Checkboxes -->
+                <div class="field col-6 md:col-4 field-checkbox" *ngFor="let permission of permissions; let i = index">
+                    <p-checkbox class="form-check-input" name="checkbox" [value]="permission.name" [inputId]="i"
+                        [checked]="true" [(ngModel)]="permission.value" [binary]="true"
+                        (onChange)="addPermission(permission)" [ngModelOptions]="{standalone: true}"></p-checkbox>
+                    <label class="custom-label" [for]="i">{{ permission.name }}</label>
+                </div>
+            </div>
+
+
+
+            <div class="flex justify-content-end w-full">
+                <button pButton label="Submit" type="Submit" class="mx-3 submit-btn"></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

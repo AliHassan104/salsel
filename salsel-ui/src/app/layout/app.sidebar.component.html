@@ -1,1 +1,7 @@
- <app-menu></app-menu>
+<div class="custom-switch">
+    <input id="checkbox" type="checkbox" (change)="layoutService.onMenuToggle()" />
+    <label class="switch" for="checkbox">
+    </label>
+</div>
+
+<app-menu></app-menu>

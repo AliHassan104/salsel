@@ -14,4 +14,9 @@ export class LoginService {
     let url = `${this._url}login`;
     return this.http.post(url, data);
   }
+
+  signUp(data: any) {
+    let url = `${this._url}signup`;
+    return this.http.post(url, data);
+  }
 }

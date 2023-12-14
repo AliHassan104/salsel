@@ -4,8 +4,8 @@ import { NotfoundComponent } from "./components/notfound/notfound.component";
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from "./components/auth/login/login.component";
 import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
-import { authGuard } from "./components/auth/guard/auth.guard";
 import { PermissionsComponent } from "./components/permissions/permissions.component";
+import { AuthGuardService } from "./components/auth/service/auth-guard.service";
 
 @NgModule({
   imports: [
@@ -14,7 +14,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
         {
           path: "",
           component: AppLayoutComponent,
-          canActivate: [authGuard],
+          canActivate: [AuthGuardService],
           children: [
             {
               path: "",
@@ -22,6 +22,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/dashboard/dashboard.module").then(
                   (m) => m.DashboardModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "userslist",
@@ -29,6 +30,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import(
                   "./components/auth/usermanagement/usermanagement.module"
                 ).then((m) => m.UsermanagementModule),
+              canActivate: [AuthGuardService],
             },
             {
               path: "ticket",
@@ -36,6 +38,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/Tickets/tickets.module").then(
                   (m) => m.TicketsModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "awb",
@@ -43,6 +46,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/awb/airbill.module").then(
                   (m) => m.AirbillModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "department",
@@ -50,6 +54,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/department/department.module").then(
                   (m) => m.DepartmentModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "department-category",
@@ -57,6 +62,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import(
                   "./components/department-category/department-category.module"
                 ).then((m) => m.DepartmentCategoryModule),
+              canActivate: [AuthGuardService],
             },
 
             {
@@ -72,6 +78,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/country/country.module").then(
                   (m) => m.CountryModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "city",
@@ -79,6 +86,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/City/city.module").then(
                   (m) => m.CityModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "product-type",
@@ -86,6 +94,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/product-type/product-type.module").then(
                   (m) => m.ProductTypeModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "service-type",
@@ -93,6 +102,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/service-type/service-type.module").then(
                   (m) => m.ServiceTypeModule
                 ),
+              canActivate: [AuthGuardService],
             },
             {
               path: "account",
@@ -100,11 +110,14 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
                 import("./components/accounts/account.module").then(
                   (m) => m.AccountModule
                 ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "permissions",
+              component: PermissionsComponent,
             },
           ],
-          canActivateChild: [authGuard],
         },
-        { path: "permissions", component: PermissionsComponent },
         { path: "login", component: LoginComponent },
         { path: "access", component: AccessdeniedComponent },
         { path: "notfound", component: NotfoundComponent },

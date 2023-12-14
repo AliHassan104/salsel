@@ -19,6 +19,7 @@ import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 import { MenuService } from "./app.menu.service";
 import { LayoutService } from "./service/app.layout.service";
+import { SessionStorageService } from "../components/auth/service/session-storage.service";
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -79,12 +80,15 @@ import { LayoutService } from "./service/app.layout.service";
         *ngIf="item.items && item.visible !== false"
         [@children]="submenuAnimation">
         <ng-template ngFor let-child let-i="index" [ngForOf]="item.items">
-          <li
-            app-menuitem
-            [item]="child"
-            [index]="i"
-            [parentKey]="key"
-            [class]="child.badgeClass"></li>
+          <ng-container
+            *ngIf="this.sessionStorageService.hasPermission(child.label)">
+            <li
+              app-menuitem
+              [item]="child"
+              [index]="i"
+              [parentKey]="key"
+              [class]="child.badgeClass"></li>
+          </ng-container>
         </ng-template>
       </ul>
     </ng-container>
@@ -131,7 +135,8 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
     public layoutService: LayoutService,
     private cd: ChangeDetectorRef,
     public router: Router,
-    private menuService: MenuService
+    private menuService: MenuService,
+    public sessionStorageService: SessionStorageService
   ) {
     this.menuSourceSubscription = this.menuService.menuSource$.subscribe(
       (value) => {
