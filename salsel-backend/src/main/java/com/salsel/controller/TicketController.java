@@ -22,13 +22,13 @@ public class TicketController {
     }
 
     @PostMapping("/ticket")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_TICKET')")
     public ResponseEntity<TicketDto> createTicket(@RequestBody TicketDto ticketDto) {
         return ResponseEntity.ok(ticketService.save(ticketDto));
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
     public ResponseEntity<Page<Ticket>> getAllTickets(@RequestParam("search") String search,
                                                @RequestParam(value = "page") int page,
                                                @RequestParam(value = "size") int size,
@@ -39,21 +39,21 @@ public class TicketController {
     }
 
     @GetMapping("/ticket/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
     public ResponseEntity<TicketDto> getTicketById(@PathVariable Long id) {
         TicketDto ticketDto = ticketService.findById(id);
         return ResponseEntity.ok(ticketDto);
     }
 
     @DeleteMapping("/ticket/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_TICKET')")
     public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
         ticketService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/ticket/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_TICKET')")
     public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id,@RequestBody TicketDto ticketDto) {
         TicketDto updatedTicketDto = ticketService.update(id, ticketDto);
         return ResponseEntity.ok(updatedTicketDto);

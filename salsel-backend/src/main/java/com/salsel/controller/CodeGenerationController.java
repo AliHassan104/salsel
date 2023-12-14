@@ -22,55 +22,26 @@ public class CodeGenerationController {
 
     @GetMapping("/generate-barcode/awb/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> generateBarcode(HttpServletResponse response, @PathVariable Long id) {
-        try {
-            String data = "900000001";
-            boolean success = codeGenerationService.generateBarcode(data, id, response.getOutputStream());
-
-            if (success) {
-                return ResponseEntity.ok("Barcode generated successfully");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to generate barcode");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while generating barcode");
-        }
+    public ResponseEntity<String> generateBarcode(@PathVariable Long id) {
+        String data = "900000001";
+        String url = codeGenerationService.generateBarcode(data, id);
+        return ResponseEntity.ok(url);
     }
 
     @GetMapping("/generate-vertical-barcode/awb/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> generateVerticalBarcode(HttpServletResponse response, @PathVariable Long id) {
-        try {
-            String data = "900000001";
-            boolean success = codeGenerationService.generateBarcodeVertical(data, id, response.getOutputStream());
-
-            if (success) {
-                return ResponseEntity.ok("Barcode generated successfully");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to generate barcode");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while generating barcode");
-        }
+    public ResponseEntity<String> generateVerticalBarcode(@PathVariable Long id) {
+        String data = "900000001";
+        String url = codeGenerationService.generateBarcodeVertical(data, id);
+        return ResponseEntity.ok(url);
     }
 
     @GetMapping("/generate-qr-code/awb/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> generateQRCode(HttpServletResponse response, @PathVariable Long id) {
-        try {
-            String data = "https://example.com";
-            boolean success = codeGenerationService.generateQRCode(data, id, response.getOutputStream());
+    public ResponseEntity<String> generateQRCode(@PathVariable Long id) {
+        String data = "https://example.com";
+        String url = codeGenerationService.generateQRCode(data, id);
+        return ResponseEntity.ok(url);
 
-            if (success) {
-                return ResponseEntity.ok("QR code generated successfully");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to generate QR code");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while generating QR code");
-        }
     }
 }

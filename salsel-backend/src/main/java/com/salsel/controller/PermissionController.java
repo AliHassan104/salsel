@@ -21,14 +21,14 @@ public class PermissionController {
     }
 
     @GetMapping("/permission")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_PERMISSION')")
     public ResponseEntity<List<PermissionDto>> getAllPermission() {
         List<PermissionDto> permissionDtoList = permissionService.getAll();
         return ResponseEntity.ok(permissionDtoList);
     }
 
     @GetMapping("/permission/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_PERMISSION')")
     public ResponseEntity<PermissionDto> getPermissionById(@PathVariable Long id) {
         PermissionDto permissionDto = permissionService.findById(id);
         return ResponseEntity.ok(permissionDto);

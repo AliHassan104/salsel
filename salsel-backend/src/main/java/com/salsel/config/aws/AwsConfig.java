@@ -3,11 +3,8 @@ package com.salsel.config.aws;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +34,5 @@ public class AwsConfig {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.ME_CENTRAL_1)
                 .build();
-
     }
 }

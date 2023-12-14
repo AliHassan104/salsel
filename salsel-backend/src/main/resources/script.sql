@@ -181,8 +181,7 @@ VALUES
   ('Attachments', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type'));
 
 
-INSERT INTO users VALUES
-(1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true);
+INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true);
 
 INSERT INTO roles VALUES (1,'ROLE_ADMIN');
 

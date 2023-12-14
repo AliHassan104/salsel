@@ -18,34 +18,34 @@ public class AccountController {
     }
 
     @PostMapping("/account")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_ACCOUNT')")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(accountService.save(accountDto));
     }
 
     @GetMapping("/account")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
         List<AccountDto> accountDtoList = accountService.getAll();
         return ResponseEntity.ok(accountDtoList);
     }
 
     @GetMapping("/account/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id) {
         AccountDto accountDto = accountService.findById(id);
         return ResponseEntity.ok(accountDto);
     }
 
     @DeleteMapping("/account/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_ACCOUNT')")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/account/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_ACCOUNT')")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
         AccountDto updatedAccountDto = accountService.update(id, accountDto);
         return ResponseEntity.ok(updatedAccountDto);

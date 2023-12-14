@@ -13,26 +13,25 @@ import java.util.List;
 @RequestMapping("/api")
 public class CountryController {
     private final CountryService countryService;
-
     public CountryController(CountryService countryService) {
         this.countryService = countryService;
     }
 
     @PostMapping("/country")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_COUNTRY')")
     public ResponseEntity<CountryDto> createCountry(@RequestBody CountryDto countryDto) {
         return ResponseEntity.ok(countryService.save(countryDto));
     }
 
     @GetMapping("/country")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_COUNTRY')")
     public ResponseEntity<List<CountryDto>> getAllCountry() {
         List<CountryDto> countryDtoList = countryService.getAll();
         return ResponseEntity.ok(countryDtoList);
     }
 
     @GetMapping("/country/page")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_COUNTRY')")
     public ResponseEntity<PaginationResponse> getAllPaginatedCountry(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "15", required = false) Integer pageSize
@@ -42,21 +41,21 @@ public class CountryController {
     }
 
     @GetMapping("/country/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_COUNTRY')")
     public ResponseEntity<CountryDto> getCountryById(@PathVariable Long id) {
         CountryDto countryDto = countryService.findById(id);
         return ResponseEntity.ok(countryDto);
     }
 
     @GetMapping("/country/name/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_COUNTRY')")
     public ResponseEntity<CountryDto> getCountryByName(@PathVariable String name) {
         CountryDto countryDto = countryService.findByName(name);
         return ResponseEntity.ok(countryDto);
     }
 
     @GetMapping("/country/names/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_COUNTRY')")
     public ResponseEntity<PaginationResponse> getAllCountryByName(
             @PathVariable String name,
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
@@ -67,14 +66,14 @@ public class CountryController {
     }
 
     @DeleteMapping("/country/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_COUNTRY')")
     public ResponseEntity<Void> deleteCountry(@PathVariable Long id) {
         countryService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/country/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_COUNTRY')")
     public ResponseEntity<CountryDto> updateCountry(@PathVariable Long id, @RequestBody CountryDto countryDto) {
         CountryDto updatedCountryDto = countryService.update(id, countryDto);
         return ResponseEntity.ok(updatedCountryDto);

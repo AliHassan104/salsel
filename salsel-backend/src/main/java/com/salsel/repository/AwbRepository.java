@@ -1,6 +1,7 @@
 package com.salsel.repository;
 
 import com.salsel.model.Awb;
+import com.salsel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,11 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
 
     @Query("SELECT a FROM Awb a WHERE a.id = :awbId AND a.status = true")
     Awb findByIdWhereStatusIsTrue(@Param("awbId") Long awbId);
+
+    @Query("SELECT a FROM Awb a WHERE a.status = true And a.emailFlag = false")
+    List<Awb> findAllWhereStatusIsTrueAndEmailFlagIsFalse();
+
+    @Query("SELECT MAX(a.uniqueNumber) FROM Awb a")
+    Long findMaxUniqueNumber();
 
 }

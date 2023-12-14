@@ -4,107 +4,123 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.salsel.service.BucketService;
 import com.salsel.service.CodeGenerationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 @Service
 public class CodeGenerationServiceImpl implements CodeGenerationService {
+    private final BucketService bucketService;
+    private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
+
+
+    public CodeGenerationServiceImpl(BucketService bucketService) {
+        this.bucketService = bucketService;
+    }
+//
+//    @Override
+//    public Boolean generateBarcodeVertical(String data, Long awbId) {
+//        try {
+//            String filename = "vertical_barcode_" + awbId + ".png";
+//
+//            BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.CODE_128, 200, 80);
+//            BufferedImage barcodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+//
+//            BufferedImage rotatedBarcodeImage = rotateImage(barcodeImage);
+//
+//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//
+//            try {
+//                ImageIO.write(rotatedBarcodeImage, "PNG", outputStream);
+//                outputStream.toByteArray();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            bucketService.save(outputStream.toByteArray(),filename);
+//            logger.info("Vertical Barcode uploaded on S3");
+//
+//            return true;
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+
     @Override
-    public Boolean generateBarcodeVertical(String data, Long awbId, OutputStream outputStream) {
+    public String generateBarcodeVertical(String data, Long awbId) {
         try {
-            // Step 1: Get the path to the resources/static/ directory
-            String staticDirectory = "src/main/resources/static/images/code";
-            Path staticPath = Paths.get(staticDirectory);
-
-            // Step 2: Create a Path object for the barcode image file
             String filename = "vertical_barcode_" + awbId + ".png";
-            Path barcodeFilePath = staticPath.resolve(filename);
 
-            // Step 3: Check if the file already exists. If it does, delete it to override it.
-            if (Files.exists(barcodeFilePath)) {
-                Files.delete(barcodeFilePath);
-            }
-
-            // Step 4: Create the file and write the barcode image to it
+            // Generate barcode image
             BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.CODE_128, 200, 80);
             BufferedImage barcodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
 
-            // Step 6: Rotate the image vertically
+            // Rotate barcode image
             BufferedImage rotatedBarcodeImage = rotateImage(barcodeImage);
 
-            // Step 7: Save the modified image to a file
-            try (OutputStream fileOutputStream = Files.newOutputStream(barcodeFilePath.toFile().toPath())) {
-                ImageIO.write(rotatedBarcodeImage, "PNG", fileOutputStream);
-            }
-            return true;
+            // Convert rotated barcode image to byte array
+            byte[] imageBytes = convertImageToByteArray(rotatedBarcodeImage);
 
+            // Save to S3 bucket
+            String url = bucketService.save(imageBytes, filename);
+            logger.info("Vertical Barcode uploaded on S3");
+
+            return url;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            logger.error("Error generating or uploading vertical barcode", e);
         }
+        return null;
     }
 
     @Override
-    public Boolean generateBarcode(String data, Long awbId, OutputStream outputStream) {
+    public String generateBarcode(String data, Long awbId) {
         try {
-            // Step 1: Get the path to the resources/static/ directory
-            String staticDirectory = "src/main/resources/static/images/code";
-            Path staticPath = Paths.get(staticDirectory);
-
-            // Step 2: Create a Path object for the barcode image file
             String filename = "barcode_" + awbId + ".png";
-            Path barcodeFilePath = staticPath.resolve(filename);
 
-            // Step 3: Check if the file already exists. If it does, delete it to override it.
-            if (Files.exists(barcodeFilePath)) {
-                Files.delete(barcodeFilePath);
-            }
-
-            // Step 4: Create the file and write the barcode image to it
             BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.CODE_128, 200, 80);
+            BufferedImage barcodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+            byte[] imageBytes = convertImageToByteArray(barcodeImage);
 
-            try (OutputStream fileOutputStream = Files.newOutputStream(barcodeFilePath)) {
-                MatrixToImageWriter.writeToStream(bitMatrix, "PNG", fileOutputStream);
-            }
-            return true;
+            // Save to S3 bucket
+            String url = bucketService.save(imageBytes, filename);
+            logger.info("Barcode uploaded on S3");
+            return url;
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            logger.error("Error generating or uploading barcode", e);
         }
+        return null;
     }
 
     @Override
-    public Boolean generateQRCode(String data, Long awbId, OutputStream outputStream) {
+    public String generateQRCode(String data, Long awbId) {
         try {
-            String staticDirectory = "src/main/resources/static/images/code";
-            Path staticPath = Paths.get(staticDirectory);
-
             String filename = "qrcode_" + awbId + ".png";
-            Path qrcodeFilePath = staticPath.resolve(filename);
-
-            if (Files.exists(qrcodeFilePath)) {
-                Files.delete(qrcodeFilePath);
-            }
 
             BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, 200, 200);
-            try (OutputStream fileOutputStream = Files.newOutputStream(qrcodeFilePath)) {
-                MatrixToImageWriter.writeToStream(bitMatrix, "PNG", fileOutputStream);
-            }
-            return true;
+            BufferedImage qrcodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+            byte[] imageBytes = convertImageToByteArray(qrcodeImage);
+
+            // Save to S3 bucket
+            String url = bucketService.save(imageBytes, filename);
+            logger.info("Qrcode uploaded on S3");
+
+            return url;
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            logger.error("Error generating or uploading qrcode", e);
         }
+        return null;
     }
 
     private BufferedImage rotateImage(BufferedImage inputImage) {
@@ -122,5 +138,12 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
         g.dispose();
 
         return rotatedImage;
+    }
+
+    private byte[] convertImageToByteArray(BufferedImage image) throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ImageIO.write(image, "PNG", outputStream);
+            return outputStream.toByteArray();
+        }
     }
 }

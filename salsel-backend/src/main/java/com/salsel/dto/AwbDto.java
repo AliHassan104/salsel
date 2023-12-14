@@ -43,4 +43,6 @@ public class AwbDto {
     private String currency;
     private String dutyAndTaxesBillTo;
     private Boolean status;
+    private Boolean emailFlag;
+    private String awbUrl;
 }

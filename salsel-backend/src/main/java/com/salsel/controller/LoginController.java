@@ -50,9 +50,8 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> signup(@RequestBody UserDto userdto) {
-        userService.registerUser(userdto);
-        return ResponseEntity.ok("User registered successfully.");
+        return ResponseEntity.ok(userService.registerUser(userdto));
     }
 }

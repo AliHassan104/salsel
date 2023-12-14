@@ -5,22 +5,17 @@ import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
 import com.salsel.repository.AwbRepository;
 import com.salsel.service.AwbService;
+import com.salsel.service.BucketService;
 import com.salsel.service.CodeGenerationService;
 import com.salsel.service.PdfGenerationService;
-import com.salsel.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import javax.transaction.Transactional;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class AwbServiceImpl implements AwbService {
@@ -28,101 +23,49 @@ public class AwbServiceImpl implements AwbService {
     @Value("${spring.mail.username}")
     private String sender;
     private final AwbRepository awbRepository;
-    private final EmailUtils emailUtils;
     private final CodeGenerationService codeGenerationService;
     private final PdfGenerationService pdfGenerationService;
+    private final BucketService bucketService;
 
-    public AwbServiceImpl(AwbRepository awbRepository, EmailUtils emailUtils, CodeGenerationService codeGenerationService, PdfGenerationService pdfGenerationService) {
+    public AwbServiceImpl(AwbRepository awbRepository, CodeGenerationService codeGenerationService, PdfGenerationService pdfGenerationService, BucketService bucketService) {
         this.awbRepository = awbRepository;
-        this.emailUtils = emailUtils;
         this.codeGenerationService = codeGenerationService;
         this.pdfGenerationService = pdfGenerationService;
+        this.bucketService = bucketService;
     }
-
-//    @Override
-//    @Transactional
-//    public AwbDto save(AwbDto awbDto) {
-//        try {
-//            // Save AWB and get the generated ID
-//            Awb awb = toEntity(awbDto);
-//            awb.setStatus(true);
-//            Awb createdAwb = awbRepository.save(awb);
-//            Long awbId = createdAwb.getId();
-//
-//            // Add variables to the Model for PDF generation
-//            Model model = new ExtendedModelMap();
-//            model.addAttribute("awbId", awbId);
-//
-//            // Generate PDF
-//            byte[] pdfBytes = pdfGenerationService.generatePdf("Awb", model);
-//
-//            // Generate barcode
-//            String barcodeData = "900000001";
-//            ByteArrayOutputStream barcodeOutputStream = new ByteArrayOutputStream();
-//            codeGenerationService.generateBarcode(barcodeData, awbId, barcodeOutputStream);
-//
-//            // Generate Vertical barcode
-//            String verticalBarcodeData = "900000001";
-//            ByteArrayOutputStream verticalBarcodeOutputStream = new ByteArrayOutputStream();
-//            codeGenerationService.generateBarcodeVertical(verticalBarcodeData, awbId, barcodeOutputStream);
-//
-//            // Generate QR code
-//            String qrCodeData = "https://example.com";
-//            ByteArrayOutputStream qrCodeOutputStream = new ByteArrayOutputStream();
-//            codeGenerationService.generateQRCode(qrCodeData, awbId, qrCodeOutputStream);
-//
-//            // Send email
-//            String userEmail = "muhammadtabish05@gmail.com";
-//            emailUtils.sendEmail(sender, userEmail, awbId.toString(), pdfBytes);
-//
-//            // Optional: Save generated barcode and QR code to the database or file system if needed
-//
-//            return toDto(createdAwb);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RecordNotFoundException("Error occurred while processing the request");
-//        }
-//    }
 
     @Override
     @Transactional
     public AwbDto save(AwbDto awbDto) {
         try {
+            // Fetch the maximum uniqueNumber from the database
+            Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
+
+            // Set the next uniqueNumber
+            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
+
             // Save AWB and get the generated ID
             Awb awb = toEntity(awbDto);
             awb.setStatus(true);
+            awb.setEmailFlag(false);
             Awb createdAwb = awbRepository.save(awb);
             Long awbId = createdAwb.getId();
+
+            String barCodeUrl = codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
+
+            String verticalBarCodeUrl = codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
+
+            String QrcodeUrl = codeGenerationService.generateQRCode("https://example.com", awbId);
 
             // Add variables to the Model for PDF generation
             Model model = new ExtendedModelMap();
             model.addAttribute("awbId", awbId);
-
-            // Barcode data map
-            Map<String, ByteArrayOutputStream> barcodeDataMap = new HashMap<>();
-            barcodeDataMap.put("normalBarcode", new ByteArrayOutputStream());
-            barcodeDataMap.put("verticalBarcode", new ByteArrayOutputStream());
-
-            // Generate barcodes in parallel
-            CompletableFuture<Void> barcodeGenerationFuture = CompletableFuture.allOf(
-                    CompletableFuture.runAsync(() -> codeGenerationService.generateBarcode("900000001", awbId, barcodeDataMap.get("normalBarcode"))),
-                    CompletableFuture.runAsync(() -> codeGenerationService.generateBarcodeVertical("900000001", awbId, barcodeDataMap.get("verticalBarcode")))
-            );
-
-            // Generate QR code
-            String qrCodeData = "https://example.com";
-            ByteArrayOutputStream qrCodeOutputStream = new ByteArrayOutputStream();
-            codeGenerationService.generateQRCode(qrCodeData, awbId, qrCodeOutputStream);
-
-            // Wait for barcode generation to complete
-            barcodeGenerationFuture.join();
+            model.addAttribute("barcodeUrl", barCodeUrl);
+            model.addAttribute("verticalBarcodeUrl", verticalBarCodeUrl);
+            model.addAttribute("qrcodeUrl", QrcodeUrl);
 
             // Generate PDF
             byte[] pdfBytes = pdfGenerationService.generatePdf("Awb", model);
-
-            // Send email
-            String userEmail = "muhammadtabish05@gmail.com";
-            emailUtils.sendEmail(sender, userEmail, awbId.toString(), pdfBytes);
 
             return toDto(createdAwb);
         } catch (Exception e) {
@@ -130,7 +73,6 @@ public class AwbServiceImpl implements AwbService {
             throw new RecordNotFoundException("Error occurred while processing the request");
         }
     }
-
 
 
     @Override
@@ -143,6 +85,13 @@ public class AwbServiceImpl implements AwbService {
             awbDtoList.add(awbDto);
         }
         return awbDtoList;
+    }
+
+    @Override
+    public byte[] downloadAwbPdf(String fileName, Long awbId) {
+        Model model = new ExtendedModelMap();
+        model.addAttribute("awbId", awbId);
+        return pdfGenerationService.generatePdf("Awb", model);
     }
 
     @Override
@@ -218,6 +167,8 @@ public class AwbServiceImpl implements AwbService {
                 .currency(awb.getCurrency())
                 .dutyAndTaxesBillTo(awb.getDutyAndTaxesBillTo())
                 .status(awb.getStatus())
+                .emailFlag(awb.getEmailFlag())
+                .awbUrl(awb.getAwbUrl())
                 .build();
     }
 
@@ -247,6 +198,8 @@ public class AwbServiceImpl implements AwbService {
                 .currency(awbDto.getCurrency())
                 .dutyAndTaxesBillTo(awbDto.getDutyAndTaxesBillTo())
                 .status(awbDto.getStatus())
+                .emailFlag(awbDto.getEmailFlag())
+                .awbUrl(awbDto.getAwbUrl())
                 .build();
     }
 }

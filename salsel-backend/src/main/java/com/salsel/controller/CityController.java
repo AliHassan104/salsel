@@ -18,48 +18,48 @@ public class CityController {
     }
 
     @PostMapping("/city")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_CITY')")
     public ResponseEntity<CityDto> createCity(@RequestBody CityDto cityDto) {
         return ResponseEntity.ok(cityService.save(cityDto));
     }
 
     @GetMapping("/city")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_CITY')")
     public ResponseEntity<List<CityDto>> getAllCity() {
         List<CityDto> cityDtoList = cityService.getAll();
         return ResponseEntity.ok(cityDtoList);
     }
 
     @GetMapping("/city/country/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_CITY')")
     public ResponseEntity<List<CityDto>> getAllCitiesByCountry(@PathVariable Long id) {
         List<CityDto> cityDtoList = cityService.getAllByCountry(id);
         return ResponseEntity.ok(cityDtoList);
     }
 
     @GetMapping("/city/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_CITY')")
     public ResponseEntity<CityDto> getCityById(@PathVariable Long id) {
         CityDto cityDto = cityService.findById(id);
         return ResponseEntity.ok(cityDto);
     }
 
     @GetMapping("/city/name/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_CITY')")
     public ResponseEntity<CityDto> getCityByName(@PathVariable String name) {
         CityDto cityDto = cityService.findByName(name);
         return ResponseEntity.ok(cityDto);
     }
 
     @DeleteMapping("/city/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_CITY')")
     public ResponseEntity<Void> deleteCity(@PathVariable Long id) {
         cityService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/city/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_CITY')")
     public ResponseEntity<CityDto> updateCity(@PathVariable Long id, @RequestBody CityDto cityDto) {
         CityDto updatedCityDto = cityService.update(id, cityDto);
         return ResponseEntity.ok(updatedCityDto);

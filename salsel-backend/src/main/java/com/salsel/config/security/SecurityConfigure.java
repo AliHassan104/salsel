@@ -31,8 +31,9 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/webjars/**",
             "/api/awb-pdf/awb/{id}",
             "/static/**",
-            "/styles.css"
-
+            "/styles.css",
+            "/api/file/**",
+            "/api/awb/pdf/{file-name}/{awbId}"
     };
 
     @Autowired
@@ -68,11 +69,4 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web
-//                .ignoring()
-//                .antMatchers("/resources/**"); // #3
-//    }
 }

@@ -18,41 +18,41 @@ public class ProductTypeController {
     }
 
     @PostMapping("/product-type")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_PRODUCT_TYPE')")
     public ResponseEntity<ProductTypeDto> createProductType(@RequestBody ProductTypeDto productTypeDto) {
         return ResponseEntity.ok(productTypeService.save(productTypeDto));
     }
 
     @GetMapping("/product-type")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_PRODUCT_TYPE')")
     public ResponseEntity<List<ProductTypeDto>> getAllProductType() {
         List<ProductTypeDto> productTypeDtoList = productTypeService.getAll();
         return ResponseEntity.ok(productTypeDtoList);
     }
 
     @GetMapping("/product-type/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_PRODUCT_TYPE')")
     public ResponseEntity<ProductTypeDto> getProductTypeById(@PathVariable Long id) {
         ProductTypeDto productTypeDto = productTypeService.findById(id);
         return ResponseEntity.ok(productTypeDto);
     }
 
     @GetMapping("/product-type/code/{code}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_PRODUCT_TYPE')")
     public ResponseEntity<ProductTypeDto> getProductTypeByCode(@PathVariable String code) {
         ProductTypeDto productTypeDto = productTypeService.findByCode(code);
         return ResponseEntity.ok(productTypeDto);
     }
 
     @DeleteMapping("/product-type/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_PRODUCT_TYPE')")
     public ResponseEntity<Void> deleteProductType(@PathVariable Long id) {
         productTypeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/product-type/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_PRODUCT_TYPE')")
     public ResponseEntity<ProductTypeDto> updateProductType(@PathVariable Long id, @RequestBody ProductTypeDto productTypeDto) {
         ProductTypeDto updatedProductTypeDto = productTypeService.update(id, productTypeDto);
         return ResponseEntity.ok(updatedProductTypeDto);

@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto registerUser(UserDto userdto) {
         User user = toEntity(userdto);
+        user.setStatus(true);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Set<Role> roleList = new HashSet<>();
         for(Role role: user.getRoles()){
@@ -88,6 +89,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", id)));
 
         existingUser.setName(userDto.getName());
+        existingUser.setEmail(userDto.getEmail());
         existingUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         existingUser.getRoles().removeIf(role -> !userDto.getRoles().contains(role));
@@ -106,6 +108,7 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .email(user.getEmail())
                 .password(user.getPassword())
                 .status(user.getStatus())
                 .roles(user.getRoles())
@@ -115,6 +118,7 @@ public class UserServiceImpl implements UserService {
     public User toEntity(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
+                .email(userDto.getEmail())
                 .name(userDto.getName())
                 .password(userDto.getPassword())
                 .status(userDto.getStatus())
