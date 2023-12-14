@@ -60,7 +60,7 @@
                             {{ user?.name }}
                         </td>
                         <td>
-                            {{ user?.roles[0].name }}
+                            {{ user?.roles[0]?.name }}
                         </td>
                         <td>
                             <button *ngIf="activeStatus" pTooltip="View" tooltipPosition="bottom" pButton pRipple

@@ -4,6 +4,7 @@ import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
 import { LoginService } from "../service/login.service";
 import { MessageService } from "primeng/api";
+import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 
 @Component({
   selector: "app-login",
@@ -15,7 +16,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private _loginService: LoginService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private formService: FormvalidationService
   ) {}
   loginForm!: FormGroup;
   token;
@@ -54,7 +56,7 @@ export class LoginComponent implements OnInit {
         summary: "Error",
         detail: "Please fill all fields",
       });
-      this.markFormGroupTouched(this.loginForm);
+      this.formService.markFormGroupTouched(this.loginForm);
     }
   }
 
@@ -63,17 +65,6 @@ export class LoginComponent implements OnInit {
       severity: "error",
       summary: "Error",
       detail: error.error.error,
-    });
-  }
-
-  // Function to mark all controls in a FormGroup as touched
-  private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach((control) => {
-      control.markAsTouched();
-
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
     });
   }
 }

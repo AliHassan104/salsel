@@ -9,8 +9,8 @@
             </div>
             <hr>
             <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-                styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
-                responsiveLayout="scroll">
+                [globalFilterFields]="['shipperName','recipientName']" styleClass="p-datatable-gridlines"
+                [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <div class="mb-2">

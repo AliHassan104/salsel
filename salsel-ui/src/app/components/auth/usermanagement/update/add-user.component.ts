@@ -8,7 +8,6 @@ import { RolesService } from "../../../permissions/service/roles.service";
 import { UserService } from "../service/user.service";
 import { IUser } from "../model/userDto";
 import { LoginService } from "../../service/login.service";
-import { Password } from "primeng/password";
 
 @Component({
   selector: "app-add-user",
@@ -45,14 +44,42 @@ export class AddUserComponent implements OnInit {
       name: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [
         Validators.required,
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
       ]),
-      role: new FormControl(null, Validators.required),
+      roles: new FormControl(null, Validators.required),
       //   phoneNumber: new FormControl(null, [
       //     Validators.required,
       //     Validators.pattern(/^[\d\s\-\(\)+]{10,}$/),
       //   ]),
     });
+  }
+
+  isLowerCaseMissing(): boolean {
+    return (
+      this.userForm.get("password")?.hasError("pattern") &&
+      !/(?=.*[a-z])/.test(this.userForm.value.password)
+    );
+  }
+
+  isUpperCaseMissing(): boolean {
+    return (
+      this.userForm.get("password")?.hasError("pattern") &&
+      !/(?=.*[A-Z])/.test(this.userForm.value.password)
+    );
+  }
+
+  isDigitMissing(): boolean {
+    return (
+      this.userForm.get("password")?.hasError("pattern") &&
+      !/(?=.*\d)/.test(this.userForm.value.password)
+    );
+  }
+
+  isShortPassword(): boolean {
+    return (
+      this.userForm.get("password")?.hasError("pattern") &&
+      !/.{8,}/.test(this.userForm.value.password)
+    );
   }
 
   queryParamSetup() {
@@ -75,10 +102,16 @@ export class AddUserComponent implements OnInit {
         this.singleUser = res;
         console.log(this.singleUser);
 
-        this.userForm.setValue({
-          name: this.singleUser.name,
-          Password: this.singleUser.password,
-          role: this.singleUser.roles,
+        this.rolesService.getRoles().subscribe((res: any) => {
+          const role = res.filter(
+            (value) => value.name == this.singleUser.roles[0].name
+          );
+
+          this.userForm.patchValue({
+            name: this.singleUser.name,
+            password: this.singleUser.password,
+            roles: role[0],
+          });
         });
       });
     }
@@ -87,12 +120,24 @@ export class AddUserComponent implements OnInit {
   getRoles() {
     this.rolesService.getRoles().subscribe((res: any) => {
       this.roles = res;
-      console.log(this.roles);
     });
   }
 
-  onSubmit(data: IUser) {
+  onSubmit() {
     if (this.userForm.valid) {
+      let formValue = this.userForm.value;
+
+      const data = {
+        name: formValue.name,
+        password: formValue.password,
+        roles: [
+          {
+            id: formValue.roles.id,
+          },
+        ],
+        status: true,
+      };
+
       if (this.editMode) {
         this.userService.updateUser(this.editId, data).subscribe((res) => {
           this.userForm.reset();
@@ -100,6 +145,8 @@ export class AddUserComponent implements OnInit {
         });
       } else {
         this.loginService.signUp(data).subscribe((res) => {
+          console.log(res);
+
           this.userForm.reset();
           this.router.navigate(["user/list"]);
         });

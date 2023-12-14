@@ -72,8 +72,9 @@ export class TicketsdataComponent implements OnInit {
   //   For table filtering purpose
   onGlobalFilter(table: Table, event: any) {
     // Update the searchText property in the search object
-    this.serachText = event.target.value;
-    this.getTickets();
+    table.filterGlobal((event.target as HTMLInputElement).value, "contains");
+    // this.serachText = event.target.value;
+    // this.getTickets();
   }
 
   clear(table: Table) {

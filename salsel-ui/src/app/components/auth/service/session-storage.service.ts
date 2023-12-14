@@ -6,6 +6,7 @@ import { AuthGuardService } from "./auth-guard.service";
 })
 export class SessionStorageService {
   userPermissions: string[] = [];
+  roleName: String;
 
   constructor(private authGuardSerivce: AuthGuardService) {
     this.updatePermission();
@@ -18,10 +19,17 @@ export class SessionStorageService {
     if (decodedToken) {
       let decodedTokenPermissions = decodedToken.PERMISSIONS;
       this.userPermissions = decodedTokenPermissions;
+
+      let role = decodedToken.ROLES;
+      this.roleName = role[0];
     }
   }
 
   hasPermission(requiredPermission: string): boolean {
     return this.userPermissions.includes(requiredPermission);
+  }
+
+  getRoleName() {
+    return this.roleName;
   }
 }
