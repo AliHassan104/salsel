@@ -32,6 +32,7 @@ INSERT INTO permissions (name, value) VALUES
     ('READ_USER', true),
     ('DELETE_USER', true);
 
+INSERT INTO roles VALUES (1,'ROLE_ADMIN');
 
 INSERT INTO `role_permissions` VALUES
     (1, (SELECT id FROM permissions WHERE name = 'CREATE_TICKET')),
@@ -255,7 +256,5 @@ VALUES
 
 
 INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true);
-
-INSERT INTO roles VALUES (1,'ROLE_ADMIN');
 
 INSERT INTO user_roles VALUES (1,1);

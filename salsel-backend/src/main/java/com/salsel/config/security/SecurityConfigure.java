@@ -33,7 +33,8 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/static/**",
             "/styles.css",
             "/api/file/**",
-            "/api/awb/pdf/{file-name}/{awbId}"
+            "/api/awb/pdf/{file-name}/{awbId}",
+            "/api/product-field/**"
     };
 
     @Autowired
