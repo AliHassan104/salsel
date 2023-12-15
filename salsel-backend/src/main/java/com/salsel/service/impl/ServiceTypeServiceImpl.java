@@ -49,6 +49,18 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     }
 
     @Override
+    public List<ServiceTypeDto> getAllByProductType(Long productTypeId) {
+        List<ServiceType> serviceTypeList = serviceTypeRepository.findAllByProductTypeWhereStatusIsTrue(productTypeId);
+        List<ServiceTypeDto> serviceTypeDtoList = new ArrayList<>();
+
+        for (ServiceType serviceType : serviceTypeList) {
+            ServiceTypeDto serviceTypeDto = toDto(serviceType);
+            serviceTypeDtoList.add(serviceTypeDto);
+        }
+        return serviceTypeDtoList;
+    }
+
+    @Override
     public ServiceTypeDto findById(Long id) {
         ServiceType serviceType = serviceTypeRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("ServiceType not found for id => %d", id)));

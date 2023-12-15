@@ -18,48 +18,55 @@ public class ServiceTypeController {
     }
 
     @PostMapping("/service-type")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_SERVICE_TYPE') and hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<ServiceTypeDto> createServiceType(@RequestBody ServiceTypeDto serviceTypeDto) {
         return ResponseEntity.ok(serviceTypeService.save(serviceTypeDto));
     }
 
     @GetMapping("/service-type")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<List<ServiceTypeDto>> getAllServiceType(@RequestParam(value = "status") Boolean status) {
         List<ServiceTypeDto> serviceTypeDtoList = serviceTypeService.getAll(status);
         return ResponseEntity.ok(serviceTypeDtoList);
     }
 
+    @GetMapping("/service-type/product-type/{id}")
+    @PreAuthorize("hasAuthority('READ_SERVICE_TYPE')")
+    public ResponseEntity<List<ServiceTypeDto>> getAllServiceTypesByProductType(@PathVariable Long id) {
+        List<ServiceTypeDto> serviceTypeDtoList = serviceTypeService.getAllByProductType(id);
+        return ResponseEntity.ok(serviceTypeDtoList);
+    }
+
     @GetMapping("/service-type/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<ServiceTypeDto> getServiceTypeById(@PathVariable Long id) {
         ServiceTypeDto serviceTypeDto = serviceTypeService.findById(id);
         return ResponseEntity.ok(serviceTypeDto);
     }
 
     @GetMapping("/service-type/code/{code}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<ServiceTypeDto> getServiceTypeByCode(@PathVariable String code) {
         ServiceTypeDto serviceTypeDto = serviceTypeService.findByCode(code);
         return ResponseEntity.ok(serviceTypeDto);
     }
 
     @DeleteMapping("/service-type/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_SERVICE_TYPE') and hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<Void> deleteServiceType(@PathVariable Long id) {
         serviceTypeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/service-type/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_SERVICE_TYPE') and hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<ServiceTypeDto> updateServiceType(@PathVariable Long id, @RequestBody ServiceTypeDto serviceTypeDto) {
         ServiceTypeDto updatedServiceTypeDto = serviceTypeService.update(id, serviceTypeDto);
         return ResponseEntity.ok(updatedServiceTypeDto);
     }
 
     @PutMapping("/service-type/status/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_SERVICE_TYPE') and hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<Void> updateServiceTypeStatusToActive(@PathVariable Long id) {
         serviceTypeService.setToActiveById(id);
         return ResponseEntity.ok().build();

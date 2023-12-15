@@ -15,6 +15,7 @@ import java.time.LocalTime;
 @Data
 public class AwbDto {
     private Long id;
+    private Long uniqueNumber;
     private String shipperName;
     private String shipperContactNumber;
     private String originCountry;
@@ -42,4 +43,6 @@ public class AwbDto {
     private String currency;
     private String dutyAndTaxesBillTo;
     private Boolean status;
+    private Boolean emailFlag;
+    private String awbUrl;
 }

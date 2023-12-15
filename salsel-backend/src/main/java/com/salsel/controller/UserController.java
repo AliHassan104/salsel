@@ -18,41 +18,41 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam(value = "status") Boolean status) {
         List<UserDto> userDtoList = userService.getAll(status);
         return ResponseEntity.ok(userDtoList);
     }
 
     @GetMapping("/user/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_USER')")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         UserDto userDto = userService.findById(id);
         return ResponseEntity.ok(userDto);
     }
     @GetMapping("/user/name/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('READ_USER')")
     public ResponseEntity<UserDto> getUserByName(@PathVariable String name) {
         UserDto userDto = userService.findByName(name);
         return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping("/user/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/user/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         UserDto updatedUserDto = userService.update(id, userDto);
         return ResponseEntity.ok(updatedUserDto);
     }
 
     @PutMapping("/user/status/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<Void> updateUserStatusToActive(@PathVariable Long id) {
         userService.setToActiveById(id);
         return ResponseEntity.ok().build();

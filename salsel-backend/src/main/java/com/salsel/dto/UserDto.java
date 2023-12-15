@@ -16,6 +16,7 @@ import java.util.Set;
 public class UserDto {
     private Long id;
     private String name;
+    private String email;
     private String password;
     private Boolean status;
     private Set<Role> roles = new HashSet<>();

@@ -28,9 +28,15 @@ public interface CityRepository extends JpaRepository<City,Long> {
     @Query("SELECT c FROM City c WHERE c.status = :status ORDER BY c.id DESC")
     List<City> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
+    @Query("SELECT c FROM City c WHERE c.country.id = :cityId AND c.status = true")
+    List<City> findAllByCountryWhereStatusIsTrue(Long cityId);
+
     @Query("SELECT c FROM City c WHERE c.status = true ORDER BY c.id DESC")
     Page<City> findAllInDesOrderByIdAndStatus(Pageable page);
 
     @Query("SELECT c FROM City c WHERE c.name LIKE %:searchName% AND c.status = true")
     Page<City> findCityByName(@Param("searchName") String searchName, Pageable page);
+
+    @Query("SELECT c FROM City c WHERE c.id = :id AND c.status = true")
+    City findByIdWhereStatusIsTrue(@Param("id") Long id);
 }

@@ -1,5 +1,7 @@
 package com.salsel.repository;
 
+import com.salsel.model.City;
+import com.salsel.model.ProductType;
 import com.salsel.model.Account;
 import com.salsel.model.ServiceType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +27,10 @@ public interface ServiceTypeRepository extends JpaRepository<ServiceType,Long> {
     List<ServiceType> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
     Optional<ServiceType> findByCode(String code);
+
+    @Query("SELECT st FROM ServiceType st WHERE st.id = :id AND st.status = true")
+    ServiceType findByIdWhereStatusIsTrue(@Param("id") Long id);
+
+    @Query("SELECT st FROM ServiceType st WHERE st.productType.id = :serviceTypeId AND st.status = true")
+    List<ServiceType> findAllByProductTypeWhereStatusIsTrue(Long serviceTypeId);
 }

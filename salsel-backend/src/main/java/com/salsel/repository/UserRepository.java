@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Ticket;
 import com.salsel.model.Account;
 import com.salsel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void setStatusActive(@Param("id") Long id);
     @Query("SELECT u FROM User u WHERE u.status = :status ORDER BY u.id DESC")
     List<User> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
+
+    @Query("SELECT u FROM User u WHERE u.id = :id AND u.status = true")
+    User findByIdWhereStatusIsTrue(@Param("id") Long id);
+    @Query("SELECT u FROM User u WHERE u.status = true ORDER BY u.id DESC")
+    List<User> findAllInDesOrderByIdAndStatus();
 }

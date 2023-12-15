@@ -1,0 +1,130 @@
+body {
+  font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0%;
+    box-sizing: border-box;
+}
+
+.info {
+width: 700px;
+  margin: auto;
+  gap: 10px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 15px;
+  z-index: 1000;
+}
+
+.img {
+  position: relative;
+    height: 130px;
+}
+.img1 {
+ height: 115px;
+   width: 252px;
+   position: absolute;
+   left: -24px;
+   top: 13px;
+}
+
+.img2 {
+   height: 150px;
+    width: 150px;
+    position: absolute;
+    right: 0;
+    top:-20px;
+    z-index: 1000;
+}
+
+.content {
+  position: relative;
+  height: 274px;
+}
+
+.content p {
+      position: absolute;
+        left: 39px;
+        font-weight: bold;
+        font-size: 20px;
+        color: #5c5b5b;
+        line-height: 1.7;
+        top: 33px;
+}
+
+.img-3 {
+       position: absolute;
+        right: 32px;
+        height: 161%;
+        width: 8%;
+        top: -88px;
+}
+
+.barcode-num {
+  position: absolute;
+  right: -46px;
+  top: 41px;
+  transform: rotate(270deg) !important;
+}
+
+.footer {
+  margin-top: 20px;
+  position: relative;
+  padding: 10px 0;
+  height: 200px;
+}
+.para {
+  position: absolute;
+  left: 13px;
+  top: 15px;
+}
+.bar1 {
+  font-weight: bold;
+  font-size: 21px;
+  margin-left: 26px;
+  color: gray;
+  margin: 0 0 8px 26px;
+}
+.bar2 {
+  font-weight: bold;
+  font-size: 37px;
+  margin: 0 0 8px 26px;
+}
+
+.footer .code {
+  position: absolute;
+  top: 20px;
+  right: 7px;
+}
+
+.heading {
+  padding: 16px 35px;
+  background-color: #000000;
+  color: white;
+  margin: -4px 18px 0 0;
+  z-index:12000;
+}
+
+.heading h1 {
+  margin: 0%;
+  font-size: 25px;
+   letter-spacing: 4px;
+}
+.footer .code p {
+ margin-left: 28px;
+   font-weight: bold;
+   margin-top: 9px;
+   font-size: 21px;
+}
+
+.footer-img {
+  position: relative;
+  height: 200px;
+}
+
+.img-4 {
+  position: absolute;
+    top: 18px;
+    left: -210px;
+    height: 48%;
+    width: 160%;
+}

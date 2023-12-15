@@ -7,6 +7,7 @@ import java.util.List;
 public interface ServiceTypeService {
     ServiceTypeDto save(ServiceTypeDto serviceTypeDto);
     List<ServiceTypeDto> getAll(Boolean status);
+    List<ServiceTypeDto> getAllByProductType(Long productTypeId);
     ServiceTypeDto findById(Long id);
     ServiceTypeDto findByCode(String code);
     void deleteById(Long id);

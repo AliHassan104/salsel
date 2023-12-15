@@ -2,6 +2,7 @@ package com.salsel.repository;
 
 import com.salsel.model.Account;
 import com.salsel.model.Department;
+import com.salsel.model.DepartmentCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,6 +31,9 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
     @Query("SELECT d FROM Department d WHERE d.status = true ORDER BY d.id DESC")
     Page<Department> findAllInDesOrderByIdAndStatus(Pageable page);
+
+    @Query("SELECT d FROM Department d WHERE d.id = :id AND d.status = true")
+    Department findByIdWhereStatusIsTrue(@Param("id") Long id);
 
     @Query("SELECT d FROM Department d WHERE d.name LIKE %:searchName% AND d.status = true")
     Page<Department> findDepartmentsByName(@Param("searchName") String searchName, Pageable page);
