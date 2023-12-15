@@ -18,7 +18,7 @@ public class CountryController {
     }
 
     @PostMapping("/country")
-    @PreAuthorize("hasAuthority('CREATE_COUNTRY')")
+    @PreAuthorize("hasAuthority('CREATE_COUNTRY') and hasAuthority('READ_COUNTRY')")
     public ResponseEntity<CountryDto> createCountry(@RequestBody CountryDto countryDto) {
         return ResponseEntity.ok(countryService.save(countryDto));
     }
@@ -66,14 +66,14 @@ public class CountryController {
     }
 
     @DeleteMapping("/country/{id}")
-    @PreAuthorize("hasAuthority('DELETE_COUNTRY')")
+    @PreAuthorize("hasAuthority('DELETE_COUNTRY') and hasAuthority('READ_COUNTRY')")
     public ResponseEntity<Void> deleteCountry(@PathVariable Long id) {
         countryService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/country/{id}")
-    @PreAuthorize("hasAuthority('CREATE_COUNTRY')")
+    @PreAuthorize("hasAuthority('CREATE_COUNTRY') and hasAuthority('READ_COUNTRY')")
     public ResponseEntity<CountryDto> updateCountry(@PathVariable Long id, @RequestBody CountryDto countryDto) {
         CountryDto updatedCountryDto = countryService.update(id, countryDto);
         return ResponseEntity.ok(updatedCountryDto);

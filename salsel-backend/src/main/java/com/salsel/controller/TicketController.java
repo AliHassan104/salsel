@@ -22,7 +22,7 @@ public class TicketController {
     }
 
     @PostMapping("/ticket")
-    @PreAuthorize("hasAuthority('CREATE_TICKET')")
+    @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
     public ResponseEntity<TicketDto> createTicket(@RequestBody TicketDto ticketDto) {
         return ResponseEntity.ok(ticketService.save(ticketDto));
     }
@@ -46,14 +46,14 @@ public class TicketController {
     }
 
     @DeleteMapping("/ticket/{id}")
-    @PreAuthorize("hasAuthority('DELETE_TICKET')")
+    @PreAuthorize("hasAuthority('DELETE_TICKET') and hasAuthority('READ_TICKET')")
     public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
         ticketService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/ticket/{id}")
-    @PreAuthorize("hasAuthority('CREATE_TICKET')")
+    @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
     public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id,@RequestBody TicketDto ticketDto) {
         TicketDto updatedTicketDto = ticketService.update(id, ticketDto);
         return ResponseEntity.ok(updatedTicketDto);

@@ -21,7 +21,7 @@ public class DepartmentCategoryController {
     }
 
     @PostMapping("/department-category")
-    @PreAuthorize("hasAuthority('CREATE_DEPARTMENT_CATEGORY')")
+    @PreAuthorize("hasAuthority('CREATE_DEPARTMENT_CATEGORY') and hasAuthority('READ_DEPARTMENT_CATEGORY')")
     public ResponseEntity<DepartmentCategoryDto> createDepartmentCategory(@RequestBody DepartmentCategoryDto departmentCategoryDto) {
         return ResponseEntity.ok(departmentCategoryService.save(departmentCategoryDto));
     }
@@ -65,14 +65,14 @@ public class DepartmentCategoryController {
     }
 
     @DeleteMapping("/department-category/{id}")
-    @PreAuthorize("hasAuthority('DELETE_DEPARTMENT_CATEGORY')")
+    @PreAuthorize("hasAuthority('DELETE_DEPARTMENT_CATEGORY') and hasAuthority('READ_DEPARTMENT_CATEGORY')")
     public ResponseEntity<Void> deleteDepartmentCategory(@PathVariable Long id) {
         departmentCategoryService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/department-category/{id}")
-    @PreAuthorize("hasAuthority('CREATE_DEPARTMENT_CATEGORY')")
+    @PreAuthorize("hasAuthority('CREATE_DEPARTMENT_CATEGORY') and hasAuthority('READ_DEPARTMENT_CATEGORY')")
     public ResponseEntity<DepartmentCategoryDto> updateDepartmentCategory(@PathVariable Long id,@RequestBody DepartmentCategoryDto departmentCategoryDto) {
         DepartmentCategoryDto updatedDepartmentCategoryDto = departmentCategoryService.update(id, departmentCategoryDto);
         return ResponseEntity.ok(updatedDepartmentCategoryDto);

@@ -25,36 +25,6 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
     public CodeGenerationServiceImpl(BucketService bucketService) {
         this.bucketService = bucketService;
     }
-//
-//    @Override
-//    public Boolean generateBarcodeVertical(String data, Long awbId) {
-//        try {
-//            String filename = "vertical_barcode_" + awbId + ".png";
-//
-//            BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.CODE_128, 200, 80);
-//            BufferedImage barcodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-//
-//            BufferedImage rotatedBarcodeImage = rotateImage(barcodeImage);
-//
-//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//
-//            try {
-//                ImageIO.write(rotatedBarcodeImage, "PNG", outputStream);
-//                outputStream.toByteArray();
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            bucketService.save(outputStream.toByteArray(),filename);
-//            logger.info("Vertical Barcode uploaded on S3");
-//
-//            return true;
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
 
     @Override
     public String generateBarcodeVertical(String data, Long awbId) {
@@ -73,7 +43,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
 
             // Save to S3 bucket
             String url = bucketService.save(imageBytes, filename);
-            logger.info("Vertical Barcode uploaded on S3");
+            logger.info("Vertical Barcode " + awbId + " uploaded on S3");
 
             return url;
         } catch (Exception e) {
@@ -93,7 +63,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
 
             // Save to S3 bucket
             String url = bucketService.save(imageBytes, filename);
-            logger.info("Barcode uploaded on S3");
+            logger.info("Barcode " + awbId + " uploaded on S3");
             return url;
 
         } catch (Exception e) {
@@ -113,7 +83,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
 
             // Save to S3 bucket
             String url = bucketService.save(imageBytes, filename);
-            logger.info("Qrcode uploaded on S3");
+            logger.info("Qrcode " + awbId + " uploaded on S3");
 
             return url;
 

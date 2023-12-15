@@ -21,7 +21,7 @@ public class AwbController {
     }
 
     @PostMapping("/awb")
-    @PreAuthorize("hasAuthority('CREATE_AWB')")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
     public ResponseEntity<AwbDto> createAwb(@RequestBody AwbDto awbDto) {
         return ResponseEntity.ok(awbService.save(awbDto));
     }
@@ -34,7 +34,6 @@ public class AwbController {
     }
 
     @GetMapping("/awb/pdf/{file-name}/{awbId}")
-//    @PreAuthorize("hasAuthority('READ_AWB')")
     public ResponseEntity<byte[]> getAwbPdf(@PathVariable(name = "file-name") String fileName,
                                             @PathVariable(name = "awbId") Long awbId) {
         byte[] pdf = awbService.downloadAwbPdf(fileName, awbId);
@@ -55,14 +54,14 @@ public class AwbController {
     }
 
     @DeleteMapping("/awb/{id}")
-    @PreAuthorize("hasAuthority('DELETE_AWB')")
+    @PreAuthorize("hasAuthority('DELETE_AWB') and hasAuthority('READ_AWB')")
     public ResponseEntity<Void> deleteAwb(@PathVariable Long id) {
         awbService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/awb/{id}")
-    @PreAuthorize("hasAuthority('CREATE_AWB')")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
     public ResponseEntity<AwbDto> updateAwb(@PathVariable Long id, @RequestBody AwbDto awbDto) {
         AwbDto updatedAwbDto = awbService.update(id, awbDto);
         return ResponseEntity.ok(updatedAwbDto);

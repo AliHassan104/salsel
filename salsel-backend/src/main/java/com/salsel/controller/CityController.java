@@ -18,7 +18,7 @@ public class CityController {
     }
 
     @PostMapping("/city")
-    @PreAuthorize("hasAuthority('CREATE_CITY')")
+    @PreAuthorize("hasAuthority('CREATE_CITY') and hasAuthority('READ_CITY')")
     public ResponseEntity<CityDto> createCity(@RequestBody CityDto cityDto) {
         return ResponseEntity.ok(cityService.save(cityDto));
     }
@@ -52,14 +52,14 @@ public class CityController {
     }
 
     @DeleteMapping("/city/{id}")
-    @PreAuthorize("hasAuthority('DELETE_CITY')")
+    @PreAuthorize("hasAuthority('DELETE_CITY') and hasAuthority('READ_CITY')")
     public ResponseEntity<Void> deleteCity(@PathVariable Long id) {
         cityService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/city/{id}")
-    @PreAuthorize("hasAuthority('CREATE_CITY')")
+    @PreAuthorize("hasAuthority('CREATE_CITY') and hasAuthority('READ_CITY')")
     public ResponseEntity<CityDto> updateCity(@PathVariable Long id, @RequestBody CityDto cityDto) {
         CityDto updatedCityDto = cityService.update(id, cityDto);
         return ResponseEntity.ok(updatedCityDto);

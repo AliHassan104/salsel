@@ -3,6 +3,7 @@ package com.salsel.utils;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
 import com.salsel.repository.AwbRepository;
+import com.salsel.service.AwbService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,10 +22,12 @@ import java.util.Optional;
 public class EmailUtils {
     private final JavaMailSender javaMailSender;
     private final AwbRepository awbRepository;
+    private final AwbService awbService;
 
-    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository) {
+    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, AwbService awbService) {
         this.javaMailSender = javaMailSender;
         this.awbRepository = awbRepository;
+        this.awbService = awbService;
     }
 
     @Value("${spring.mail.username}")
@@ -69,14 +72,16 @@ public class EmailUtils {
     }
 
     @Transactional
-    @Scheduled(fixedRate = 900000) // 15 minutes in milliseconds
+    @Scheduled(fixedRate = 300000) // 5 minutes in milliseconds
     public void sendScheduledEmail() {
         List<Awb> awbList = awbRepository.findAllWhereStatusIsTrueAndEmailFlagIsFalse();
 
         for (Awb awb : awbList) {
             if (!awb.getEmailFlag()) {
+                byte[] pdf = awbService.downloadAwbPdf("awb_" + awb.getId() + ".pdf", awb.getId());
+
                 // Send email
-//                sendEmail(sender, "muhammadtabish05@gmail.com", awb.getId(), USER);
+                sendEmail(sender, "muhammadtabish05@gmail.com", awb.getId(), pdf);
 
                 // Set the flag to true after sending the email
                 awb.setEmailFlag(true);

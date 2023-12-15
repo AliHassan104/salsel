@@ -18,7 +18,7 @@ public class AccountController {
     }
 
     @PostMapping("/account")
-    @PreAuthorize("hasAuthority('CREATE_ACCOUNT')")
+    @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(accountService.save(accountDto));
     }
@@ -38,14 +38,14 @@ public class AccountController {
     }
 
     @DeleteMapping("/account/{id}")
-    @PreAuthorize("hasAuthority('DELETE_ACCOUNT')")
+    @PreAuthorize("hasAuthority('DELETE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/account/{id}")
-    @PreAuthorize("hasAuthority('CREATE_ACCOUNT')")
+    @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
         AccountDto updatedAccountDto = accountService.update(id, accountDto);
         return ResponseEntity.ok(updatedAccountDto);

@@ -28,7 +28,7 @@ public class PdfController {
         model.addAttribute("name", "Tabish");
 
         // Generate PDF
-        byte[] pdfBytes = pdfGenerationService.generatePdf("Awb", model);
+        byte[] pdfBytes = pdfGenerationService.generatePdf("Awb", model, id);
 
         // Set response headers
         HttpHeaders headers = new HttpHeaders();

@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasAuthority('CREATE_USER')")
+    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> userDtoList = userService.getAll();
         return ResponseEntity.ok(userDtoList);
@@ -38,14 +38,14 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
-    @PreAuthorize("hasAuthority('DELETE_USER')")
+    @PreAuthorize("hasAuthority('DELETE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/user/{id}")
-    @PreAuthorize("hasAuthority('CREATE_USER')")
+    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         UserDto updatedUserDto = userService.update(id, userDto);
         return ResponseEntity.ok(updatedUserDto);

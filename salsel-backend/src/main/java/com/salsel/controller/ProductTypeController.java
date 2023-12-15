@@ -18,7 +18,7 @@ public class ProductTypeController {
     }
 
     @PostMapping("/product-type")
-    @PreAuthorize("hasAuthority('CREATE_PRODUCT_TYPE')")
+    @PreAuthorize("hasAuthority('CREATE_PRODUCT_TYPE') and hasAuthority('READ_PRODUCT_TYPE')")
     public ResponseEntity<ProductTypeDto> createProductType(@RequestBody ProductTypeDto productTypeDto) {
         return ResponseEntity.ok(productTypeService.save(productTypeDto));
     }
@@ -45,14 +45,14 @@ public class ProductTypeController {
     }
 
     @DeleteMapping("/product-type/{id}")
-    @PreAuthorize("hasAuthority('DELETE_PRODUCT_TYPE')")
+    @PreAuthorize("hasAuthority('DELETE_PRODUCT_TYPE') and hasAuthority('READ_PRODUCT_TYPE')")
     public ResponseEntity<Void> deleteProductType(@PathVariable Long id) {
         productTypeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/product-type/{id}")
-    @PreAuthorize("hasAuthority('CREATE_PRODUCT_TYPE')")
+    @PreAuthorize("hasAuthority('CREATE_PRODUCT_TYPE') and hasAuthority('READ_PRODUCT_TYPE')")
     public ResponseEntity<ProductTypeDto> updateProductType(@PathVariable Long id, @RequestBody ProductTypeDto productTypeDto) {
         ProductTypeDto updatedProductTypeDto = productTypeService.update(id, productTypeDto);
         return ResponseEntity.ok(updatedProductTypeDto);

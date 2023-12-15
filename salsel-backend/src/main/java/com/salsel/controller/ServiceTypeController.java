@@ -18,7 +18,7 @@ public class ServiceTypeController {
     }
 
     @PostMapping("/service-type")
-    @PreAuthorize("hasAuthority('CREATE_SERVICE_TYPE')")
+    @PreAuthorize("hasAuthority('CREATE_SERVICE_TYPE') and hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<ServiceTypeDto> createServiceType(@RequestBody ServiceTypeDto serviceTypeDto) {
         return ResponseEntity.ok(serviceTypeService.save(serviceTypeDto));
     }
@@ -52,14 +52,14 @@ public class ServiceTypeController {
     }
 
     @DeleteMapping("/service-type/{id}")
-    @PreAuthorize("hasAuthority('DELETE_SERVICE_TYPE')")
+    @PreAuthorize("hasAuthority('DELETE_SERVICE_TYPE') and hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<Void> deleteServiceType(@PathVariable Long id) {
         serviceTypeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/service-type/{id}")
-    @PreAuthorize("hasAuthority('CREATE_SERVICE_TYPE')")
+    @PreAuthorize("hasAuthority('CREATE_SERVICE_TYPE') and hasAuthority('READ_SERVICE_TYPE')")
     public ResponseEntity<ServiceTypeDto> updateServiceType(@PathVariable Long id, @RequestBody ServiceTypeDto serviceTypeDto) {
         ServiceTypeDto updatedServiceTypeDto = serviceTypeService.update(id, serviceTypeDto);
         return ResponseEntity.ok(updatedServiceTypeDto);

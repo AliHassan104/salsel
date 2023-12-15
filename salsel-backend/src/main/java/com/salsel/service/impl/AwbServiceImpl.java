@@ -38,34 +38,18 @@ public class AwbServiceImpl implements AwbService {
     @Transactional
     public AwbDto save(AwbDto awbDto) {
         try {
-            // Fetch the maximum uniqueNumber from the database
             Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
-
-            // Set the next uniqueNumber
             awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
 
-            // Save AWB and get the generated ID
             Awb awb = toEntity(awbDto);
             awb.setStatus(true);
             awb.setEmailFlag(false);
             Awb createdAwb = awbRepository.save(awb);
             Long awbId = createdAwb.getId();
 
-            String barCodeUrl = codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
-
-            String verticalBarCodeUrl = codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
-
-            String QrcodeUrl = codeGenerationService.generateQRCode("https://example.com", awbId);
-
-            // Add variables to the Model for PDF generation
-            Model model = new ExtendedModelMap();
-            model.addAttribute("awbId", awbId);
-            model.addAttribute("barcodeUrl", barCodeUrl);
-            model.addAttribute("verticalBarcodeUrl", verticalBarCodeUrl);
-            model.addAttribute("qrcodeUrl", QrcodeUrl);
-
-            // Generate PDF
-            byte[] pdfBytes = pdfGenerationService.generatePdf("Awb", model);
+            codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
+            codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
+            codeGenerationService.generateQRCode("https://example.com", awbId);
 
             return toDto(createdAwb);
         } catch (Exception e) {
@@ -91,7 +75,7 @@ public class AwbServiceImpl implements AwbService {
     public byte[] downloadAwbPdf(String fileName, Long awbId) {
         Model model = new ExtendedModelMap();
         model.addAttribute("awbId", awbId);
-        return pdfGenerationService.generatePdf("Awb", model);
+        return pdfGenerationService.generatePdf("Awb", model, awbId);
     }
 
     @Override
