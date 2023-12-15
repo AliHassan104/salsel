@@ -211,6 +211,7 @@ VALUES
   ('Currency', 4, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Duty And Taxes Billing', 5, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Ticket Type', 6, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
+  ('Status', 7, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
 
 
 INSERT INTO product_field_values (name, status, product_field_id)
@@ -248,6 +249,9 @@ VALUES
   ('Text Box', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
   ('Priority', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
   ('Attachments', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type'));
+
+  ('Active', 'Active', (SELECT id FROM product_field WHERE name = 'Status'));
+  ('In Active', 'Active', (SELECT id FROM product_field WHERE name = 'Status'));
 
 
 INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true);

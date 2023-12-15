@@ -29,6 +29,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
     @Override
     public String generateBarcodeVertical(String data, Long awbId) {
         try {
+            String folderName = "awb_" + awbId;
             String filename = "vertical_barcode_" + awbId + ".png";
 
             // Generate barcode image
@@ -42,7 +43,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
             byte[] imageBytes = convertImageToByteArray(rotatedBarcodeImage);
 
             // Save to S3 bucket
-            String url = bucketService.save(imageBytes, filename);
+            String url = bucketService.save(imageBytes, folderName, filename);
             logger.info("Vertical Barcode " + awbId + " uploaded on S3");
 
             return url;
@@ -55,6 +56,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
     @Override
     public String generateBarcode(String data, Long awbId) {
         try {
+            String folderName = "awb_" + awbId;
             String filename = "barcode_" + awbId + ".png";
 
             BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.CODE_128, 200, 80);
@@ -62,7 +64,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
             byte[] imageBytes = convertImageToByteArray(barcodeImage);
 
             // Save to S3 bucket
-            String url = bucketService.save(imageBytes, filename);
+            String url = bucketService.save(imageBytes, folderName, filename);
             logger.info("Barcode " + awbId + " uploaded on S3");
             return url;
 
@@ -75,6 +77,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
     @Override
     public String generateQRCode(String data, Long awbId) {
         try {
+            String folderName = "awb_" + awbId;
             String filename = "qrcode_" + awbId + ".png";
 
             BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, 200, 200);
@@ -82,7 +85,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
             byte[] imageBytes = convertImageToByteArray(qrcodeImage);
 
             // Save to S3 bucket
-            String url = bucketService.save(imageBytes, filename);
+            String url = bucketService.save(imageBytes, folderName, filename);
             logger.info("Qrcode " + awbId + " uploaded on S3");
 
             return url;

@@ -13,11 +13,11 @@
     <div class="img">
         <img th:src="@{classpath:/static/images/logo.png}"  class="img1"></img>
 <!--        <img th:src="${'http://localhost:8080/api/file/qrcode_34.png'}" alt="QR Code" class="img2"></img>-->
-        <img th:src="${'http://localhost:8080/api/file/qrcode_' + awbId + '.png'}" alt="QR Code" class="img2"></img>
+        <img th:src="${'http://localhost:8080/api/file/awb_' + awbId + '/qrcode_' + awbId + '.png'}" alt="QR Code" class="img2"></img>
     </div>
     <div class="content">
         <p>Fred L Scott <br></br> 20 Bridge St <br></br> Olney MK46 4AB <br></br> England</p>
-        <img th:src="${'http://localhost:8080/api/file/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
+        <img th:src="${'http://localhost:8080/api/file/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
         <!--            <p class="barcode-num">011011101110110101</p>-->
     </div>
     <div style="z-index: 1000; position: relative;">
@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="footer-img">
-        <img th:src="${'http://localhost:8080/api/file/barcode_' + awbId + '.png'}" alt="Barcode" class="img-4"></img>
+        <img th:src="${'http://localhost:8080/api/file/awb_' + awbId + '/barcode_' + awbId + '.png'}" alt="Barcode" class="img-4"></img>
     </div>
 </div>
 </body>
