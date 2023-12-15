@@ -84,7 +84,7 @@
 
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
                                 type="button" icon="pi pi-check"
-                                disabled="!this.sessionStorageService.hasPermission('DELETE_SERVICE_TYPE')"
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_SERVICE_TYPE')"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveServiceType(serviceType.id)"></button>
 

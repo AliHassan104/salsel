@@ -103,6 +103,8 @@ export class AddUserComponent implements OnInit {
         console.log(this.singleUser);
 
         this.rolesService.getRoles().subscribe((res: any) => {
+          console.log(res);
+
           const role = res.filter(
             (value) => value.name == this.singleUser.roles[0].name
           );
