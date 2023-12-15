@@ -12,6 +12,7 @@ import { IPermissions } from "./model/permissionDto";
 import { IRole } from "./model/roleDto";
 import { ActivatedRoute } from "@angular/router";
 import { SessionStorageService } from "../auth/service/session-storage.service";
+import { FormvalidationService } from "../Tickets/service/formvalidation.service";
 
 @Component({
   selector: "app-permissions",
@@ -31,7 +32,8 @@ export class PermissionsComponent {
     private messageService: MessageService,
     private roleService: RolesService,
     private route: ActivatedRoute,
-    private SessionStorageService: SessionStorageService
+    private SessionStorageService: SessionStorageService,
+    private formService: FormvalidationService
   ) {}
 
   ngOnInit(): void {
@@ -127,6 +129,7 @@ export class PermissionsComponent {
         });
     } else {
       this.alert();
+      this.formService.markFormGroupTouched(this.permissionsForm);
     }
   }
 

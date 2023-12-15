@@ -5,6 +5,7 @@ import { IDepartmentCategory } from "src/app/components/department-category/mode
 import { DepartmentCategoryService } from "../service/department-category.service";
 import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/service/dropdown.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-department-category-data",
@@ -26,7 +27,9 @@ export class DepartmentCategoryDataComponent {
     private departmentCategoryService: DepartmentCategoryService,
     private router: Router,
     private messageService: MessageService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+
+    public sessionStorageService: SessionStorageService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
@@ -94,7 +97,7 @@ export class DepartmentCategoryDataComponent {
 
   editDepartmentCategory(id?: any) {
     const queryParams = { id: id };
-    this.router.navigate(["department-category"], {
+    this.router.navigate(["create-department-category"], {
       queryParams: queryParams,
     });
   }

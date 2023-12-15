@@ -4,6 +4,7 @@ import { CityService } from "../service/city.service";
 import { Router } from "@angular/router";
 import { Table } from "primeng/table";
 import { DropdownService } from "src/app/service/dropdown.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-city-list",
@@ -16,7 +17,9 @@ export class CityListComponent {
     private _cityService: CityService,
     private router: Router,
     private dropdownService: DropdownService,
-    private messageService: MessageService
+    private messageService: MessageService,
+
+    public sessionStorageService: SessionStorageService
   ) {}
 
   @ViewChild("filter") filter!: ElementRef;
@@ -96,7 +99,7 @@ export class CityListComponent {
   //   Edit Ticket
   onEditCity(id) {
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["city"], {
+    this.router.navigate(["create-city"], {
       queryParams: queryParams,
     });
   }

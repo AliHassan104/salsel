@@ -67,66 +67,116 @@ export class AuthGuardService implements CanActivate {
   getPermissionsObj(): any {
     const dashboardObj = {
       url: ["/"],
-      permissions: "Dashboard",
+      permissions: "DASHBOARD",
     };
-    const ticketObj = {
-      url: ["/ticket", "/ticket/list", "/ticket/list/:id"],
-      permissions: "Ticket",
+    const readTicketObj = {
+      url: ["/ticket/list", "/ticket/list/:id"],
+      permissions: "READ_TICKET",
     };
-    const awbObj = {
-      url: ["/awb", "/awb/list", "/awb/list/:id"],
-      permissions: "Awb",
+    const createTicketObj = {
+      url: ["/create-ticket"],
+      permissions: "CREATE_TICKET",
     };
-    const accountObj = {
-      url: ["/account", "/account/list", "/account/list/:id"],
-      permissions: "Account",
+    const readAwbObj = {
+      url: ["/awb/list", "/awb/list/:billid"],
+      permissions: "READ_AWB",
     };
-    const departmentObj = {
-      url: ["/department", "/department/list"],
-      permissions: "Department",
+    const createAwbObj = {
+      url: ["/create-awb"],
+      permissions: "CREATE_AWB",
     };
-    const departmentCategoryObj = {
-      url: ["/department-category", "/department-category/list"],
-      permissions: "Department Category",
+    const readAccountObj = {
+      url: ["/account/list", "/account/list/:id"],
+      permissions: "READ_ACCOUNT",
     };
-    const cityObj = {
-      url: ["/city", "/city/list"],
-      permissions: "City",
+    const createAccountObj = {
+      url: ["/create-account"],
+      permissions: "CREATE_ACCOUNT",
     };
-    const countryObj = {
-      url: ["/country", "/country/list"],
-      permissions: "Country",
+    const readDepartmentObj = {
+      url: ["/department/list"],
+      permissions: "READ_DEPARTMENT",
     };
-    const productTypeObj = {
-      url: ["/product-type", "/product-type/list"],
-      permissions: "Product Type",
+    const createDepartmentObj = {
+      url: ["/create-department"],
+      permissions: "CREATE_DEPARTMENT",
     };
-    const ServiceTypeObj = {
-      url: ["/service-type", "/service-type/list"],
-      permissions: "Product Type",
+    const readDepartmentCategoryObj = {
+      url: ["/department-category/list"],
+      permissions: "READ_DEPARTMENT_CATEGORY",
+    };
+    const createDepartmentCategoryObj = {
+      url: ["/create-department-category"],
+      permissions: "CREATE_DEPARTMENT_CATEGORY",
+    };
+    const readCityObj = {
+      url: ["/city/list", "/city/list/:id"],
+      permissions: "READ_CITY",
+    };
+    const createCityObj = {
+      url: ["/create-city"],
+      permissions: "CREATE_CITY",
+    };
+    const readCountryObj = {
+      url: ["/country/list"],
+      permissions: "READ_COUNTRY",
+    };
+    const createCountryObj = {
+      url: ["/create-country"],
+      permissions: "CREATE_COUNTRY",
+    };
+    const readProductTypeObj = {
+      url: ["/product-type/list", "/product-type/list/:id"],
+      permissions: "READ_PRODUCT_TYPE",
+    };
+    const createProductTypeObj = {
+      url: ["/create-product-type"],
+      permissions: "CREATE_PRODUCT_TYPE",
+    };
+    const readServiceTypeObj = {
+      url: ["/service-type/list", "/service-type/list/:id"],
+      permissions: "READ_SERVICE_TYPE",
+    };
+    const createServiceTypeObj = {
+      url: ["/create-service-type"],
+      permissions: "CREATE_SERVICE_TYPE",
     };
     const permissionsObj = {
       url: ["/permissions"],
-      permissions: "Permission",
+      permissions: "PERMISSION",
     };
-    const userObj = {
-      url: ["/user", "/user/list", "/user/list/:id"],
-      permissions: "User",
+    const createUserObj = {
+      url: ["/create-user"],
+      permissions: "CREATE_USER",
+    };
+    const readUserObj = {
+      url: ["/user/list", "/user/list/:id"],
+      permissions: "READ_USER",
     };
 
     return [
       dashboardObj,
-      ticketObj,
-      awbObj,
-      accountObj,
-      cityObj,
-      countryObj,
-      productTypeObj,
-      ServiceTypeObj,
-      departmentCategoryObj,
-      departmentObj,
+      readAccountObj,
+      createAccountObj,
+      readAwbObj,
+      createAwbObj,
+      readCityObj,
+      createCityObj,
+      readCountryObj,
+      createCountryObj,
+      readDepartmentObj,
+      createDepartmentObj,
+      readDepartmentCategoryObj,
+      createDepartmentCategoryObj,
+      readTicketObj,
+      createTicketObj,
+      readProductTypeObj,
+      createProductTypeObj,
+      readServiceTypeObj,
+      createServiceTypeObj,
       permissionsObj,
-      userObj,
+      createUserObj,
+      readUserObj,
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

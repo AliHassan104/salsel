@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AuthGuardService } from "./auth-guard.service";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -25,8 +26,16 @@ export class SessionStorageService {
     }
   }
 
-  hasPermission(requiredPermission: string): boolean {
-    return this.userPermissions.includes(requiredPermission);
+  hasPermission(requiredPermissions: string | string[]): boolean {
+    if (Array.isArray(requiredPermissions)) {
+      // Check if the user has at least one of the required permissions in the array
+      return requiredPermissions.some((permission) =>
+        this.userPermissions.includes(permission)
+      );
+    } else {
+      // Check if the user has the single required permission
+      return this.userPermissions.includes(requiredPermissions);
+    }
   }
 
   getRoleName() {

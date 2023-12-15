@@ -28,11 +28,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [
-    AwbcreationComponent,
-    AirbilldetailsComponent,
-    AirbilldataComponent,
-  ],
+  declarations: [AirbilldetailsComponent, AirbilldataComponent],
   imports: [
     CommonModule,
     FormsModule,

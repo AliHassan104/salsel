@@ -14,13 +14,12 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { MultiSelectModule } from "primeng/multiselect";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ToastModule } from "primeng/toast";
-import { ProductTypeComponent } from "./update/product-type.component";
 import { ProductTypeListComponent } from "./list/product-type-list.component";
 import { ProductTypeRoutingModule } from "./product-type-routing-module";
 import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [ProductTypeComponent, ProductTypeListComponent],
+  declarations: [ProductTypeListComponent],
   imports: [
     CommonModule,
     ProductTypeRoutingModule,

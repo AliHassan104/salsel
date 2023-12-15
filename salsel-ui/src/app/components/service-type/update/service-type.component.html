@@ -5,7 +5,7 @@
             {{mode == 'Add'? "Create Service Type" :"Update Service Type" }}</h1>
         <form action="" [formGroup]="serviceTypeForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-4">
+                <div class="field col-12 md:col-4">
                     <label>Product Type</label>
                     <p-dropdown [options]="productTypes" formControlName="type" optionLabel="name"
                         placeholder="Select Product Type"
@@ -16,7 +16,7 @@
                     </small>
                 </div>
 
-                <div class="field col-4">
+                <div class="field col-12 md:col-4">
                     <label htmlFor="name"><strong>Name</strong></label>
                     <input pInputTextarea id="name" rows="4" formControlName="name"
                         [ngClass]="{'ng-dirty':serviceTypeForm.get('name')?.touched && serviceTypeForm.get('name')?.invalid}" />
@@ -26,7 +26,7 @@
                     </small>
                 </div>
 
-                <div class="field col-4">
+                <div class="field col-12 md:col-4">
                     <label htmlFor="code"><strong>Code</strong></label>
                     <input pInputTextarea id="code" rows="4" formControlName="code"
                         [ngClass]="{'ng-dirty':serviceTypeForm.get('code')?.touched && serviceTypeForm.get('code')?.invalid}" />

@@ -18,12 +18,11 @@ import { DepartmentCategoryRoutingModule } from "./department-category-routing.m
 import { TableModule } from "primeng/table";
 import { DialogModule } from "primeng/dialog";
 import { DepartmentCategoryDataComponent } from "./list/department-category-data.component";
-import { DepartmentCategoryComponent } from "./update/department-category.component";
 import { ToastModule } from "primeng/toast";
 import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [DepartmentCategoryDataComponent, DepartmentCategoryComponent],
+  declarations: [DepartmentCategoryDataComponent],
   imports: [
     CommonModule,
     DepartmentCategoryRoutingModule,

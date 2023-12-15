@@ -5,6 +5,7 @@ import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-airbilldata",
@@ -23,7 +24,8 @@ export class AirbilldataComponent implements OnInit {
     private _airbillService: AirbillService,
     private router: Router,
     private messageService: MessageService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    public sessionStorageService: SessionStorageService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
@@ -90,7 +92,7 @@ export class AirbilldataComponent implements OnInit {
   onEditBill(id) {
     this._airbillService.updateAWB.next(true);
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["awb"], {
+    this.router.navigate(["create-awb"], {
       queryParams: queryParams,
     });
   }

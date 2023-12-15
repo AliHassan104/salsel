@@ -30,11 +30,7 @@ import { PaginatorModule } from "primeng/paginator";
 import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [
-    TicketitemComponent,
-    TicketsdataComponent,
-    TicketformComponent,
-  ],
+  declarations: [TicketitemComponent, TicketsdataComponent],
   imports: [
     CommonModule,
     TableModule,

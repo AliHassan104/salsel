@@ -5,6 +5,7 @@ import { IProductType } from "src/app/components/product-type/model/productType.
 import { ProductTypeService } from "../service/product-type.service";
 import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/service/dropdown.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 @Component({
   selector: "app-product-type-list",
   templateUrl: "./product-type-list.component.html",
@@ -25,7 +26,8 @@ export class ProductTypeListComponent {
     private productTypeService: ProductTypeService,
     private router: Router,
     private MessageService: MessageService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    public sessionStorageService: SessionStorageService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
@@ -93,7 +95,7 @@ export class ProductTypeListComponent {
 
   editProductType(id?: any) {
     const queryParams = { id: id };
-    this.router.navigate(["product-type"], { queryParams: queryParams });
+    this.router.navigate(["create-product-type"], { queryParams: queryParams });
   }
 
   onActiveproductType(id) {

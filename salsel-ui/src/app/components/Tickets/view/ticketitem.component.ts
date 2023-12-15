@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
 import { AirbillService } from "../../awb/service/airbill.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-ticketitem",
@@ -13,7 +14,8 @@ export class TicketitemComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private _ticketService: TicktingService,
     private router: Router,
-    private _airbillService: AirbillService
+    private _airbillService: AirbillService,
+    public sessionStorageService: SessionStorageService
   ) {}
   display: any;
   singleTicket: any;
@@ -40,7 +42,7 @@ export class TicketitemComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
       const queryParams = { id: a };
-      this.router.navigate(["awb"], {
+      this.router.navigate(["create-awb"], {
         queryParams: queryParams,
       });
     });

@@ -5,6 +5,7 @@ import { ServiceTypeService } from "../service/service-type.service";
 import { IServiceType } from "src/app/components/service-type/model/serviceType.model";
 import { MessageService } from "primeng/api";
 import { DropdownService } from "../../../service/dropdown.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-service-type-list",
@@ -26,7 +27,8 @@ export class ServiceTypeListComponent {
     private serviceTypeService: ServiceTypeService,
     private router: Router,
     private messageService: MessageService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    public sessionStorageService: SessionStorageService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
@@ -93,7 +95,7 @@ export class ServiceTypeListComponent {
 
   editServiceType(id?: any) {
     const queryParams = { id: id };
-    this.router.navigate(["service-type"], { queryParams: queryParams });
+    this.router.navigate(["create-service-type"], { queryParams: queryParams });
   }
 
   onActiveServiceType(id) {

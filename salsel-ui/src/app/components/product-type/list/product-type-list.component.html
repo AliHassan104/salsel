@@ -5,7 +5,8 @@
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
                 All Product Types</h1>
             <div class="flex justify-content-end">
-                <button pButton label="Add Product Type" class="mb-2" routerLink="/product-type"></button>
+                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_PRODUCT_TYPE')" pButton
+                    label="Add Product Type" class="mb-2" routerLink="/create-product-type"></button>
             </div>
             <hr>
             <p-table #dt1 [value]="productTypes" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
@@ -61,17 +62,21 @@
 
                         <td>
 
-                            <button pTooltip="Edit" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
-                                type="button" icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-2"
+                            <button pTooltip="Edit" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_PRODUCT_TYPE')"
+                                pButton pRipple type="button" icon="pi pi-file-edit"
+                                class="p-button-rounded p-button-outlined mx-2"
                                 (click)="editProductType(productType.id)"></button>
 
-                            <button pTooltip="Deactivate" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
-                                type="button" icon="pi pi-times"
+                            <button pTooltip="Deactivate" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_PRODUCT_TYPE')"
+                                pButton pRipple type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
                                 (click)="deleteProductType(productType.id)"></button>
 
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
                                 type="button" icon="pi pi-check"
+                                [disabled]="this.sessionStorageService.hasPermission('DELETE_PRODUCT_TYPE')"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveproductType(productType.id)"></button>
 

@@ -25,7 +25,7 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "user",
+              path: "user/list",
               loadChildren: () =>
                 import(
                   "./components/auth/usermanagement/usermanagement.module"
@@ -33,7 +33,15 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "ticket",
+              path: "create-user",
+              loadChildren: () =>
+                import(
+                  "./components/auth/usermanagement/update/user-form.module"
+                ).then((m) => m.UserFormModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "ticket/list",
               loadChildren: () =>
                 import("./components/Tickets/tickets.module").then(
                   (m) => m.TicketsModule
@@ -41,7 +49,15 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "awb",
+              path: "create-ticket",
+              loadChildren: () =>
+                import("./components/Tickets/update/tickets-form.module").then(
+                  (m) => m.TicketsFormModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "awb/list",
               loadChildren: () =>
                 import("./components/awb/airbill.module").then(
                   (m) => m.AirbillModule
@@ -49,7 +65,15 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "department",
+              path: "create-awb",
+              loadChildren: () =>
+                import("./components/awb/update/awbform.module").then(
+                  (m) => m.AwbformModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "department/list",
               loadChildren: () =>
                 import("./components/department/department.module").then(
                   (m) => m.DepartmentModule
@@ -57,11 +81,27 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "department-category",
+              path: "create-department",
+              loadChildren: () =>
+                import(
+                  "./components/department/update/department-form.module"
+                ).then((m) => m.DepartmentFormModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "department-category/list",
               loadChildren: () =>
                 import(
                   "./components/department-category/department-category.module"
                 ).then((m) => m.DepartmentCategoryModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-department-category",
+              loadChildren: () =>
+                import(
+                  "./components/department-category/update/department-category-form.module"
+                ).then((m) => m.DepartmentCategoryFormModule),
               canActivate: [AuthGuardService],
             },
 
@@ -73,7 +113,7 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
                 ),
             },
             {
-              path: "country",
+              path: "country/list",
               loadChildren: () =>
                 import("./components/country/country.module").then(
                   (m) => m.CountryModule
@@ -81,7 +121,15 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "city",
+              path: "create-country",
+              loadChildren: () =>
+                import("./components/country/update/country-form.module").then(
+                  (m) => m.CountryFormModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "city/list",
               loadChildren: () =>
                 import("./components/City/city.module").then(
                   (m) => m.CityModule
@@ -89,7 +137,15 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "product-type",
+              path: "create-city",
+              loadChildren: () =>
+                import("./components/City/update/city-form.module").then(
+                  (m) => m.CityFormModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "product-type/list",
               loadChildren: () =>
                 import("./components/product-type/product-type.module").then(
                   (m) => m.ProductTypeModule
@@ -97,7 +153,15 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "service-type",
+              path: "create-product-type",
+              loadChildren: () =>
+                import(
+                  "./components/product-type/update/product-type-form.module"
+                ).then((m) => m.ProductTypeFormModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "service-type/list",
               loadChildren: () =>
                 import("./components/service-type/service-type.module").then(
                   (m) => m.ServiceTypeModule
@@ -105,11 +169,27 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
-              path: "account",
+              path: "create-service-type",
+              loadChildren: () =>
+                import(
+                  "./components/service-type/update/service-type-form.module"
+                ).then((m) => m.ServiceTypeFormModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "account/list",
               loadChildren: () =>
                 import("./components/accounts/account.module").then(
                   (m) => m.AccountModule
                 ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-account",
+              loadChildren: () =>
+                import(
+                  "./components/accounts/update/accounts-form.module"
+                ).then((m) => m.AccountsFormModule),
               canActivate: [AuthGuardService],
             },
             {

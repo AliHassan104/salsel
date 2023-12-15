@@ -5,7 +5,7 @@
             {{mode == 'Add'? "Add Product Type" :"Update Product Type" }}</h1>
         <form action="" [formGroup]="productTypeForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-6">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Product Type</strong></label>
                     <input placeholder="Enter Product Type" pInputTextarea id="name" rows="4" formControlName="name"
                         [ngClass]="{'ng-dirty':productTypeForm.get('name')?.touched && productTypeForm.get('name')?.invalid}" />
@@ -14,7 +14,7 @@
                         Required
                     </small>
                 </div>
-                <div class="field col-6">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="code"><strong>Code</strong></label>
                     <input placeholder="Enter Code" pInputTextarea id="name" rows="4" formControlName="code"
                         [ngClass]="{'ng-dirty':productTypeForm.get('code')?.touched && productTypeForm.get('code')?.invalid}" />

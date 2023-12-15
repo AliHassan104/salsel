@@ -3,9 +3,10 @@
         <div class="card">
             <h1 class="m-0"
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
-                All Departments Category</h1>
+                All Department Categories</h1>
             <div class="flex justify-content-end">
-                <button pButton label="Add Department Category" class="mb-2" routerLink="/department-category"></button>
+                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_DEPARTMENT_CATEGORY')" pButton
+                    label="Add Department Category" class="mb-2" routerLink="/create-department-category"></button>
             </div>
             <hr>
             <p-table #dt1 [value]="departmentCategories" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
@@ -68,17 +69,21 @@
                         </td>
 
                         <td>
-                            <button pTooltip="Edit" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
-                                type="button" icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-2"
+                            <button pTooltip="Edit" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_DEPARTMENT_CATEGORY')"
+                                pButton pRipple type="button" icon="pi pi-file-edit"
+                                class="p-button-rounded p-button-outlined mx-2"
                                 (click)="editDepartmentCategory(departmentCategory.id)"></button>
 
-                            <button pTooltip="Deactivate" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
-                                type="button" icon="pi pi-times"
+                            <button pTooltip="Deactivate" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_DEPARTMENT_CATEGORY')"
+                                pButton pRipple type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
                                 (click)="deleteDepartmentCategory(departmentCategory.id)"></button>
 
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
                                 type="button" icon="pi pi-check"
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_DEPARTMENT_CATEGORY')"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveDepartmentCategory(departmentCategory.id)"></button>
 

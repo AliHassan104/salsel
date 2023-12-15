@@ -5,7 +5,7 @@
             {{mode == 'Add'? "Add Department Category" :"Update Department Category" }}</h1>
         <form action="" [formGroup]="departmentCategoryForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-6">
+                <div class="field col-12 md:col-6">
                     <label><strong>Department</strong></label>
                     <p-dropdown [options]="departments" formControlName="type" optionLabel="name"
                         placeholder="Select Department" [filter]="true"
@@ -17,7 +17,7 @@
                     </small>
                 </div>
 
-                <div class="field col-6">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Department Category</strong></label>
                     <input pInputTextarea id="name" rows="4" formControlName="name"
                         placeholder="Enter Department Category Name"

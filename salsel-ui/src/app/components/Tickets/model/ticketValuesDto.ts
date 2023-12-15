@@ -21,4 +21,5 @@ export interface Ticket {
   ticketStatus?: string;
   ticketFlag?: string;
   status?: true;
+  createdBy?: string;
 }

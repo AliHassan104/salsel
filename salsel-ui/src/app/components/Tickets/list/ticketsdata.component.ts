@@ -5,6 +5,7 @@ import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-ticketsdata",
@@ -25,7 +26,8 @@ export class TicketsdataComponent implements OnInit {
     private _ticktingService: TicktingService,
     private router: Router,
     private messageService: MessageService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    public sessionStorageService: SessionStorageService
   ) {}
 
   loading: any;
@@ -43,15 +45,7 @@ export class TicketsdataComponent implements OnInit {
 
   //   Get all tickets
   getTickets() {
-    let search = {
-      searchText: this.serachText,
-    };
-
     const queryParams = {
-      //   page: this.page,
-      //   size: this.size,
-      //   sort: "id",
-      //   search: JSON.stringify(search),
       status: this.activeStatus,
     };
 
@@ -121,7 +115,7 @@ export class TicketsdataComponent implements OnInit {
   //   Edit Ticket
   onEditTicket(id) {
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["ticket"], {
+    this.router.navigate(["create-ticket"], {
       queryParams: queryParams,
     });
   }

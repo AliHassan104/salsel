@@ -81,7 +81,7 @@ import { SessionStorageService } from "../components/auth/service/session-storag
         [@children]="submenuAnimation">
         <ng-template ngFor let-child let-i="index" [ngForOf]="item.items">
           <ng-container
-            *ngIf="this.sessionStorageService.hasPermission(child.label)">
+            *ngIf="this.sessionStorageService.hasPermission(child.permission)">
             <li
               app-menuitem
               [item]="child"

@@ -25,16 +25,12 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { PaginatorModule } from "primeng/paginator";
 import { AccountListComponent } from "./list/account-list.component";
-import { AccountFormComponent } from "./update/account-form.component";
 import { AccountViewComponent } from "./view/account-view.component";
 import { TooltipModule } from "primeng/tooltip";
+import { AccountsFormRoutingModule } from "./update/accounts-form-routing.module";
 
 @NgModule({
-  declarations: [
-    AccountListComponent,
-    AccountFormComponent,
-    AccountViewComponent,
-  ],
+  declarations: [AccountListComponent, AccountViewComponent],
   imports: [
     CommonModule,
     AccountRoutingModule,

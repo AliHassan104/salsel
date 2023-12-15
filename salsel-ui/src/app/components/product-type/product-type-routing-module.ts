@@ -1,18 +1,11 @@
-import { NgModule } from '@angular/core';
-import { Route, RouterModule, Routes } from '@angular/router';
-import { ProductTypeListComponent } from './list/product-type-list.component';
-import { ProductTypeComponent } from './update/product-type.component';
+import { NgModule } from "@angular/core";
+import { Route, RouterModule } from "@angular/router";
+import { ProductTypeListComponent } from "./list/product-type-list.component";
 
-// const routes: Routes = [];
-
-const routes:Route[] = [
-  {path: '', component: ProductTypeComponent},
-  {path: ':/id', component: ProductTypeComponent},
-  {path: 'list', component: ProductTypeListComponent}
-];
+const routes: Route[] = [{ path: "", component: ProductTypeListComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ProductTypeRoutingModule { }
+export class ProductTypeRoutingModule {}

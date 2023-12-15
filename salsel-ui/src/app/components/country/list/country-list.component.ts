@@ -4,6 +4,7 @@ import { CountryService } from "../service/country.service";
 import { Table } from "primeng/table";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { MessageService } from "primeng/api";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-country-list",
@@ -22,7 +23,9 @@ export class CountryListComponent implements OnInit {
     private _countryService: CountryService,
     private router: Router,
     private dropdownService: DropdownService,
-    private messageService: MessageService
+    private messageService: MessageService,
+
+    public sessionStorageService: SessionStorageService
   ) {}
 
   @ViewChild("filter") filter!: ElementRef;
@@ -98,7 +101,7 @@ export class CountryListComponent implements OnInit {
   //   Edit Ticket
   onEditCountry(id) {
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["country"], {
+    this.router.navigate(["create-country"], {
       queryParams: queryParams,
     });
   }

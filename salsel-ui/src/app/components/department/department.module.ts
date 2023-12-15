@@ -17,13 +17,12 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { DepartmentRoutingModule } from "./department-routing.module";
-import { DepartmentComponent } from "./update/department.component";
 import { DepartmentListComponent } from "./list/department-list.component";
 import { ToastModule } from "primeng/toast";
 import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [DepartmentListComponent, DepartmentComponent],
+  declarations: [DepartmentListComponent],
   imports: [
     CommonModule,
     DepartmentRoutingModule,

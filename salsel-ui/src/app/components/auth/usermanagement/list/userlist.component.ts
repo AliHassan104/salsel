@@ -5,6 +5,7 @@ import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { IUser } from "../model/userDto";
 import { Table } from "primeng/table";
+import { SessionStorageService } from "../../service/session-storage.service";
 
 @Component({
   selector: "app-userlist",
@@ -23,7 +24,8 @@ export class UserlistComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private dropdownService: DropdownService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public sessionStorageService: SessionStorageService
   ) {}
 
   @ViewChild("filter") filter!: ElementRef;
@@ -91,7 +93,7 @@ export class UserlistComponent implements OnInit {
 
   onEditUser(id) {
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["user"], {
+    this.router.navigate(["create-user"], {
       queryParams: queryParams,
     });
   }

@@ -12,6 +12,8 @@ import { CountryService } from "../../country/service/country.service";
 import { CityService } from "../../City/service/city.service";
 import { DepartmentService } from "../../department/service/department.service";
 import { DepartmentCategoryService } from "../../department-category/service/department-category.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
+import { RolesService } from "../../permissions/service/roles.service";
 
 @Component({
   selector: "app-ticketform",
@@ -56,7 +58,8 @@ export class TicketformComponent implements OnInit {
     private countryService: CountryService,
     private cityService: CityService,
     private departmentService: DepartmentService,
-    private departmentCategoryService: DepartmentCategoryService
+    private departmentCategoryService: DepartmentCategoryService,
+    private roleService: RolesService
   ) {}
 
   ngOnInit(): void {
@@ -174,10 +177,6 @@ export class TicketformComponent implements OnInit {
         this.productFields.filter((data) => data.name == "Ticket Status")[0]
           .productFieldValuesList
       );
-      this.assignedTo = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Assigned To")[0]
-          .productFieldValuesList
-      );
     });
 
     // Get All Countries
@@ -191,6 +190,12 @@ export class TicketformComponent implements OnInit {
     this.departmentService.getDepartments(this.params).subscribe((res) => {
       this.department = res.body;
       this.department = this.dropdownService.extractNames(this.department);
+    });
+
+    // Get All Roles
+    this.roleService.getRoles().subscribe((res: any) => {
+      this.assignedTo = res;
+      this.assignedTo = this.dropdownService.extractNames(this.assignedTo);
     });
   }
 
@@ -325,6 +330,7 @@ export class TicketformComponent implements OnInit {
         ticketFlag: formValue.ticketFlag,
         department: formValue.department,
         departmentCategory: formValue.departmentCategory,
+        createdBy: localStorage.getItem("loginUserName"),
       };
 
       if (this.editMode) {

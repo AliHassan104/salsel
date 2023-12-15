@@ -6,9 +6,8 @@ import { AirbilldetailsComponent } from "./view/airbilldetails.component";
 import { Route, RouterModule } from "@angular/router";
 
 const routes: Route[] = [
-  { path: "", component: AwbcreationComponent },
-  { path: "list", component: AirbilldataComponent },
-  { path: "list/:billid", component: AirbilldetailsComponent },
+  { path: "", component: AirbilldataComponent },
+  { path: ":billid", component: AirbilldetailsComponent },
 ];
 
 @NgModule({

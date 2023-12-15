@@ -5,7 +5,7 @@
             {{mode == 'Add'? "Add Department" :"Update Department" }}</h1>
         <form action="" [formGroup]="departmentForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-6">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Department</strong></label>
                     <input pInputTextarea id="name" rows="4" formControlName="name" placeholder="Enter Department Name"
                         [ngClass]="{'ng-dirty':departmentForm.get('name')?.touched && departmentForm.get('name')?.invalid}" />

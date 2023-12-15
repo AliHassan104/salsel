@@ -5,6 +5,8 @@ import { Router } from "@angular/router";
 import { LoginService } from "../service/login.service";
 import { MessageService } from "primeng/api";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
+import { UserService } from "../usermanagement/service/user.service";
+import { SessionStorageService } from "../service/session-storage.service";
 
 @Component({
   selector: "app-login",
@@ -17,7 +19,9 @@ export class LoginComponent implements OnInit {
     private _loginService: LoginService,
     private router: Router,
     private messageService: MessageService,
-    private formService: FormvalidationService
+    private formService: FormvalidationService,
+    private userService: UserService,
+    private SessionStorageService: SessionStorageService
   ) {}
   loginForm!: FormGroup;
   token;
@@ -45,6 +49,9 @@ export class LoginComponent implements OnInit {
           localStorage.setItem("token", this.token.jwt);
           this.router.navigate([""]);
           this.loginForm.reset();
+          this.userService.getUserByName(value.name).subscribe((res: any) => {
+            localStorage.setItem("loginUserName", res.name);
+          });
         },
         (error) => {
           this.showError(error);

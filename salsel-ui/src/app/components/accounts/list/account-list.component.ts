@@ -5,6 +5,7 @@ import { Router } from "@angular/router";
 import { DropdownService } from "src/app/service/dropdown.service";
 import { MessageService } from "primeng/api";
 import { IAccountData } from "src/app/components/accounts/model/accountValuesDto";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
   selector: "app-account-list",
@@ -26,7 +27,8 @@ export class AccountListComponent implements OnInit {
     private accountService: AccountService,
     private router: Router,
     private dropdownService: DropdownService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public sessionStorageService: SessionStorageService
   ) {}
 
   accounts?: IAccountData[];
@@ -99,7 +101,7 @@ export class AccountListComponent implements OnInit {
   //   Edit Account
   onEditAccount(id) {
     const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["account"], {
+    this.router.navigate(["create-account"], {
       queryParams: queryParams,
     });
   }

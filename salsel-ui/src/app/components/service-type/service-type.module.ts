@@ -16,11 +16,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ToastModule } from "primeng/toast";
 import { ServiceTypeListComponent } from "./list/service-type-list.component";
 import { ServiceTypeRoutingModule } from "./service-type-routing-module";
-import { ServiceTypeComponent } from "./update/service-type.component";
 import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  declarations: [ServiceTypeComponent, ServiceTypeListComponent],
+  declarations: [ServiceTypeListComponent],
   imports: [
     CommonModule,
     ServiceTypeRoutingModule,
