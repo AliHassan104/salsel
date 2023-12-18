@@ -1,12 +1,15 @@
 package com.salsel.controller;
 
 import com.salsel.service.BucketService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -27,10 +30,11 @@ public class BucketController {
             String fileName = multipartFile.getOriginalFilename();
 
             // Save the file to the bucket and get the URL
-            String fileUrl = bucketService.save(fileBytes, fileName);
+//            String fileUrl = bucketService.save(fileBytes, fileName);
 
             // Add any additional logic or response as needed
-            return ResponseEntity.ok().body("File uploaded successfully. URL: " + fileUrl);
+//            return ResponseEntity.ok().body("File uploaded successfully. URL: " + fileUrl);
+            return ResponseEntity.ok().body("File uploaded successfully. URL: ");
 
         } catch (IOException e) {
             // Handle exception (e.g., log, return error response)
@@ -53,18 +57,16 @@ public class BucketController {
         return ResponseEntity.ok(fileDetailsMap);
     }
 
-    @GetMapping("file/{fileName}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName) {
+    @GetMapping("/file/{folderName}/{fileName}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String folderName, @PathVariable String fileName) {
         try {
-            byte[] fileContent = bucketService.downloadFile(fileName);
-
-//            // Create HttpHeaders with appropriate content type and disposition
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//            headers.setContentDispositionFormData("attachment", fileName);
+            byte[] fileContent = bucketService.downloadFile(folderName, fileName);
 
             // Return the file content as a ResponseEntity with appropriate headers
-            return new ResponseEntity<>(fileContent, HttpStatus.OK);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(fileContent);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -77,5 +79,16 @@ public class BucketController {
     public ResponseEntity<?> deleteFile(@PathVariable String fileName) {
         bucketService.deleteFile(fileName);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/folder/{folderName}")
+    public ResponseEntity<String> deleteFolder(@PathVariable String folderName) {
+        try {
+            bucketService.deleteFolder(folderName);
+            return ResponseEntity.ok("Folder deleted successfully: " + folderName);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting folder: " + e.getMessage());
+        }
     }
 }

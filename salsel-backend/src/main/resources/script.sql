@@ -209,8 +209,13 @@ VALUES
   ('Ticket Flag', 2, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Ticket Status', 3, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Currency', 4, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
-  ('Duty And Taxes Billing', 5, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
-  ('Ticket Type', 6, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
+  ('Duty And Tax Billing', 5, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
+  ('Ticket Type', 6, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
+  ('Status', 7, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
+  ('Request Type', 8, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
+  ('Account Types', 9, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
+  ('Sales Region', 10, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
+  ('Sales Agent', 11, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
 
 
 INSERT INTO product_field_values (name, status, product_field_id)
@@ -247,7 +252,34 @@ VALUES
   ('Subject', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
   ('Text Box', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
   ('Priority', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
-  ('Attachments', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type'));
+  ('Attachments', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
+
+  ('Active', 'Active', (SELECT id FROM product_field WHERE name = 'Status')),
+  ('In Active', 'Active', (SELECT id FROM product_field WHERE name = 'Status')),
+
+  ('Pick-up', 'Active', (SELECT id FROM product_field WHERE name = 'Request Type')),
+  ('Drop-off', 'Active', (SELECT id FROM product_field WHERE name = 'Request Type')),
+
+  ('Cash', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+  ('Corporate', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+  ('ECOM', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+  ('Freight', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+  ('Cash Retail', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+  ('Freight B2B', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+  ('Freight BCB', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+
+  ('Saudi Arabia', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('United Arab Emirates', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('GCC Other', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('Sudan', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('Africa', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('Turkey', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('Middle East', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('United States of America', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('UK & Europe', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+  ('China', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+
+  ('Mohammad Sameer', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Agent'));
 
 
 INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true);

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -28,17 +29,22 @@ public class bucketServiceImpl implements BucketService {
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
     @Override
-    public String save(byte[] pdf, String fileName) {
+    public String save(byte[] pdf, String folderName, String fileName) {
         try {
+            // Create the folder if it doesn't exist
+            createFolderIfNotExists(folderName);
+
             ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf);
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(pdf.length);
 
-            s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
+            String key = folderName + "/" + fileName;
+
+            s3Client.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
 
             // Generate pre-signed URL for the saved object
             GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                    new GeneratePresignedUrlRequest(bucketName, fileName)
+                    new GeneratePresignedUrlRequest(bucketName, key)
                             .withMethod(HttpMethod.GET);
 
             URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
@@ -50,19 +56,43 @@ public class bucketServiceImpl implements BucketService {
         }
     }
 
+
+
+//    @Override
+//    public byte[] downloadFile(String fileName) {
+//        try {
+//            S3Object s3Object = s3Client.getObject(bucketName, fileName);
+//
+//            try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
+//                return IOUtils.toByteArray(inputStream);
+//            }
+//            // Ensure the input stream is closed
+//        } catch (IOException e) {
+//            logger.error("cannot download file from s3 bucket");
+//            e.printStackTrace();
+//            throw new RuntimeException(e.getMessage());
+//        }
+//    }
+
     @Override
-    public byte[] downloadFile(String fileName) {
+    public byte[] downloadFile(String folderName, String fileName) {
         try {
-            S3Object s3Object = s3Client.getObject(bucketName, fileName);
+            String key = folderName + "/" + fileName;
+
+            // Check if the file exists in the S3 bucket
+            if (!s3Client.doesObjectExist(bucketName, key)) {
+                throw new FileNotFoundException("File not found: " + key);
+            }
+
+            S3Object s3Object = s3Client.getObject(bucketName, key);
 
             try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
                 return IOUtils.toByteArray(inputStream);
             }
             // Ensure the input stream is closed
         } catch (IOException e) {
-            logger.error("cannot download file from s3 bucket");
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            logger.error("Error downloading file from S3 bucket: {}", fileName, e);
+            throw new RuntimeException("Error downloading file from S3 bucket: " + e.getMessage());
         }
     }
 
@@ -75,6 +105,19 @@ public class bucketServiceImpl implements BucketService {
             logger.error("Error deleting file from S3 bucket: {}", fileName);
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public void deleteFolder(String folderName) {
+        ObjectListing objectListing = s3Client.listObjects(bucketName, folderName);
+
+        // Iterate through each object in the folder and delete it
+        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+            s3Client.deleteObject(bucketName, objectSummary.getKey());
+        }
+
+        // Delete the folder itself
+        s3Client.deleteObject(bucketName, folderName);
     }
 
 //    @Override
@@ -110,6 +153,22 @@ public class bucketServiceImpl implements BucketService {
         }
 
         return fileDetailsMap;
+    }
+
+    private void createFolderIfNotExists(String folderName) {
+        try {
+            // Check if the folder already exists
+            if (!s3Client.doesObjectExist(bucketName, folderName + "/")) {
+                // If not, create the folder
+                s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
+                logger.info("Folder '{}' created in S3 bucket", folderName);
+            } else {
+                logger.info("Folder '{}' already exists in S3 bucket", folderName);
+            }
+        } catch (Exception e) {
+            logger.error("Error creating folder '{}' in S3 bucket", folderName, e);
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
 
