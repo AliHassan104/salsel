@@ -1,6 +1,7 @@
 package com.salsel.service.impl;
 
 import com.salsel.service.PdfGenerationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.thymeleaf.TemplateEngine;
@@ -10,6 +11,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.ByteArrayOutputStream;
 
 @Service
+@Slf4j
 public class PdfGenerationServiceImpl implements PdfGenerationService {
     private final TemplateEngine templateEngine;
 
@@ -24,6 +26,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
             model.asMap().forEach(context::setVariable);
 
             String htmlContent = templateEngine.process(templateName, context);
+            log.info(htmlContent);
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 ITextRenderer renderer = new ITextRenderer();
                 renderer.setDocumentFromString(htmlContent);
