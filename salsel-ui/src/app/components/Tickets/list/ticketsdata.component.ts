@@ -50,11 +50,7 @@ export class TicketsdataComponent implements OnInit {
     };
 
     this._ticktingService.getTickets(queryParams).subscribe((res: any) => {
-      if (res && res.body) {
-        this.tickets = res.body;
-        this.totalRecords = res.body.totalElements;
-        console.log(res.body);
-      }
+      this.tickets = res.body;
     });
   }
 
