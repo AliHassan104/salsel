@@ -97,6 +97,14 @@ export class AirbilldataComponent implements OnInit {
     });
   }
 
+  onDownloadBill(id) {
+    this._airbillService.downloadBill(id).subscribe((res) => {
+      if (res) {
+        this.downloadSuccess();
+      }
+    });
+  }
+
   onActiveBill(id) {
     this._airbillService.updateBillStatus(id).subscribe((res) => {
       this.success();
@@ -110,6 +118,14 @@ export class AirbilldataComponent implements OnInit {
       severity: "success",
       summary: "Success",
       detail: "Activation Successfull",
+    });
+  }
+
+  downloadSuccess() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Download Successfull",
     });
   }
 

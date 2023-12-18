@@ -54,7 +54,7 @@ width: 700px;
 .img-3 {
        position: absolute;
         right: 32px;
-        height: 161%;
+        height: 120%;
         width: 8%;
         top: -88px;
 }
@@ -126,5 +126,5 @@ width: 700px;
     top: 18px;
     left: -210px;
     height: 48%;
-    width: 160%;
+    width: 150%;
 }
