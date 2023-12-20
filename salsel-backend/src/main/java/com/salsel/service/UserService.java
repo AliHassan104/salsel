@@ -14,4 +14,6 @@ public interface UserService {
     void deleteById(Long id);
     void setToActiveById(Long id);
     UserDto update(Long id, UserDto userDto);
+    void forgotPassword(String userEmail);
+    void resetPassword(String userEmail, String resetCode, String newPassword);
 }

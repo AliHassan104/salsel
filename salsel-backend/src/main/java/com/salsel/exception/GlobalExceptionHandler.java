@@ -45,4 +45,14 @@ public class GlobalExceptionHandler
 
         return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = InvalidResetCodeException.class)
+    public ResponseEntity<ErrorMessage<Object>> handleInvalidResetCodeException(InvalidResetCodeException ex)
+    {
+        ErrorMessage<Object> errorMessage = ErrorMessage.builder()
+                .error(ex.getMessage())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorMessage,HttpStatus.BAD_REQUEST);
+    }
 }
