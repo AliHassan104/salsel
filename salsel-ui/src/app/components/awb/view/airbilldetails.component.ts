@@ -15,12 +15,21 @@ export class AirbilldetailsComponent implements OnInit {
   ) {}
   display: any;
   singleBill: any;
+  id;
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("billid");
-
+      this.id = a;
       this.onView(a);
+    });
+  }
+
+  downloadAwb() {
+    this._airbillService.downloadBill(this.id).subscribe((res) => {
+      if (res) {
+        console.log("success");
+      }
     });
   }
 

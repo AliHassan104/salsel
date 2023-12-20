@@ -42,6 +42,10 @@ export class AirbillService {
     return this.http.put(`${this.url}awb/status/${id}`, {});
   }
 
+  downloadBill(id: any) {
+    return this.http.get(`${this.url}awb/pdf/awb_${id}/${id}`);
+  }
+
   //   Get formated Date
   formatDate(date: Date): string {
     const year = date.getFullYear().toString(); // Get the last two digits of the year

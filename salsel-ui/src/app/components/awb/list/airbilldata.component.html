@@ -141,7 +141,7 @@
                                 Duty and Taxes Bill To
                             </div>
                         </th>
-                        <th style="min-width: 15rem">
+                        <th style="min-width: 18rem">
                             <div class="flex justify-content-center align-items-center">
                                 Actions
                             </div>
@@ -223,16 +223,24 @@
                             <button pTooltip="Edit" tooltipPosition="bottom"
                                 *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_AWB')" pButton
                                 pRipple type="button" icon="pi pi-file-edit"
-                                class="p-button-rounded p-button-outlined mx-2" (click)="onEditBill(data.id)"></button>
+                                class="p-button-rounded p-button-outlined mx-1" (click)="onEditBill(data.id)"></button>
+
                             <button pTooltip="Deactivate" tooltipPosition="bottom"
                                 *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_AWB')" pButton
                                 pRipple type="button" icon="pi pi-times"
-                                class="p-button-rounded p-button-danger p-button-outlined mx-2"
+                                class="p-button-rounded p-button-danger p-button-outlined mx-1"
                                 (click)="onDeleteBill(data.id)"></button>
+
+                            <button pTooltip="Download Scan" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_AWB')" pButton
+                                pRipple type="button" icon="pi pi-download"
+                                class="p-button-rounded p-button-success p-button-outlined mx-1"
+                                (click)="onDownloadBill(data.id)"></button>
+
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton
                                 [disabled]="!this.sessionStorageService.hasPermission('DELETE_AWB')" pRipple
                                 type="button" icon="pi pi-check"
-                                class="p-button-rounded p-button-success p-button-outlined mx-2"
+                                class="p-button-rounded p-button-success p-button-outlined mx-1"
                                 (click)="onActiveBill(data.id)"></button>
                         </td>
                     </tr>
