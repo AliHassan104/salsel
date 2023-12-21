@@ -4,11 +4,33 @@ import { Product } from "../../Api/product";
 import { ProductService } from "../../service/product.service";
 import { Subscription } from "rxjs";
 import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { TicktingService } from "../Tickets/service/tickting.service";
+import { AirbillService } from "../awb/service/airbill.service";
+import { accounts } from "../accounts/model/accountValuesDto";
+import { AccountService } from "../accounts/service/account.service";
+import { SessionStorageService } from "../auth/service/session-storage.service";
 
 @Component({
   templateUrl: "./dashboard.component.html",
+  styleUrls: ["./dashboard.scss"],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  activeTicketsCount?;
+  inActiveTicketsCount?;
+  totalTickets?;
+  activeawb?;
+  inactiveAwb?;
+  awbCount;
+  activeAccountCount?;
+  inactiveAccountCount?;
+  totalAccountCount?;
+
+  newTicketsSinceLast24Hours;
+
+  pieData;
+  pieOptions;
+  pieDataAwb;
+  pieDataAccount;
   items!: MenuItem[];
 
   products!: Product[];
@@ -20,81 +42,133 @@ export class DashboardComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
 
   constructor(
-    private productService: ProductService,
-    public layoutService: LayoutService
-  ) {
-    this.subscription = this.layoutService.configUpdate$.subscribe(() => {
-      this.initChart();
-    });
-  }
+    private ticketService: TicktingService,
+    private airbillService: AirbillService,
+    private accountsService: AccountService,
+    public sessionStorageService: SessionStorageService
+  ) {}
 
   ngOnInit() {
-    this.initChart();
-    this.productService
-      .getProductsSmall()
-      .then((data) => (this.products = data));
-
-    this.items = [
-      { label: "Add New", icon: "pi pi-fw pi-plus" },
-      { label: "Remove", icon: "pi pi-fw pi-minus" },
-    ];
+    this.getAllInfo();
+    this.pieChartSetup();
   }
 
-  initChart() {
+  getAllInfo() {
+    const twentyFourHoursAgo = new Date();
+    twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+
+    this.ticketService.getTickets({ status: true }).subscribe((res: any) => {
+      this.activeTicketsCount = res.body.length;
+
+      this.ticketService.getTickets({ status: false }).subscribe((res: any) => {
+        this.inActiveTicketsCount = res.body.length;
+        this.totalTickets = this.activeTicketsCount + this.inActiveTicketsCount;
+
+        this.pieChartSetup();
+      });
+    });
+
+    this.airbillService.getBills({ status: true }).subscribe((res: any) => {
+      this.activeawb = res.length;
+      this.airbillService.getBills({ status: false }).subscribe((res: any) => {
+        this.inactiveAwb = res.length;
+        this.awbCount = this.activeawb + this.inactiveAwb;
+        this.pieChartAwbSetup();
+      });
+    });
+
+    this.accountsService
+      .getAllAccounts({ status: true })
+      .subscribe((res: any) => {
+        this.activeAccountCount = res.body.length;
+
+        this.accountsService
+          .getAllAccounts({ status: false })
+          .subscribe((res: any) => {
+            this.inactiveAccountCount = res.body.length;
+            this.totalAccountCount =
+              this.activeAccountCount + this.inActiveTicketsCount;
+
+            this.pieChartAccountSetup();
+          });
+      });
+  }
+
+  pieChartAccountSetup() {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue("--text-color");
-    const textColorSecondary = documentStyle.getPropertyValue(
-      "--text-color-secondary"
-    );
-    const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
-    this.chartData = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+    this.pieDataAccount = {
+      labels: ["Active", "InActive"],
       datasets: [
         {
-          label: "First Dataset",
-          data: [65, 59, 80, 81, 56, 55, 40],
-          fill: false,
-          backgroundColor: documentStyle.getPropertyValue("--bluegray-700"),
-          borderColor: documentStyle.getPropertyValue("--bluegray-700"),
-          tension: 0.4,
-        },
-        {
-          label: "Second Dataset",
-          data: [28, 48, 40, 19, 86, 27, 90],
-          fill: false,
-          backgroundColor: documentStyle.getPropertyValue("--green-600"),
-          borderColor: documentStyle.getPropertyValue("--green-600"),
-          tension: 0.4,
+          data: [this.activeAccountCount, this.inactiveAccountCount],
+          backgroundColor: ["#8e44ad", "#d35400"],
+          hoverBackgroundColor: ["#9b59b6", "#e74c3c"],
         },
       ],
     };
 
-    this.chartOptions = {
+    this.pieOptions = {
       plugins: {
         legend: {
           labels: {
+            usePointStyle: true,
             color: textColor,
           },
         },
       },
-      scales: {
-        x: {
-          ticks: {
-            color: textColorSecondary,
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
+    };
+  }
+
+  pieChartAwbSetup() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue("--text-color");
+
+    this.pieDataAwb = {
+      labels: ["Active", "InActive"],
+      datasets: [
+        {
+          data: [this.activeawb, this.inactiveAwb],
+          backgroundColor: ["#2ecc71", "#e67e22"],
+          hoverBackgroundColor: ["#27ae60", "#d35400"],
+        },
+      ],
+    };
+
+    this.pieOptions = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+            color: textColor,
           },
         },
-        y: {
-          ticks: {
-            color: textColorSecondary,
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
+      },
+    };
+  }
+
+  pieChartSetup() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue("--text-color");
+
+    this.pieData = {
+      labels: ["Active", "InActive"],
+      datasets: [
+        {
+          data: [this.activeTicketsCount, this.inActiveTicketsCount],
+          backgroundColor: ["#9b59b6", "#f39c12"],
+          hoverBackgroundColor: ["#8e44ad", "#d35400"],
+        },
+      ],
+    };
+
+    this.pieOptions = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+            color: textColor,
           },
         },
       },
