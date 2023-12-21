@@ -98,7 +98,9 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onDownloadBill(id) {
-    this._airbillService.downloadBill(id).subscribe((res: any) => {});
+    this._airbillService.downloadBill(id).subscribe((res: any) => {
+      console.log("hello");
+    });
   }
 
   onActiveBill(id) {
