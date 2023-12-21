@@ -282,8 +282,15 @@ VALUES
   ('Mohammad Sameer', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Agent'));
 
 
-INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true);
+INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true, "info@stepwaysoftwares.com");
 
-INSERT INTO roles VALUES (1,'ROLE_ADMIN');
+INSERT INTO roles
+VALUES
+    (1,'ROLE_ADMIN'),
+    (2,'ROLE_OPERATION_AGENT'),
+    (3,'ROLE_CUSTOMER_SERVICE_AGENT'),
+    (4,'ROLE_CUSTOMER_CARE_AGENT'),
+    (5,'ROLE_MANAGEMENT_USER'),
+    (6,'ROLE_OPERATION_USER'),
 
 INSERT INTO user_roles VALUES (1,1);

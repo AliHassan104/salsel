@@ -1,4 +1,4 @@
-package com.salsel.model;
+package com.salsel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -6,24 +6,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name = "awb")
-public class Awb {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AwbShippingHistoryDto {
     private Long id;
+    private String status;
 
-    @Column(unique = true, nullable = false)
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    private LocalDateTime timestamp;
+
+    private Long awbId;
     private Long uniqueNumber;
-
     private String shipperName;
     private String shipperContactNumber;
     private String originCountry;
@@ -44,14 +43,12 @@ public class Awb {
 
     private String productType;
     private String serviceType;
-    private String requestType;
     private Double pieces;
     private String content;
     private Double weight;
     private Double amount;
     private String currency;
     private String dutyAndTaxesBillTo;
-    private Boolean status;
     private Boolean emailFlag;
     private String awbUrl;
 }
