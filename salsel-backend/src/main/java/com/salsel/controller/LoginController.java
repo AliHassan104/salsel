@@ -7,15 +7,11 @@ import com.salsel.dto.UserDto;
 import com.salsel.service.UserService;
 import com.salsel.service.impl.MyUserDetailServiceImplementation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -52,5 +48,19 @@ public class LoginController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDto userdto) {
         return ResponseEntity.ok(userService.registerUser(userdto));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        userService.forgotPassword(email);
+        return ResponseEntity.ok("Password reset email sent successfully");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody String newPassword,
+            @RequestParam String email,
+            @RequestParam String code) {
+        userService.resetPassword(email, code, newPassword);
+        return ResponseEntity.ok("Password reset successfully");
     }
 }

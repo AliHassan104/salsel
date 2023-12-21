@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
@@ -15,15 +17,19 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "awb")
-public class Awb {
+@Table(name = "awb_shipping_history")
+public class AwbShippingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String status;
 
-    @Column(unique = true, nullable = false)
+    @CreationTimestamp
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    private LocalDateTime timestamp;
+
+    private Long awbId;
     private Long uniqueNumber;
-
     private String shipperName;
     private String shipperContactNumber;
     private String originCountry;
@@ -44,14 +50,12 @@ public class Awb {
 
     private String productType;
     private String serviceType;
-    private String requestType;
     private Double pieces;
     private String content;
     private Double weight;
     private Double amount;
     private String currency;
     private String dutyAndTaxesBillTo;
-    private Boolean status;
     private Boolean emailFlag;
     private String awbUrl;
 }

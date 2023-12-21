@@ -127,6 +127,7 @@ public class AwbServiceImpl implements AwbService {
         existingAwb.setWeight(awbDto.getWeight());
         existingAwb.setAmount(awbDto.getAmount());
         existingAwb.setCurrency(awbDto.getCurrency());
+        existingAwb.setRequestType(awbDto.getRequestType());
         existingAwb.setDutyAndTaxesBillTo(awbDto.getDutyAndTaxesBillTo());
 
         Awb updatedAwb = awbRepository.save(existingAwb);
@@ -152,6 +153,7 @@ public class AwbServiceImpl implements AwbService {
                 .pickupTime(awb.getPickupTime())
                 .productType(awb.getProductType())
                 .serviceType(awb.getServiceType())
+                .requestType(awb.getRequestType())
                 .pieces(awb.getPieces())
                 .content(awb.getContent())
                 .weight(awb.getWeight())
@@ -181,6 +183,7 @@ public class AwbServiceImpl implements AwbService {
                 .deliveryAddress(awbDto.getDeliveryAddress())
                 .pickupDate(awbDto.getPickupDate())
                 .pickupTime(awbDto.getPickupTime())
+                .requestType(awbDto.getRequestType())
                 .productType(awbDto.getProductType())
                 .serviceType(awbDto.getServiceType())
                 .pieces(awbDto.getPieces())

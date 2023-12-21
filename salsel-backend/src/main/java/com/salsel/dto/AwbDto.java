@@ -36,6 +36,7 @@ public class AwbDto {
 
     private String productType;
     private String serviceType;
+    private String requestType;
     private Double pieces;
     private String content;
     private Double weight;

@@ -2,6 +2,7 @@ package com.salsel.utils;
 
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
+import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
 import com.salsel.service.AwbService;
 import org.springframework.beans.factory.annotation.Value;
@@ -87,6 +88,33 @@ public class EmailUtils {
                 awb.setEmailFlag(true);
                 awbRepository.save(awb);
             }
+        }
+    }
+
+    @Async
+    public void sendPasswordResetEmail(User user, String resetCode) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(sender);
+            helper.setTo(user.getEmail());
+            helper.setSubject("Password Reset Request");
+
+            String resetLink = "http://localhost:8080/api/reset-password?email=" + user.getEmail() + "&code=" + resetCode;
+
+            String emailContent = "Dear " + user.getName() + ",\n\n"
+                    + "You have requested to reset your password. Please click on the following link to proceed with the password reset:\n\n"
+                    + resetLink + "\n\n"
+                    + "If you did not request a password reset, please ignore this email.\n\n"
+                    + "Best regards,\n"
+                    + "Salsel Team";
+
+            helper.setText(emailContent);
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.err.println("Error sending email: " + e.getMessage());
         }
     }
 

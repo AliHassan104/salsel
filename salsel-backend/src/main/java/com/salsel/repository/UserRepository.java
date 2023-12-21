@@ -29,4 +29,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByIdWhereStatusIsTrue(@Param("id") Long id);
     @Query("SELECT u FROM User u WHERE u.status = true ORDER BY u.id DESC")
     List<User> findAllInDesOrderByIdAndStatus();
+
+    Optional<User> findByEmail(String userEmail);
+
+    User findByEmailAndStatusIsTrue(String email);
 }
