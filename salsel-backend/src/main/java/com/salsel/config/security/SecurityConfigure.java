@@ -35,7 +35,8 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/file/**",
             "/api/awb/pdf/{file-name}/{awbId}",
             "/api/forgot-password",
-            "/api/reset-password"
+            "/api/reset-password",
+            "/api/upload-pdf"
     };
 
     @Autowired

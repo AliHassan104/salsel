@@ -56,24 +56,6 @@ public class bucketServiceImpl implements BucketService {
         }
     }
 
-
-
-//    @Override
-//    public byte[] downloadFile(String fileName) {
-//        try {
-//            S3Object s3Object = s3Client.getObject(bucketName, fileName);
-//
-//            try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
-//                return IOUtils.toByteArray(inputStream);
-//            }
-//            // Ensure the input stream is closed
-//        } catch (IOException e) {
-//            logger.error("cannot download file from s3 bucket");
-//            e.printStackTrace();
-//            throw new RuntimeException(e.getMessage());
-//        }
-//    }
-
     @Override
     public byte[] downloadFile(String folderName, String fileName) {
         try {
@@ -120,18 +102,6 @@ public class bucketServiceImpl implements BucketService {
         s3Client.deleteObject(bucketName, folderName);
     }
 
-//    @Override
-//    public List<String> getAllFiles() {
-//        List<String> fileNames = new ArrayList<>();
-//
-//        ObjectListing objectListing = s3Client.listObjects(bucketName);
-//
-//        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-//            fileNames.add(objectSummary.getKey());
-//        }
-//        return fileNames;
-//    }
-
     @Override
     public Map<String, String> getAllFilesWithUrls() {
         Map<String, String> fileDetailsMap = new HashMap<>();
@@ -162,8 +132,6 @@ public class bucketServiceImpl implements BucketService {
                 // If not, create the folder
                 s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
                 logger.info("Folder '{}' created in S3 bucket", folderName);
-            } else {
-                logger.info("Folder '{}' already exists in S3 bucket", folderName);
             }
         } catch (Exception e) {
             logger.error("Error creating folder '{}' in S3 bucket", folderName, e);

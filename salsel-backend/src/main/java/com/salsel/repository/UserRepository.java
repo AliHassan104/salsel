@@ -31,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllInDesOrderByIdAndStatus();
 
     Optional<User> findByEmail(String userEmail);
+
+    User findByEmailAndStatusIsTrue(String email);
 }
