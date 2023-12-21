@@ -3,7 +3,7 @@
         <h1 class=""
             style="color: #93003c; font-size: 19px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
             AWB Details</h1>
-        <button pButton label="Download Scan" (click)="downloadAwb()"></button>
+        <button pButton label="Download Scan" (click)="downloadAwb()" class="downloadBtn"></button>
     </div>
     <div class="grid custom-modal">
 
@@ -37,7 +37,7 @@
             <!-- <p><strong>Created By:</strong> {{singleTicket?.createdBy.name}}</p> -->
             <p><strong>Currency:</strong> {{singleBill?.currency}}</p>
             <p><strong>Amount:</strong> {{singleBill?.amount}}</p>
-            <p><strong>Service Type:</strong> Pick-up</p>
+            <p><strong>Request Type:</strong> {{singleBill?.requestType}}</p>
 
         </div>
     </div>

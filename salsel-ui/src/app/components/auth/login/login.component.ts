@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem("token");
 
     this.loginForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
+      name: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required]),
     });
   }

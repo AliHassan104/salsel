@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
@@ -42,8 +42,18 @@ export class AirbillService {
     return this.http.put(`${this.url}awb/status/${id}`, {});
   }
 
-  downloadBill(id: any) {
-    return this.http.get(`${this.url}awb/pdf/awb_${id}/${id}`);
+  downloadBill(id: any): Observable<HttpResponse<ArrayBuffer>> {
+    // Set the headers
+    const headers = new HttpHeaders({
+      "Content-Type": "application/octet-stream",
+    });
+
+    // Make the GET request with the configured headers
+    return this.http.get<ArrayBuffer>(`${this.url}/awb/pdf/awb_${id}/${id}`, {
+      headers: headers,
+      observe: "response",
+      responseType: "arraybuffer" as "json",
+    });
   }
 
   //   Get formated Date

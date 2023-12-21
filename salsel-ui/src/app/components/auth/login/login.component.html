@@ -13,7 +13,7 @@
                 <div class="w-20rem">
                     <input type="text" class="w-20rem"
                         [ngClass]="{'ng-dirty':loginForm.get('name')?.invalid && loginForm.get('name')?.touched}"
-                        pInputText formControlName="name" placeholder="Username or Email" />
+                        pInputText formControlName="name" placeholder="Enter a valid email" />
                     <div class="text-left">
                         <small *ngIf="!loginForm.get('name')?.valid && loginForm.get('name')?.touched"
                             class="text-red-500">

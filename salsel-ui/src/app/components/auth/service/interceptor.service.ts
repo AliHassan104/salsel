@@ -28,7 +28,7 @@ export class LogininterceptorService implements HttpInterceptor {
     this._authService.token
       ? (req = req.clone({
           headers: req.headers.set(
-            "Authorization",
+            "authorization",
             `Bearer ${this._authService.token}`
           ),
         }))

@@ -40,7 +40,7 @@ export class AddUserComponent implements OnInit {
 
   formSetup() {
     this.userForm = new FormGroup({
-      //   email: new FormControl(null, [Validators.required, Validators.email]),
+      email: new FormControl(null, [Validators.required, Validators.email]),
       name: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [
         Validators.required,
@@ -110,6 +110,7 @@ export class AddUserComponent implements OnInit {
           );
 
           this.userForm.patchValue({
+            email: this.singleUser.email,
             name: this.singleUser.name,
             password: this.singleUser.password,
             roles: role[0],
@@ -132,6 +133,7 @@ export class AddUserComponent implements OnInit {
       const data = {
         name: formValue.name,
         password: formValue.password,
+        email: formValue.email,
         roles: [
           {
             id: formValue.roles.id,

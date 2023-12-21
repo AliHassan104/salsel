@@ -7,13 +7,14 @@
             <div class="p-fluid p-formgrid grid">
                 <!-- User Details -->
                 <!-- Email -->
-                <!-- <div class="field col-12 md:col-6">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="email"><strong>Email</strong></label>
-                    <input pInputText id="email" type="text" formControlName="email" placeholder="Enter Email" [ngClass]="{'ng-dirty':userForm.get('email')?.touched && userForm.get('email')?.invalid}" />
+                    <input pInputText id="email" type="text" formControlName="email" placeholder="Enter Email"
+                        [ngClass]="{'ng-dirty':userForm.get('email')?.touched && userForm.get('email')?.invalid}" />
                     <small *ngIf="!userForm.get('email')?.valid && userForm.get('email')?.touched" class="text-red-500">
                         Required
                     </small>
-                </div> -->
+                </div>
                 <!-- Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Name</strong></label>
