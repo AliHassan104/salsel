@@ -220,7 +220,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           pieces: this.singleBill.pieces,
           serviceType: this.singleBill.serviceType,
           productType: this.singleBill.productType,
-          requestType: "Pick-up",
+          requestType: this.singleBill.requestType,
         });
       });
     }

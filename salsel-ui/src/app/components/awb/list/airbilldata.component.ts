@@ -98,11 +98,7 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onDownloadBill(id) {
-    this._airbillService.downloadBill(id).subscribe((res) => {
-      if (res) {
-        this.downloadSuccess();
-      }
-    });
+    this._airbillService.downloadBill(id).subscribe((res: any) => {});
   }
 
   onActiveBill(id) {
@@ -125,7 +121,7 @@ export class AirbilldataComponent implements OnInit {
     this.messageService.add({
       severity: "success",
       summary: "Success",
-      detail: "Download Successfull",
+      detail: "File Successfully Downloaded",
     });
   }
 
