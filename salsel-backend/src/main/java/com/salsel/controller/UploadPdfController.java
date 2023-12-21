@@ -2,6 +2,7 @@ package com.salsel.controller;
 
 import com.salsel.service.UploadPdfService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ public class UploadPdfController {
     }
 
     @PostMapping("/upload-pdf")
+    @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<String> uploadPdf(@RequestParam("file") MultipartFile file) {
         String imageUrl = uploadPdfService.uploadPdf(file);
         return ResponseEntity.ok(imageUrl);

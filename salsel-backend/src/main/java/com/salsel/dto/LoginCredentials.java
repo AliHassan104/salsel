@@ -7,6 +7,6 @@ import lombok.*;
 @Data
 @Builder
 public class LoginCredentials {
-    private String name;
+    private String email;
     private String password;
 }
