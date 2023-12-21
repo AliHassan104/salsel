@@ -57,4 +57,10 @@ public class AccountController {
         AccountDto updatedAccountDto = accountService.update(id, accountDto);
         return ResponseEntity.ok(updatedAccountDto);
     }
+
+    @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
+    public ResponseEntity<AccountDto> updatehhhAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
+        AccountDto updatedAccountDto = accountService.update(id, accountDto);
+        return ResponseEntity.ok(updatedAccountDto);
+    }
 }
