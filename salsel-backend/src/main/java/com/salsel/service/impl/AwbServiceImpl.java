@@ -42,6 +42,7 @@ public class AwbServiceImpl implements AwbService {
             awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
 
             Awb awb = toEntity(awbDto);
+            awb.setAwbStatus("AWB Created");
             awb.setStatus(true);
             awb.setEmailFlag(false);
             Awb createdAwb = awbRepository.save(awb);
@@ -49,7 +50,7 @@ public class AwbServiceImpl implements AwbService {
 
             codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
             codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
-            codeGenerationService.generateQRCode("https://example.com", awbId);
+            codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
 
             return toDto(createdAwb);
         } catch (Exception e) {
@@ -163,6 +164,7 @@ public class AwbServiceImpl implements AwbService {
                 .status(awb.getStatus())
                 .emailFlag(awb.getEmailFlag())
                 .awbUrl(awb.getAwbUrl())
+                .awbStatus(awb.getAwbStatus())
                 .build();
     }
 
@@ -195,6 +197,7 @@ public class AwbServiceImpl implements AwbService {
                 .status(awbDto.getStatus())
                 .emailFlag(awbDto.getEmailFlag())
                 .awbUrl(awbDto.getAwbUrl())
+                .awbStatus(awbDto.getAwbStatus())
                 .build();
     }
 }

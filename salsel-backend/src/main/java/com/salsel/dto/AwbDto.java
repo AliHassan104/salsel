@@ -46,4 +46,5 @@ public class AwbDto {
     private Boolean status;
     private Boolean emailFlag;
     private String awbUrl;
+    private String awbStatus;
 }
