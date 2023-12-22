@@ -6,6 +6,7 @@ export interface IAwbDto {
   destinationCity?: string;
   destinationCountry?: string;
   dutyAndTaxesBillTo?: string;
+  createdAt?: string;
   id?: number;
   originCity?: string;
   originCountry?: string;
