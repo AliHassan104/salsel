@@ -26,10 +26,13 @@ export class AccountFormComponent implements OnInit {
   salesRegion?;
   salesAgents?;
 
+  fileName: string = "";
+
   singleAccount: IAccountData;
   editMode;
   editId: any;
   params: any = { status: true };
+  ageement: any;
 
   constructor(
     private messageService: MessageService,
@@ -80,6 +83,7 @@ export class AccountFormComponent implements OnInit {
       billingPocName: new FormControl(null, Validators.required),
       salesRegion: new FormControl(null, Validators.required),
       salesAgentName: new FormControl(null, Validators.required),
+      agreement: new FormControl(null),
     });
   }
 
@@ -172,14 +176,41 @@ export class AccountFormComponent implements OnInit {
           this.router.navigate(["account/list"]);
         });
       } else {
-        this.accountService.addAccount(data).subscribe((res) => {
-          this.accountForm.reset();
-          this.router.navigate(["account/list"]);
-        });
+        // this.accountService.addAccount(data).subscribe((res) => {
+        //   this.accountForm.reset();
+        //   this.router.navigate(["account/list"]);
+        // });
+        console.log(data);
       }
     } else {
       this.alert();
       this.formService.markFormGroupTouched(this.accountForm);
+    }
+  }
+
+  onFileChange(event: any): void {
+    const fileInput = event.target;
+    if (fileInput.files && fileInput.files.length > 0) {
+      const selectedFile = fileInput.files[0];
+
+      // Check if the selected file has a PDF extension
+      if (selectedFile.name.toLowerCase().endsWith(".pdf")) {
+        this.fileName = selectedFile.name;
+        this.ageement = selectedFile;
+        console.log(this.ageement);
+
+        // You can also store the file itself if needed: this.accountForm.patchValue({ agreement: selectedFile });
+      } else {
+        // Clear the file input and display an error message
+        this.accountForm.get("agreement").setValue(null);
+        fileInput.value = null;
+
+        this.messageService.add({
+          severity: "error",
+          summary: "Invalid File",
+          detail: "Only PDF files are allowed.",
+        });
+      }
     }
   }
 

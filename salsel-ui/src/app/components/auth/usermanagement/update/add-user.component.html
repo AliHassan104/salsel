@@ -24,6 +24,17 @@
                         Required
                     </small>
                 </div>
+                <!-- Employee Id -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="employeeId"><strong>Employee Id</strong></label>
+                    <input pInputText id="employeeId" type="text" formControlName="employeeId"
+                        placeholder="Enter Employee Id"
+                        [ngClass]="{'ng-dirty':userForm.get('employeeId')?.touched && userForm.get('employeeId')?.invalid}" />
+                    <small *ngIf="!userForm.get('employeeId')?.valid && userForm.get('employeeId')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
                 <!-- Password -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="address"><strong>Password</strong></label>

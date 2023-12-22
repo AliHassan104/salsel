@@ -47,10 +47,7 @@ export class AddUserComponent implements OnInit {
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
       ]),
       roles: new FormControl(null, Validators.required),
-      //   phoneNumber: new FormControl(null, [
-      //     Validators.required,
-      //     Validators.pattern(/^[\d\s\-\(\)+]{10,}$/),
-      //   ]),
+      employeeId: new FormControl(null, Validators.required),
     });
   }
 
@@ -98,7 +95,7 @@ export class AddUserComponent implements OnInit {
 
   editForm() {
     if (this.editMode) {
-      this.userService.GetUserById(this.editId).subscribe((res) => {
+      this.userService.GetUserById(this.editId).subscribe((res: any) => {
         this.singleUser = res;
         console.log(this.singleUser);
 
@@ -113,6 +110,7 @@ export class AddUserComponent implements OnInit {
             email: this.singleUser.email,
             name: this.singleUser.name,
             password: this.singleUser.password,
+            employeeId: this.singleUser.employeeId,
             roles: role[0],
           });
         });
@@ -134,6 +132,7 @@ export class AddUserComponent implements OnInit {
         name: formValue.name,
         password: formValue.password,
         email: formValue.email,
+        employeeId: formValue.employeeId,
         roles: [
           {
             id: formValue.roles.id,

@@ -30,7 +30,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="min-width: 14rem">
+                        <th style="min-width: 18rem">
                             <div class="flex justify-content-center align-items-center">
                                 Actions
                             </div>
@@ -78,6 +78,11 @@
                         <th style="min-width: 15rem">
                             <div class="flex justify-content-center align-items-center">
                                 Recipient Contact Number
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Status
                             </div>
                         </th>
                         <!-- <th style="min-width: 12rem">
@@ -154,9 +159,10 @@
                                 type="button" icon="pi pi-eye
                         " class="p-button-rounded p-button-secondary p-button-outlined mx-2"
                                 routerLink="{{data.id}}"></button>
-                            <!-- <button pTooltip="Edit" tooltipPosition="bottom"
-                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_AWB')" pButton pRipple type="button"
-                                icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-1" (click)="onEditBill(data.id)"></button> -->
+                            <button pTooltip="View History" tooltipPosition="bottom" *ngIf="activeStatus" pButton
+                                pRipple type="button" icon="pi pi-history"
+                                class="p-button-rounded p-button-outlined mx-1"
+                                (click)="onViewHistory(data.id)"></button>
 
                             <button pTooltip="Deactivate" tooltipPosition="bottom"
                                 *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_AWB')" pButton
@@ -201,6 +207,9 @@
                         </td>
                         <td>
                             {{ data?.recipientsContactNumber }}
+                        </td>
+                        <td>
+                            {{ data?.awbStatus }}
                         </td>
                         <!-- <td>
                             {{ data?.deliveryAddress }}

@@ -1,17 +1,20 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AirbillService } from "../service/airbill.service";
+import { MessageService } from "primeng/api";
 
 @Component({
   selector: "app-airbilldetails",
   templateUrl: "./airbilldetails.component.html",
   styleUrls: ["./airbilldetails.component.scss"],
+  providers: [MessageService],
 })
 export class AirbilldetailsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private _airbillService: AirbillService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
   display: any;
   singleBill: any;
@@ -26,11 +29,15 @@ export class AirbilldetailsComponent implements OnInit {
   }
 
   downloadAwb() {
-    this._airbillService.downloadBill(this.id).subscribe((res) => {
-      if (res) {
-        console.log("success");
+    this._airbillService.downloadBill(this.id).subscribe(
+      (res: any) => {
+        this.downloadSuccess();
+        this._airbillService.downloadFile(res, `awb_${this.id}.pdf`);
+      },
+      (error) => {
+        this.downloadError();
       }
-    });
+    );
   }
 
   //   On Single Ticket View
@@ -38,6 +45,22 @@ export class AirbilldetailsComponent implements OnInit {
     this.display = true;
     this._airbillService.getSingleBill(id).subscribe((res) => {
       this.singleBill = res;
+    });
+  }
+
+  downloadError() {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Download Failed",
+    });
+  }
+
+  downloadSuccess() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "File Successfully Downloaded",
     });
   }
 }

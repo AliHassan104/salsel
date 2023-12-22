@@ -27,7 +27,6 @@ import { PaginatorModule } from "primeng/paginator";
 import { AccountListComponent } from "./list/account-list.component";
 import { AccountViewComponent } from "./view/account-view.component";
 import { TooltipModule } from "primeng/tooltip";
-import { AccountsFormRoutingModule } from "./update/accounts-form-routing.module";
 
 @NgModule({
   declarations: [AccountListComponent, AccountViewComponent],

@@ -98,9 +98,15 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onDownloadBill(id) {
-    this._airbillService.downloadBill(id).subscribe((res: any) => {
-      console.log("hello");
-    });
+    this._airbillService.downloadBill(id).subscribe(
+      (res: any) => {
+        this.downloadSuccess();
+        this._airbillService.downloadFile(res, `awb_${id}.pdf`);
+      },
+      (error) => {
+        this.downloadError();
+      }
+    );
   }
 
   onActiveBill(id) {
@@ -111,11 +117,21 @@ export class AirbilldataComponent implements OnInit {
     });
   }
 
+  onViewHistory(id) {}
+
   success() {
     this.messageService.add({
       severity: "success",
       summary: "Success",
       detail: "Activation Successfull",
+    });
+  }
+
+  downloadError() {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Download Failed",
     });
   }
 

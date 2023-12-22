@@ -4,6 +4,7 @@ export interface IUser {
   id?: number;
   email?: string;
   name?: string;
+  employeeId: string;
   password?: string;
   roles?: [IRole];
   status?: true;

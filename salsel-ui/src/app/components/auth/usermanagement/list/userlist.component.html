@@ -46,6 +46,11 @@
                         </th>
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-center align-items-center">
+                                Employee Id
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
                                 Role
                             </div>
                         </th>
@@ -85,6 +90,9 @@
                         </td>
                         <td>
                             {{ user?.name }}
+                        </td>
+                        <td>
+                            {{ user?.employeeId }}
                         </td>
                         <td>
                             {{ user?.roles[0]?.name }}
