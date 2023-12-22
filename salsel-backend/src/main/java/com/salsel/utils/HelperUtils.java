@@ -46,20 +46,6 @@ public class HelperUtils {
         return uuid.substring(0, 6);
     }
 
-    public void createFolderIfNotExists(String folderName) {
-        try {
-            // Check if the folder already exists
-            if (!s3Client.doesObjectExist(bucketName, folderName + "/")) {
-                // If not, create the folder
-                s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
-                logger.info("Folder '{}' created in S3 bucket", folderName);
-            }
-        } catch (Exception e) {
-            logger.error("Error creating folder '{}' in S3 bucket", folderName, e);
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
     public String savePdfToS3(MultipartFile pdf, String folderName) {
         try {
             String originalFileName = pdf.getOriginalFilename();
@@ -74,8 +60,7 @@ public class HelperUtils {
             String newFileName = FilenameUtils.getBaseName(originalFileName) + "_" + timestamp + fileExtension;
 
             // Save to S3 bucket
-            createFolderIfNotExists(folderName); // Create folder
-            return bucketService.save(pdf.getBytes(), folderName, newFileName, "account"); // Save PDF and return the URL
+            return bucketService.save(pdf.getBytes(), folderName, newFileName, "Account"); // Save PDF and return the URL
 
         } catch (IOException e) {
             logger.error("Failed to save PDF to S3", e);

@@ -39,9 +39,10 @@ public class AccountServiceImpl implements AccountService {
         if (pdf != null && !pdf.isEmpty()) {
             String folderName = "Account_" + createdAccount.getId();
             String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            createdAccount.setAccountUrl(savedPdfUrl);
             logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
         }
-        return toDto(createdAccount);
+        return toDto(accountRepository.save(createdAccount));
     }
 
 

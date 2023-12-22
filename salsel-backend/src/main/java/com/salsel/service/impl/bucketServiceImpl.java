@@ -40,39 +40,36 @@ public class bucketServiceImpl implements BucketService {
                 throw new IllegalArgumentException("Invalid input parameters");
             }
 
-            // Create the folder if it doesn't exist
-            createFolderIfNotExists(folderName, folderType);
+            // Check if the folder exists
+            String folderKey;
+            if (folderType.equalsIgnoreCase(ACCOUNT)) {
+                folderKey = ACCOUNT + "/" + folderName;
+            } else if (folderType.equalsIgnoreCase(AWB)) {
+                folderKey = AWB + "/" + folderName;
+            } else {
+                throw new IllegalArgumentException("Invalid folder type: " + folderType);
+            }
+
+            if (!s3Client.doesObjectExist(bucketName, folderKey + "/")) {
+                // Create an empty object to simulate the directory
+                s3Client.putObject(bucketName, folderKey + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
+            }
 
             // Use try-with-resources to automatically close the input stream
             try (ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf)) {
+                String key = folderKey + "/" + fileName;
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentLength(pdf.length);
 
-                String key = null;
-                if (folderType.equalsIgnoreCase(ACCOUNT)) {
-                    key = ACCOUNT + "/" + folderName + "/" + fileName;
-                } else if (folderType.equalsIgnoreCase(AWB)) {
-                    key = AWB + "/" + folderName + "/" + fileName;
-                } else {
-                    throw new IllegalArgumentException("Invalid folder type: " + folderType);
-                }
-
                 s3Client.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
-
-                // Generate pre-signed URL for the saved object
-                GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                        new GeneratePresignedUrlRequest(bucketName, key)
-                                .withMethod(HttpMethod.GET);
-
-                URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
-
-                return preSignedUrl.toString();
+                return key;
             }
         } catch (Exception e) {
             logger.error("File {} not uploaded to S3 bucket", fileName, e);
             throw new RuntimeException(e.getMessage());
         }
     }
+
 
     @Override
     public byte[] downloadFile(String folderName, String fileName) {
@@ -141,30 +138,6 @@ public class bucketServiceImpl implements BucketService {
         }
 
         return fileDetailsMap;
-    }
-
-    private void createFolderIfNotExists(String folderName, String folderType) {
-        try {
-            // Check if the folder already exists
-
-            if(folderType.equalsIgnoreCase(AWB)){
-                if (!s3Client.doesObjectExist(bucketName, AWB + "/" + folderName + "/")) {
-                    // If not, create the folder
-                    s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
-                    logger.info("Folder '{}' created in S3 bucket", folderName);
-                }
-            } else if (folderType.equalsIgnoreCase(ACCOUNT)) {
-                if (!s3Client.doesObjectExist(bucketName, ACCOUNT + "/" + folderName + "/")) {
-                    // If not, create the folder
-                    s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
-                    logger.info("Folder '{}' created in S3 bucket", folderName);
-                }
-            }
-
-        } catch (Exception e) {
-            logger.error("Error creating folder '{}' in S3 bucket", folderName, e);
-            throw new RuntimeException(e.getMessage());
-        }
     }
 }
 
