@@ -41,7 +41,7 @@ public class bucketServiceImpl implements BucketService {
             }
 
             // Create the folder if it doesn't exist
-            createFolderIfNotExists(folderName);
+            createFolderIfNotExists(folderName, folderType);
 
             // Use try-with-resources to automatically close the input stream
             try (ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf)) {
@@ -143,14 +143,24 @@ public class bucketServiceImpl implements BucketService {
         return fileDetailsMap;
     }
 
-    private void createFolderIfNotExists(String folderName) {
+    private void createFolderIfNotExists(String folderName, String folderType) {
         try {
             // Check if the folder already exists
-            if (!s3Client.doesObjectExist(bucketName, folderName + "/")) {
-                // If not, create the folder
-                s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
-                logger.info("Folder '{}' created in S3 bucket", folderName);
+
+            if(folderType.equalsIgnoreCase(AWB)){
+                if (!s3Client.doesObjectExist(bucketName, AWB + "/" + folderName + "/")) {
+                    // If not, create the folder
+                    s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
+                    logger.info("Folder '{}' created in S3 bucket", folderName);
+                }
+            } else if (folderType.equalsIgnoreCase(ACCOUNT)) {
+                if (!s3Client.doesObjectExist(bucketName, ACCOUNT + "/" + folderName + "/")) {
+                    // If not, create the folder
+                    s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
+                    logger.info("Folder '{}' created in S3 bucket", folderName);
+                }
             }
+
         } catch (Exception e) {
             logger.error("Error creating folder '{}' in S3 bucket", folderName, e);
             throw new RuntimeException(e.getMessage());
