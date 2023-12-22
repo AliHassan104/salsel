@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api")
 public class UploadPdfController {
@@ -19,9 +22,13 @@ public class UploadPdfController {
     }
 
     @PostMapping("/upload-pdf")
-    @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
-    public ResponseEntity<String> uploadPdf(@RequestParam("file") MultipartFile file) {
-        String imageUrl = uploadPdfService.uploadPdf(file);
-        return ResponseEntity.ok(imageUrl);
+    public ResponseEntity<Map<String, String>> uploadPdf(@RequestParam("file") MultipartFile pdf) {
+        Map<String, String> responseMap = uploadPdfService.uploadPdf(pdf);
+
+        if ("success".equals(responseMap.get("response"))) {
+            return ResponseEntity.ok(responseMap);
+        } else {
+            return ResponseEntity.badRequest().body(responseMap);
+        }
     }
 }
