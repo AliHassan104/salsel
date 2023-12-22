@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
@@ -16,6 +17,10 @@ import java.time.LocalTime;
 public class AwbDto {
     private Long id;
     private Long uniqueNumber;
+
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+
     private String shipperName;
     private String shipperContactNumber;
     private String originCountry;
@@ -46,4 +51,5 @@ public class AwbDto {
     private Boolean status;
     private Boolean emailFlag;
     private String awbUrl;
+    private String awbStatus;
 }

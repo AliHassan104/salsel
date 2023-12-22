@@ -158,6 +158,7 @@ public class UserServiceImpl implements UserService {
     public UserDto toDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
+                .employeeId(user.getEmployeeId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .password(user.getPassword())
@@ -169,6 +170,7 @@ public class UserServiceImpl implements UserService {
     public User toEntity(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
+                .employeeId(userDto.getEmployeeId())
                 .email(userDto.getEmail())
                 .name(userDto.getName())
                 .password(userDto.getPassword())

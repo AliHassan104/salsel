@@ -5,28 +5,45 @@ import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Account;
 import com.salsel.repository.AccountRepository;
 import com.salsel.service.AccountService;
+import com.salsel.utils.HelperUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
+    private final HelperUtils helperUtils;
+    private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+
+    public AccountServiceImpl(AccountRepository accountRepository, HelperUtils helperUtils) {
         this.accountRepository = accountRepository;
+        this.helperUtils = helperUtils;
     }
 
     @Override
     @Transactional
-    public AccountDto save(AccountDto accountDto) {
+    public AccountDto save(AccountDto accountDto, MultipartFile pdf) {
         Account account = toEntity(accountDto);
         account.setStatus(true);
         Account createdAccount = accountRepository.save(account);
+
+        // Save PDF to S3 bucket
+        if (pdf != null && !pdf.isEmpty()) {
+            String folderName = "Account_" + createdAccount.getId();
+            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
+        }
         return toDto(createdAccount);
     }
+
 
     @Override
     public List<AccountDto> getAll(Boolean status) {
@@ -84,7 +101,6 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setBillingPocName(accountDto.getBillingPocName());
         existingAccount.setSalesAgentName(accountDto.getSalesAgentName());
         existingAccount.setSalesRegion(accountDto.getSalesRegion());
-        existingAccount.setAccountStatus(accountDto.getAccountStatus());
 
         Account updatedAccount = accountRepository.save(existingAccount);
         return toDto(updatedAccount);
@@ -108,8 +124,8 @@ public class AccountServiceImpl implements AccountService {
                 .billingPocName(account.getBillingPocName())
                 .salesAgentName(account.getSalesAgentName())
                 .salesRegion(account.getSalesRegion())
+                .accountUrl(account.getAccountUrl())
                 .status(account.getStatus())
-                .accountStatus(account.getAccountStatus())
                 .build();
     }
 
@@ -131,8 +147,8 @@ public class AccountServiceImpl implements AccountService {
                 .billingPocName(accountDto.getBillingPocName())
                 .salesAgentName(accountDto.getSalesAgentName())
                 .salesRegion(accountDto.getSalesRegion())
+                .accountUrl(accountDto.getAccountUrl())
                 .status(accountDto.getStatus())
-                .accountStatus(accountDto.getAccountStatus())
                 .build();
     }
 

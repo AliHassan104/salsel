@@ -5,7 +5,6 @@ import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
 import com.salsel.repository.AwbRepository;
 import com.salsel.service.AwbService;
-import com.salsel.service.BucketService;
 import com.salsel.service.CodeGenerationService;
 import com.salsel.service.PdfGenerationService;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,13 +24,11 @@ public class AwbServiceImpl implements AwbService {
     private final AwbRepository awbRepository;
     private final CodeGenerationService codeGenerationService;
     private final PdfGenerationService pdfGenerationService;
-    private final BucketService bucketService;
 
-    public AwbServiceImpl(AwbRepository awbRepository, CodeGenerationService codeGenerationService, PdfGenerationService pdfGenerationService, BucketService bucketService) {
+    public AwbServiceImpl(AwbRepository awbRepository, CodeGenerationService codeGenerationService, PdfGenerationService pdfGenerationService) {
         this.awbRepository = awbRepository;
         this.codeGenerationService = codeGenerationService;
         this.pdfGenerationService = pdfGenerationService;
-        this.bucketService = bucketService;
     }
 
     @Override
@@ -42,6 +39,7 @@ public class AwbServiceImpl implements AwbService {
             awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
 
             Awb awb = toEntity(awbDto);
+            awb.setAwbStatus("AWB Created");
             awb.setStatus(true);
             awb.setEmailFlag(false);
             Awb createdAwb = awbRepository.save(awb);
@@ -49,7 +47,7 @@ public class AwbServiceImpl implements AwbService {
 
             codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
             codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
-            codeGenerationService.generateQRCode("https://example.com", awbId);
+            codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
 
             return toDto(createdAwb);
         } catch (Exception e) {
@@ -129,6 +127,7 @@ public class AwbServiceImpl implements AwbService {
         existingAwb.setCurrency(awbDto.getCurrency());
         existingAwb.setRequestType(awbDto.getRequestType());
         existingAwb.setDutyAndTaxesBillTo(awbDto.getDutyAndTaxesBillTo());
+        existingAwb.setAwbStatus(awbDto.getAwbStatus());
 
         Awb updatedAwb = awbRepository.save(existingAwb);
         return toDto(updatedAwb);
@@ -138,6 +137,7 @@ public class AwbServiceImpl implements AwbService {
         return AwbDto.builder()
                 .id(awb.getId())
                 .uniqueNumber(awb.getUniqueNumber())
+                .createdAt(awb.getCreatedAt())
                 .shipperName(awb.getShipperName())
                 .shipperContactNumber(awb.getShipperContactNumber())
                 .originCountry(awb.getOriginCountry())
@@ -163,6 +163,7 @@ public class AwbServiceImpl implements AwbService {
                 .status(awb.getStatus())
                 .emailFlag(awb.getEmailFlag())
                 .awbUrl(awb.getAwbUrl())
+                .awbStatus(awb.getAwbStatus())
                 .build();
     }
 
@@ -170,6 +171,7 @@ public class AwbServiceImpl implements AwbService {
         return Awb.builder()
                 .id(awbDto.getId())
                 .uniqueNumber(awbDto.getUniqueNumber())
+                .createdAt(awbDto.getCreatedAt())
                 .shipperName(awbDto.getShipperName())
                 .shipperContactNumber(awbDto.getShipperContactNumber())
                 .originCountry(awbDto.getOriginCountry())
@@ -195,6 +197,7 @@ public class AwbServiceImpl implements AwbService {
                 .status(awbDto.getStatus())
                 .emailFlag(awbDto.getEmailFlag())
                 .awbUrl(awbDto.getAwbUrl())
+                .awbStatus(awbDto.getAwbStatus())
                 .build();
     }
 }

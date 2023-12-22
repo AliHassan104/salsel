@@ -5,6 +5,7 @@ import com.salsel.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,9 +20,11 @@ public class AccountController {
 
     @PostMapping("/account")
     @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
-        return ResponseEntity.ok(accountService.save(accountDto));
+    public ResponseEntity<AccountDto> createAccount(@RequestPart AccountDto accountDto,
+                                                    @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(accountService.save(accountDto, file));
     }
+
 
     @GetMapping("/account")
     @PreAuthorize("hasAuthority('READ_ACCOUNT')")
