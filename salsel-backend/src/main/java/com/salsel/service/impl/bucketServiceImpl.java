@@ -23,6 +23,9 @@ import java.util.Map;
 @Service
 @Slf4j
 public class bucketServiceImpl implements BucketService {
+
+    public static final String ACCOUNT = "Account";
+    public static final String AWB = "Awb";
     @Autowired
     private AmazonS3 s3Client;
     @Value("${application.bucket.name}")
@@ -30,29 +33,43 @@ public class bucketServiceImpl implements BucketService {
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
     @Override
-    public String save(byte[] pdf, String folderName, String fileName) {
+    public String save(byte[] pdf, String folderName, String fileName, String folderType) {
         try {
+            // Validate input parameters
+            if (pdf == null || folderName == null || fileName == null || folderType == null) {
+                throw new IllegalArgumentException("Invalid input parameters");
+            }
+
             // Create the folder if it doesn't exist
             createFolderIfNotExists(folderName);
 
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf);
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(pdf.length);
+            // Use try-with-resources to automatically close the input stream
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf)) {
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(pdf.length);
 
-            String key = folderName + "/" + fileName;
+                String key = null;
+                if (folderType.equalsIgnoreCase(ACCOUNT)) {
+                    key = ACCOUNT + "/" + folderName + "/" + fileName;
+                } else if (folderType.equalsIgnoreCase(AWB)) {
+                    key = AWB + "/" + folderName + "/" + fileName;
+                } else {
+                    throw new IllegalArgumentException("Invalid folder type: " + folderType);
+                }
 
-            s3Client.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
+                s3Client.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
 
-            // Generate pre-signed URL for the saved object
-            GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                    new GeneratePresignedUrlRequest(bucketName, key)
-                            .withMethod(HttpMethod.GET);
+                // Generate pre-signed URL for the saved object
+                GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                        new GeneratePresignedUrlRequest(bucketName, key)
+                                .withMethod(HttpMethod.GET);
 
-            URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+                URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
-            return preSignedUrl.toString();
+                return preSignedUrl.toString();
+            }
         } catch (Exception e) {
-            logger.error("File not uploaded to S3 bucket", fileName);
+            logger.error("File {} not uploaded to S3 bucket", fileName, e);
             throw new RuntimeException(e.getMessage());
         }
     }

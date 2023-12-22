@@ -65,7 +65,7 @@ public class UploadPdfServiceImpl implements UploadPdfService {
             String newFileName = FilenameUtils.getBaseName(originalFileName) + "_" + timestamp + fileExtension;
 
             // Save to S3 bucket
-            bucketService.save(pdf.getBytes(), folderName, newFileName);
+            bucketService.save(pdf.getBytes(), folderName, newFileName, "account");
             logger.info(newFileName + " is uploaded to S3.");
 
             // Populate the response map for success

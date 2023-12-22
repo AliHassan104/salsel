@@ -75,7 +75,7 @@ public class HelperUtils {
 
             // Save to S3 bucket
             createFolderIfNotExists(folderName); // Create folder
-            return bucketService.save(pdf.getBytes(), folderName, newFileName); // Save PDF and return the URL
+            return bucketService.save(pdf.getBytes(), folderName, newFileName, "account"); // Save PDF and return the URL
 
         } catch (IOException e) {
             logger.error("Failed to save PDF to S3", e);
