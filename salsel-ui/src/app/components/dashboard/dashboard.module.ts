@@ -9,6 +9,7 @@ import { StyleClassModule } from "primeng/styleclass";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { DashboardsRoutingModule } from "./dashboard-routing.module";
 import { DashboardComponent } from "./dashboard.component";
+import { SkeletonModule } from "primeng/skeleton";
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { DashboardComponent } from "./dashboard.component";
     PanelMenuModule,
     ButtonModule,
     DashboardsRoutingModule,
+    SkeletonModule,
   ],
   declarations: [DashboardComponent],
 })

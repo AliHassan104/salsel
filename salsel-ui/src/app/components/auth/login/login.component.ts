@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem("token");
 
     this.loginForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required]),
     });
   }
@@ -49,9 +49,9 @@ export class LoginComponent implements OnInit {
           localStorage.setItem("token", this.token.jwt);
           this.router.navigate([""]);
           this.loginForm.reset();
-          this.userService.getUserByName(value.name).subscribe((res: any) => {
-            localStorage.setItem("loginUserName", res.name);
-          });
+          //   this.userService.getUserByName(value.name).subscribe((res: any) => {
+          //     localStorage.setItem("loginUserName", res.name);
+          //   });
         },
         (error) => {
           this.showError(error);

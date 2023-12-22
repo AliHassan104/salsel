@@ -11,11 +11,11 @@
                 class="flex flex-column align-items-center gap-4">
                 <!-- Username Email -->
                 <div class="w-20rem">
-                    <input type="text" class="w-20rem"
-                        [ngClass]="{'ng-dirty':loginForm.get('name')?.invalid && loginForm.get('name')?.touched}"
-                        pInputText formControlName="name" placeholder="Username or Email" />
+                    <input type="email" class="w-20rem"
+                        [ngClass]="{'ng-dirty':loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
+                        pInputText formControlName="email" placeholder="Enter a valid email" />
                     <div class="text-left">
-                        <small *ngIf="!loginForm.get('name')?.valid && loginForm.get('name')?.touched"
+                        <small *ngIf="!loginForm.get('email')?.valid && loginForm.get('email')?.touched"
                             class="text-red-500">
                             Required
                         </small>

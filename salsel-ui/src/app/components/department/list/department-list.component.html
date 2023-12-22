@@ -3,10 +3,10 @@
         <div class="card">
             <h1 class="m-0"
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
-                All Departments</h1>
+                Departments</h1>
             <div class="flex justify-content-end">
                 <button *ngIf="this.sessionStorageService.hasPermission('CREATE_DEPARTMENT')" pButton
-                    label="Add Department" class="mb-2" routerLink="/create-department"></button>
+                    label="Add Department" class="mb-2 addBtn" routerLink="/create-department"></button>
             </div>
             <hr>
             <p-table #dt1 [value]="departments" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
@@ -18,8 +18,7 @@
                             <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
-                                (ngModelChange)="onStatusChange($event)"
-                                placeholder="Select Active InActive List"></p-dropdown>
+                                (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
                         </div>
 
                         <span class="p-input-icon-left mb-2">

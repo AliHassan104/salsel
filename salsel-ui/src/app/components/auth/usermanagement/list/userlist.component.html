@@ -17,8 +17,7 @@
                             <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
-                                (ngModelChange)="onStatusChange($event)"
-                                placeholder="Select Active InActive List"></p-dropdown>
+                                (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
                         </div>
 
                         <span class="p-input-icon-left mb-2">
@@ -30,9 +29,14 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="min-width: 5rem">
+                        <th style="min-width: 15rem">
                             <div class="flex justify-content-center align-items-center">
-                                #
+                                Actions
+                            </div>
+                        </th>
+                        <th style="min-width: 15rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Email
                             </div>
                         </th>
                         <th style="min-width: 12rem">
@@ -42,31 +46,24 @@
                         </th>
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-center align-items-center">
+                                Employee Id
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
                                 Role
                             </div>
                         </th>
-                        <th style="min-width: 15rem">
-                            <div class="flex justify-content-center align-items-center">
-                                Actions
-                            </div>
-                        </th>
+
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-user>
                     <tr>
                         <td>
-                            {{ user?.id }}
-                        </td>
-                        <td>
-                            {{ user?.name }}
-                        </td>
-                        <td>
-                            {{ user?.roles[0]?.name }}
-                        </td>
-                        <td>
                             <button *ngIf="activeStatus" pTooltip="View" tooltipPosition="bottom" pButton pRipple
                                 type="button" icon="pi pi-eye
-" class="p-button-rounded p-button-secondary p-button-outlined mx-2" routerLink="{{user.id}}"></button>
+                        " class="p-button-rounded p-button-secondary p-button-outlined mx-2"
+                                routerLink="{{user.id}}"></button>
 
                             <button [disabled]="user?.roles[0].name == 'ROLE_ADMIN'"
                                 *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_USER')"
@@ -88,6 +85,19 @@
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveUser(user.id)"></button>
                         </td>
+                        <td>
+                            {{ user?.email }}
+                        </td>
+                        <td>
+                            {{ user?.name }}
+                        </td>
+                        <td>
+                            {{ user?.employeeId }}
+                        </td>
+                        <td>
+                            {{ user?.roles[0]?.name }}
+                        </td>
+
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">

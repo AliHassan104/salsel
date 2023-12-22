@@ -9,9 +9,7 @@ export class SessionStorageService {
   userPermissions: string[] = [];
   roleName: String;
 
-  constructor(private authGuardSerivce: AuthGuardService) {
-    this.updatePermission();
-  }
+  constructor(private authGuardSerivce: AuthGuardService) {}
 
   updatePermission() {
     const token = localStorage.getItem("token");

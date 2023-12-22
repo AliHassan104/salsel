@@ -1,17 +1,21 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
+import { AuthGuardService } from "../../auth/service/auth-guard.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AirbillService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _authService: AuthGuardService
+  ) {}
 
   updateAWB = new BehaviorSubject(false);
   CreateAWB = new BehaviorSubject(false);
-
+  jwtToken = localStorage.getItem("token");
   url = environment.URL;
 
   // Create Ticket
@@ -43,7 +47,9 @@ export class AirbillService {
   }
 
   downloadBill(id: any) {
-    return this.http.get(`${this.url}awb/pdf/awb_${id}/${id}`);
+    return this.http.get(`${this.url}awb/pdf/awb_${id}/${id}`, {
+      responseType: "blob" as "json", // Set the response type to 'blob'
+    });
   }
 
   //   Get formated Date
@@ -71,5 +77,13 @@ export class AirbillService {
     const seconds = date.getSeconds().toString().padStart(2, "0");
 
     return `${hours}:${minutes}:${seconds}`;
+  }
+
+  downloadFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
   }
 }

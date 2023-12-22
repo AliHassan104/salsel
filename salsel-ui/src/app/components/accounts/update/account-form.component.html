@@ -161,6 +161,20 @@
                         Required
                     </small>
                 </div>
+                <!-- Agreement -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="agreement"><strong>Upload Agreement</strong></label>
+
+                    <!-- Hidden input for file upload -->
+                    <input id="agreement" type="file" formControlName="agreement" (change)="onFileChange($event)"
+                        accept=".pdf" />
+
+                    <!-- Validation error message -->
+                    <small *ngIf="!accountForm.get('agreement')?.valid && accountForm.get('agreement')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
 
                 <div class="flex justify-content-end w-full">
                     <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"

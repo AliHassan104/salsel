@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild, Input } from "@angular/core";
 import { AccountService } from "../service/account.service";
 import { Table } from "primeng/table";
 import { Router } from "@angular/router";
@@ -6,6 +6,7 @@ import { DropdownService } from "src/app/service/dropdown.service";
 import { MessageService } from "primeng/api";
 import { IAccountData } from "src/app/components/accounts/model/accountValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
+import { UploadEvent } from "primeng/fileupload";
 
 @Component({
   selector: "app-account-list",
@@ -21,7 +22,11 @@ export class AccountListComponent implements OnInit {
   selectedStatus: string = "Active";
   activeStatus: boolean = true;
 
+  file;
+
   deleteId: any;
+
+  @ViewChild("fileUpload", { static: false }) fileUpload: any;
 
   constructor(
     private accountService: AccountService,
@@ -113,6 +118,8 @@ export class AccountListComponent implements OnInit {
       this.onStatusChange(this.selectedStatus);
     });
   }
+
+  onDownloadAgreement(id) {}
 
   success() {
     this.messageService.add({

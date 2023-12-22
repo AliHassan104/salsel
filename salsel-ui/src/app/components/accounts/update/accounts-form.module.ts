@@ -24,6 +24,7 @@ import { TableModule } from "primeng/table";
 import { ToastModule } from "primeng/toast";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { TooltipModule } from "primeng/tooltip";
+import { FileUploadModule } from "primeng/fileupload";
 import { AccountsFormRoutingModule } from "./accounts-form-routing.module";
 
 @NgModule({
@@ -55,6 +56,7 @@ import { AccountsFormRoutingModule } from "./accounts-form-routing.module";
     PaginatorModule,
     TooltipModule,
     AccountsFormRoutingModule,
+    FileUploadModule,
   ],
 })
 export class AccountsFormModule {}

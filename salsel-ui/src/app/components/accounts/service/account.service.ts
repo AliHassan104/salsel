@@ -51,4 +51,10 @@ export class AccountService {
   updateAccountStatus(id) {
     return this.http.put(`${this.url}account/status/${id}`, {});
   }
+
+  uploadFile(data: any) {
+    return this.http.post<any>(`${this.url}upload-pdf`, data, {
+      responseType: "text" as "json",
+    });
+  }
 }

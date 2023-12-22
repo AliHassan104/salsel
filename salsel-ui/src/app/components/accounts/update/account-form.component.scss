@@ -8,3 +8,42 @@
 label {
   font-weight: bold;
 }
+
+.file-input-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hide the default file input */
+input[type="file"].hidden {
+  display: none;
+}
+
+.uploadBtn {
+  width: 150px !important;
+}
+
+input#agreement {
+  max-width: 400px;
+  display: block;
+  border: 1px solid #c10751;
+  border-radius: 10px;
+  color: #93003c;
+  font-size: 15px;
+}
+
+input[type="file"]::file-selector-button {
+  color: white;
+  padding: 12px 25px;
+  background: #93003c;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  margin-right: 25px;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #c10751;
+}

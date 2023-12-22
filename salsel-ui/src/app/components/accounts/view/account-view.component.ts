@@ -9,6 +9,7 @@ import { AccountService } from "../service/account.service";
 })
 export class AccountViewComponent implements OnInit {
   singleAccount?;
+  id: any;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -18,9 +19,12 @@ export class AccountViewComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
+      this.id = a;
       this.getSingleAccount(a);
     });
   }
+
+  downloadAgreement() {}
 
   getSingleAccount(id) {
     this.accountService.getSingleAccount(id).subscribe((res) => {

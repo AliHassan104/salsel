@@ -9,3 +9,9 @@
 .custom-h {
   color: #93003c;
 }
+
+@media screen and (max-width: 500px) {
+  .downloadBtn {
+    margin-top: 26px;
+  }
+}

@@ -19,7 +19,8 @@
             </div>
             <div class="p-fluid p-formgrid grid mt-5 mx-auto">
                 <!-- Permissions Checkboxes -->
-                <div class="field col-6 md:col-4 field-checkbox" *ngFor="let permission of permissions; let i = index">
+                <div class="field col-12 sm:col-6 md:col-6 lg:col-4 field-checkbox"
+                    *ngFor="let permission of permissions; let i = index">
                     <p-checkbox class="form-check-input" name="checkbox" [value]="permission.name" [inputId]="i"
                         [checked]="true" [(ngModel)]="permission.value" [binary]="true"
                         (onChange)="addPermission(permission)" [ngModelOptions]="{standalone: true}"></p-checkbox>
