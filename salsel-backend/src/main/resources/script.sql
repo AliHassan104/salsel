@@ -41,7 +41,6 @@ INSERT INTO permissions (name, value) VALUES
         (5,'ROLE_MANAGEMENT_USER'),
         (6,'ROLE_OPERATION_USER'),
 
-
 INSERT INTO `role_permissions` VALUES
     (1, (SELECT id FROM permissions WHERE name = 'CREATE_TICKET')),
     (1, (SELECT id FROM permissions WHERE name = 'READ_TICKET')),
@@ -224,7 +223,7 @@ VALUES
   ('Request Type', 8, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Account Types', 9, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Sales Region', 10, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
-  ('Sales Agent', 11, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
+  ('Sales Agent', 11, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Awb Status', 12, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
 
 
@@ -289,21 +288,19 @@ VALUES
   ('UK & Europe', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
   ('China', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
 
-  ('Mohammad Sameer', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Agent'));
+  ('Mohammad Sameer', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Agent')),
 
-  ('AWB Created', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Picked Up', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Arrived in Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Held in Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Depart from Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Arrived in Hub', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Depart from Hub', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Out for Delivery', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
+  ('AWB Created', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
+  ('Picked Up', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
+  ('Arrived in Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
+  ('Held in Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
+  ('Depart from Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
+  ('Arrived in Hub', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
+  ('Depart from Hub', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
+  ('Out for Delivery', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status')),
   ('Delivered', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
 
 
 INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true, "info@stepwaysoftwares.com", "001");
-
-
 
 INSERT INTO user_roles VALUES (1,1);

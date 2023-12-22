@@ -51,7 +51,7 @@ public class bucketServiceImpl implements BucketService {
 
             return preSignedUrl.toString();
         } catch (Exception e) {
-            logger.error("File not uploaded to S3 bucket", fileName);
+            logger.error("File {} not uploaded to S3 bucket", fileName);
             throw new RuntimeException(e.getMessage());
         }
     }
