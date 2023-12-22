@@ -35,6 +35,11 @@
                                 Actions
                             </div>
                         </th>
+                        <th style="min-width: 16rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Created At
+                            </div>
+                        </th>
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-center align-items-center">
                                 AWB Number
@@ -180,6 +185,9 @@
                                 type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
                                 (click)="onActiveBill(data.id)"></button>
+                        </td>
+                        <td>
+                            {{data?.createdAt}}
                         </td>
                         <td>
                             {{data?.uniqueNumber}}

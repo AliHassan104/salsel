@@ -117,7 +117,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       amount: new FormControl(null, Validators.required),
       dutyAndTaxesBillTo: new FormControl(null, Validators.required),
       requestType: new FormControl(null, Validators.required),
-      createdAt: new FormControl(null, Validators.required),
     });
   }
 
@@ -196,7 +195,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         let pickDate = new Date(this.singleBill.pickupDate);
         let pickTimeArray = this.singleBill.pickupTime;
         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
-        let createdAt: Date = this.awbForm.value.createdAt;
+
         // EDIT BILL VALUES SETUP
 
         this.awbForm.setValue({
@@ -222,7 +221,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           serviceType: this.singleBill.serviceType,
           productType: this.singleBill.productType,
           requestType: this.singleBill.requestType,
-          createdAt: createdAt,
         });
       });
     }
