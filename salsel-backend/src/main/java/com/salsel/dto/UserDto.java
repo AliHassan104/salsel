@@ -16,6 +16,7 @@ import java.util.Set;
 public class UserDto {
     private Long id;
     private String name;
+    private String employeeId;
     private String email;
     private String password;
     private Boolean status;

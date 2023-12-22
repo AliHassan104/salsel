@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UploadPdfServiceImpl implements UploadPdfService {
@@ -23,21 +25,30 @@ public class UploadPdfServiceImpl implements UploadPdfService {
     public UploadPdfServiceImpl(BucketService bucketService) {
         this.bucketService = bucketService;
     }
+
     @Override
-    public String uploadPdf(MultipartFile pdf) {
+    public Map<String, String> uploadPdf(MultipartFile pdf) {
+        Map<String, String> responseMap = new HashMap<>();
+
         // Check if the file is empty
         if (pdf.isEmpty()) {
-            throw new RecordNotFoundException("File not found.");
+            responseMap.put("response", "failed");
+            responseMap.put("message", "File not found.");
+            return responseMap;
         }
 
         // Check if the file size exceeds the allowed limit
         if (pdf.getSize() > MAX_FILE_SIZE_BYTES) {
-            throw new RecordNotFoundException("File size exceeds the allowed limit.");
+            responseMap.put("response", "failed");
+            responseMap.put("message", "File size exceeds the allowed limit.");
+            return responseMap;
         }
 
         // Check if the file is a PDF
         if (!MediaType.APPLICATION_PDF.isCompatibleWith(MediaType.parseMediaType(pdf.getContentType()))) {
-            throw new RecordNotFoundException("Invalid file format. Only PDF files are allowed.");
+            responseMap.put("response", "failed");
+            responseMap.put("message", "Invalid file format. Only PDF files are allowed.");
+            return responseMap;
         }
 
         try {
@@ -54,12 +65,19 @@ public class UploadPdfServiceImpl implements UploadPdfService {
             String newFileName = FilenameUtils.getBaseName(originalFileName) + "_" + timestamp + fileExtension;
 
             // Save to S3 bucket
-            String url = bucketService.save(pdf.getBytes(), folderName, newFileName);
+            bucketService.save(pdf.getBytes(), folderName, newFileName);
             logger.info(newFileName + " is uploaded to S3.");
-            return url;
+
+            // Populate the response map for success
+            responseMap.put("response", "success");
+            responseMap.put("message", "File uploaded successfully.");
+            return responseMap;
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload: " + e.getMessage());
+            // Populate the response map for failure
+            responseMap.put("response", "failed");
+            responseMap.put("message", "Failed to upload: " + e.getMessage());
+            return responseMap;
         }
     }
 }

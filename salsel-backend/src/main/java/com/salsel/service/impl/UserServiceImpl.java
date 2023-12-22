@@ -109,6 +109,7 @@ public class UserServiceImpl implements UserService {
 
         existingUser.setName(userDto.getName());
         existingUser.setEmail(userDto.getEmail());
+        existingUser.setEmployeeId(userDto.getEmployeeId());
         existingUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         existingUser.getRoles().removeIf(role -> !userDto.getRoles().contains(role));
@@ -159,6 +160,7 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .employeeId(user.getEmployeeId())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .status(user.getStatus())
@@ -171,6 +173,7 @@ public class UserServiceImpl implements UserService {
                 .id(userDto.getId())
                 .email(userDto.getEmail())
                 .name(userDto.getName())
+                .employeeId(userDto.getEmployeeId())
                 .password(userDto.getPassword())
                 .status(userDto.getStatus())
                 .roles(userDto.getRoles())

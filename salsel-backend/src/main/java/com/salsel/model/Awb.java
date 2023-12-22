@@ -54,4 +54,5 @@ public class Awb {
     private Boolean status;
     private Boolean emailFlag;
     private String awbUrl;
+    private String awbStatus;
 }
