@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
@@ -23,6 +25,10 @@ public class Awb {
 
     @Column(unique = true, nullable = false)
     private Long uniqueNumber;
+
+    @CreationTimestamp
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
     private String shipperName;
     private String shipperContactNumber;

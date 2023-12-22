@@ -293,7 +293,7 @@ VALUES
   ('Delivered', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
 
 
-INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true, "info@stepwaysoftwares.com");
+INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true, "info@stepwaysoftwares.com", "001");
 
 INSERT INTO roles
 VALUES

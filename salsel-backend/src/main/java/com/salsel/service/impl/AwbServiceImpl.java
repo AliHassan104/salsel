@@ -165,6 +165,7 @@ public class AwbServiceImpl implements AwbService {
                 .emailFlag(awb.getEmailFlag())
                 .awbUrl(awb.getAwbUrl())
                 .awbStatus(awb.getAwbStatus())
+                .createdAt(awb.getCreatedAt())
                 .build();
     }
 
@@ -195,6 +196,7 @@ public class AwbServiceImpl implements AwbService {
                 .currency(awbDto.getCurrency())
                 .dutyAndTaxesBillTo(awbDto.getDutyAndTaxesBillTo())
                 .status(awbDto.getStatus())
+                .createdAt(awbDto.getCreatedAt())
                 .emailFlag(awbDto.getEmailFlag())
                 .awbUrl(awbDto.getAwbUrl())
                 .awbStatus(awbDto.getAwbStatus())
