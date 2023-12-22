@@ -32,6 +32,15 @@ INSERT INTO permissions (name, value) VALUES
     ('READ_USER', true),
     ('DELETE_USER', true);
 
+    INSERT INTO roles
+    VALUES
+        (1,'ROLE_ADMIN'),
+        (2,'ROLE_OPERATION_AGENT'),
+        (3,'ROLE_CUSTOMER_SERVICE_AGENT'),
+        (4,'ROLE_CUSTOMER_CARE_AGENT'),
+        (5,'ROLE_MANAGEMENT_USER'),
+        (6,'ROLE_OPERATION_USER'),
+
 
 INSERT INTO `role_permissions` VALUES
     (1, (SELECT id FROM permissions WHERE name = 'CREATE_TICKET')),
@@ -295,13 +304,6 @@ VALUES
 
 INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true, "info@stepwaysoftwares.com", "001");
 
-INSERT INTO roles
-VALUES
-    (1,'ROLE_ADMIN'),
-    (2,'ROLE_OPERATION_AGENT'),
-    (3,'ROLE_CUSTOMER_SERVICE_AGENT'),
-    (4,'ROLE_CUSTOMER_CARE_AGENT'),
-    (5,'ROLE_MANAGEMENT_USER'),
-    (6,'ROLE_OPERATION_USER'),
+
 
 INSERT INTO user_roles VALUES (1,1);
