@@ -97,7 +97,6 @@ export class TicketformComponent implements OnInit {
       departmentCategory: new FormControl(null, Validators.required),
       assignedTo: new FormControl(null, Validators.required),
       category: new FormControl(null, Validators.required),
-      createdAt: new FormControl(null, Validators.required),
       ticketStatus: new FormControl(null, Validators.required),
       ticketFlag: new FormControl(null, Validators.required),
     });
@@ -148,7 +147,6 @@ export class TicketformComponent implements OnInit {
           departmentCategory: this.singleTicket.departmentCategory,
           assignedTo: this.singleTicket.assignedTo,
           category: this.singleTicket.category,
-          createdAt: cretedAt,
           ticketStatus: this.singleTicket.ticketStatus,
           ticketFlag: this.singleTicket.ticketFlag,
         });
@@ -295,13 +293,13 @@ export class TicketformComponent implements OnInit {
       // Date and Time get from form
       let ticketDate: Date = this.ticketForm.value.pickupDate;
       let ticketT: Date = this.ticketForm.value.pickupTime;
-      let createdAt: Date = this.ticketForm.value.createdAt;
+      //   let createdAt: Date = this.ticketForm.value.createdAt;
       // Now converting date in to our desired format
       let formattedDate: string = this._ticketService.formatDate(ticketDate);
 
       // Now converting date in to our desired format
-      let formattedCreatedAt: string =
-        this._ticketService.formatCreatedAt(createdAt);
+      //   let formattedCreatedAt: string =
+      //     this._ticketService.formatCreatedAt(createdAt);
 
       // Now converting Time in to our desired format
       const ticketTime: string =
@@ -325,7 +323,6 @@ export class TicketformComponent implements OnInit {
         pickupDate: formattedDate,
         pickupTime: ticketTime,
         category: formValue.category,
-        createdAt: formattedCreatedAt,
         ticketStatus: formValue.ticketStatus,
         ticketFlag: formValue.ticketFlag,
         department: formValue.department,

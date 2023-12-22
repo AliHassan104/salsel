@@ -87,19 +87,8 @@
                         Required
                     </small>
                 </div>
-                <!-- Created At -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="createdAt"><strong>Created At</strong></label>
-                    <p-calendar [hourFormat]="24" [showTime]="true" [showIcon]="true" [showSeconds]="true"
-                        [ngClass]="{'ng-dirty':awbForm.get('createdAt')?.touched && awbForm.get('createdAt')?.invalid}"
-                        formControlName="createdAt"></p-calendar>
-                    <small *ngIf="!awbForm.get('createdAt')?.valid && awbForm.get('createdAt')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
                 <!-- Product Type -->
-                <div class="field col-12 md:col-6">
+                <div class="field col-12 md:col-3">
                     <label htmlFor="producttype">Product Type</label>
                     <p-dropdown [options]="productType" placeholder="Select Product Type" formControlName="productType"
                         [ngClass]="{'ng-dirty':awbForm.get('productType')?.touched && awbForm.get('productType')?.invalid}"
@@ -110,7 +99,7 @@
                     </small>
                 </div>
                 <!-- Service Type -->
-                <div class="field col-12 md:col-6">
+                <div class="field col-12 md:col-3">
                     <label htmlFor="servicetype">Service Type</label>
                     <p-dropdown [options]="serviceType" placeholder="Select Service Type" formControlName="serviceType"
                         [ngClass]="{'ng-dirty':awbForm.get('serviceType')?.touched && awbForm.get('serviceType')?.invalid}"
