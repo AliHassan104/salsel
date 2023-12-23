@@ -18,6 +18,7 @@ import java.io.IOException;
 
 @Service
 public class CodeGenerationServiceImpl implements CodeGenerationService {
+    public static final String AWB = "Awb";
     private final BucketService bucketService;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
@@ -43,7 +44,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
             byte[] imageBytes = convertImageToByteArray(rotatedBarcodeImage);
 
             // Save to S3 bucket
-            String url = bucketService.save(imageBytes, folderName, filename);
+            String url = bucketService.save(imageBytes, folderName, filename, AWB);
             logger.info("Vertical Barcode " + awbId + " uploaded on S3");
 
             return url;
@@ -64,7 +65,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
             byte[] imageBytes = convertImageToByteArray(barcodeImage);
 
             // Save to S3 bucket
-            String url = bucketService.save(imageBytes, folderName, filename);
+            String url = bucketService.save(imageBytes, folderName, filename, AWB);
             logger.info("Barcode " + awbId + " uploaded on S3");
             return url;
 
@@ -85,7 +86,7 @@ public class CodeGenerationServiceImpl implements CodeGenerationService {
             byte[] imageBytes = convertImageToByteArray(qrcodeImage);
 
             // Save to S3 bucket
-            String url = bucketService.save(imageBytes, folderName, filename);
+            String url = bucketService.save(imageBytes, folderName, filename, AWB);
             logger.info("Qrcode " + awbId + " uploaded on S3");
 
             return url;

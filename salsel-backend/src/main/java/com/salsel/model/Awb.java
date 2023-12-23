@@ -23,12 +23,12 @@ public class Awb {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private Long uniqueNumber;
-
     @CreationTimestamp
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+
+    @Column(unique = true, nullable = false)
+    private Long uniqueNumber;
 
     private String shipperName;
     private String shipperContactNumber;

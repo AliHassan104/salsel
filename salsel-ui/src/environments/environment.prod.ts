@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  // URL : "http://api.salselexpress.com/api/"
+  // URL : "https://api.salselexpress.com/api/"
 };

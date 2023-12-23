@@ -41,7 +41,6 @@ INSERT INTO permissions (name, value) VALUES
         (5,'ROLE_MANAGEMENT_USER'),
         (6,'ROLE_OPERATION_USER'),
 
-
 INSERT INTO `role_permissions` VALUES
     (1, (SELECT id FROM permissions WHERE name = 'CREATE_TICKET')),
     (1, (SELECT id FROM permissions WHERE name = 'READ_TICKET')),
@@ -224,86 +223,85 @@ VALUES
   ('Request Type', 8, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Account Types', 9, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Sales Region', 10, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
-  ('Sales Agent', 11, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
+  ('Sales Agent', 11, 'Active', CURRENT_DATE, 'MULTIDROPDOWN'),
   ('Awb Status', 12, 'Active', CURRENT_DATE, 'MULTIDROPDOWN');
 
 
 INSERT INTO product_field_values (name, status, product_field_id)
 VALUES
-  ('Complaint', 'Active', (SELECT id FROM product_field WHERE name = 'Category')),
-  ('Suggestion', 'Active', (SELECT id FROM product_field WHERE name = 'Category')),
-  ('General Inquiry', 'Active', (SELECT id FROM product_field WHERE name = 'Category')),
-  ('Service Request', 'Active', (SELECT id FROM product_field WHERE name = 'Category')),
+    ('Complaint', 'Active', 1),
+    ('Suggestion', 'Active', 1),
+    ('General Inquiry', 'Active', 1),
+    ('Service Request', 'Active', 1),
 
-  ('Normal', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Flag')),
-  ('Priority', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Flag')),
-  ('Urgent', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Flag')),
-  ('Extreme Urgent', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Flag')),
+    ('Normal', 'Active', 2),
+    ('Priority', 'Active', 2),
+    ('Urgent', 'Active',2),
+    ('Extreme Urgent', 'Active',2),
 
-  ('Open', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Status')),
-  ('Closed', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Status')),
-  ('On-Hold', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Status')),
-  ('Under Process', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Status')),
-  ('Overdue Escalation', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Status')),
-  ('Held-FI', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Status')),
+    ('Open', 'Active', 3),
+    ('Closed', 'Active', 3),
+    ('On-Hold', 'Active', 3),
+    ('Under Process', 'Active', 3),
+    ('Overdue Escalation', 'Active', 3),
+    ('Held-FI', 'Active', 3),
 
-  ('SAR', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
-  ('AED', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
-  ('BHD', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
-  ('KWD', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
-  ('OMR', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
-  ('SDG', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
-  ('CNY', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
-  ('USD', 'Active', (SELECT id FROM product_field WHERE name = 'Currency')),
+    ('SAR', 'Active', 4),
+    ('AED', 'Active', 4),
+    ('BHD', 'Active', 4),
+    ('KWD', 'Active', 4),
+    ('OMR', 'Active', 4),
+    ('SDG', 'Active', 4),
+    ('CNY', 'Active', 4),
+    ('USD', 'Active', 4),
 
-  ('Bill Shipper', 'Active', (SELECT id FROM product_field WHERE name = 'Duty And Taxes Billing')),
-  ('Bill Consignee', 'Active', (SELECT id FROM product_field WHERE name = 'Duty And Taxes Billing')),
+    ('Bill Shipper', 'Active', 5),
+    ('Bill Consignee', 'Active', 5),
 
-  ('Subject', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
-  ('Text Box', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
-  ('Priority', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
-  ('Attachments', 'Active', (SELECT id FROM product_field WHERE name = 'Ticket Type')),
+    ('Subject', 'Active', 6),
+    ('Text Box', 'Active', 6),
+    ('Priority', 'Active', 6),
+    ('Attachments', 'Active', 6),
 
-  ('Active', 'Active', (SELECT id FROM product_field WHERE name = 'Status')),
-  ('In Active', 'Active', (SELECT id FROM product_field WHERE name = 'Status')),
+    ('Active', 'Active', 7),
+    ('In Active', 'Active', 7),
 
-  ('Pick-up', 'Active', (SELECT id FROM product_field WHERE name = 'Request Type')),
-  ('Drop-off', 'Active', (SELECT id FROM product_field WHERE name = 'Request Type')),
+    ('Pick-up', 'Active', 8),
+    ('Drop-off', 'Active', 8),
 
-  ('Cash', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
-  ('Corporate', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
-  ('ECOM', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
-  ('Freight', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
-  ('Cash Retail', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
-  ('Freight B2B', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
-  ('Freight BCB', 'Active', (SELECT id FROM product_field WHERE name = 'Account Types')),
+    ('Cash', 'Active', 9),
+    ('Corporate', 'Active', 9),
+    ('ECOM', 'Active', 9),
+    ('Freight', 'Active', 9),
+    ('Cash Retail', 'Active', 9),
+    ('Freight B2B', 'Active', 9),
+    ('Freight BCB', 'Active', 9),
 
-  ('Saudi Arabia', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('United Arab Emirates', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('GCC Other', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('Sudan', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('Africa', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('Turkey', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('Middle East', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('United States of America', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('UK & Europe', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
-  ('China', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Region')),
+    ('Saudi Arabia', 'Active', 10),
+    ('United Arab Emirates', 'Active', 10),
+    ('GCC Other', 'Active', 11),
+    ('Sudan', 'Active', 12),
+    ('Africa', 'Active', 12),
+    ('Turkey', 'Active', 12),
+    ('Middle East', 'Active', 12),
+    ('United States of America', 'Active', 12),
+    ('UK & Europe', 'Active', 12),
+    ('China', 'Active', 12),
 
-  ('Mohammad Sameer', 'Active', (SELECT id FROM product_field WHERE name = 'Sales Agent'));
+    ('Mohammad Sameer', 'Active', 13),
 
-  ('AWB Created', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Picked Up', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Arrived in Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Held in Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Depart from Station', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Arrived in Hub', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Depart from Hub', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Out for Delivery', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-  ('Delivered', 'Active', (SELECT id FROM product_field WHERE name = 'Awb Status'));
-
-
-INSERT INTO users VALUES (1,'admin','$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC',true, "info@stepwaysoftwares.com", "001");
+    ('AWB Created', 'Active', 14),
+    ('Picked Up', 'Active', 14),
+    ('Arrived in Station', 'Active', 14),
+    ('Held in Station', 'Active', 14),
+    ('Depart from Station', 'Active', 14),
+    ('Arrived in Hub', 'Active', 14),
+    ('Depart from Hub', 'Active', 14),
+    ('Out for Delivery', 'Active', 14),
+    ('Delivered', 'Active', 14);
 
 
+
+INSERT INTO users VALUES (1,'info@stepwaysoftwares.com','001',"admin","$2a$12$mHLYj8pQvDPZq1J2hcevUuNYnJT.tzdlZbzokF1n4LBFwpPIxLSoC", true);
 
 INSERT INTO user_roles VALUES (1,1);

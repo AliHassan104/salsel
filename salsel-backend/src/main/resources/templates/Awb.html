@@ -12,13 +12,11 @@
 <div class="info">
     <div class="img">
         <img th:src="@{classpath:/static/images/logo.png}"  class="img1"></img>
-<!--        <img th:src="${'http://localhost:8080/api/file/qrcode_34.png'}" alt="QR Code" class="img2"></img>-->
-        <img th:src="${'http://localhost:8080/api/file/awb_' + awbId + '/qrcode_' + awbId + '.png'}" alt="QR Code" class="img2"></img>
+        <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/qrcode_' + awbId + '.png'}" alt="QR Code" class="img2"></img>
     </div>
     <div class="content">
         <p>Fred L Scott <br></br> 20 Bridge St <br></br> Olney MK46 4AB <br></br> England</p>
-        <img th:src="${'http://localhost:8080/api/file/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
-        <!--            <p class="barcode-num">011011101110110101</p>-->
+        <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
     </div>
     <div style="z-index: 1000; position: relative;">
         <hr style="border: none; margin: 20px; height: 3px; background-color: #787779;"></hr>
@@ -29,17 +27,14 @@
             <p class="bar2">UK - 00156796</p>
             <p class="bar1">1564AUIV865-4613</p>
         </div>
-        <!--            <hr-->
-        <!--                    style="position: absolute; right: 29%; top: 35%;   border: none; height: 4px; background-color: #787779; width: 132px; -webkit-transform: rotate(90deg); transform: rotate(90deg);"></hr>-->
         <div class="code">
             <h1 class="heading">1/1</h1>
-            <p>1.3 Kg</p>
+            <p th:text="${weight + ' Kg'}"></p>
         </div>
     </div>
     <div class="footer-img">
-        <img th:src="${'http://localhost:8080/api/file/awb_' + awbId + '/barcode_' + awbId + '.png'}" alt="Barcode" class="img-4"></img>
+        <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/barcode_' + awbId + '.png'}" alt="Barcode" class="img-4"></img>
     </div>
 </div>
 </body>
-
 </html>
