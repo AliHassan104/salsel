@@ -14,6 +14,7 @@ export interface IAccountData {
   billingPocName?: string;
   salesRegion?: string;
   salesAgentName?: string;
+  accountUrl?: string;
 }
 
 export class accounts implements IAccountData {

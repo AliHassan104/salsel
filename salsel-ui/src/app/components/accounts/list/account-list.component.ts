@@ -119,7 +119,33 @@ export class AccountListComponent implements OnInit {
     });
   }
 
-  onDownloadAgreement(id) {}
+  onDownloadAgreement(url, id) {
+    this.accountService.downloadAgreement(url).subscribe(
+      (res: any) => {
+        this.downloadSuccess();
+        this.accountService.downloadFile(res, `Agreement_${id}`);
+      },
+      (error) => {
+        this.downloadError();
+      }
+    );
+  }
+
+  downloadError() {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Download Failed",
+    });
+  }
+
+  downloadSuccess() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "File Successfully Downloaded",
+    });
+  }
 
   success() {
     this.messageService.add({

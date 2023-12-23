@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { IAccountData } from "src/app/components/accounts/model/accountValuesDto";
@@ -25,10 +25,17 @@ export class AccountService {
 
   // ADD ACCOUNT
 
-  addAccount(accountDto: IAccountData): Observable<EntityAccountType> {
-    return this.http.post(`${this.url}account`, accountDto, {
-      observe: "response",
+  addAccount(data: any, file: File) {
+    const formData = new FormData();
+
+    const accountDtoBlob = new Blob([JSON.stringify(data)], {
+      type: "application/json",
     });
+    formData.append("accountDto", accountDtoBlob, "accountDto.txt");
+
+    formData.append("file", file);
+
+    return this.http.post<any>(`${this.url}account`, formData);
   }
 
   // DELETE ACCOUNT
@@ -38,8 +45,17 @@ export class AccountService {
   }
 
   // EDIT ACCOUNT
-  editAccount(id: any, data: any) {
-    return this.http.put(`${this.url}account/${id}`, data);
+  editAccount(id: any, data: any, file: File) {
+    const formData = new FormData();
+
+    const accountDtoBlob = new Blob([JSON.stringify(data)], {
+      type: "application/json",
+    });
+    formData.append("accountDto", accountDtoBlob, "accountDto.txt");
+
+    formData.append("file", file);
+
+    return this.http.put<any>(`${this.url}account/${id}`, formData);
   }
 
   //   GET SINGLE ACCOUNT
@@ -47,14 +63,22 @@ export class AccountService {
     return this.http.get(`${this.url}account/${id}`);
   }
 
+  downloadAgreement(agreementUrl: any) {
+    return this.http.get(`${this.url}file/${agreementUrl}`, {
+      responseType: "blob" as "json", // Set the response type to 'blob'
+    });
+  }
+
   //   Update Account Status
   updateAccountStatus(id) {
     return this.http.put(`${this.url}account/status/${id}`, {});
   }
 
-  uploadFile(data: any) {
-    return this.http.post<any>(`${this.url}upload-pdf`, data, {
-      responseType: "text" as "json",
-    });
+  downloadFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
   }
 }

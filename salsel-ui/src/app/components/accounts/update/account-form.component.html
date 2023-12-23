@@ -166,7 +166,7 @@
                     <label htmlFor="agreement"><strong>Upload Agreement</strong></label>
 
                     <!-- Hidden input for file upload -->
-                    <input id="agreement" type="file" (change)="onFileChange($event)" accept=".pdf" />
+                    <input #fileInput id="agreement" type="file" (change)="onFileChange($event)" accept=".pdf" />
                 </div>
 
                 <div class="flex justify-content-end w-full">

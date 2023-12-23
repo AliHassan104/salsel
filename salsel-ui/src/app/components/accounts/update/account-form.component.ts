@@ -1,5 +1,5 @@
 import { IAccountData } from "../model/accountValuesDto";
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { AccountService } from "../service/account.service";
@@ -8,6 +8,7 @@ import { DropdownService } from "src/app/service/dropdown.service";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { CityService } from "../../City/service/city.service";
 import { CountryService } from "../../country/service/country.service";
+import { filter } from "rxjs";
 
 @Component({
   selector: "app-account-form",
@@ -34,6 +35,10 @@ export class AccountFormComponent implements OnInit {
   params: any = { status: true };
 
   accountAgeement: any;
+  agreement;
+  allAgreements;
+
+  @ViewChild("fileInput") fileInput: ElementRef;
 
   constructor(
     private messageService: MessageService,
@@ -124,6 +129,8 @@ export class AccountFormComponent implements OnInit {
     if (this.editId != null) {
       this.accountService.getSingleAccount(this.editId).subscribe((res) => {
         this.singleAccount = res;
+        this.attachAgreement(this.singleAccount.accountUrl);
+
         this.getAllCities(this.singleAccount.county);
         this.editForm();
       });
@@ -169,22 +176,49 @@ export class AccountFormComponent implements OnInit {
   }
 
   onSubmit(data: IAccountData) {
-    if (this.accountForm.valid) {
+    if (
+      this.accountForm.valid &&
+      this.fileInput.nativeElement.files.length != 0
+    ) {
       if (this.editMode) {
-        this.accountService.editAccount(this.editId, data).subscribe((res) => {
-          this.accountForm.reset();
-          this.router.navigate(["account/list"]);
-        });
+        this.accountService
+          .editAccount(this.editId, data, this.accountAgeement)
+          .subscribe((res) => {
+            this.accountForm.reset();
+            this.router.navigate(["account/list"]);
+          });
       } else {
-        this.accountService.addAccount(data).subscribe((res) => {
-          this.accountForm.reset();
-          this.router.navigate(["account/list"]);
-        });
+        this.accountService
+          .addAccount(data, this.accountAgeement)
+          .subscribe((res) => {
+            this.accountForm.reset();
+            this.router.navigate(["account/list"]);
+          });
       }
     } else {
       this.alert();
       this.formService.markFormGroupTouched(this.accountForm);
     }
+  }
+
+  attachAgreement(agreementUrl: string) {
+    this.accountService
+      .downloadAgreement(agreementUrl)
+      .subscribe((blob: Blob) => {
+        const file = new File([blob], `agreement_${this.editId}.pdf`, {
+          type: "application/pdf",
+        });
+
+        // Create a DataTransfer object
+        const dataTransfer = new DataTransfer();
+
+        // Add the file to the DataTransfer object
+        dataTransfer.items.add(file);
+
+        // Set the files property of the input element
+        this.fileInput.nativeElement.files = dataTransfer.files;
+        this.accountAgeement = file;
+      });
   }
 
   onFileChange(event: any): void {
@@ -198,9 +232,7 @@ export class AccountFormComponent implements OnInit {
         this.accountAgeement = selectedFile;
         console.log(this.accountAgeement);
       } else {
-        this.accountForm.get("agreement").setValue(null);
         fileInput.value = null;
-
         this.messageService.add({
           severity: "error",
           summary: "Invalid File",
@@ -214,7 +246,8 @@ export class AccountFormComponent implements OnInit {
     this.messageService.add({
       severity: "error",
       summary: "Warning",
-      detail: "Please ensure that all required details are filled out.",
+      detail:
+        "Please ensure that all required details are filled out and Agreement is attached.",
     });
   }
 
