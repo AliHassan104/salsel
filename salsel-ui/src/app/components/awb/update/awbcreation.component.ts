@@ -39,10 +39,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   // FOR EDIT AND CREATE AIRBILL FROM TICKET
   ticketMode;
   TicketId;
-  editMode;
   editId;
-  createAWB;
-  updateAWB;
   productTypeId;
   serviceTypeId;
 
@@ -64,14 +61,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     private cityService: CityService,
     private productTypeService: ProductTypeService,
     private serviceTypeService: ServiceTypeService
-  ) {
-    this._airbillService.updateAWB.subscribe((res) => {
-      this.updateAWB = res;
-    });
-    this._airbillService.CreateAWB.subscribe((res) => {
-      this.createAWB = res;
-    });
-  }
+  ) {}
 
   params = { status: true };
   awbForm!: FormGroup;
@@ -84,7 +74,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     this.queryParamsSetup();
 
     // FOR EDIT BILL
-    this.UpdateBill();
+    // this.UpdateBill();
 
     // Create From Ticket
     this.CreateAwbFromTicket();
@@ -120,20 +110,31 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     });
   }
 
+  //   queryParamsSetup() {
+  //     this.route.queryParams.subscribe((params) => {
+  //       // Retrieve editMode and id from the query parameters
+  //       if (params["id"] != null && this.updateAWB == true) {
+  //         this.editMode = params["updateMode"] === "true"; // Convert to boolean
+  //         this.editId = +params["id"]; // Convert to number
+  //       }
+  //       //   To create AWB form ticket view page
+  //       else if (params["id"] != null && this.createAWB == true) {
+  //         this.ticketMode = true;
+  //         this.TicketId = +params["id"];
+  //       } else {
+  //         this.ticketMode = false;
+  //         this.editMode = false;
+  //       }
+  //     });
+  //   }
+
   queryParamsSetup() {
     this.route.queryParams.subscribe((params) => {
-      // Retrieve editMode and id from the query parameters
-      if (params["id"] != null && this.updateAWB == true) {
-        this.editMode = params["updateMode"] === "true"; // Convert to boolean
-        this.editId = +params["id"]; // Convert to number
-      }
-      //   To create AWB form ticket view page
-      else if (params["id"] != null && this.createAWB == true) {
+      if (params["id"] != null) {
         this.ticketMode = true;
         this.TicketId = +params["id"];
       } else {
         this.ticketMode = false;
-        this.editMode = false;
       }
     });
   }
@@ -183,48 +184,46 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     });
   }
 
-  UpdateBill() {
-    if (this.editMode) {
-      this._airbillService.getSingleBill(this.editId).subscribe((res) => {
-        this.singleBill = res;
-        this.getAllServiceTypes(this.singleBill.productType);
-        this.getAllCities(
-          this.singleBill.destinationCountry,
-          this.singleBill.originCountry
-        );
-        let pickDate = new Date(this.singleBill.pickupDate);
-        let pickTimeArray = this.singleBill.pickupTime;
-        let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
+  //   UpdateBill() {
+  //     if (this.editMode) {
+  //       this._airbillService.getSingleBill(this.editId).subscribe((res) => {
+  //         this.singleBill = res;
+  //         this.getAllServiceTypes(this.singleBill.productType);
+  //         this.getAllCities(
+  //           this.singleBill.destinationCountry,
+  //           this.singleBill.originCountry
+  //         );
+  //         let pickDate = new Date(this.singleBill.pickupDate);
+  //         let pickTimeArray = this.singleBill.pickupTime;
+  //         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
 
-        // EDIT BILL VALUES SETUP
-
-        this.awbForm.setValue({
-          shipperName: this.singleBill.shipperName,
-          shipperContactNumber: this.singleBill.shipperContactNumber,
-          pickupAddress: this.singleBill.pickupAddress,
-          shipperRefNumber: this.singleBill.shipperRefNumber,
-          originCountry: this.singleBill.originCountry,
-          originCity: this.singleBill.originCity,
-          recipientsName: this.singleBill.recipientsName,
-          recipientsContactNumber: this.singleBill.recipientsContactNumber,
-          destinationCountry: this.singleBill.destinationCountry,
-          destinationCity: this.singleBill.destinationCity,
-          deliveryAddress: this.singleBill.deliveryAddress,
-          pickupDate: pickDate,
-          pickupTime: pickTime,
-          dutyAndTaxesBillTo: this.singleBill.dutyAndTaxesBillTo,
-          weight: this.singleBill.weight,
-          amount: this.singleBill.amount,
-          content: this.singleBill.content,
-          currency: this.singleBill.currency,
-          pieces: this.singleBill.pieces,
-          serviceType: this.singleBill.serviceType,
-          productType: this.singleBill.productType,
-          requestType: this.singleBill.requestType,
-        });
-      });
-    }
-  }
+  //         this.awbForm.setValue({
+  //           shipperName: this.singleBill.shipperName,
+  //           shipperContactNumber: this.singleBill.shipperContactNumber,
+  //           pickupAddress: this.singleBill.pickupAddress,
+  //           shipperRefNumber: this.singleBill.shipperRefNumber,
+  //           originCountry: this.singleBill.originCountry,
+  //           originCity: this.singleBill.originCity,
+  //           recipientsName: this.singleBill.recipientsName,
+  //           recipientsContactNumber: this.singleBill.recipientsContactNumber,
+  //           destinationCountry: this.singleBill.destinationCountry,
+  //           destinationCity: this.singleBill.destinationCity,
+  //           deliveryAddress: this.singleBill.deliveryAddress,
+  //           pickupDate: pickDate,
+  //           pickupTime: pickTime,
+  //           dutyAndTaxesBillTo: this.singleBill.dutyAndTaxesBillTo,
+  //           weight: this.singleBill.weight,
+  //           amount: this.singleBill.amount,
+  //           content: this.singleBill.content,
+  //           currency: this.singleBill.currency,
+  //           pieces: this.singleBill.pieces,
+  //           serviceType: this.singleBill.serviceType,
+  //           productType: this.singleBill.productType,
+  //           requestType: this.singleBill.requestType,
+  //         });
+  //       });
+  //     }
+  //   }
 
   CreateAwbFromTicket() {
     if (this.ticketMode) {
@@ -346,21 +345,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         requestType: formValue.requestType,
       };
 
-      if (this.editMode) {
-        this.http
-          .put<any>(`${environment.URL}awb/${this.editId}`, billData)
-          .subscribe(() => {
-            this.update();
-            this.router.navigate(["awb/list"]);
-          });
-      } else {
-        //   Create Ticket
-        this._airbillService.createBill(billData).subscribe((res) => {
-          this.success();
-          this.router.navigate(["awb/list"]);
-          this.awbForm.reset();
-        });
-      }
+      //   Create Ticket
+      this._airbillService.createBill(billData).subscribe((res) => {
+        this.success();
+        this.router.navigate(["awb/list"]);
+        this.awbForm.reset();
+      });
     } else {
       this.alert();
       this.formService.markFormGroupTouched(this.awbForm);
@@ -397,7 +387,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._airbillService.CreateAWB.next(false);
-    this._airbillService.updateAWB.next(false);
+    // this._airbillService.CreateAWB.next(false);
+    // this._airbillService.updateAWB.next(false);
   }
 }

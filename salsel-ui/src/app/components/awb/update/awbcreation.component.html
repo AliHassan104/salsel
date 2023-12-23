@@ -2,7 +2,7 @@
     <div class="card">
         <h1 class="mb-5"
             style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
-            {{editMode?"Update AWB":"Create AWB"}}</h1>
+            Create AWB</h1>
         <form action="" [formGroup]="awbForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
                 <!-- Shipper Details -->
@@ -201,9 +201,7 @@
                 </div>
 
                 <div class="flex justify-content-end w-full">
-                    <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"
-                        *ngIf="editMode" (click)="onCancel()"></button>
-                    <button pButton [label]="editMode?'Update':'Create'" type="Submit" class="mx-3 submit-btn"></button>
+                    <button pButton label="Create" type="Submit" class="mx-3 submit-btn"></button>
                 </div>
             </div>
         </form>
