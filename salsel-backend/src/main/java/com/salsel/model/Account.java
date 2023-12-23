@@ -33,6 +33,6 @@ public class Account {
     private String billingPocName;
     private String salesAgentName;
     private String salesRegion;
-    private String accountStatus;
+    private String accountUrl;
     private Boolean status;
 }

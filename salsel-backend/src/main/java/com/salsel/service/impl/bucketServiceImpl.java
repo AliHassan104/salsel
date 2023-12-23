@@ -22,6 +22,9 @@ import java.util.Map;
 @Service
 @Slf4j
 public class bucketServiceImpl implements BucketService {
+
+    public static final String ACCOUNT = "Account";
+    public static final String AWB = "Awb";
     @Autowired
     private AmazonS3 s3Client;
     @Value("${application.bucket.name}")
@@ -29,37 +32,48 @@ public class bucketServiceImpl implements BucketService {
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
     @Override
-    public String save(byte[] pdf, String folderName, String fileName) {
+    public String save(byte[] pdf, String folderName, String fileName, String folderType) {
         try {
-            // Create the folder if it doesn't exist
-            createFolderIfNotExists(folderName);
+            // Validate input parameters
+            if (pdf == null || folderName == null || fileName == null || folderType == null) {
+                throw new IllegalArgumentException("Invalid input parameters");
+            }
 
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf);
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(pdf.length);
+            // Check if the folder exists
+            String folderKey;
+            if (folderType.equalsIgnoreCase(ACCOUNT)) {
+                folderKey = ACCOUNT + "/" + folderName;
+            } else if (folderType.equalsIgnoreCase(AWB)) {
+                folderKey = AWB + "/" + folderName;
+            } else {
+                throw new IllegalArgumentException("Invalid folder type: " + folderType);
+            }
 
-            String key = folderName + "/" + fileName;
+            if (!s3Client.doesObjectExist(bucketName, folderKey + "/")) {
+                // Create an empty object to simulate the directory
+                s3Client.putObject(bucketName, folderKey + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
+            }
 
-            s3Client.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
+            // Use try-with-resources to automatically close the input stream
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf)) {
+                String key = folderKey + "/" + fileName;
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(pdf.length);
 
-            // Generate pre-signed URL for the saved object
-            GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                    new GeneratePresignedUrlRequest(bucketName, key)
-                            .withMethod(HttpMethod.GET);
-
-            URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
-
-            return preSignedUrl.toString();
+                s3Client.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
+                return key;
+            }
         } catch (Exception e) {
-            logger.error("File {} not uploaded to S3 bucket", fileName);
+            logger.error("File {} not uploaded to S3 bucket", fileName, e);
             throw new RuntimeException(e.getMessage());
         }
     }
 
+
     @Override
-    public byte[] downloadFile(String folderName, String fileName) {
+    public byte[] downloadFile(String folderName, String fileName, String folderType) {
         try {
-            String key = folderName + "/" + fileName;
+            String key = folderType + "/" + folderName + "/" + fileName;
 
             // Check if the file exists in the S3 bucket
             if (!s3Client.doesObjectExist(bucketName, key)) {
@@ -88,6 +102,31 @@ public class bucketServiceImpl implements BucketService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @Override
+    public void deleteFilesStartingWith(String folderKey, String prefix) {
+        try {
+            // List the objects in the specified folder
+            ObjectListing objectListing = s3Client.listObjects(bucketName, folderKey);
+
+            // Iterate through the objects and delete files with names starting with the specified prefix
+            for (S3ObjectSummary summary : objectListing.getObjectSummaries()) {
+                String objectKey = summary.getKey();
+
+                // Check if the object is a file and its name starts with the specified prefix
+                if (objectKey.startsWith(folderKey + "/" + prefix)) {
+                    String file = folderKey + "/" + prefix;
+                    s3Client.deleteObject(new DeleteObjectRequest(bucketName, objectKey));
+                    logger.info("File deleted successfully: {}", objectKey);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting files from path {} in S3 bucket with prefix {}: {}", folderKey, prefix, e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
 
     @Override
     public void deleteFolder(String folderName) {
@@ -123,20 +162,6 @@ public class bucketServiceImpl implements BucketService {
         }
 
         return fileDetailsMap;
-    }
-
-    private void createFolderIfNotExists(String folderName) {
-        try {
-            // Check if the folder already exists
-            if (!s3Client.doesObjectExist(bucketName, folderName + "/")) {
-                // If not, create the folder
-                s3Client.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
-                logger.info("Folder '{}' created in S3 bucket", folderName);
-            }
-        } catch (Exception e) {
-            logger.error("Error creating folder '{}' in S3 bucket", folderName, e);
-            throw new RuntimeException(e.getMessage());
-        }
     }
 }
 
