@@ -5,6 +5,7 @@ import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Account;
 import com.salsel.repository.AccountRepository;
 import com.salsel.service.AccountService;
+import com.salsel.service.BucketService;
 import com.salsel.utils.HelperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +20,14 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final HelperUtils helperUtils;
+    private final BucketService bucketService;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
 
-    public AccountServiceImpl(AccountRepository accountRepository, HelperUtils helperUtils) {
+    public AccountServiceImpl(AccountRepository accountRepository, HelperUtils helperUtils, BucketService bucketService) {
         this.accountRepository = accountRepository;
         this.helperUtils = helperUtils;
+        this.bucketService = bucketService;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public AccountDto update(Long id, AccountDto accountDto) {
+    public AccountDto update(Long id, AccountDto accountDto, MultipartFile pdf) {
         Account existingAccount = accountRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
 
@@ -102,6 +104,15 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setBillingPocName(accountDto.getBillingPocName());
         existingAccount.setSalesAgentName(accountDto.getSalesAgentName());
         existingAccount.setSalesRegion(accountDto.getSalesRegion());
+
+        if (pdf != null && !pdf.isEmpty()) {
+            String folderKey = "Account/Account_" + id;
+            bucketService.deleteFilesStartingWith(folderKey,"Agreement_");
+            String folderName = "Account_" + existingAccount.getId();
+            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            existingAccount.setAccountUrl(savedPdfUrl);
+            logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
+        }
 
         Account updatedAccount = accountRepository.save(existingAccount);
         return toDto(updatedAccount);

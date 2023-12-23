@@ -71,8 +71,12 @@ public class AwbServiceImpl implements AwbService {
 
     @Override
     public byte[] downloadAwbPdf(String fileName, Long awbId) {
+        Awb awb = awbRepository.findById(awbId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", awbId)));
+
         Model model = new ExtendedModelMap();
         model.addAttribute("awbId", awbId);
+        model.addAttribute("weight", awb.getWeight());
         return pdfGenerationService.generatePdf("Awb", model, awbId);
     }
 

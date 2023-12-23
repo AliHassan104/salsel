@@ -11,5 +11,5 @@ public interface AccountService {
     AccountDto findById(Long id);
     void deleteById(Long id);
     void setToActiveById(Long id);
-    AccountDto update(Long id, AccountDto accountDto);
+    AccountDto update(Long id, AccountDto accountDto,  MultipartFile pdf);
 }

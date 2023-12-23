@@ -48,16 +48,16 @@ public class HelperUtils {
 
     public String savePdfToS3(MultipartFile pdf, String folderName) {
         try {
-            String originalFileName = pdf.getOriginalFilename();
+            String filename = "Agreement";
 
             // Extract file extension using FilenameUtils
-            String fileExtension = "." + FilenameUtils.getExtension(originalFileName);
+            String fileExtension = "." + FilenameUtils.getExtension(pdf.getOriginalFilename());
 
             // Generate timestamp
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
 
             // Append timestamp to the original filename
-            String newFileName = FilenameUtils.getBaseName(originalFileName) + "_" + timestamp + fileExtension;
+            String newFileName = FilenameUtils.getBaseName(filename) + "_" + timestamp + fileExtension;
 
             // Save to S3 bucket
             return bucketService.save(pdf.getBytes(), folderName, newFileName, "Account"); // Save PDF and return the URL

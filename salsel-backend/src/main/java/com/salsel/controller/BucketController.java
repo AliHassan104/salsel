@@ -57,10 +57,11 @@ public class BucketController {
         return ResponseEntity.ok(fileDetailsMap);
     }
 
-    @GetMapping("/file/{folderName}/{fileName}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable String folderName, @PathVariable String fileName) {
+    @GetMapping("/file/{folderType}/{folderName}/{fileName}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String folderName, @PathVariable String fileName,
+                                               @PathVariable String folderType) {
         try {
-            byte[] fileContent = bucketService.downloadFile(folderName, fileName);
+            byte[] fileContent = bucketService.downloadFile(folderName, fileName, folderType);
 
             // Return the file content as a ResponseEntity with appropriate headers
             return ResponseEntity.ok()

@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.salsel.service.BucketService;
-import com.salsel.utils.HelperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,9 +71,9 @@ public class bucketServiceImpl implements BucketService {
 
 
     @Override
-    public byte[] downloadFile(String folderName, String fileName) {
+    public byte[] downloadFile(String folderName, String fileName, String folderType) {
         try {
-            String key = folderName + "/" + fileName;
+            String key = folderType + "/" + folderName + "/" + fileName;
 
             // Check if the file exists in the S3 bucket
             if (!s3Client.doesObjectExist(bucketName, key)) {
@@ -103,6 +102,31 @@ public class bucketServiceImpl implements BucketService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @Override
+    public void deleteFilesStartingWith(String folderKey, String prefix) {
+        try {
+            // List the objects in the specified folder
+            ObjectListing objectListing = s3Client.listObjects(bucketName, folderKey);
+
+            // Iterate through the objects and delete files with names starting with the specified prefix
+            for (S3ObjectSummary summary : objectListing.getObjectSummaries()) {
+                String objectKey = summary.getKey();
+
+                // Check if the object is a file and its name starts with the specified prefix
+                if (objectKey.startsWith(folderKey + "/" + prefix)) {
+                    String file = folderKey + "/" + prefix;
+                    s3Client.deleteObject(new DeleteObjectRequest(bucketName, objectKey));
+                    logger.info("File deleted successfully: {}", objectKey);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting files from path {} in S3 bucket with prefix {}: {}", folderKey, prefix, e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
 
     @Override
     public void deleteFolder(String folderName) {

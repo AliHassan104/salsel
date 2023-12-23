@@ -56,8 +56,9 @@ public class AccountController {
 
     @PutMapping("/account/{id}")
     @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
-    public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
-        AccountDto updatedAccountDto = accountService.update(id, accountDto);
+    public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestPart AccountDto accountDto,
+                                                    @RequestPart("file") MultipartFile file) {
+        AccountDto updatedAccountDto = accountService.update(id, accountDto, file);
         return ResponseEntity.ok(updatedAccountDto);
     }
 }
