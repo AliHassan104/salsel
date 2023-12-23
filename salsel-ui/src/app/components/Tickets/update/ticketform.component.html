@@ -120,19 +120,8 @@
                         Required
                     </small>
                 </div>
-                <!-- Created At -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="createdAt"><strong>Created At</strong></label>
-                    <p-calendar [hourFormat]="24" [showTime]="true" [showIcon]="true" [showSeconds]="true"
-                        [ngClass]="{'ng-dirty':ticketForm.get('createdAt')?.touched && ticketForm.get('createdAt')?.invalid}"
-                        formControlName="createdAt"></p-calendar>
-                    <small *ngIf="!ticketForm.get('createdAt')?.valid && ticketForm.get('createdAt')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
                 <!-- Category -->
-                <div class="field col-12 md:col-4">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="category"><strong>Category</strong></label>
                     <p-dropdown [options]="categories" placeholder="Select category" formControlName="category"
                         [ngClass]="{'ng-dirty':ticketForm.get('category')?.touched && ticketForm.get('category')?.invalid}"></p-dropdown>
@@ -142,7 +131,7 @@
                     </small>
                 </div>
                 <!-- Status -->
-                <div class="field col-12 md:col-4">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="status"><strong>Ticket Status</strong></label>
                     <p-dropdown [options]="status" placeholder="Select Ticket Status" formControlName="ticketStatus"
                         [ngClass]="{'ng-dirty':ticketForm.get('status')?.touched && ticketForm.get('status')?.invalid}"></p-dropdown>
@@ -151,7 +140,7 @@
                         Required
                     </small>
                 </div>
-                <div class="field col-12 md:col-4">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="status"><strong>Ticket Flag</strong></label>
                     <p-dropdown [options]="ticketFlag" placeholder="Select Ticket Flag" formControlName="ticketFlag"
                         [ngClass]="{'ng-dirty':ticketForm.get('ticketFlag')?.touched && ticketForm.get('ticketFlag')?.invalid}"></p-dropdown>

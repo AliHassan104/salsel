@@ -41,7 +41,6 @@ INSERT INTO permissions (name, value) VALUES
         (5,'ROLE_MANAGEMENT_USER'),
         (6,'ROLE_OPERATION_USER'),
 
-
 INSERT INTO `role_permissions` VALUES
     (1, (SELECT id FROM permissions WHERE name = 'CREATE_TICKET')),
     (1, (SELECT id FROM permissions WHERE name = 'READ_TICKET')),
