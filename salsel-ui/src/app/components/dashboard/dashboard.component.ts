@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           .subscribe((res: any) => {
             this.inactiveAccountCount = res.body.length;
             this.totalAccountCount =
-              this.activeAccountCount + this.inActiveTicketsCount;
+              this.activeAccountCount + this.inactiveAccountCount;
 
             this.pieChartAccountSetup();
           });

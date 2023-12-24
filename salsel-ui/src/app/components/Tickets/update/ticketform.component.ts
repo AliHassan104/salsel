@@ -340,10 +340,11 @@ export class TicketformComponent implements OnInit {
       } else {
         //   Create Ticket
 
-        this._ticketService.createTicket(ticketData).subscribe();
-        this.success();
-        this.router.navigate(["ticket/list"]);
-        this.ticketForm.reset();
+        this._ticketService.createTicket(ticketData).subscribe((res: any) => {
+          this.success();
+          this.router.navigate(["ticket/list"]);
+          this.ticketForm.reset();
+        });
       }
     } else {
       this.alert();
