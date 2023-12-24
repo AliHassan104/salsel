@@ -166,8 +166,8 @@
                                 routerLink="{{data.id}}"></button>
                             <button pTooltip="View History" tooltipPosition="bottom" *ngIf="activeStatus" pButton
                                 pRipple type="button" icon="pi pi-history"
-                                class="p-button-rounded p-button-outlined mx-1"
-                                (click)="onViewHistory(data.id)"></button>
+                                class="p-button-rounded p-button-outlined mx-1" [routerLink]="'/awb-history/' + data.id"
+                                routerLinkActive="router-link-active"></button>
 
                             <button pTooltip="Deactivate" tooltipPosition="bottom"
                                 *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_AWB')" pButton

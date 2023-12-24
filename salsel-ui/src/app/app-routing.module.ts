@@ -193,6 +193,14 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
               canActivate: [AuthGuardService],
             },
             {
+              path: "awb-history/:id",
+              loadChildren: () =>
+                import("./components/awb/history/history.module").then(
+                  (m) => m.HistoryModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
               path: "permissions",
               component: PermissionsComponent,
               canActivate: [AuthGuardService],
