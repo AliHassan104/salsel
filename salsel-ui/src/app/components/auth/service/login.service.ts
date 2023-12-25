@@ -20,4 +20,12 @@ export class LoginService {
     let url = `${this._url}signup`;
     return this.http.post<any>(url, data);
   }
+
+  forgotPassword(params: any) {
+    return this.http.post<any>(
+      `${this._url}forgot-password`,
+      {},
+      { params, responseType: "text" as "json" }
+    );
+  }
 }

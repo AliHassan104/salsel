@@ -97,11 +97,8 @@ export class AddUserComponent implements OnInit {
     if (this.editMode) {
       this.userService.GetUserById(this.editId).subscribe((res: any) => {
         this.singleUser = res;
-        console.log(this.singleUser);
 
         this.rolesService.getRoles().subscribe((res: any) => {
-          console.log(res);
-
           const role = res.filter(
             (value) => value.name == this.singleUser.roles[0].name
           );
@@ -148,8 +145,6 @@ export class AddUserComponent implements OnInit {
         });
       } else {
         this.loginService.signUp(data).subscribe((res) => {
-          console.log(res);
-
           this.userForm.reset();
           this.router.navigate(["user/list"]);
         });

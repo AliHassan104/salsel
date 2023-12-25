@@ -34,12 +34,9 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  //   alreadyExistUser(control: FormControl): { [s: string]: boolean } {
-  //     if (this.userDetailList.indexOf(control.value) !== -1) {
-  //       return { userAlreadyExist: true };
-  //     }
-  //     return null as any;
-  //   }
+  navigateToForgotPassword() {
+    this.router.navigate(["/reset-password"]);
+  }
 
   onLogin(value) {
     if (this.loginForm.valid) {

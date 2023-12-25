@@ -14,6 +14,8 @@ import { CityService } from "../../City/service/city.service";
 import { ProductTypeService } from "../../product-type/service/product-type.service";
 import { ServiceTypeService } from "../../service-type/service/service-type.service";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
+import { map } from "rxjs/operators";
+import { filter } from "rxjs";
 
 @Component({
   selector: "app-awbcreation",

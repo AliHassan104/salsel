@@ -4,16 +4,20 @@
             <img src="../../../../assets/logo/Logo-4-1.png" alt="" width="200px" height="100px">
             <div class="mb-3 mt-4">
                 <h2>Login to your account</h2>
-                <p>Forgot password? <a class="text-primary hover:underline cursor-pointer font-medium">Click here</a> to
+                <p>Forgot password? <a class="text-primary hover:underline cursor-pointer font-medium"
+                        (click)="navigateToForgotPassword()">Click here</a> to
                     reset.</p>
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)"
                 class="flex flex-column align-items-center gap-4">
                 <!-- Username Email -->
                 <div class="w-20rem">
-                    <input type="email" class="w-20rem"
-                        [ngClass]="{'ng-dirty':loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
-                        pInputText formControlName="email" placeholder="Enter a valid email" />
+                    <span class="p-input-icon-left w-full">
+                        <i class="pi pi-envelope"></i>
+                        <input type="email" class="w-20rem"
+                            [ngClass]="{'ng-dirty':loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
+                            pInputText formControlName="email" placeholder="Email" />
+                    </span>
                     <div class="text-left">
                         <small *ngIf="!loginForm.get('email')?.valid && loginForm.get('email')?.touched"
                             class="text-red-500">
@@ -23,10 +27,15 @@
                 </div>
                 <!-- Password -->
                 <div class="w-20rem">
-                    <p-password [toggleMask]="true" class="w-20rem" [inputStyle]="{'width':'20rem'}"
-                        [ngClass]="{'ng-dirty':loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
-                        placeholder="Password" [strongRegex]="true" [strongLabel]="true" formControlName="password"
-                        [feedback]="false"></p-password>
+                    <span class="p-input-icon-left w-full">
+                        <i class="pi pi-key z-5"></i>
+                        <p-password [toggleMask]="true" class="w-20rem"
+                            [inputStyle]="{'width':'20rem','padding-left':'35px'}"
+                            [ngClass]="{'ng-dirty':loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+                            placeholder="Password" [strongRegex]="true" [strongLabel]="true" formControlName="password"
+                            [feedback]="false">
+                        </p-password>
+                    </span>
                     <div class="text-left">
                         <small class="alig"
                             *ngIf="!loginForm.get('password')?.valid && loginForm.get('password')?.touched"

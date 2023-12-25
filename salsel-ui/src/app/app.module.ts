@@ -20,6 +20,8 @@ import { LoaderComponent } from "./components/loader/loader.component";
 import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
 import { ButtonModule } from "primeng/button";
 import { PermissionsModule } from "./components/permissions/permissions.module";
+import { ForgotPasswordModule } from "./components/auth/forgot-password/forgot-password.module";
+import { NewPasswordModule } from "./components/auth/new-password/new-password.module";
 
 @NgModule({
   declarations: [
@@ -35,6 +37,8 @@ import { PermissionsModule } from "./components/permissions/permissions.module";
     LoginModule,
     ButtonModule,
     PermissionsModule,
+    ForgotPasswordModule,
+    NewPasswordModule,
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

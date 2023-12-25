@@ -6,6 +6,8 @@ import { LoginComponent } from "./components/auth/login/login.component";
 import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdenied.component";
 import { PermissionsComponent } from "./components/permissions/permissions.component";
 import { AuthGuardService } from "./components/auth/service/auth-guard.service";
+import { ForgotPasswordComponent } from "./components/auth/forgot-password/forgot-password.component";
+import { NewPasswordComponent } from "./components/auth/new-password/new-password.component";
 
 @NgModule({
   imports: [
@@ -208,6 +210,8 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
           ],
         },
         { path: "login", component: LoginComponent },
+        { path: "reset-password", component: ForgotPasswordComponent },
+        { path: "new-password", component: NewPasswordComponent },
         { path: "access", component: AccessdeniedComponent },
         { path: "notfound", component: NotfoundComponent },
         { path: "**", redirectTo: "/notfound" },
