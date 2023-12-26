@@ -16,10 +16,10 @@
     </div>
     <div class="content">
 <!--        <p>Fred L Scott <br></br> 20 Bridge St <br></br> Olney MK46 4AB <br></br> England</p>-->
-        <p th:text="${shipperName}"></p><br></br>
-        <p th:text="${pickupAddress}"></p><br></br>
-        <p th:text="${recipientsName}"></p><br></br>
-        <p th:text="${deliveryAddress}"></p>
+        <p class="truncate-text p1" th:text="${shipperName}"></p><br></br>
+        <p class="truncate-text p2" th:text="${pickupAddress}"></p><br></br>
+        <p class="truncate-text p3" th:text="${recipientsName}"></p><br></br>
+        <p class="truncate-text p4" th:text="${deliveryAddress}"></p>
         <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
     </div>
     <div style="z-index: 1000; position: relative;">
