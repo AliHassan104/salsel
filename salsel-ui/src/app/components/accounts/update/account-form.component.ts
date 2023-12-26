@@ -202,13 +202,11 @@ export class AccountFormComponent implements OnInit {
   }
 
   attachAgreement(agreementUrl: string) {
-    this.accountService
-      .downloadAgreement(agreementUrl)
-      .subscribe((blob: Blob) => {
+    this.accountService.downloadAgreement(agreementUrl).subscribe(
+      (blob: Blob) => {
         const file = new File([blob], `agreement_${this.editId}.pdf`, {
           type: "application/pdf",
         });
-
         // Create a DataTransfer object
         const dataTransfer = new DataTransfer();
 
@@ -218,7 +216,16 @@ export class AccountFormComponent implements OnInit {
         // Set the files property of the input element
         this.fileInput.nativeElement.files = dataTransfer.files;
         this.accountAgeement = file;
-      });
+      },
+      (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Error Attaching File",
+        });
+        // Handle the error (e.g., show a user-friendly message)
+      }
+    );
   }
 
   onFileChange(event: any): void {
@@ -230,7 +237,6 @@ export class AccountFormComponent implements OnInit {
       if (selectedFile.name.toLowerCase().endsWith(".pdf")) {
         this.fileName = selectedFile.name;
         this.accountAgeement = selectedFile;
-        console.log(this.accountAgeement);
       } else {
         fileInput.value = null;
         this.messageService.add({

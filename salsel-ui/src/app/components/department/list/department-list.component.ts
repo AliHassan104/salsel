@@ -44,7 +44,6 @@ export class DepartmentListComponent {
     this.departmentService.getDepartments(params).subscribe((res) => {
       if (res && res.body) {
         this.departments = res.body;
-        console.log(this.departments);
       }
     });
   }

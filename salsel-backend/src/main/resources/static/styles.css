@@ -48,8 +48,24 @@ width: 700px;
         font-size: 20px;
         color: #5c5b5b;
         line-height: 1.7;
-        top: 33px;
 }
+
+.content .p1{
+top: 33px;
+}
+
+.content .p2{
+top: 60px;
+}
+
+.content .p3{
+top: 87px;
+}
+
+.content .p4{
+top: 116px;
+}
+
 
 .img-3 {
        position: absolute;
@@ -128,3 +144,10 @@ width: 700px;
     height: 48%;
     width: 150%;
 }
+
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 20ch; /* or set the desired width */
+  }
