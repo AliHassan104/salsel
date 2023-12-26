@@ -39,7 +39,7 @@ INSERT INTO permissions (name, value) VALUES
         (3,'ROLE_CUSTOMER_SERVICE_AGENT'),
         (4,'ROLE_CUSTOMER_CARE_AGENT'),
         (5,'ROLE_MANAGEMENT_USER'),
-        (6,'ROLE_OPERATION_USER'),
+        (6,'ROLE_OPERATION_USER');
 
 INSERT INTO `role_permissions` VALUES
     (1, (SELECT id FROM permissions WHERE name = 'CREATE_TICKET')),
@@ -279,26 +279,26 @@ VALUES
 
     ('Saudi Arabia', 'Active', 10),
     ('United Arab Emirates', 'Active', 10),
-    ('GCC Other', 'Active', 11),
-    ('Sudan', 'Active', 12),
-    ('Africa', 'Active', 12),
-    ('Turkey', 'Active', 12),
-    ('Middle East', 'Active', 12),
-    ('United States of America', 'Active', 12),
-    ('UK & Europe', 'Active', 12),
-    ('China', 'Active', 12),
+    ('GCC Other', 'Active', 10),
+    ('Sudan', 'Active', 10),
+    ('Africa', 'Active', 10),
+    ('Turkey', 'Active', 10),
+    ('Middle East', 'Active', 10),
+    ('United States of America', 'Active', 10),
+    ('UK & Europe', 'Active', 10),
+    ('China', 'Active', 10),
 
-    ('Mohammad Sameer', 'Active', 13),
+    ('Mohammad Sameer', 'Active', 11),
 
-    ('AWB Created', 'Active', 14),
-    ('Picked Up', 'Active', 14),
-    ('Arrived in Station', 'Active', 14),
-    ('Held in Station', 'Active', 14),
-    ('Depart from Station', 'Active', 14),
-    ('Arrived in Hub', 'Active', 14),
-    ('Depart from Hub', 'Active', 14),
-    ('Out for Delivery', 'Active', 14),
-    ('Delivered', 'Active', 14);
+    ('AWB Created', 'Active', 12),
+    ('Picked Up', 'Active', 12),
+    ('Arrived in Station', 'Active', 12),
+    ('Held in Station', 'Active', 12),
+    ('Depart from Station', 'Active', 12),
+    ('Arrived in Hub', 'Active', 12),
+    ('Depart from Hub', 'Active', 12),
+    ('Out for Delivery', 'Active', 12),
+    ('Delivered', 'Active', 12);
 
 
 
