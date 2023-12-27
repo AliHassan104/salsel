@@ -81,6 +81,9 @@ public class AwbServiceImpl implements AwbService {
         model.addAttribute("pickupAddress", awb.getPickupAddress());
         model.addAttribute("recipientsName", awb.getRecipientsName());
         model.addAttribute("deliveryAddress", awb.getDeliveryAddress());
+        model.addAttribute("shipperRefNumber", awb.getShipperRefNumber());
+        model.addAttribute("uniqueNumber", awb.getUniqueNumber());
+        model.addAttribute("content", awb.getContent());
         return pdfGenerationService.generatePdf("Awb", model, awbId);
     }
 

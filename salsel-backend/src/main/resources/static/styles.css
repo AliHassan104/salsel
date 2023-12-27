@@ -6,6 +6,7 @@ body {
 }
 
 .info {
+position:relative;
 width: 700px;
   margin: auto;
   gap: 10px;
@@ -15,16 +16,18 @@ width: 700px;
   z-index: 1000;
 }
 
+
+
 .img {
   position: relative;
     height: 130px;
 }
 .img1 {
- height: 115px;
-   width: 252px;
+ height:100px;
+   width: 250px;
    position: absolute;
    left: -24px;
-   top: 13px;
+   top: 7px;
 }
 
 .img2 {
@@ -34,6 +37,14 @@ width: 700px;
     right: 0;
     top:-20px;
     z-index: 1000;
+}
+
+.uniqueNumber{
+position:absolute;
+top: -12px;
+right: 54px;
+font-weight:700;
+z-index:1001;
 }
 
 .content {
@@ -59,18 +70,18 @@ top: 60px;
 }
 
 .content .p3{
-top: 87px;
+top: 100px;
 }
 
 .content .p4{
-top: 116px;
+top: 127px;
 }
 
 
 .img-3 {
        position: absolute;
         right: 32px;
-        height: 120%;
+        height: 140%;
         width: 8%;
         top: -88px;
 }
@@ -140,7 +151,7 @@ top: 116px;
 .img-4 {
   position: absolute;
     top: 18px;
-    left: -210px;
+    left: -190px;
     height: 48%;
     width: 150%;
 }
