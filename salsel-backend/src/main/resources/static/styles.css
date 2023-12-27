@@ -23,11 +23,11 @@ width: 700px;
     height: 130px;
 }
 .img1 {
- height:100px;
-   width: 250px;
+ height:auto;
+   width: 200px;
    position: absolute;
-   left: -24px;
-   top: 7px;
+   left: 13px;
+   top: 5px;
 }
 
 .img2 {
