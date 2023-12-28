@@ -14,6 +14,7 @@ public interface TicketService {
     Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable);
     TicketDto save(TicketDto ticketDto);
     List<TicketDto> getAll(Boolean status);
+    List<TicketDto> getTicketsByLoggedInUser(String createdByUser, Boolean status);
     TicketDto findById(Long id);
     void deleteById(Long id);
     void setToActiveById(Long id);

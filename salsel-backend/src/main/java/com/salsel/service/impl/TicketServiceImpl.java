@@ -1,10 +1,13 @@
 package com.salsel.service.impl;
 
 import com.salsel.criteria.SearchCriteria;
+import com.salsel.dto.CustomUserDetail;
 import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Ticket;
+import com.salsel.model.User;
 import com.salsel.repository.TicketRepository;
+import com.salsel.repository.UserRepository;
 import com.salsel.service.TicketService;
 import com.salsel.specification.FilterSpecification;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,9 +27,11 @@ import java.util.Optional;
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
 
-    public TicketServiceImpl(TicketRepository ticketRepository){
+    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository){
         this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -59,6 +65,21 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketDto> getAll(Boolean status) {
         List<Ticket> ticketList = ticketRepository.findAllInDesOrderByIdAndStatus(status);
+        List<TicketDto> ticketDtoList = new ArrayList<>();
+
+        for (Ticket ticket : ticketList) {
+            TicketDto ticketDto = toDto(ticket);
+            ticketDtoList.add(ticketDto);
+        }
+        return ticketDtoList;
+    }
+
+    @Override
+    public List<TicketDto> getTicketsByLoggedInUser(String createdByUser, Boolean status) {
+        User user = userRepository.findByNameAndStatusIsTrue(createdByUser)
+                .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+        List<Ticket> ticketList = ticketRepository.findAllInDesOrderByNameAndStatus(status,user.getName());
         List<TicketDto> ticketDtoList = new ArrayList<>();
 
         for (Ticket ticket : ticketList) {

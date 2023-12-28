@@ -55,6 +55,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public UserDto registerRoleCustomerUser(UserDto userdto) {
+        User user = toEntity(userdto);
+        user.setStatus(true);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        Set<Role> roleList = new HashSet<>();
+        Role role = roleRepository.findByName("ROLE_CUSTOMER_USER")
+                .orElseThrow(()-> new RecordNotFoundException("Role not found"));
+        roleList.add(role);
+        user.setRoles(roleList);
+        userRepository.save(user);
+        return toDto(user);
+    }
+
+    @Override
     public List<UserDto> getAll(Boolean status) {
         List<User> userList = userRepository.findAllInDesOrderByIdAndStatus(status);
         List<UserDto> userDtoList = new ArrayList<>();
@@ -109,6 +124,9 @@ public class UserServiceImpl implements UserService {
 
         existingUser.setName(userDto.getName());
         existingUser.setEmail(userDto.getEmail());
+        existingUser.setPhone(userDto.getPhone());
+        existingUser.setFirstname(userDto.getFirstname());
+        existingUser.setLastname(userDto.getLastname());
         existingUser.setEmployeeId(userDto.getEmployeeId());
         existingUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
@@ -161,6 +179,9 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .employeeId(user.getEmployeeId())
                 .name(user.getName())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .phone(user.getPhone())
                 .employeeId(user.getEmployeeId())
                 .email(user.getEmail())
                 .password(user.getPassword())
@@ -174,6 +195,9 @@ public class UserServiceImpl implements UserService {
                 .id(userDto.getId())
                 .employeeId(userDto.getEmployeeId())
                 .email(userDto.getEmail())
+                .firstname(userDto.getFirstname())
+                .lastname(userDto.getLastname())
+                .phone(userDto.getPhone())
                 .name(userDto.getName())
                 .employeeId(userDto.getEmployeeId())
                 .password(userDto.getPassword())

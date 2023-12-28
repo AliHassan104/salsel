@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class TicketController {
     private final TicketService ticketService;
+
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
@@ -32,20 +33,29 @@ public class TicketController {
     //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("")
     public ResponseEntity<Page<Ticket>> getAllTickets(@RequestParam("search") String search,
-                                               @RequestParam(value = "page") int page,
-                                               @RequestParam(value = "size") int size,
-                                               @RequestParam(value = "sort", defaultValue = "id") String sort) throws JsonProcessingException, JsonProcessingException {
+                                                      @RequestParam(value = "page") int page,
+                                                      @RequestParam(value = "size") int size,
+                                                      @RequestParam(value = "sort", defaultValue = "id") String sort) throws JsonProcessingException, JsonProcessingException {
         SearchCriteria searchCriteria = new ObjectMapper().readValue(search, SearchCriteria.class);
-        Page<Ticket> departmentDtos = ticketService.findAll(searchCriteria, PageRequest.of(page, size,  Sort.by(sort).descending()));
+        Page<Ticket> departmentDtos = ticketService.findAll(searchCriteria, PageRequest.of(page, size, Sort.by(sort).descending()));
         return ResponseEntity.ok(departmentDtos);
     }
 
     @GetMapping("/ticket")
     @PreAuthorize("hasAuthority('READ_TICKET')")
-    public ResponseEntity<List<TicketDto>> getAllTickets(@RequestParam(value = "status") Boolean status){
+    public ResponseEntity<List<TicketDto>> getAllTickets(@RequestParam(value = "status") Boolean status) {
         List<TicketDto> ticketDtoList = ticketService.getAll(status);
         return ResponseEntity.ok(ticketDtoList);
     }
+
+    @GetMapping("/ticket/logged-in-user")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
+    public ResponseEntity<List<TicketDto>> getAllTicketsCreatedByLoggedInUser(@RequestParam(value = "status") Boolean status,
+                                                                              @RequestParam(value = "createdBy") String createdBy) {
+        List<TicketDto> ticketDtoList = ticketService.getTicketsByLoggedInUser(createdBy,status);
+        return ResponseEntity.ok(ticketDtoList);
+    }
+
 
     @GetMapping("/ticket/{id}")
     @PreAuthorize("hasAuthority('READ_TICKET')")
@@ -63,7 +73,7 @@ public class TicketController {
 
     @PutMapping("/ticket/{id}")
     @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
-    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id,@RequestBody TicketDto ticketDto) {
+    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id, @RequestBody TicketDto ticketDto) {
         TicketDto updatedTicketDto = ticketService.update(id, ticketDto);
         return ResponseEntity.ok(updatedTicketDto);
     }

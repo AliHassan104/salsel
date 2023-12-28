@@ -8,6 +8,7 @@ import java.util.List;
 @Service
 public interface UserService {
     UserDto registerUser(UserDto userdto);
+    UserDto registerRoleCustomerUser(UserDto userdto);
     List<UserDto> getAll(Boolean status);
     UserDto findById(Long id);
     UserDto findByName(String name);
