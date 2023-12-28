@@ -50,9 +50,8 @@ public class TicketController {
 
     @GetMapping("/ticket/logged-in-user")
     @PreAuthorize("hasAuthority('READ_TICKET')")
-    public ResponseEntity<List<TicketDto>> getAllTicketsCreatedByLoggedInUser(@RequestParam(value = "status") Boolean status,
-                                                                              @RequestParam(value = "createdBy") String createdBy) {
-        List<TicketDto> ticketDtoList = ticketService.getTicketsByLoggedInUser(createdBy,status);
+    public ResponseEntity<List<TicketDto>> getAllTicketsCreatedByLoggedInUser(@RequestParam(value = "status") Boolean status) {
+        List<TicketDto> ticketDtoList = ticketService.getTicketsByLoggedInUser(status);
         return ResponseEntity.ok(ticketDtoList);
     }
 

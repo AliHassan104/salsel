@@ -1,10 +1,6 @@
 package com.salsel.repository;
 
-import com.salsel.model.Account;
-import com.salsel.model.ServiceType;
 import com.salsel.model.Ticket;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -37,5 +33,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
     List<Ticket> findAllInDesOrderByIdAndStatus();
 
     @Query("SELECT t FROM Ticket t WHERE t.status = :status And t.createdBy = :createdBy ORDER BY t.id DESC")
-    List<Ticket> findAllInDesOrderByNameAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy);
+    List<Ticket> findAllInDesOrderByEmailAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy);
 }

@@ -75,18 +75,24 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getTicketsByLoggedInUser(String createdByUser, Boolean status) {
-        User user = userRepository.findByNameAndStatusIsTrue(createdByUser)
-                .orElseThrow(() -> new RecordNotFoundException("User not found"));
+    public List<TicketDto> getTicketsByLoggedInUser(Boolean status) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<Ticket> ticketList = ticketRepository.findAllInDesOrderByNameAndStatus(status,user.getName());
-        List<TicketDto> ticketDtoList = new ArrayList<>();
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
 
-        for (Ticket ticket : ticketList) {
-            TicketDto ticketDto = toDto(ticket);
-            ticketDtoList.add(ticketDto);
+            List<Ticket> ticketList = ticketRepository.findAllInDesOrderByEmailAndStatus(status,user.getEmail());
+            List<TicketDto> ticketDtoList = new ArrayList<>();
+
+            for (Ticket ticket : ticketList) {
+                TicketDto ticketDto = toDto(ticket);
+                ticketDtoList.add(ticketDto);
+            }
+            return ticketDtoList;
         }
-        return ticketDtoList;
+        return null;
     }
 
     @Override
