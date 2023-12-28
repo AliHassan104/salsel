@@ -81,6 +81,24 @@ public class AwbServiceImpl implements AwbService {
         model.addAttribute("pickupAddress", awb.getPickupAddress());
         model.addAttribute("recipientsName", awb.getRecipientsName());
         model.addAttribute("deliveryAddress", awb.getDeliveryAddress());
+        model.addAttribute("shipperRefNumber", awb.getShipperRefNumber());
+        model.addAttribute("uniqueNumber", awb.getUniqueNumber());
+        model.addAttribute("currency", awb.getCurrency());
+        model.addAttribute("originCountry", awb.getOriginCountry());
+        model.addAttribute("originCity", awb.getOriginCity());
+        model.addAttribute("destinationCountry", awb.getDestinationCountry());
+        model.addAttribute("destinationCity", awb.getDestinationCity());
+        model.addAttribute("shipperContactNumber", awb.getShipperContactNumber());
+        model.addAttribute("recipientsContactNumber", awb.getRecipientsContactNumber());
+        model.addAttribute("pickupAddress", awb.getPickupAddress());
+        model.addAttribute("deliveryAddress", awb.getDeliveryAddress());
+        model.addAttribute("pieces", awb.getPieces());
+        model.addAttribute("amount", awb.getAmount());
+        model.addAttribute("content", awb.getContent());
+        model.addAttribute("requestType", awb.getRequestType());
+        model.addAttribute("dutyAndTaxesBillTo", awb.getDutyAndTaxesBillTo());
+        model.addAttribute("productType", awb.getProductType());
+        model.addAttribute("serviceType", awb.getServiceType());
         return pdfGenerationService.generatePdf("Awb", model, awbId);
     }
 
