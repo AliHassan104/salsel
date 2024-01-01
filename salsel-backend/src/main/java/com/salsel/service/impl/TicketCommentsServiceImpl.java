@@ -90,6 +90,7 @@ public class TicketCommentsServiceImpl implements TicketCommentsService {
 
         existingTicketComments.setComment(ticketCommentsDto.getComment());
         existingTicketComments.setMessage(ticketCommentsDto.getMessage());
+        existingTicketComments.setName(ticketCommentsDto.getName());
 
         existingTicketComments.setTicket(ticketRepository.findById(ticketCommentsDto.getTicket().getId())
                 .orElseThrow(() -> new RecordNotFoundException(String.format("TicketComments not found for id => %d", ticketCommentsDto.getTicket().getId()))));
@@ -103,6 +104,7 @@ public class TicketCommentsServiceImpl implements TicketCommentsService {
                 .id(ticketComments.getId())
                 .timestamp(ticketComments.getTimestamp())
                 .comment(ticketComments.getComment())
+                .name(ticketComments.getName())
                 .message(ticketComments.getMessage())
                 .status(ticketComments.getStatus())
                 .ticket(ticketComments.getTicket())
@@ -114,6 +116,7 @@ public class TicketCommentsServiceImpl implements TicketCommentsService {
                 .id(ticketCommentsDto.getId())
                 .timestamp(ticketCommentsDto.getTimestamp())
                 .comment(ticketCommentsDto.getComment())
+                .name(ticketCommentsDto.getName())
                 .message(ticketCommentsDto.getMessage())
                 .status(ticketCommentsDto.getStatus())
                 .ticket(ticketCommentsDto.getTicket())
