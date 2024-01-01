@@ -12,6 +12,7 @@ import { SessionStorageService } from "../../auth/service/session-storage.servic
 import { TicketCommentsService } from "../service/ticket-comments.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
+import { FormvalidationService } from "../service/formvalidation.service";
 
 @Component({
   selector: "app-ticketitem",
@@ -30,7 +31,8 @@ export class TicketitemComponent implements OnInit {
     private _airbillService: AirbillService,
     public sessionStorageService: SessionStorageService,
     private commentsService: TicketCommentsService,
-    private messageServie: MessageService
+    private messageServie: MessageService,
+    private formService: FormvalidationService
   ) {}
 
   loginUserName?;
@@ -105,6 +107,7 @@ export class TicketitemComponent implements OnInit {
     if (this.postCommentForm.valid) {
       let data = {
         comment: this.postCommentForm.value.postComment,
+        name: localStorage.getItem("loginUserName"),
         ticket: { id: this.id },
       };
       if (this.editMode) {
@@ -132,6 +135,7 @@ export class TicketitemComponent implements OnInit {
         });
       }
     } else {
+      this.formService.markFormGroupTouched(this.postCommentForm);
       this.messageServie.add({
         severity: "error",
         summary: "Error",

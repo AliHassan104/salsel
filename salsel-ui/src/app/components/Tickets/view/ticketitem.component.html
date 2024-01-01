@@ -100,43 +100,46 @@
 
 <div class="grid">
     <div class="col-12">
-        <div class="card p-fluid comments-box">
+        <div class="card p-fluid">
             <div class="flex align-items-center mb-4 font-bold"><span class="text-xl text-900 mr-4">Comments</span><span
                     class="inline-flex align-items-center justify-content-center w-2rem h-2rem border-1 surface-border border-round">{{commentCount}}</span>
             </div>
-            <ul class="list-none p-0 m-0">
-                <ng-container *ngFor="let comment of ticketComments; let index = i">
-                    <li class="grid p-3 mb-5 border-1 surface-border border-round ng-star-inserted custom-li"
-                        *ngIf="comment?.comment">
-                        <div class="col-12 " style="background-color: #eff3f8; border-radius: 10px;">
-                            <div class="flex">
-                                <p-avatar shape="circle" [label]="loginUser"
-                                    styleClass="w-3rem h-3rem mr-3 flex-shrink-0 customA" size="xlarge"></p-avatar>
-                                <div class="w-100 timeStamp">
-                                    <p class="font-semibold mb-0 text-xl text-900">{{loginUserName | titlecase}}
-                                    </p>
-                                    <p class="font-semibold text-600 text-sm mb-0">{{comment?.timestamp}}
-                                        <i class="pi pi-file-edit font-semibold text-600 mb-0"
-                                            (click)="onEdit(comment.id)"></i>
-                                        <i class="pi pi-trash font-semibold text-600 mb-0"
-                                            (click)="onDelete(comment.id)"></i>
-                                    </p>
+            <div class="card p-fluid comments-box" *ngIf="commentCount > 0">
+                <ul class="list-none p-0 m-0">
+                    <ng-container *ngFor="let comment of ticketComments; let index = i">
+                        <li class="grid p-3 mb-5 border-1 surface-border border-round ng-star-inserted custom-li"
+                            *ngIf="comment?.comment">
+                            <div class="col-12 " style="background-color: #eff3f8; border-radius: 10px;">
+                                <div class="flex">
+                                    <p-avatar shape="circle" [label]="loginUser"
+                                        styleClass="w-3rem h-3rem mr-3 flex-shrink-0 customA" size="xlarge"></p-avatar>
+                                    <div class="w-100 timeStamp">
+                                        <p class="font-semibold mb-0 text-xl text-900">{{comment?.name | titlecase}}
+                                        </p>
+                                        <p class="font-semibold text-600 text-sm mb-0">{{comment?.timestamp}}
+                                            <i class="pi pi-file-edit font-semibold text-600 mb-0"
+                                                (click)="onEdit(comment.id)"></i>
+                                            <i class="pi pi-trash font-semibold text-600 mb-0"
+                                                (click)="onDelete(comment.id)"></i>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <p class="line-height-3 mb-0 mb-3" style="margin-left: 4rem;">{{comment?.comment}}
-                            </p>
-                        </div>
-                    </li>
-                </ng-container>
-            </ul>
+                                <p class="line-height-3 mb-0 mb-3" style="margin-left: 4rem;">{{comment?.comment}}
+                                </p>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
         </div>
 
         <div class="card">
             <form [formGroup]="postCommentForm" (ngSubmit)="onPostComment()">
                 <div class="mb-3 p-fluid">
                     <textarea #textArea pInputTextarea rows="4" placeholder="Enter Your Reply"
-                        formControlName="postComment"></textarea>
+                        formControlName="postComment"
+                        [ngClass]="{'ng-dirty':postCommentForm.get('postComment')?.touched && postCommentForm.get('postComment')?.invalid}"></textarea>
                 </div>
                 <div class="flex justify-content-end">
                     <button *ngIf="editMode" pButton label="Cancel" type="button" class="mr-4 cancelBtn"

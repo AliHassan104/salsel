@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AuthGuardService } from "./auth-guard.service";
 import { BehaviorSubject } from "rxjs";
+import { UserService } from "../usermanagement/service/user.service";
 
 @Injectable({
   providedIn: "root",
@@ -9,7 +10,12 @@ export class SessionStorageService {
   userPermissions: string[] = [];
   roleName: String;
 
-  constructor(private authGuardSerivce: AuthGuardService) {}
+  constructor(
+    private authGuardSerivce: AuthGuardService,
+    private UserService: UserService
+  ) {
+    this.updatePermission();
+  }
 
   updatePermission() {
     const token = localStorage.getItem("token");

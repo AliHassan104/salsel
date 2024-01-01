@@ -21,6 +21,7 @@ public class TicketCommentsDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
+    private String name;
     private String comment;
     private String message;
     private Ticket ticket;

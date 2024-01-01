@@ -20,8 +20,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private formService: FormvalidationService,
-    private userService: UserService,
-    private SessionStorageService: SessionStorageService
+    private userService: UserService
   ) {}
   loginForm!: FormGroup;
   token;
@@ -45,12 +44,9 @@ export class LoginComponent implements OnInit {
         (res) => {
           this.token = res;
           localStorage.setItem("token", this.token.jwt);
+          localStorage.setItem("loginUserEmail", value.email);
           this.router.navigate([""]);
           this.loginForm.reset();
-          this.userService.getUserByEmail(value.email).subscribe((res: any) => {
-            localStorage.setItem("loginUserEmail", res.email);
-            localStorage.setItem("loginUserName", res.name);
-          });
         },
         (error) => {
           this.showError(error);
