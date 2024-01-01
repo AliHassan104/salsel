@@ -3,7 +3,7 @@ import { Component, ElementRef, ViewChild } from "@angular/core";
 import { CityService } from "../service/city.service";
 import { Router } from "@angular/router";
 import { Table } from "primeng/table";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({

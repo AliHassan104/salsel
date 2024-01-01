@@ -4,7 +4,7 @@ import { Table } from "primeng/table";
 import { IDepartmentCategory } from "src/app/components/department-category/model/department-category.model";
 import { DepartmentCategoryService } from "../service/department-category.service";
 import { MessageService } from "primeng/api";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({

@@ -175,10 +175,13 @@
                             {{ data?.createdAt }}
                         </td>
                         <td>
-                            {{ data?.ticketStatus }}
+                            {{data?.ticketStatus}}
+                            <!-- <p-tag styleClass="custom" [severity]="getStatusClass(data?.ticketStatus)"
+                                [value]="data?.ticketStatus"></p-tag> -->
                         </td>
                         <td>
-                            {{ data?.ticketFlag }}
+                            {{data?.ticketFlag}}
+                            <!-- <p-tag [severity]="getPriorityClass(data?.ticketFlag)" [value]="data?.ticketFlag"></p-tag> -->
                         </td>
                         <td>
                             {{ data?.category }}

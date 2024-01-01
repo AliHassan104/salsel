@@ -4,7 +4,7 @@ import { Table } from "primeng/table";
 import { IProductType } from "src/app/components/product-type/model/productType.model";
 import { ProductTypeService } from "../service/product-type.service";
 import { MessageService } from "primeng/api";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 @Component({
   selector: "app-product-type-list",

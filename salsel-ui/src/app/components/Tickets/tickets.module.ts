@@ -28,9 +28,20 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { PaginatorModule } from "primeng/paginator";
 import { TooltipModule } from "primeng/tooltip";
+import { DaysAgoPipe } from "./pipe/days-ago.pipe";
+import { PartialEmailPipe } from "./pipe/partial-email.pipe";
+import { AvatarModule } from "primeng/avatar";
+import { AvatarGroupModule } from "primeng/avatargroup";
+import { AutoFocusModule } from "primeng/autofocus";
+import { TagModule } from "primeng/tag";
 
 @NgModule({
-  declarations: [TicketitemComponent, TicketsdataComponent],
+  declarations: [
+    TicketitemComponent,
+    TicketsdataComponent,
+    DaysAgoPipe,
+    PartialEmailPipe,
+  ],
   imports: [
     CommonModule,
     TableModule,
@@ -59,6 +70,10 @@ import { TooltipModule } from "primeng/tooltip";
     RadioButtonModule,
     PaginatorModule,
     TooltipModule,
+    AvatarModule,
+    AvatarGroupModule,
+    AutoFocusModule,
+    TagModule,
   ],
 })
 export class TicketsModule {}

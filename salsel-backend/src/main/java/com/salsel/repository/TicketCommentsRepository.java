@@ -27,4 +27,7 @@ public interface TicketCommentsRepository extends JpaRepository<TicketComments, 
 
     @Query("SELECT tc FROM TicketComments tc WHERE tc.ticket.id = :ticketCommentsId AND tc.status = true")
     List<TicketComments> findAllByTicketCommentsWhereStatusIsTrue(Long ticketCommentsId);
+
+    @Query("SELECT tc FROM TicketComments tc Where tc.ticket.id = :ticketId AND tc.status = true")
+    List<TicketComments>getAllByTicketIdWhereStatusIsTrue(Long ticketId);
 }

@@ -94,6 +94,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto findByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return toDto(user);
+        } else {
+            throw new RecordNotFoundException(String.format("User not found for email => %s", email));
+        }
+    }
+
+    @Override
     public UserDto findByName(String name) {
         User user = userRepository.findByName(name)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for name => %s", name)));

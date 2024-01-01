@@ -12,6 +12,7 @@ public interface UserService {
     List<UserDto> getAll(Boolean status);
     UserDto findById(Long id);
     UserDto findByName(String name);
+    UserDto findByEmail(String email);
     void deleteById(Long id);
     void setToActiveById(Long id);
     UserDto update(Long id, UserDto userDto);

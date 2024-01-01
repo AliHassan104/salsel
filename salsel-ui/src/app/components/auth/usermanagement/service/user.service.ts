@@ -30,6 +30,10 @@ export class UserService {
     return this.http.get(`${this.url}user/name/${name}`);
   }
 
+  getUserByEmail(email: string) {
+    return this.http.get(`${this.url}user/email/${email}`);
+  }
+
   updateUserStatus(id: any) {
     return this.http.put(`${this.url}user/status/${id}`, {});
   }

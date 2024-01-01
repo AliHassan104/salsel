@@ -1,32 +1,81 @@
-import { Component, OnInit } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
 import { AirbillService } from "../../awb/service/airbill.service";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
+import { TicketCommentsService } from "../service/ticket-comments.service";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { MessageService } from "primeng/api";
 
 @Component({
   selector: "app-ticketitem",
   templateUrl: "./ticketitem.component.html",
   styleUrls: ["./ticketitem.component.scss"],
+  providers: [MessageService],
 })
 export class TicketitemComponent implements OnInit {
+  @ViewChild("textArea") textArea!: ElementRef;
+
+  editMode: any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private _ticketService: TicktingService,
     private router: Router,
     private _airbillService: AirbillService,
-    public sessionStorageService: SessionStorageService
+    public sessionStorageService: SessionStorageService,
+    private commentsService: TicketCommentsService,
+    private messageServie: MessageService
   ) {}
+
+  loginUserName?;
+  loginUserEmail?;
+  loginUser;
+
   display: any;
   singleTicket: any;
   id: any;
 
+  ticketComments?;
+  singleComment?;
+  commentCount?;
+
+  postCommentForm!: FormGroup;
+
   ngOnInit(): void {
+    this.formSetup();
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
-
+      this.id = a;
       this.onView(a);
     });
+
+    this.getAllTicketComments();
+
+    this.loginUserName = localStorage.getItem("loginUserName");
+    this.loginUserEmail = localStorage.getItem("loginUserEmail");
+    this.loginUser = this.loginUserName.charAt(0).toUpperCase();
+  }
+
+  formSetup() {
+    this.postCommentForm = new FormGroup({
+      postComment: new FormControl(null, Validators.required),
+    });
+  }
+
+  getAllTicketComments() {
+    this.commentsService
+      .getAllTicketCommentsByTicketId(this.id)
+      .subscribe((res: any) => {
+        this.ticketComments = res;
+        console.log(this.ticketComments);
+        this.commentCount = this.ticketComments.length;
+      });
   }
 
   //   On Single Ticket View
@@ -34,6 +83,78 @@ export class TicketitemComponent implements OnInit {
     this.display = true;
     this._ticketService.getSingleTicket(id).subscribe((res) => {
       this.singleTicket = res;
+    });
+  }
+
+  onEdit(id) {
+    this.commentsService.getTicketCommentById(id).subscribe((res: any) => {
+      this.editMode = true;
+      this.singleComment = res;
+      this.textArea.nativeElement.focus();
+      this.postCommentForm.setValue({
+        postComment: this.singleComment.comment,
+      });
+    });
+  }
+  onCancel() {
+    this.editMode = false;
+    this.postCommentForm.reset();
+  }
+
+  onPostComment() {
+    if (this.postCommentForm.valid) {
+      let data = {
+        comment: this.postCommentForm.value.postComment,
+        ticket: { id: this.id },
+      };
+      if (this.editMode) {
+        this.commentsService
+          .updateTicketComment(this.singleComment.id, data)
+          .subscribe((res: any) => {
+            this.getAllTicketComments();
+            this.messageServie.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Sucessfully Updated",
+            });
+            this.editMode = false;
+            this.postCommentForm.reset();
+          });
+      } else {
+        this.commentsService.createTicketComment(data).subscribe((res: any) => {
+          this.messageServie.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Posted Successfully",
+          });
+          this.getAllTicketComments();
+          this.postCommentForm.reset();
+        });
+      }
+    } else {
+      this.messageServie.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Fill the Required Field",
+      });
+    }
+  }
+
+  onDelete(id) {
+    this.commentsService.deleteTicketComment(id).subscribe((res: any) => {
+      this.getAllTicketComments();
+      this.messageServie.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Deleted Successfully",
+      });
+    });
+  }
+
+  updateTicket(id) {
+    const queryParams = { updateMode: "true", id: id };
+    this.router.navigate(["create-ticket"], {
+      queryParams: queryParams,
     });
   }
 
@@ -46,5 +167,39 @@ export class TicketitemComponent implements OnInit {
         queryParams: queryParams,
       });
     });
+  }
+
+  getPriorityClass(): string {
+    switch (this.singleTicket?.ticketFlag) {
+      case "Normal":
+        return "normal";
+      case "Urgent":
+        return "urgent";
+      case "Priority":
+        return "priority";
+      case "Extreme Urgent":
+        return "extreme-urgent";
+      default:
+        return "";
+    }
+  }
+
+  getStatusClass(): string {
+    switch (this.singleTicket?.ticketStatus) {
+      case "Open":
+        return "open-status";
+      case "Closed":
+        return "closed-status";
+      case "On-Hold":
+        return "on-hold-status";
+      case "Under Process":
+        return "underprocess-status";
+      case "Overdue Escalation":
+        return "overdue-escalation-status";
+      case "Held-FI":
+        return "held-fi-status";
+      default:
+        return "";
+    }
   }
 }

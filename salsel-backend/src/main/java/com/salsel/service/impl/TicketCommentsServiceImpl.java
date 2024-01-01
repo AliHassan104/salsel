@@ -55,6 +55,18 @@ public class TicketCommentsServiceImpl implements TicketCommentsService {
     }
 
     @Override
+    public List<TicketCommentsDto> getAllCommentsByTicketId(Long ticketId) {
+        List<TicketComments> ticketCommentsList = ticketCommentsRepository.getAllByTicketIdWhereStatusIsTrue(ticketId);
+        List<TicketCommentsDto> ticketCommentsDtoList = new ArrayList<>();
+
+        for (TicketComments ticketComments : ticketCommentsList) {
+            TicketCommentsDto ticketCommentsDto = toDto(ticketComments);
+            ticketCommentsDtoList.add(ticketCommentsDto);
+        }
+        return ticketCommentsDtoList;
+    }
+
+    @Override
     @Transactional
     public void deleteById(Long id) {
         TicketComments ticketComments = ticketCommentsRepository.findById(id)

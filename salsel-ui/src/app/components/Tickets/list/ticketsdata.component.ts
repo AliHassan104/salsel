@@ -3,7 +3,7 @@ import { TicktingService } from "src/app/components/Tickets/service/tickting.ser
 import { Table } from "primeng/table";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 
@@ -63,10 +63,7 @@ export class TicketsdataComponent implements OnInit {
 
   //   For table filtering purpose
   onGlobalFilter(table: Table, event: any) {
-    // Update the searchText property in the search object
     table.filterGlobal((event.target as HTMLInputElement).value, "contains");
-    // this.serachText = event.target.value;
-    // this.getTickets();
   }
 
   clear(table: Table) {
@@ -140,5 +137,39 @@ export class TicketsdataComponent implements OnInit {
       summary: "Success",
       detail: "Deactivation Successfull",
     });
+  }
+
+  getPriorityClass(value: any): string {
+    switch (value) {
+      case "Normal":
+        return "primary";
+      case "Urgent":
+        return "warning";
+      case "Priority":
+        return "success";
+      case "Extreme Urgent":
+        return "danger";
+      default:
+        return "";
+    }
+  }
+
+  getStatusClass(value: any): string {
+    switch (value) {
+      case "Open":
+        return "primary";
+      case "Closed":
+        return "danger";
+      case "On-Hold":
+        return "warning";
+      case "Under Process":
+        return "success";
+      case "Overdue Escalation":
+        return "warning";
+      case "Held-FI":
+        return "success";
+      default:
+        return "";
+    }
   }
 }

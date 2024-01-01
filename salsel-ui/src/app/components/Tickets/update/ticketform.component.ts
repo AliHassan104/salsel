@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { MessageService } from "primeng/api";
 import { environment } from "src/environments/environment";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { FormvalidationService } from "../service/formvalidation.service";
 import { CountryService } from "../../country/service/country.service";
 import { CityService } from "../../City/service/city.service";
@@ -327,7 +327,7 @@ export class TicketformComponent implements OnInit {
         ticketFlag: formValue.ticketFlag,
         department: formValue.department,
         departmentCategory: formValue.departmentCategory,
-        createdBy: localStorage.getItem("loginUserName"),
+        createdBy: localStorage.getItem("loginUserEmail"),
       };
 
       if (this.editMode) {

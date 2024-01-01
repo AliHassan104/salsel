@@ -37,6 +37,13 @@ public class TicketCommentsController {
         return ResponseEntity.ok(ticketCommentsDto);
     }
 
+    @GetMapping("/ticket-comments/ticket/{id}")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
+    public ResponseEntity<List<TicketCommentsDto>> getAllCommentsByTicketId(@PathVariable Long id) {
+        List<TicketCommentsDto> ticketCommentsDtoList = ticketCommentsService.getAllCommentsByTicketId(id);
+        return ResponseEntity.ok(ticketCommentsDtoList);
+    }
+
     @DeleteMapping("/ticket-comments/{id}")
     @PreAuthorize("hasAuthority('DELETE_TICKET') and hasAuthority('READ_TICKET')")
     public ResponseEntity<Void> deleteTicketComments(@PathVariable Long id) {

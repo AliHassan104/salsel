@@ -8,17 +8,15 @@
         <i class="pi pi-bars"></i>
     </button>
 
-    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
+    <button #topbarmenubutton class="p-link custom-btn layout-topbar-menu-button layout-topbar-button"
         (click)="layoutService.showProfileSidebar()">
-        <i class="pi pi-ellipsis-v"></i>
+        <p-avatar shape="circle" [label]="loginUserName" styleClass="w-3rem h-3rem mr-3 flex-shrink-0 customAvatar"
+            size="xlarge"></p-avatar>
     </button>
+
 
     <div #topbarmenu class="layout-topbar-menu"
         [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-calendar"></i>
-            <span>Calendar</span>
-        </button>
         <button class="p-link layout-topbar-button">
             <i class="pi pi-user"></i>
             <span>Profile</span>

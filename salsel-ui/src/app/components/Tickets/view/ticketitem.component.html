@@ -1,44 +1,153 @@
-<div class="card">
-    <div class="flex justify-content-between ">
-        <h1 class=""
-            style="color: #93003c; font-size: 19px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
-            Ticket Details</h1>
-        <button *ngIf="this.sessionStorageService.hasPermission('CREATE_AWB')" pButton label="Create AWB"
-            (click)="createAwb()"></button>
-    </div>
-    <div class="grid custom-modal">
-
-        <div class="col-12 md:col-6 lg:col-6 mt-3 ">
-            <h2>SHIPPER DETAILS</h2>
-            <p><strong>Shipper Name:</strong> {{singleTicket?.shipperName}}</p>
-            <p><strong>Shipper Contact No:</strong> {{singleTicket?.shipperContactNumber}}</p>
-            <p><strong>Pickup Address:</strong> {{singleTicket?.pickupAddress}}</p>
-            <p><strong>Shipper Ref Number: </strong>{{singleTicket?.shipperRefNumber}}</p>
-            <p><strong>Origin Country:</strong> {{singleTicket?.originCountry}}</p>
-            <p><strong>Origin City:</strong> {{singleTicket?.originCity}}</p>
-        </div>
-        <div class="col-12 md:col-6 lg:col-6 mt-3">
-            <h2>RECIPIENT DETAILS</h2>
-            <p><strong>Recipient Name:</strong> {{singleTicket?.recipientName}}</p>
-            <p><strong>Contact No:</strong> {{singleTicket?.recipientContactNumber}}</p>
-            <p><strong>Delivery Address:</strong> {{singleTicket?.deliveryAddress}}</p>
-            <p><strong>Destination Country:</strong> {{singleTicket?.destinationCountry}}</p>
-            <p><strong>Destination City:</strong> {{singleTicket?.destinationCity}}</p>
-        </div>
-        <div class="col-12">
-            <h2>OTHER DETAILS</h2>
-            <p><strong>Department:</strong> {{singleTicket?.department}}</p>
-            <p><strong>Department Category:</strong> {{singleTicket?.departmentCategory}}</p>
-            <p><strong>Pickup Date:</strong> {{singleTicket?.pickupDate}}</p>
-            <p><strong>Pickup Time:</strong>
-                {{singleTicket?.pickupTime}}</p>
-            <p><strong>Assigned To:</strong> {{singleTicket?.assignedTo}}</p>
-            <p><strong>Category:</strong> {{singleTicket?.category}}</p>
-            <p><strong>Created At:</strong> {{singleTicket?.createdAt}}</p>
-            <!-- <p><strong>Created By:</strong> {{singleTicket?.createdBy.name}}</p> -->
-            <p><strong>Ticket Status:</strong> {{singleTicket?.ticketStatus}}</p>
-            <p><strong>Ticket Flag:</strong> {{singleTicket?.ticketFlag}}</p>
-
+<div class="grid">
+    <div class="col-12">
+        <div class="card flex justify-content-between align-items-center">
+            <h1 class="m-0"
+                style="color: #93003c; font-size: 19px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700; font-size: 24px;">
+                Ticket Details</h1>
+            <button *ngIf="this.sessionStorageService.hasPermission('CREATE_AWB')" pButton label="Create AWB"
+                (click)="createAwb()"></button>
         </div>
     </div>
 </div>
+
+<div class="grid">
+    <div class="col-12 lg:col-8">
+        <div class="card p-fluid">
+            <div class="grid customP">
+                <div class="col-12 md:col-6">
+                    <h4>Shipper Infomation</h4>
+                    <p><strong>Shipper Name:</strong> {{singleTicket?.shipperName}}</p>
+                    <p><strong>Shipper Contact Number:</strong> {{singleTicket?.shipperContactNumber}}</p>
+                    <p><strong>Pickup Address:</strong> {{singleTicket?.pickupAddress}}</p>
+                    <p><strong>Shipper Ref Number: </strong>{{singleTicket?.shipperRefNumber}}</p>
+                    <p><strong>Origin Country:</strong> {{singleTicket?.originCountry}}</p>
+                    <p><strong>Origin City:</strong> {{singleTicket?.originCity}}</p>
+                </div>
+                <div class="col-12 md:col-6">
+                    <h4>Recipient Infomation</h4>
+                    <p><strong>Recipient Name:</strong> {{singleTicket?.recipientName}}</p>
+                    <p><strong>Recipient Contact Number:</strong> {{singleTicket?.recipientContactNumber}}</p>
+                    <p><strong>Delivery Address:</strong> {{singleTicket?.deliveryAddress}}</p>
+                    <p><strong>Destination Country:</strong> {{singleTicket?.destinationCountry}}</p>
+                    <p><strong>Destination City:</strong> {{singleTicket?.destinationCity}}</p>
+                </div>
+                <div class="col-12 md:col-6">
+                    <h4>Department Information</h4>
+                    <p><strong>Department:</strong> {{singleTicket?.department}}</p>
+                    <p><strong>Department Category:</strong> {{singleTicket?.departmentCategory}}</p>
+                </div>
+                <div class="col-12 md:col-6">
+                    <h4>Schedule Information</h4>
+                    <p><strong>Pickup Date:</strong> {{singleTicket?.pickupDate}}</p>
+                    <p><strong>Pickup Time: </strong> {{singleTicket?.pickupTime}}</p>
+                </div>
+                <div class="col-12 md:col-6">
+                    <h4>Inquiry Information</h4>
+                    <p><strong>Category:</strong> {{singleTicket?.category}}</p>
+                    <p><strong>Created At:</strong> {{singleTicket?.createdAt}}</p>
+                    <p><strong>Created By:</strong> {{singleTicket?.createdBy}}</p>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <h4>Ticket Status</h4>
+                    <p><strong>Status:</strong> {{singleTicket?.ticketStatus}}</p>
+                    <p><strong>Flag:</strong> {{singleTicket?.ticketFlag}}</p>
+                </div>
+                <div class="col-12 md:col-6">
+                    <h4>Assignment Details</h4>
+                    <p><strong>Assigned To:</strong> {{singleTicket?.assignedTo}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12 lg:col-4">
+        <div class="card p-fluid">
+            <div class="grid">
+                <h5 class="col-8 m-0">
+                    <i class="pi pi-check-circle mr-3"></i>
+                    Status
+                </h5>
+            </div>
+            <div class="grid p-fluid mb-5 mt-2">
+                <button class="uppercase customBtn" [label]="singleTicket?.ticketStatus" [ngClass]="getStatusClass()"
+                    pButton></button>
+            </div>
+            <div class="grid">
+                <p class="col-12 py-1 mb-0"><span>Created:</span> {{singleTicket?.createdAt | daysAgo}}</p>
+                <p class="col-12 py-1 mb-0"><span>Due Date:</span> {{singleTicket?.pickupDate}}</p>
+                <p class="col-12 py-1 mb-0"><span>Department:</span> {{singleTicket?.department}}</p>
+                <p class="col-12 py-1 mb-0"><span>Ticket Id:</span> {{singleTicket?.id}}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="grid">
+                <h5 class="col-8 m-0"> <i class="pi pi-money-bill mr-3
+ "></i> Priority
+                </h5>
+                <p (click)="updateTicket(singleTicket?.id)" class="col-4 headingP text-right inline-flex">Change</p>
+            </div>
+            <div class="grid p-fluid my-2">
+                <button class="uppercase customBtn" [ngClass]="getPriorityClass()" [label]="singleTicket?.ticketFlag"
+                    pButton></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card p-fluid comments-box">
+            <div class="flex align-items-center mb-4 font-bold"><span class="text-xl text-900 mr-4">Comments</span><span
+                    class="inline-flex align-items-center justify-content-center w-2rem h-2rem border-1 surface-border border-round">{{commentCount}}</span>
+            </div>
+            <ul class="list-none p-0 m-0">
+                <ng-container *ngFor="let comment of ticketComments; let index = i">
+                    <li class="grid p-3 mb-5 border-1 surface-border border-round ng-star-inserted custom-li"
+                        *ngIf="comment?.comment">
+                        <div class="col-12 " style="background-color: #eff3f8; border-radius: 10px;">
+                            <div class="flex">
+                                <p-avatar shape="circle" [label]="loginUser"
+                                    styleClass="w-3rem h-3rem mr-3 flex-shrink-0 customA" size="xlarge"></p-avatar>
+                                <div class="w-100 timeStamp">
+                                    <p class="font-semibold mb-0 text-xl text-900">{{loginUserName | titlecase}}
+                                    </p>
+                                    <p class="font-semibold text-600 text-sm mb-0">{{comment?.timestamp}}
+                                        <i class="pi pi-file-edit font-semibold text-600 mb-0"
+                                            (click)="onEdit(comment.id)"></i>
+                                        <i class="pi pi-trash font-semibold text-600 mb-0"
+                                            (click)="onDelete(comment.id)"></i>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p class="line-height-3 mb-0 mb-3" style="margin-left: 4rem;">{{comment?.comment}}
+                            </p>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+
+        <div class="card">
+            <form [formGroup]="postCommentForm" (ngSubmit)="onPostComment()">
+                <div class="mb-3 p-fluid">
+                    <textarea #textArea pInputTextarea rows="4" placeholder="Enter Your Reply"
+                        formControlName="postComment"></textarea>
+                </div>
+                <div class="flex justify-content-end">
+                    <button *ngIf="editMode" pButton label="Cancel" type="button" class="mr-4 cancelBtn"
+                        (click)="onCancel()"></button>
+                    <button pButton [label]="editMode ? 'Update' : 'Post Comment'" type="submit" class="w-10rem">
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

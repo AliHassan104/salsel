@@ -37,6 +37,13 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
+    @GetMapping("/user/email/{email}")
+    @PreAuthorize("hasAuthority('READ_USER')")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+        UserDto userDto = userService.findByEmail(email);
+        return ResponseEntity.ok(userDto);
+    }
+
     @DeleteMapping("/user/{id}")
     @PreAuthorize("hasAuthority('DELETE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

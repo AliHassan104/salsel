@@ -4,7 +4,7 @@ import { Table } from "primeng/table";
 import { ServiceTypeService } from "../service/service-type.service";
 import { IServiceType } from "src/app/components/service-type/model/serviceType.model";
 import { MessageService } from "primeng/api";
-import { DropdownService } from "../../../service/dropdown.service";
+import { DropdownService } from "../../../layout/service/dropdown.service";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 
 @Component({
