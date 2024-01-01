@@ -1,0 +1,58 @@
+.header {
+    height: 65px;
+    float: left;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background: #32373c;
+    border: 1px solid #ebecec;
+}
+
+.container {
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    margin-top: 100px;
+}
+
+
+
+
+.table tbody tr td {
+    padding: 15px 0 10px 0;
+}
+
+
+.action-edit,
+.action-delete,
+.action-enforce-delete {
+    float: left;
+    padding: 0 10px;
+    margin-right: 5px;
+    height: auto;
+    line-height: 36px;
+    vertical-align: middle;
+    border-radius: 0;
+    border: 1px solid #ebecec;
+    background: #fff;
+    color: #575455;
+}
+
+.action-edit i {
+    color: #1572e8;
+}
+.action-delete i {
+    color: #ce7172;
+}
+.action-enforce-delete  i {
+    color: #ce7172;
+}
+
+.action-edit:hover {
+    border-color: #1572e8;
+    cursor: pointer;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1430px !important;
+    }
+}
