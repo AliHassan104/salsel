@@ -34,6 +34,7 @@ import { AvatarModule } from "primeng/avatar";
 import { AvatarGroupModule } from "primeng/avatargroup";
 import { AutoFocusModule } from "primeng/autofocus";
 import { TagModule } from "primeng/tag";
+import { SingleCharacterPipe } from './pipe/single-character.pipe';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { TagModule } from "primeng/tag";
     TicketsdataComponent,
     DaysAgoPipe,
     PartialEmailPipe,
+    SingleCharacterPipe,
   ],
   imports: [
     CommonModule,

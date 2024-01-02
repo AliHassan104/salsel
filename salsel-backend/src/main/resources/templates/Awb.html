@@ -17,10 +17,14 @@
     </div>
     <div class="content">
 <!--        <p>Fred L Scott <br></br> 20 Bridge St <br></br> Olney MK46 4AB <br></br> England</p>-->
+        <h3 class="h31">From:</h3>
         <p class="truncate-text p1" th:text="${shipperName} + '  -  ' + ${shipperContactNumber}"></p>
-        <p class="truncate-text p2" th:text="${pickupAddress}"></p>
-        <p class="truncate-text p3" th:text="${originCity} + '  -  ' + ${originCountry}"></p>
+        <p class="truncate-text p12" th:text="'Street Name' + '  -  ' + 'District'"></p>
+<!--        <p class="truncate-text p2" th:text="${pickupAddress}"></p>-->
+        <p class="truncate-text p2" th:text="${originCity} + '  -  ' + ${originCountry}"></p>
+        <h3 class="h32">To:</h3>
         <p class="truncate-text p4" th:text="${recipientsName} + '  -  ' +  ${recipientsContactNumber}"></p>
+        <p class="truncate-text p42" th:text="'Street Name' + '  -  ' + 'District'"></p>
         <p class="truncate-text p5" th:text="${deliveryAddress}"></p>
         <p class="truncate-text p6" th:text="${destinationCity} + '  -  ' +  ${destinationCountry}"></p>
         <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
@@ -30,10 +34,10 @@
     </div>
     <div class="footer">
         <div class="para">
-            <p class="b1" th:text="${shipperRefNumber}"></p>
-            <p class="b2" th:text="${content}"></p>
-            <p class="b3" th:text="${amount} + '  /  ' +${currency}"></p>
-            <p class="b4" th:text="${weight} + ' kg' +  '  -  '  +  ${pieces} + ' Pieces'"></p>
+            <p class="b1" th:text="'Ref:' + ${shipperRefNumber}"></p>
+            <p class="b2" th:text="'Content: '  + ${content}"></p>
+            <p class="b3" th:text="'Custom Value: ' +  ${amount} + '  /  Currency: ' +${currency}"></p>
+            <p class="b4" th:text="'Weight: '  + ${weight} + ' kg' +  '  /  Pieces: '  +  ${pieces}"></p>
         </div>
         <div class="code">
             <p class="code-service" th:text="'SSCFCD'"></p>

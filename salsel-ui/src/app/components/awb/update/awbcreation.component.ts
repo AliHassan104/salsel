@@ -109,6 +109,11 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       amount: new FormControl(null, Validators.required),
       dutyAndTaxesBillTo: new FormControl(null, Validators.required),
       requestType: new FormControl(null, Validators.required),
+      accountNumber: new FormControl(null, Validators.required),
+      deliveryStreetName: new FormControl(null),
+      deliveryDistrict: new FormControl(null),
+      pickupStreetName: new FormControl(null),
+      pickupDistrict: new FormControl(null),
     });
   }
 

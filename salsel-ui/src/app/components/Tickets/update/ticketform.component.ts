@@ -45,6 +45,7 @@ export class TicketformComponent implements OnInit {
 
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
+  ticketType?: string[];
 
   //   CONSTRUCTOR
   constructor(
@@ -99,6 +100,12 @@ export class TicketformComponent implements OnInit {
       category: new FormControl(null, Validators.required),
       ticketStatus: new FormControl(null, Validators.required),
       ticketFlag: new FormControl(null, Validators.required),
+      deliveryStreetName: new FormControl(null),
+      deliveryDistrict: new FormControl(null),
+      pickupStreetName: new FormControl(null),
+      pickupDistrict: new FormControl(null),
+      ticketType: new FormControl(null, Validators.required),
+      weight: new FormControl(null),
     });
   }
 
@@ -159,6 +166,7 @@ export class TicketformComponent implements OnInit {
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
+      console.log(res);
 
       //   Categories From Product Field
       this.categories = this.dropdownService.extractNames(
@@ -173,6 +181,11 @@ export class TicketformComponent implements OnInit {
 
       this.status = this.dropdownService.extractNames(
         this.productFields.filter((data) => data.name == "Ticket Status")[0]
+          .productFieldValuesList
+      );
+
+      this.ticketType = this.dropdownService.extractNames(
+        this.productFields.filter((data) => data.name == "Product Type")[0]
           .productFieldValuesList
       );
     });
@@ -289,6 +302,8 @@ export class TicketformComponent implements OnInit {
   //  ON TICKET FORM SUBMIT
 
   onSubmit() {
+    console.log(this.ticketForm.value);
+
     if (this.ticketForm.valid) {
       // Date and Time get from form
       let ticketDate: Date = this.ticketForm.value.pickupDate;

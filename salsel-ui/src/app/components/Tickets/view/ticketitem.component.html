@@ -111,7 +111,7 @@
                             *ngIf="comment?.comment">
                             <div class="col-12 " style="background-color: #eff3f8; border-radius: 10px;">
                                 <div class="flex">
-                                    <p-avatar shape="circle" [label]="loginUser"
+                                    <p-avatar shape="circle" [label]="comment?.name | singleCharacter"
                                         styleClass="w-3rem h-3rem mr-3 flex-shrink-0 customA" size="xlarge"></p-avatar>
                                     <div class="w-100 timeStamp">
                                         <p class="font-semibold mb-0 text-xl text-900">{{comment?.name | titlecase}}

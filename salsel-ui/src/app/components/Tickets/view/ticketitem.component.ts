@@ -58,10 +58,6 @@ export class TicketitemComponent implements OnInit {
     });
 
     this.getAllTicketComments();
-
-    this.loginUserName = localStorage.getItem("loginUserName");
-    this.loginUserEmail = localStorage.getItem("loginUserEmail");
-    this.loginUser = this.loginUserName.charAt(0).toUpperCase();
   }
 
   formSetup() {
@@ -75,7 +71,6 @@ export class TicketitemComponent implements OnInit {
       .getAllTicketCommentsByTicketId(this.id)
       .subscribe((res: any) => {
         this.ticketComments = res;
-        console.log(this.ticketComments);
         this.commentCount = this.ticketComments.length;
       });
   }
