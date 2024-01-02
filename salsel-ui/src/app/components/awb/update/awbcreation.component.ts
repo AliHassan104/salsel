@@ -6,7 +6,7 @@ import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
 import { TicktingService } from "../../Tickets/service/tickting.service";
 import { environment } from "src/environments/environment";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
 import { CountryService } from "../../country/service/country.service";
@@ -109,6 +109,11 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       amount: new FormControl(null, Validators.required),
       dutyAndTaxesBillTo: new FormControl(null, Validators.required),
       requestType: new FormControl(null, Validators.required),
+      accountNumber: new FormControl(null, Validators.required),
+      deliveryStreetName: new FormControl(null),
+      deliveryDistrict: new FormControl(null),
+      pickupStreetName: new FormControl(null),
+      pickupDistrict: new FormControl(null),
     });
   }
 

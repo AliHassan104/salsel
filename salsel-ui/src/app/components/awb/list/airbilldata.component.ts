@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { Table } from "primeng/table";
 import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 

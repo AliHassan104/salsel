@@ -10,7 +10,7 @@
             </div>
             <hr>
             <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-                [globalFilterFields]="['shipperName','recipientName']" styleClass="p-datatable-gridlines"
+                [globalFilterFields]="['ticketStatus','ticketFlag','category']" styleClass="p-datatable-gridlines"
                 [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -40,7 +40,7 @@
                                 Created At
                             </div>
                         </th>
-                        <th style="min-width: 10rem">
+                        <th style="min-width: 13rem">
                             <div class="flex justify-content-center align-items-center">
                                 Ticket Status
                             </div>
@@ -60,7 +60,7 @@
                                 Assigned To
                             </div>
                         </th>
-                        <th style="min-width: 12rem">
+                        <th style="min-width: 14rem">
                             <div class="flex justify-content-center align-items-center">
                                 Department Category
                             </div>
@@ -175,10 +175,13 @@
                             {{ data?.createdAt }}
                         </td>
                         <td>
-                            {{ data?.ticketStatus }}
+                            {{data?.ticketStatus}}
+                            <!-- <p-tag styleClass="custom" [severity]="getStatusClass(data?.ticketStatus)"
+                                [value]="data?.ticketStatus"></p-tag> -->
                         </td>
                         <td>
-                            {{ data?.ticketFlag }}
+                            {{data?.ticketFlag}}
+                            <!-- <p-tag [severity]="getPriorityClass(data?.ticketFlag)" [value]="data?.ticketFlag"></p-tag> -->
                         </td>
                         <td>
                             {{ data?.category }}

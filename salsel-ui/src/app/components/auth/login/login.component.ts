@@ -20,13 +20,13 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private formService: FormvalidationService,
-    private userService: UserService,
-    private SessionStorageService: SessionStorageService
+    private userService: UserService
   ) {}
   loginForm!: FormGroup;
   token;
+
   ngOnInit(): void {
-    localStorage.removeItem("token");
+    localStorage.clear();
 
     this.loginForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
@@ -44,11 +44,9 @@ export class LoginComponent implements OnInit {
         (res) => {
           this.token = res;
           localStorage.setItem("token", this.token.jwt);
+          localStorage.setItem("loginUserEmail", value.email);
           this.router.navigate([""]);
           this.loginForm.reset();
-          //   this.userService.getUserByName(value.name).subscribe((res: any) => {
-          //     localStorage.setItem("loginUserName", res.name);
-          //   });
         },
         (error) => {
           this.showError(error);

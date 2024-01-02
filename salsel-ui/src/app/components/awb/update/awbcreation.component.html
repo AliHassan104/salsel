@@ -9,22 +9,38 @@
                 <!-- Shipper Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="shippername">Shipper Name</label>
-                    <input pInputText id="shippername" type="text" formControlName="shipperName" />
+                    <input pInputText id="shippername" type="text" formControlName="shipperName"
+                        placeholder="Enter Shipper Name" />
                 </div>
                 <!-- Shipper Contact -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contact">Contact Number</label>
-                    <input pInputText id="shipperContact" type="text" formControlName="shipperContactNumber" />
+                    <input pInputText id="shipperContact" type="text" formControlName="shipperContactNumber"
+                        placeholder="Enter Shipper Contact" />
                 </div>
                 <!-- Pickup Address -->
-                <div class="field col-12">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="address">Pickup Address</label>
-                    <input pInputTextarea id="address" rows="4" formControlName="pickupAddress" />
+                    <input pInputTextarea id="address" rows="4" formControlName="pickupAddress"
+                        placeholder="Enter Pickup Address" />
+                </div>
+                <!-- Street Name -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="deliveryStreetName">Street Name</label>
+                    <input pInputTextarea id="pickupStreetName" rows="4" formControlName="pickupStreetName"
+                        placeholder="Enter Street Name" />
+                </div>
+                <!-- District Address -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="pickupDistrict">District</label>
+                    <input pInputTextarea id="pickupDistrict" rows="4" formControlName="pickupDistrict"
+                        placeholder="Enter District" />
                 </div>
                 <!-- Shipper Ref Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="shipperRef">Shipper Ref Number</label>
-                    <input pInputText id="shipperRef" type="text" formControlName="shipperRefNumber" />
+                    <input pInputText id="shipperRef" type="text" formControlName="shipperRefNumber"
+                        placeholder="Enter Shipper Ref Number" />
                 </div>
                 <!-- Origin Country -->
                 <div class="field col-12 md:col-3">
@@ -42,17 +58,32 @@
                 <!-- Recipient Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="recipientname">Recipient Name</label>
-                    <input pInputText id="recipientname" type="text" formControlName="recipientsName" />
+                    <input pInputText id="recipientname" type="text" formControlName="recipientsName"
+                        placeholder="Enter Recipient Name" />
                 </div>
                 <!-- Recipient Contact Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contactR">Contact Number</label>
-                    <input pInputText id="recipientsContact" type="text" formControlName="recipientsContactNumber" />
+                    <input pInputText id="recipientsContact" type="text" formControlName="recipientsContactNumber"
+                        placeholder="Enter Recipient Contact" />
                 </div>
                 <!-- Delivery Address -->
-                <div class="field col-12">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="daddress">Delivery Address</label>
-                    <input pInputTextarea id="daddress" rows="4" formControlName="deliveryAddress" />
+                    <input pInputTextarea id="daddress" rows="4" formControlName="deliveryAddress"
+                        placeholder="Enter Delivery Address" />
+                </div>
+                <!-- Street Name -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="deliveryStreetName">Street Name</label>
+                    <input pInputTextarea id="deliveryStreetName" rows="4" formControlName="deliveryStreetName"
+                        placeholder="Enter Street Name" />
+                </div>
+                <!-- District Address -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="deliveryDistrict">District</label>
+                    <input pInputTextarea id="deliveryDistrict" rows="4" formControlName="deliveryDistrict"
+                        placeholder="Enter District" />
                 </div>
                 <!-- Destination Country -->
                 <div class="field col-12 md:col-3">
@@ -70,6 +101,7 @@
                 <div class="field col-12 md:col-6">
                     <label htmlFor="dcity">Pickup Date</label>
                     <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="pickupDate"
+                        placeholder="Select Pickup Date"
                         [ngClass]="{'ng-dirty':awbForm.get('pickupDate')?.touched && awbForm.get('pickupDate')?.invalid}"></p-calendar>
                     <small *ngIf="!awbForm.get('pickupDate')?.valid && awbForm.get('pickupDate')?.touched"
                         class="text-red-500">
@@ -81,7 +113,7 @@
                     <label htmlFor="dcity">Pickup Time</label>
                     <p-calendar [hourFormat]="24" [timeOnly]="true" formControlName="pickupTime" [showSeconds]="true"
                         [ngClass]="{'ng-dirty':awbForm.get('pickupTime')?.touched && awbForm.get('pickupTime')?.invalid}"
-                        [required]="true"></p-calendar>
+                        placeholder="Select Pickup Time" [required]="true"></p-calendar>
                     <small *ngIf="!awbForm.get('pickupTime')?.valid && awbForm.get('pickupTime')?.touched"
                         class="text-red-500">
                         Required
@@ -114,7 +146,7 @@
                     <label htmlFor="pieces">Pieces</label>
                     <input pInputText id="pieces" type="number" formControlName="pieces"
                         [ngClass]="{'ng-dirty':awbForm.get('pieces')?.touched && awbForm.get('pieces')?.invalid}"
-                        [required]="true" />
+                        placeholder="Enter Pieces" [required]="true" />
                     <small *ngIf="!awbForm.get('pieces')?.valid && awbForm.get('pieces')?.touched" class="text-red-500">
                         Required
                     </small>
@@ -124,7 +156,7 @@
                     <label htmlFor="weight">Weight</label>
                     <input pInputText id="weight" type="text" formControlName="weight"
                         [ngClass]="{'ng-dirty':awbForm.get('weight')?.touched && awbForm.get('weight')?.invalid}"
-                        [required]="true" />
+                        placeholder="Enter Weight" [required]="true" />
                     <small *ngIf="!awbForm.get('weight')?.valid && awbForm.get('weight')?.touched" class="text-red-500">
                         Required
                     </small>
@@ -134,14 +166,27 @@
                     <label htmlFor="content">Content</label>
                     <input pInputText id="content" type="text" formControlName="content"
                         [ngClass]="{'ng-dirty':awbForm.get('content')?.touched && awbForm.get('content')?.invalid}"
-                        [required]="true" />
+                        placeholder="Enter Content" [required]="true" />
                     <small *ngIf="!awbForm.get('content')?.valid && awbForm.get('content')?.touched"
                         class="text-red-500">
                         Required
                     </small>
                 </div>
-                <!-- Currency -->
+                <!-- Account Number -->
                 <div class="field col-12 md:col-6">
+                    <label htmlFor="accountNumber">Account Number</label>
+                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
+                        placeholder="Enter Account Number" formControlName="accountNumber"
+                        [ngClass]="{'ng-dirty':awbForm.get('accountNumber')?.touched && awbForm.get('accountNumber')?.invalid}"
+                        [required]="true">
+                    </p-inputNumber>
+                    <small *ngIf="!awbForm.get('accountNumber')?.valid && awbForm.get('accountNumber')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Currency -->
+                <div class="field col-12 md:col-3">
                     <label htmlFor="currency">Currency</label>
                     <p-dropdown [options]="currencies" class="w-4" formControlName="currency"
                         placeholder="Select a currency"
@@ -153,7 +198,7 @@
                     </small>
                 </div>
                 <!-- Amount -->
-                <div class="field col-12 md:col-6">
+                <div class="field col-12 md:col-3">
                     <label htmlFor="amount">Amount</label>
                     <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
                         placeholder="Enter Amount" formControlName="amount"
@@ -164,6 +209,7 @@
                         Required
                     </small>
                 </div>
+
                 <!-- Status -->
                 <!-- <div class="field col-12 md:col-6">
                     <label htmlFor="status">Status</label>

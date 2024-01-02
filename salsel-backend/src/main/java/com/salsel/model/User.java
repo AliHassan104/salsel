@@ -24,6 +24,9 @@ public class User {
 
     private String employeeId;
     private String name;
+    private String firstname;
+    private String lastname;
+    private String phone;
     private String email;
     private String password;
     private Boolean status;

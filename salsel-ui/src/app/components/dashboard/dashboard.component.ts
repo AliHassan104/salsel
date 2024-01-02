@@ -1,12 +1,9 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { MenuItem } from "primeng/api";
 import { Product } from "../../Api/product";
-import { ProductService } from "../../service/product.service";
 import { Subscription } from "rxjs";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
 import { TicktingService } from "../Tickets/service/tickting.service";
 import { AirbillService } from "../awb/service/airbill.service";
-import { accounts } from "../accounts/model/accountValuesDto";
 import { AccountService } from "../accounts/service/account.service";
 import { SessionStorageService } from "../auth/service/session-storage.service";
 

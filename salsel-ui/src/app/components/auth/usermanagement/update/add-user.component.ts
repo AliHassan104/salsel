@@ -41,7 +41,9 @@ export class AddUserComponent implements OnInit {
   formSetup() {
     this.userForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
-      name: new FormControl(null, [Validators.required]),
+      firstname: new FormControl(null, [Validators.required]),
+      lastname: new FormControl(null, [Validators.required]),
+      phone: new FormControl(null, Validators.required),
       password: new FormControl(null, [
         Validators.required,
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
@@ -105,7 +107,9 @@ export class AddUserComponent implements OnInit {
 
           this.userForm.patchValue({
             email: this.singleUser.email,
-            name: this.singleUser.name,
+            firstname: this.singleUser.firstname,
+            lastname: this.singleUser.lastname,
+            phone: this.singleUser.phone,
             password: this.singleUser.password,
             employeeId: this.singleUser.employeeId,
             roles: role[0],
@@ -124,9 +128,12 @@ export class AddUserComponent implements OnInit {
   onSubmit() {
     if (this.userForm.valid) {
       let formValue = this.userForm.value;
-
+      let fullname = formValue.firstname + " " + formValue.lastname;
       const data = {
-        name: formValue.name,
+        firstname: formValue.firstname,
+        lastname: formValue.lastname,
+        name: fullname,
+        phone: formValue.phone,
         password: formValue.password,
         email: formValue.email,
         employeeId: formValue.employeeId,

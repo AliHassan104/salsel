@@ -6,32 +6,42 @@
         <form action="" [formGroup]="userForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
                 <!-- User Details -->
+                <!--First Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="firstname"><strong>First Name</strong></label>
+                    <input pInputText id="firstname" type="text" formControlName="firstname"
+                        placeholder="Enetr First Name"
+                        [ngClass]="{'ng-dirty':userForm.get('firstname')?.touched && userForm.get('firstname')?.invalid}" />
+                    <small *ngIf="!userForm.get('firstname')?.valid && userForm.get('firstname')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!--Last Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="lastname"><strong>Last Name</strong></label>
+                    <input pInputText id="lastname" type="text" formControlName="lastname" placeholder="Enter Last Name"
+                        [ngClass]="{'ng-dirty':userForm.get('lastname')?.touched && userForm.get('lastname')?.invalid}" />
+                    <small *ngIf="!userForm.get('lastname')?.valid && userForm.get('lastname')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
                 <!-- Email -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="email"><strong>Email</strong></label>
-                    <input pInputText id="email" type="text" formControlName="email" placeholder="Enter Email"
+                    <input pInputText id="email" type="email" formControlName="email" placeholder="Enter Email"
                         [ngClass]="{'ng-dirty':userForm.get('email')?.touched && userForm.get('email')?.invalid}" />
                     <small *ngIf="!userForm.get('email')?.valid && userForm.get('email')?.touched" class="text-red-500">
                         Required
                     </small>
                 </div>
-                <!-- Name -->
+                <!-- Phone -->
                 <div class="field col-12 md:col-6">
-                    <label htmlFor="name"><strong>Name</strong></label>
-                    <input pInputText id="name" type="text" formControlName="name" placeholder="Enter Name"
-                        [ngClass]="{'ng-dirty':userForm.get('name')?.touched && userForm.get('name')?.invalid}" />
-                    <small *ngIf="!userForm.get('name')?.valid && userForm.get('name')?.touched" class="text-red-500">
-                        Required
-                    </small>
-                </div>
-                <!-- Employee Id -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="employeeId"><strong>Employee Id</strong></label>
-                    <input pInputText id="employeeId" type="text" formControlName="employeeId"
-                        placeholder="Enter Employee Id"
-                        [ngClass]="{'ng-dirty':userForm.get('employeeId')?.touched && userForm.get('employeeId')?.invalid}" />
-                    <small *ngIf="!userForm.get('employeeId')?.valid && userForm.get('employeeId')?.touched"
-                        class="text-red-500">
+                    <label htmlFor="phone"><strong>Phone Number</strong></label>
+                    <input pInputText id="phone" type="number" formControlName="phone" placeholder="Enter Phone Number"
+                        [ngClass]="{'ng-dirty':userForm.get('phone')?.touched && userForm.get('phone')?.invalid}" />
+                    <small *ngIf="!userForm.get('phone')?.valid && userForm.get('phone')?.touched" class="text-red-500">
                         Required
                     </small>
                 </div>
@@ -46,14 +56,6 @@
                         class="text-red-500">
                         Required
                     </small>
-                    <!-- <small class="pass smalltext" *ngIf="userForm.get('password')?.errors?.['pattern']">
-                        <ul class="text-left text-red-500">
-                            <li>At least one lowercase letter</li>
-                            <li>At least one uppercase letter</li>
-                            <li>At least one digit</li>
-                            <li>Minimum length of 8 characters</li>
-                        </ul>
-                    </small> -->
                     <small class="pass smalltext" *ngIf="userForm.get('password')?.errors?.['pattern']">
                         <ul class="text-left text-red-500">
                             <li *ngIf="isLowerCaseMissing()">At least one lowercase letter</li>
@@ -63,18 +65,18 @@
                         </ul>
                     </small>
                 </div>
-                <!-- Phone Number -->
-                <!-- <div class="field col-12 md:col-6">
-                    <label htmlFor="phoneNumber"><strong>Phone Number</strong></label>
-                    <input pInputText id="phoneNumber" type="text" formControlName="phoneNumber"
-                        placeholder="Enter Phone Number" />
-                    <small *ngIf="!userForm.get('phoneNumber')?.valid && userForm.get('phoneNumber')?.touched"
+                <!-- Employee Id -->
+                <div class="field col-12 md:col-2">
+                    <label htmlFor="employeeId"><strong>Employee Id</strong></label>
+                    <input pInputText id="employeeId" type="number" formControlName="employeeId"
+                        placeholder="Enter Employee Id"
+                        [ngClass]="{'ng-dirty':userForm.get('employeeId')?.touched && userForm.get('employeeId')?.invalid}" />
+                    <small *ngIf="!userForm.get('employeeId')?.valid && userForm.get('employeeId')?.touched"
                         class="text-red-500">
                         Required
                     </small>
-                </div> -->
-                <!-- Role -->
-                <div class="field col-12 md:col-6">
+                </div>
+                <div class="field col-12 md:col-4">
                     <label htmlFor="department"><strong>Role</strong></label>
                     <p-dropdown [options]="roles" optionLabel="name" placeholder="Select Role" formControlName="roles"
                         [ngClass]="{'ng-dirty':userForm.get('roles')?.touched && userForm.get('roles')?.invalid}"></p-dropdown>

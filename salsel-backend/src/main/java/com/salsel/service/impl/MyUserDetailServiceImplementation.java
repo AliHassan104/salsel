@@ -17,11 +17,8 @@ public class MyUserDetailServiceImplementation implements UserDetailsService {
 
     @Override
     public CustomUserDetail loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailAndStatusIsTrue(email);
-
-        if(user == null) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
-        }
+        User user = userRepository.findByEmailAndStatusIsTrue(email)
+                .orElseThrow(()->new UsernameNotFoundException("User not found with email: " + email));
         return new CustomUserDetail(user);
     }
 }

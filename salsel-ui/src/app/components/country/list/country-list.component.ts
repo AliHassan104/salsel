@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { CountryService } from "../service/country.service";
 import { Table } from "primeng/table";
-import { DropdownService } from "src/app/service/dropdown.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { MessageService } from "primeng/api";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 

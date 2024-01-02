@@ -50,6 +50,12 @@ public class LoginController {
         return ResponseEntity.ok(userService.registerUser(userdto));
     }
 
+    @PostMapping("/signup/customer")
+    public ResponseEntity<?> customerSignUp(@RequestBody UserDto userdto) {
+        return ResponseEntity.ok(userService.registerRoleCustomerUser(userdto));
+    }
+
+
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
         userService.forgotPassword(email);
