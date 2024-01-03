@@ -27,7 +27,6 @@ public class ProductFieldController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<ProductFieldDto>> getAllProductField() {
         List<ProductFieldDto> productFieldDtoList = productFieldService.getAll();
         return ResponseEntity.ok(productFieldDtoList);

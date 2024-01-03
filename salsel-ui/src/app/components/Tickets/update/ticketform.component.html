@@ -3,124 +3,63 @@
         <h1 class="mb-5"
             style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
             {{editMode?"Update Ticket":"Create Ticket"}}</h1>
+        <hr>
         <form action="" [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
                 <!-- Shipper Details -->
-                <!-- Shipper Name -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="shippername"><strong>Shipper Name</strong></label>
-                    <input pInputText id="shippername" type="text" formControlName="shipperName" />
-                </div>
-                <!-- Shipper Contact -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="contact"><strong>Contact Number</strong></label>
-                    <input pInputText id="shipperContact" type="text" formControlName="shipperContactNumber" />
-                </div>
-                <!-- Recipient Name -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="recipientname"><strong>Recipient Name</strong></label>
-                    <input pInputText id="recipientname" type="text" formControlName="recipientName" />
-                </div>
-                <!-- Recipient Contact Number -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="contactR"><strong>Contact Number</strong></label>
-                    <input pInputText id="recipientsContact" type="text" formControlName="recipientContactNumber" />
-                </div>
                 <!-- Ticket Type -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="ticketType"><strong>Ticket Type</strong></label>
-                    <p-dropdown [options]="ticketType" placeholder="Select Ticket Type"
-                        formControlName="ticketType"></p-dropdown>
+                    <p-dropdown [options]="ticketType" placeholder="Select Ticket Type" formControlName="ticketType"
+                        [ngClass]="{'ng-dirty':ticketForm.get('ticketType')?.touched && ticketForm.get('ticketType')?.invalid}"></p-dropdown>
+                    <small *ngIf="!ticketForm.get('ticketType')?.valid && ticketForm.get('ticketType')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
-                <ng-container *ngIf="ticketForm.get('ticketType')?.value == 'Pickup Request'">
-                    <!-- Pickup Address -->
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="address"><strong>Pickup Address</strong></label>
-                        <input pInputTextarea id="address" rows="4" formControlName="pickupAddress" />
-                    </div>
-                    <!-- Street Name -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="deliveryStreetName"><strong>Street Name</strong></label>
-                        <input pInputTextarea id="pickupStreetName" rows="4" formControlName="pickupStreetName"
-                            placeholder="Enter Street Name" />
-                    </div>
-                    <!-- District Address -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="pickupDistrict"><strong>District</strong></label>
-                        <input pInputTextarea id="pickupDistrict" rows="4" formControlName="pickupDistrict"
-                            placeholder="Enter District" />
-                    </div>
-                    <!-- Shipper Ref Number -->
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="shipperRef"><strong>Shipper Ref Number</strong></label>
-                        <input pInputText id="shipperRef" type="text" formControlName="shipperRefNumber" />
-                    </div>
-                    <!-- Origin Country -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="ocountry"><strong>Origin Country</strong></label>
-                        <p-dropdown [options]="countries" placeholder="Select Country" formControlName="originCountry"
-                            (onChange)="getOriginCountry($event)"></p-dropdown>
-                    </div>
-                    <!-- Origin City -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="oCity"><strong>Origin City</strong></label>
-                        <p-dropdown [options]="originCities" placeholder="Select city"
-                            formControlName="originCity"></p-dropdown>
-                    </div>
-                    <!-- Recipients Details -->
+                <!-- Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="name"><strong>Name</strong></label>
+                    <input pInputText id="name" type="text" formControlName="name"
+                        [ngClass]="{'ng-dirty':ticketForm.get('name')?.touched && ticketForm.get('name')?.invalid}"
+                        placeholder="Enter name" [required]="true" />
+                    <small *ngIf="!ticketForm.get('name')?.valid && ticketForm.get('name')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Email -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="email"><strong>Email</strong></label>
+                    <input pInputText id="email" type="email" formControlName="email"
+                        [ngClass]="{'ng-dirty':ticketForm.get('email')?.touched && ticketForm.get('email')?.invalid}"
+                        placeholder="Enter Email" [required]="true" />
+                    <small *ngIf="!ticketForm.get('email')?.valid && ticketForm.get('email')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Contact Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="phone"><strong>Contact Number</strong></label>
+                    <input pInputText id="phone" type="number" formControlName="phone"
+                        [ngClass]="{'ng-dirty':ticketForm.get('phone')?.touched && ticketForm.get('phone')?.invalid}"
+                        placeholder="Enter Contact Number" [required]="true" />
+                    <small *ngIf="!ticketForm.get('phone')?.valid && ticketForm.get('phone')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
 
-                    <!-- Delivery Address -->
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="daddress"><strong>Delivery Address</strong></label>
-                        <input pInputTextarea id="daddress" rows="4" formControlName="deliveryAddress" />
-                    </div>
-                    <!-- Street Name -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="deliveryStreetName"><strong>Street Name</strong></label>
-                        <input pInputTextarea id="deliveryStreetName" rows="4" formControlName="deliveryStreetName"
-                            placeholder="Enter Street Name" />
-                    </div>
-                    <!-- District Address -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="deliveryDistrict"><strong>District</strong></label>
-                        <input pInputTextarea id="deliveryDistrict" rows="4" formControlName="deliveryDistrict"
-                            placeholder="Enter District" />
-                    </div>
-                    <!-- Destination Country -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="dcountry"><strong>Destination Country</strong></label>
-                        <p-dropdown [options]="countries" placeholder="Select Country"
-                            formControlName="destinationCountry"
-                            (onChange)="getDestinationCountry($event)"></p-dropdown>
-                    </div>
-                    <!-- Destination City -->
-                    <div class="field col-12 md:col-3">
-                        <label htmlFor="dcity"><strong>Destination City</strong></label>
-                        <p-dropdown [options]="destinationCities" placeholder="Select city"
-                            formControlName="destinationCity"></p-dropdown>
-                    </div>
-                    <!-- Pickup Date -->
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="dcity"><strong>Pickup Date</strong></label>
-                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="pickupDate"
-                            [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && ticketForm.get('pickupDate')?.invalid}"></p-calendar>
-                        <small *ngIf="!ticketForm.get('pickupDate')?.valid && ticketForm.get('pickupDate')?.touched"
-                            class="text-red-500">
-                            Required
-                        </small>
-                    </div>
-                    <!-- Pickup Time -->
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="dcity"><strong>Pickup Time</strong></label>
-                        <p-calendar [hourFormat]="24" [timeOnly]="true" formControlName="pickupTime"
-                            [showSeconds]="true"
-                            [ngClass]="{'ng-dirty':ticketForm.get('pickupTime')?.touched && ticketForm.get('pickupTime')?.invalid}"
-                            [required]="true"></p-calendar>
-                        <small *ngIf="!ticketForm.get('pickupTime')?.valid && ticketForm.get('pickupTime')?.touched"
-                            class="text-red-500">
-                            Required
-                        </small>
-                    </div>
+                <!-- Text Box -->
+                <div class="field col-12">
+                    <label htmlFor="textarea"><strong>Details</strong></label>
+                    <textarea #textArea pInputTextarea rows="3" placeholder="Enter Your Note if any"
+                        formControlName="textarea"></textarea>
+                </div>
+
+                <ng-container
+                    *ngIf="ticketForm.get('ticketType')?.value == 'Pickup Request' &&this.userRole == 'CUSTOMER_SERVICE_AGENT'">
                     <!-- Department -->
                     <div class="field col-12 md:col-3">
                         <label htmlFor="department"><strong>Department</strong></label>
@@ -184,6 +123,129 @@
                         </small>
                     </div>
                 </ng-container>
+
+                <!-- Shipment Inquiry Form -->
+                <ng-container *ngIf="ticketForm.get('ticketType')?.value == 'Shipment Inquiry'">
+                    <!-- Airway or Reference Number -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="shipperRef"><strong>Airway or Reference Number</strong></label>
+                        <input pInputText id="airwayNumber" type="text" formControlName="airwayNumber"
+                            placeholder="Enter Airway or Reference Number" />
+                    </div>
+                </ng-container>
+
+                <!-- Pickup Request -->
+                <ng-container *ngIf="ticketForm.get('ticketType')?.value == 'Pickup Request'">
+                    <!-- Shipper Name -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="shippername"><strong>Shipper Name</strong></label>
+                        <input pInputText id="shippername" type="text" formControlName="shipperName" />
+                    </div>
+                    <!-- Shipper Contact -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="contact"><strong>Contact Number</strong></label>
+                        <input pInputText id="shipperContact" type="text" formControlName="shipperContactNumber" />
+                    </div>
+                    <!-- Pickup Address -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="address"><strong>Pickup Address</strong></label>
+                        <input pInputTextarea id="address" rows="4" formControlName="pickupAddress" />
+                    </div>
+                    <!-- Street Name -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="deliveryStreetName"><strong>Street Name</strong></label>
+                        <input pInputTextarea id="pickupStreetName" rows="4" formControlName="pickupStreetName"
+                            placeholder="Enter Street Name" />
+                    </div>
+                    <!-- District Address -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="pickupDistrict"><strong>District</strong></label>
+                        <input pInputTextarea id="pickupDistrict" rows="4" formControlName="pickupDistrict"
+                            placeholder="Enter District" />
+                    </div>
+                    <!-- Shipper Ref Number -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="shipperRef"><strong>Shipper Ref Number</strong></label>
+                        <input pInputText id="shipperRef" type="text" formControlName="shipperRefNumber" />
+                    </div>
+                    <!-- Origin Country -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="ocountry"><strong>Origin Country</strong></label>
+                        <p-dropdown [options]="countries" placeholder="Select Country" formControlName="originCountry"
+                            (onChange)="getOriginCountry($event)"></p-dropdown>
+                    </div>
+                    <!-- Origin City -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="oCity"><strong>Origin City</strong></label>
+                        <p-dropdown [options]="originCities" placeholder="Select city"
+                            formControlName="originCity"></p-dropdown>
+                    </div>
+                    <!-- Recipient Name -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="recipientname"><strong>Recipient Name</strong></label>
+                        <input pInputText id="recipientname" type="text" formControlName="recipientName" />
+                    </div>
+                    <!-- Recipient Contact Number -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="contactR"><strong>Contact Number</strong></label>
+                        <input pInputText id="recipientsContact" type="text" formControlName="recipientContactNumber" />
+                    </div>
+                    <!-- Delivery Address -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="daddress"><strong>Delivery Address</strong></label>
+                        <input pInputTextarea id="daddress" rows="4" formControlName="deliveryAddress" />
+                    </div>
+                    <!-- Street Name -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="deliveryStreetName"><strong>Street Name</strong></label>
+                        <input pInputTextarea id="deliveryStreetName" rows="4" formControlName="deliveryStreetName"
+                            placeholder="Enter Street Name" />
+                    </div>
+                    <!-- Delivery District -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="deliveryDistrict"><strong>District</strong></label>
+                        <input pInputTextarea id="deliveryDistrict" rows="4" formControlName="deliveryDistrict"
+                            placeholder="Enter District" />
+                    </div>
+                    <!-- Pickup Time -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="dcity"><strong>Pickup Time</strong></label>
+                        <p-calendar [hourFormat]="24" [timeOnly]="true" formControlName="pickupTime"
+                            [showSeconds]="true"
+                            [ngClass]="{'ng-dirty':ticketForm.get('pickupTime')?.touched && ticketForm.get('pickupTime')?.invalid}"
+                            [required]="true"></p-calendar>
+                        <small *ngIf="!ticketForm.get('pickupTime')?.valid && ticketForm.get('pickupTime')?.touched"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+                    <!-- Pickup Date -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="dcity"><strong>Pickup Date</strong></label>
+                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="pickupDate"
+                            [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && ticketForm.get('pickupDate')?.invalid}"></p-calendar>
+                        <small *ngIf="!ticketForm.get('pickupDate')?.valid && ticketForm.get('pickupDate')?.touched"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+                    <!-- Destination Country -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="dcountry"><strong>Destination Country</strong></label>
+                        <p-dropdown [options]="countries" placeholder="Select Country"
+                            formControlName="destinationCountry"
+                            (onChange)="getDestinationCountry($event)"></p-dropdown>
+                    </div>
+                    <!-- Destination City -->
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="dcity"><strong>Destination City</strong></label>
+                        <p-dropdown [options]="destinationCities" placeholder="Select city"
+                            formControlName="destinationCity"></p-dropdown>
+                    </div>
+
+                </ng-container>
+
+                <!-- Rate Inquiry -->
                 <ng-container *ngIf="ticketForm.get('ticketType')?.value == 'Rate Inquiry'">
                     <!-- Origin Country -->
                     <div class="field col-12 md:col-6">
@@ -222,6 +284,7 @@
                         </small>
                     </div>
                 </ng-container>
+
 
 
 

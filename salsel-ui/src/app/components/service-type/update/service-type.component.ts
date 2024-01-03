@@ -83,7 +83,7 @@ export class ServiceTypeComponent {
   }
 
   patchFormWithDto() {
-    this.serviceTypeForm.patchValue({
+    this.serviceTypeForm.setValue({
       name: this.serviceType.name,
       code: this.serviceType.code,
       type: this.serviceType.productType,

@@ -16,6 +16,7 @@ import { ServiceTypeService } from "../../service-type/service/service-type.serv
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { map } from "rxjs/operators";
 import { filter } from "rxjs";
+import { AccountService } from "../../accounts/service/account.service";
 
 @Component({
   selector: "app-awbcreation",
@@ -44,6 +45,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   editId;
   productTypeId;
   serviceTypeId;
+  serviceTypeCode?;
+  accountNumbers?;
 
   // SINGLE BILL AND TICKET STORE IN IT
   singleBill?: IAwbDto;
@@ -62,7 +65,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     private countryService: CountryService,
     private cityService: CityService,
     private productTypeService: ProductTypeService,
-    private serviceTypeService: ServiceTypeService
+    private serviceTypeService: ServiceTypeService,
+    private accountService: AccountService
   ) {}
 
   params = { status: true };
@@ -179,16 +183,42 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       this.productType = res.body;
       this.productType = this.dropdownService.extractNames(this.productType);
     });
+
+    // GET ALL AccountNumbers
+    this.accountService
+      .getAllAccounts({ status: true })
+      .subscribe((res: any) => {
+        this.accountNumbers = res.body;
+        this.accountNumbers = this.dropdownService.extractaccountNumber(
+          this.accountNumbers
+        );
+      });
   }
 
   getProductType(data) {
     this.serviceTypeService.getServiceTypes(this.params).subscribe((res) => {
       this.serviceType = res.body;
+
       let filterServiceType = this.serviceType.filter(
         (type) => type.productType.name == data.value
       );
+
       this.serviceType = this.dropdownService.extractNames(filterServiceType);
     });
+  }
+
+  getServiceType(data) {
+    this.serviceTypeService
+      .getServiceTypes(this.params)
+      .subscribe((res: any) => {
+        let filterServiceType = res.body.filter(
+          (type) => type.name == data.value
+        );
+        this.serviceTypeCode =
+          this.dropdownService.extractCode(filterServiceType)[0];
+
+        console.log(this.serviceTypeCode);
+      });
   }
 
   //   UpdateBill() {
@@ -350,6 +380,11 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         serviceType: formValue.serviceType,
         productType: formValue.productType,
         requestType: formValue.requestType,
+        serviceTypeCode: this.serviceTypeCode,
+        deliveryStreetName: formValue.deliveryStreetName,
+        deliveryDistrict: formValue.deliveryDistrict,
+        pickupStreetName: formValue.pickupStreetName,
+        pickupDistrict: formValue.pickupDistrict,
       };
 
       //   Create Ticket

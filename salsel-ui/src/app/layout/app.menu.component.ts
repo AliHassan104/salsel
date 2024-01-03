@@ -31,7 +31,7 @@ export class AppMenuComponent implements OnInit {
             label: "User",
             icon: "pi pi-user",
             routerLink: "user/list",
-            permission: "READ_USER",
+            permission: "CREATE_USER",
           },
           {
             label: "Account",

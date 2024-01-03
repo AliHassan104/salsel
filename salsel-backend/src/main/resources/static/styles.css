@@ -120,17 +120,17 @@ body {
   top: 15px;
 }
 .b1 {
-  font-weight: 400;
+  font-weight: bold;
   margin-left: 26px;
   margin: 0 0 8px 26px;
-  font-size: 17px;
+  font-size: 18px;
   margin: 0 0 8px 26px;
 }
 .b2,
 .b3,
 .b4 {
-  font-weight: 400;
-  font-size: 17px;
+  font-weight: bold;
+  font-size: 18px;
   margin-left: 26px;
   margin: 0 0 8px 26px;
 }
@@ -147,6 +147,7 @@ body {
     margin-top: 0px;
     margin-bottom: 15px;
     font-size: 21px;
+    min-width:90px;
 }
 
 .heading {

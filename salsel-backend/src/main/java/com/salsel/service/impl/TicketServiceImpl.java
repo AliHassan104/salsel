@@ -42,6 +42,8 @@ public class TicketServiceImpl implements TicketService {
     public TicketDto save(TicketDto ticketDto) {
         Ticket ticket = toEntity(ticketDto);
         ticket.setStatus(true);
+        ticket.setTicketStatus("Open");
+        ticket.setTicketFlag("Normal");
         Ticket createdTicket = ticketRepository.save(ticket);
         return toDto(createdTicket);
     }
@@ -144,6 +146,20 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setCreatedBy(ticketDto.getCreatedBy());
         existingTicket.setDepartment(ticketDto.getDepartment());
         existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
+        existingTicket.setCreatedBy(ticketDto.getCreatedBy());
+        existingTicket.setDepartment(ticketDto.getDepartment());
+        existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
+        existingTicket.setDeliveryStreetName(ticketDto.getDeliveryStreetName());
+        existingTicket.setDeliveryDistrict(ticketDto.getDeliveryDistrict());
+        existingTicket.setPickupStreetName(ticketDto.getPickupStreetName());
+        existingTicket.setPickupDistrict(ticketDto.getPickupDistrict());
+        existingTicket.setName(ticketDto.getName());
+        existingTicket.setWeight(ticketDto.getWeight());
+        existingTicket.setEmail(ticketDto.getEmail());
+        existingTicket.setPhone(ticketDto.getPhone());
+        existingTicket.setTextarea(ticketDto.getTextarea());
+        existingTicket.setAirwayNumber(ticketDto.getAirwayNumber());
+        existingTicket.setTicketType(ticketDto.getTicketType());
 
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return toDto(updatedTicket);
@@ -174,6 +190,17 @@ public class TicketServiceImpl implements TicketService {
                 .assignedTo(ticket.getAssignedTo())
                 .department(ticket.getDepartment())
                 .departmentCategory(ticket.getDepartmentCategory())
+                .deliveryDistrict(ticket.getDeliveryDistrict())
+                .deliveryStreetName(ticket.getDeliveryStreetName())
+                .pickupDistrict(ticket.getPickupDistrict())
+                .pickupStreetName(ticket.getPickupStreetName())
+                .name(ticket.getName())
+                .email(ticket.getEmail())
+                .weight(ticket.getWeight())
+                .phone(ticket.getPhone())
+                .textarea(ticket.getTextarea())
+                .airwayNumber(ticket.getAirwayNumber())
+                .ticketType(ticket.getTicketType())
                 .build();
     }
 
@@ -202,6 +229,17 @@ public class TicketServiceImpl implements TicketService {
                 .assignedTo(ticketDto.getAssignedTo())
                 .department(ticketDto.getDepartment())
                 .departmentCategory(ticketDto.getDepartmentCategory())
+                .deliveryDistrict(ticketDto.getDeliveryDistrict())
+                .deliveryStreetName(ticketDto.getDeliveryStreetName())
+                .pickupDistrict(ticketDto.getPickupDistrict())
+                .pickupStreetName(ticketDto.getPickupStreetName())
+                .name(ticketDto.getName())
+                .email(ticketDto.getEmail())
+                .weight(ticketDto.getWeight())
+                .phone(ticketDto.getPhone())
+                .textarea(ticketDto.getTextarea())
+                .airwayNumber(ticketDto.getAirwayNumber())
+                .ticketType(ticketDto.getTicketType())
                 .build();
     }
 }
