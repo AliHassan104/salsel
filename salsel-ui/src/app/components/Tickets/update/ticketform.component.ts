@@ -83,7 +83,6 @@ export class TicketformComponent implements OnInit {
     this.editForm();
 
     this.userRole = this.sessionStorageService.getRoleName();
-    console.log(this.userRole);
   }
 
   ticketFormSetup() {
@@ -196,7 +195,6 @@ export class TicketformComponent implements OnInit {
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
-      console.log(res);
 
       //   Categories From Product Field
       this.categories = this.dropdownService.extractNames(

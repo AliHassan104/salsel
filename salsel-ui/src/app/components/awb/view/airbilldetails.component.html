@@ -5,27 +5,33 @@
             AWB Details</h1>
         <button pButton label="Scan" icon="pi pi-download" (click)="downloadAwb()" class="downloadBtn"></button>
     </div>
+    <hr>
     <div class="grid custom-modal">
 
         <div class="col-12 md:col-6 lg:col-6 mt-3 ">
-            <h2>SHIPPER DETAILS</h2>
+            <h4>Shipper Infomation</h4>
             <p><strong>Shipper Name:</strong> {{singleBill?.shipperName}}</p>
-            <p><strong>Shipper Contact No:</strong> {{singleBill?.shipperContactNumber}}</p>
+            <p><strong>Shipper Contact Number:</strong> {{singleBill?.shipperContactNumber}}</p>
             <p><strong>Pickup Address:</strong> {{singleBill?.pickupAddress}}</p>
-            <p><strong>Shipper Ref Number:</strong>{{singleBill?.shipperRefNumber}}</p>
+            <p><strong>Street Name:</strong> {{singleBill?.pickupStreetName}}</p>
+            <p><strong>District:</strong> {{singleBill?.pickupDistrict}}</p>
+            <p><strong>Shipper Ref Number: </strong>{{singleBill?.shipperRefNumber}}</p>
             <p><strong>Origin Country:</strong> {{singleBill?.originCountry}}</p>
             <p><strong>Origin City:</strong> {{singleBill?.originCity}}</p>
         </div>
         <div class="col-12 md:col-6 lg:col-6 mt-3">
-            <h2>RECIPIENT DETAILS</h2>
-            <p><strong>Recipient Name:</strong> {{singleBill?.recipientsName}}</p>
-            <p><strong>Contact No:</strong> {{singleBill?.recipientsContactNumber}}</p>
+            <h4>Recipient Infomation</h4>
+            <p><strong>Recipient Name:</strong> {{singleBill?.recipientName}}</p>
+            <p><strong>Recipient Contact Number:</strong> {{singleBill?.recipientContactNumber}}</p>
             <p><strong>Delivery Address:</strong> {{singleBill?.deliveryAddress}}</p>
+            <p><strong>Street Name:</strong> {{singleBill?.deliveryStreetName}}</p>
+            <p><strong>District:</strong> {{singleBill?.deliveryDistrict}}</p>
             <p><strong>Destination Country:</strong> {{singleBill?.destinationCountry}}</p>
             <p><strong>Destination City:</strong> {{singleBill?.destinationCity}}</p>
         </div>
         <div class="col-12">
-            <h2>SHIPMENT DETAILS</h2>
+            <h4>Shipment Infomation</h4>
+            <p><strong>Account Number:</strong> {{singleBill?.accountNumber}}</p>
             <p><strong>Duty and Taxes Bill to:</strong> {{singleBill?.dutyAndTaxesBillTo}}</p>
             <p><strong>Product Type:</strong> {{singleBill?.productType}}</p>
             <p><strong>Service Type:</strong> {{singleBill?.serviceType}}</p>
