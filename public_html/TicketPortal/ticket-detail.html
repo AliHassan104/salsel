@@ -38,11 +38,6 @@
 
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
-    <div id="loader-container" class="loader-container">
-        <!-- Loader element -->
-        <div class="loader"></div>
-    </div>
-
     <!-- Page Navigation -->
 
     <nav class="navbar custom-navbar navbar-expand-lg navbar-dark affix" style="position: unset !important;">
@@ -102,7 +97,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../screens/login.html" onclick="logOut()">LOGOUT</a>
+                        <a class="nav-link" href="../screens/login.html">LOGIN</a>
                     </li>
                     <!-- <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
@@ -124,119 +119,186 @@
     </nav>
 
     <!-- tickets section start -->
-    <div class="table-container">
 
-        <div class="table-header">
-            <h1>All Tickets</h1>
-            <button onclick="window.location.href=`create-ticket.html`">Create Ticket</button>
+
+    <div class="container">
+        <h1>Ticket Detail</h1>
+        <div class="row">
+
+            <div class="col-md-8" style=" margin-right: 10px; height: 1800px;">
+                <div class="row"
+                    style="height: 60%;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2); margin-bottom: 40px; padding: 10px;">
+                    <div class="col-md-12">
+
+                        <p>Final Setting for hide field for user</p><br><br><br>
+                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
+                        <p><b>Shipper Name :</b> sammm</p>
+                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
+                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
+                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
+                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
+                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
+                        <p><b>Pick Up Address </b>dsdsdsd</p>
+                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
+                        <p><b>Shipper City :</b> ddsds</p>
+                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
+                        <p><b>Pick Up Address </b>dsdsdsd</p>
+                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
+                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
+                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
+                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
+                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
+                        <p><b>Pick Up Address </b>dsdsdsd</p>
+                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
+                        <p><b>Shipper City :</b> ddsds</p>
+                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
+                        <p><b>Pick Up Address </b>dsdsdsd</p>
+                    </div>
+
+                </div>
+                <div class="row" style="height: 15%; margin-bottom: 40px; box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
+                    <div class="col-md-12 remove-padding">
+
+                        <div class="ticket-thread-header">
+                            <h3>Ticket Thread</h3>
+                        </div>
+
+                        <div class="row mb-3 content">
+                            <div class="col-md-2">
+                                <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
+                                    width="120px" alt="">
+                            </div>
+                            <div class="col-md-10">
+                                <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
+                                <p style="text-align: unset !important;">Department: Operation Department</p>
+                                <button style="background-color:#c7cbf5; float: left;
+                                padding: 5px 10px;
+                                margin-right: 3px;
+                                font-size: 14px;
+                                color: #fff;
+                                border: unset;
+                                font-weight: bold;
+                                text-transform: uppercase;">Normal</button>
+                                <br>
+                                <p>Thursday September 07, 2023, 04:19:21</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 25%; margin-bottom: 40px; box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
+
+                    <div class="col-md-12 remove-padding">
+
+                        <div class="post-reply">
+                            <h3>Post Reply</h3>
+                        </div>
+
+                        <textarea style="margin-left: 15px;" name="" id="" cols="123" rows="10"></textarea>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4" style=" height: 1000px;">
+                <div class="row" style="height: 30%; margin-bottom: 40px;  box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
+                    <div class="col-md-12">
+                        <div class="open-closed">
+                            <div class="tag">
+                                <h3>Open</h3>
+                            </div>
+                            <p><b>Enter Airway or Reference Number (Optional) :</b></p>
+                            <p><b>Shipper Name :</b> sammm</p>
+                            <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
+                            <p><b>Shipper Origin Country : </b> Bangladesh</p>
+                            <p><b>Department :IT Department</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 15%; margin-bottom: 40px;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2);">
+                    <div class="col-md-12">
+                        <div class="priority">
+                            <span style="display: flex; align-items: baseline;"> <img
+                                    src="https://salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/watch-video-icon.png"
+                                    width="10%" alt="">
+                                <h3>Priority</h3>
+                            </span>
+                            <div class="priority-imp">
+                                <h3>Normal</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 45%;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2);">
+                    <div class="col-md-12">
+                        <div class="ds-tickets">
+                            <h3 style="margin-bottom: 30px;">dsds Tickets</h3>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
+                                        width="100%" alt="">
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
+                                    <p style="text-align: unset !important;">Department: Operation Department</p>
+                                    <button style="background-color:#c7cbf5; float: left;
+                                    padding: 5px 10px;
+                                    margin-right: 3px;
+                                    font-size: 14px;
+                                    color: #fff;
+                                    border: unset;
+                                    font-weight: bold;
+                                    text-transform: uppercase;">Normal</button>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
+                                        width="100%" alt="">
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
+                                    <p style="text-align: unset !important;">Department: Operation Department</p>
+                                    <button style="background-color:#c7cbf5; float: left;
+                                    padding: 5px 10px;
+                                    margin-right: 3px;
+                                    font-size: 14px;
+                                    color: #fff;
+                                    border: unset;
+                                    font-weight: bold;
+                                    text-transform: uppercase;">Normal</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
+                                        width="100%" alt="">
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
+                                    <p style="text-align: unset !important;">Department: Operation Department</p>
+                                    <button style="background-color:#c7cbf5; float: left;
+                                    padding: 5px 10px;
+                                    margin-right: 3px;
+                                    font-size: 14px;
+                                    color: #fff;
+                                    border: unset;
+                                    font-weight: bold;
+                                    text-transform: uppercase;">Normal</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="table-responsive-md">
-            <table class="table table-sm" id="myTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Department</th>
-                        <th scope="col">Ticket Type</th>
-                        <th scope="col">Ticket Id</th>
-                        <th scope="col">Created</th>
-                        <th scope="col">Fee Details</th>
-                        <th scope="col">Tag</th>
-                        <th scope="col" colspan="3" style="text-align: center;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    <!-- <tr onclick="goInDetails()">
-                        <td>Usman</td>
-                        <td scope="row">Arrange My Pup</td>
-                        <td>It department</td>
-                        <td>Pickup request</td>
-                        <td>000138</td>
-                        <td>08-12-2023</td>
-                        <td>Shall we send you the fee details? Yes/No</td>
-                        <td> <span
-                                style="color: #1572e8; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">New</span>
-                            <span
-                                style="color: #ed8e00; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">High</span>
-                        </td>
-                        <td> <span class="action-edit"> <i class="fa-regular fa-pen-to-square"></i> Edit Ticket </span>
-                        </td>
-                        <td> <span class="action-delete"><i class="fa-solid fa-trash-can"></i>Delete </span>
-                        </td>
-                        <td> <span class="action-enforce-delete"> <i class="fa-solid fa-delete-left"></i>Enforce Delete
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Usman</td>
-                        <td scope="row">Arrange My Pup</td>
-                        <td>It department</td>
-                        <td>Pickup request</td>
-                        <td>000138</td>
-                        <td>08-12-2023</td>
-                        <td>Shall we send you the fee details? Yes/No</td>
-                        <td> <span
-                                style="color: #1572e8; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">New</span>
-                            <span
-                                style="color: #ed8e00; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">High</span>
-                        </td>
-                        <td> <span class="action-edit"> <i class="fa-regular fa-pen-to-square"></i> Edit Ticket </span>
-                        </td>
-                        <td> <span class="action-delete"><i class="fa-solid fa-trash-can"></i>Delete </span>
-                        </td>
-                        <td> <span class="action-enforce-delete"> <i class="fa-solid fa-delete-left"></i>Enforce Delete
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Usman</td>
-                        <td scope="row">Arrange My Pup</td>
-                        <td>It department</td>
-                        <td>Pickup request</td>
-                        <td>000138</td>
-                        <td>08-12-2023</td>
-                        <td>Shall we send you the fee details? Yes/No</td>
-                        <td> <span
-                                style="color: #1572e8; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">New</span>
-                            <span
-                                style="color: #ed8e00; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">High</span>
-                        </td>
-                        <td> <span class="action-edit"> <i class="fa-regular fa-pen-to-square"></i> Edit Ticket </span>
-                        </td>
-                        <td> <span class="action-delete"><i class="fa-solid fa-trash-can"></i>Delete </span>
-                        </td>
-                        <td> <span class="action-enforce-delete"> <i class="fa-solid fa-delete-left"></i>Enforce Delete
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Usman</td>
-                        <td scope="row">Arrange My Pup</td>
-                        <td>It department</td>
-                        <td>Pickup request</td>
-                        <td>000138</td>
-                        <td>08-12-2023</td>
-                        <td>Shall we send you the fee details? Yes/No</td>
-                        <td> <span
-                                style="color: #1572e8; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">New</span>
-                            <span
-                                style="color: #ed8e00; display: inline-block;padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec;background: #f8fcfe;">High</span>
-                        </td>
-                        <td> <span class="action-edit"> <i class="fa-regular fa-pen-to-square"></i> Edit Ticket </span>
-                        </td>
-                        <td> <span class="action-delete"><i class="fa-solid fa-trash-can"></i>Delete </span>
-                        </td>
-                        <td> <span class="action-enforce-delete"> <i class="fa-solid fa-delete-left"></i>Enforce Delete
-                            </span>
-                        </td>
-                    </tr> -->
-
-
-
-                </tbody>
-            </table>
-        </div>
+        <button style="    float: left;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0;
+        border-top: 2px solid #32373c;
+        background: #209e24;
+    border: 1px solid #368534;
+    color: #fff;">Post</button>
     </div>
 
     <!-- tickets section end -->
@@ -317,29 +379,14 @@
   
       <div class="menu_group" id="menu">
         <a href="https://www.instagram.com/bachassllc/" class="toggle_items" target="_blank"><img alt=""
-            id="toggle-images1" src="../assets/imgs/social/instagramIcon.png" /></a>
+            id="toggle-images1" src="assets/imgs/social/instagramIcon.png" /></a>
         <a href="https://wa.me/13074564966" class="toggle_items" target="_blank"><img alt="" id="toggle-images2"
-            src="../assets/imgs/social/whatsAppIcon.png" /></a>
+            src="assets/imgs/social/whatsAppIcon.png" /></a>
         <a href="https://twitter.com/BachassLLC" class="toggle_items" target="_blank"><img alt="" id="toggle-images3"
-            src="../assets/imgs/social/twitterIcon.png" /></a>
+            src="assets/imgs/social/twitterIcon.png" /></a>
       </div>
 
     <script>
-        
-        var plusIcon = document.querySelector("#plus");
-        var socialIcons = document.querySelector("#menu");
-        var toggle = 0;
-        function expand() {
-            if (toggle == 0) {
-                plusIcon.style.transform = "rotate(360deg)";
-                socialIcons.style.transform = "scale(2)";
-                toggle = 1;
-            } else {
-                plusIcon.style.transform = "rotate(0deg)";
-                socialIcons.style.transform = "scale(0)";
-                toggle = 0;
-            }
-        }
         AOS.init();
     </script>
 
@@ -392,6 +439,7 @@
         }
 
         function updateFlagImage(languageCode) {
+            debugger
             console.log('Updating flag for language:', languageCode);
             var flagMappings = {
                 'en': 'english.png',
@@ -418,6 +466,8 @@
         function googleTranslateOnLoad() {
             setTimeout(function () {
                 hideGoogleTranslateToolbar();
+                debugger
+
                 var translateElement = document.getElementById('google_translate_element');
                 if (translateElement) {
                     translateElement.addEventListener('change', function () {

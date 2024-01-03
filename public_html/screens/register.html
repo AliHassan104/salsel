@@ -41,6 +41,13 @@
 
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
+       <!-- loader start -->
+       <div id="loader-container" class="loader-container">
+        <!-- Loader element -->
+        <div class="loader"></div>
+    </div>
+    <!-- loader end -->
+
     <!-- Page Navigation -->
     <nav class="navbar custom-navbar navbar-expand-lg navbar-dark affix">
         <div class="container nav-width">
@@ -123,25 +130,32 @@
     </nav>
     <!-- End Of Page Navigation -->
     <!-- Page Header -->
-    <header class="header" style="height: 109%;" >
-        <div class="overlay" style="height: 109%;">
+    <header class="header" style=" min-height: 1000px !important; " >
+        <div class="overlay" style=" min-height: 900px !important;">
             <div class="background" >
                 <div class="shape"></div>
                 <div class="shape"></div>
             </div>
-            <form class="login-form" style="height: 620px;">
+            <form class="login-form" style="min-height: 1000px !important;">
                 <h3>Register</h3>
         
-                <label for="username">Username</label>
-                <input type="text" placeholder="Email or Phone" id="username">
+                <label for="firstname">First Name</label>
+                <input type="text" placeholder="Enter FirstName" id="firstname">
         
-                <label for="password">Password</label>
-                <input type="password" placeholder="Phone Number" id="phone number">
+                <label for="lastname">Last Name</label>
+                <input type="text" placeholder="Enter LastName" id="lastname">
 
-                <label for="password">Phone Number</label>
-                <input type="password" placeholder="Password" id="password">
+                <label for="email">Email</label>
+                <input type="email" placeholder="Enter Email" id="email">
+
+                <label for="phone">Phone Number</label>
+                <input type="number" placeholder="Enter Phone Number" id="phone">
+
+                <label for="password">Password</label>
+                <input type="password" placeholder="Enter Password" id="password">
+
         
-                <button class="login-button">Register</button>
+                <button class="login-button" onclick="register(event)">Register</button>
                 <div class="social">
                     <a href="forgotpassword.html">
                         <div class="go"><i class="fa-solid fa-lock"></i> <span style="font-size: 12px;"> Forgot Password </span></div>
@@ -229,6 +243,19 @@
         </div>
     </section>
 
+    <div class="socialmedia-toggle" onclick="expand()">
+        <i class="fa fa-plus" id="plus"></i>
+      </div>
+  
+      <div class="menu_group" id="menu">
+        <a href="https://www.instagram.com/bachassllc/" class="toggle_items" target="_blank"><img alt=""
+            id="toggle-images1" src="../assets/imgs/social/instagramIcon.png" /></a>
+        <a href="https://wa.me/13074564966" class="toggle_items" target="_blank"><img alt="" id="toggle-images2"
+            src="../assets/imgs/social/whatsAppIcon.png" /></a>
+        <a href="https://twitter.com/BachassLLC" class="toggle_items" target="_blank"><img alt="" id="toggle-images3"
+            src="../assets/imgs/social/twitterIcon.png" /></a>
+      </div>
+
     <script>
         AOS.init();
     </script>
@@ -282,7 +309,6 @@
         }
 
         function updateFlagImage(languageCode) {
-            debugger
             console.log('Updating flag for language:', languageCode);
             var flagMappings = {
                 'en': 'english.png',
@@ -309,7 +335,6 @@
         function googleTranslateOnLoad() {
             setTimeout(function () {
                 hideGoogleTranslateToolbar();
-                debugger
 
                 var translateElement = document.getElementById('google_translate_element');
                 if (translateElement) {
@@ -324,6 +349,76 @@
     <script type="text/javascript"
         src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+
+        <script>
+
+            function showLoader() {
+                document.getElementById("loader-container").style.display = "flex";
+            }
+    
+            function hideLoader() {
+                document.getElementById("loader-container").style.display = "none";
+            }
+    
+            function register(event) {
+                event.preventDefault();
+                showLoader();
+                let getFirstName = document.getElementById("firstname").value;
+                let getLastName = document.getElementById("lastname").value;
+                let getEmail = document.getElementById("email").value;
+                let getPhoneNumber = document.getElementById("phone").value;
+                let getPassword = document.getElementById("password").value;
+    
+    
+                let apiUrl = "https://api.salselexpress.com/api/signup/customer";
+    
+                // Create a request object
+                let requestData = {
+                    email: getEmail,
+                    password: getPassword,
+                    firstname: getFirstName,
+                    lastname: getLastName,
+                    phone: getPhoneNumber,
+                    name: getFirstName+getLastName
+                };
+    
+                // Make a POST request to the API
+                fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any additional headers if needed
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                    .then(response => {
+                        hideLoader();
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Handle the response data
+                        console.log(data);
+                        localStorage.setItem("token", JSON.stringify(data));
+                        goIntoTicket(data);
+                        // You can redirect the user or perform any other action based on the response
+                    })
+                    .catch(error => {
+                        hideLoader();
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+    
+            }
+    
+            function goIntoTicket(token) {
+                if (token.jwt) {
+                    window.location.href = "../TicketPortal/ticket.html"
+                }
+            }
+    
+        </script>
 
 </body>
 

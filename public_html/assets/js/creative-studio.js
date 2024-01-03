@@ -165,6 +165,8 @@ function goToServiceDetail(service, inService) {
         }
     }
 
+  
+
 
 
     // function hideGoogleTranslateToolbar() {
@@ -281,4 +283,20 @@ function goToServiceDetail(service, inService) {
         }, 500);
     }
 
+}
+
+
+var plusIcon = document.querySelector("#plus");
+var socialIcons = document.querySelector("#menu");
+var toggle = 0;
+function expand() {
+    if (toggle == 0) {
+        plusIcon.style.transform = "rotate(360deg)";
+        socialIcons.style.transform = "scale(2)";
+        toggle = 1;
+    } else {
+        plusIcon.style.transform = "rotate(0deg)";
+        socialIcons.style.transform = "scale(0)";
+        toggle = 0;
+    }
 }
