@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with Creative Studio landing page.">
+    <meta name="author" content="Devcrud">
+    <title>Cold Chain & Pharma Delivery Services – Salsel Express</title>
+    <link rel="icon" href="../assets/imgs/Logo_.png" style="width: 100% !important;" type="image/x-icon">
+
+
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="../assets/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap + Creative Studio main styles -->
+    <link rel="stylesheet" href="../assets/css/creative-studio.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <!-- Page Navigation -->
+    <nav class="navbar custom-navbar navbar-expand-lg navbar-dark affix"  >
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../assets/imgs/logo_.png"
+                    alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, Creative studio Landing page">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
+                <span></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto increase-nav-height">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">HOME</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#about">Services</a>
+                    </li> -->
+                    <li class="nav-item service-nav-item">
+                        <a class="nav-link" href="#service">SERVICES <span><i class="fa-solid fa-caret-down"></i></span></a>
+                        <div class="service-dropdown">
+                            <ul>
+                                <li onclick="goToServiceDetail('doorToDoor' , 'inService')">Door To Door Shipment</li>
+                                <li onclick="goToServiceDetail('seaCargo' , 'inService')">Sea Cargo</li>
+                                <li onclick="goToServiceDetail('roadFreight' , 'inService')">Road Freight </li>
+                                <li onclick="goToServiceDetail('ecommerce' , 'inService')">E-Commerce Delivery</li>
+                                <li onclick="goToServiceDetail('specialDelivery' , 'inService')">Special Delivery Channel</li>
+                                <li onclick="goToServiceDetail('coldChain' , 'inService')">Cold chain $ Pharma Delivery</li>
+                                <li onclick="goToServiceDetail('threePl' , 'inService')">3PL, Fulfillment and Warehouse</li>
+                                <li onclick="goToServiceDetail('return' , 'inService')">Return shipments Management</li>
+                                <li onclick="goToServiceDetail('truckRoadFreight' , 'inService')">Truckload freight</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../screens/shop&ship.html">SHOP&SHIP</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#team">HELPDESK</a>
+                    </li> -->
+                    <li class="nav-item company-nav-item" >
+                        <a class="nav-link" href="#testimonial" >COMPANY  <span><i class="fa-solid fa-caret-down"></i></span></a>
+                        <div class="company-dropdown">
+                            <ul>
+                                <li>Contact</li>
+                                <li>About</li>
+                                <li> <a href="../screens/privacypolicy.html"> Privacy </a> </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../screens/login.html">LOGIN</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary btn-sm ml-lg-3" style="color: white !important;"
+                            href="components.html">TRACK</a>
+                    </li>
+                    <li class="nav-item" style="position: relative;">
+                        <a>
+                            <div id="google_translate_element"></div>
+                        </a>
+                        <img id="selected_language_flag" style="position: absolute; top: 2px; left: 2px;"
+                            src="assets/imgs/english.png" width="20px" height="20px" alt="Selected Language Flag">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- Page Header -->
+    <header class="header header-overide">
+        <div class="overlay decrease-height">
+            <h1>
+                Cold Chain & Pharma Delivery Services</h1>
+        </div>
+    </header>
+    <!-- End Of Page Header -->
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <iframe width="100%" height="475" src="https://www.youtube.com/embed/TP4THzsAa3M" frameborder="0"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
+
+
+    <!-- main service detail section start -->
+
+        <section id="door-to-door">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="mb-4">Cold Chain & Pharma Delivery is also an excellent and advanced service of Salsel Express. Cold chain and pharma delivery services are essential for ensuring the safe and effective transportation of temperature-sensitive pharmaceutical products. The cold chain is a supply chain system that ensures the integrity of temperature-sensitive products from production to consumption. It is a critical part of the pharmaceutical industry, as many medicines, vaccines, and biologics require specific temperature conditions to remain stable and effective.</p>
+
+                        <h2>What is the Cold Chain?</h2>
+                        <p class="mb-5">The cold chain is a temperature-controlled supply chain system that includes all the activities involved in the transport, storage, and handling of temperature-sensitive products. The cold chain is designed to maintain a consistent temperature range for these products, usually between 2°C and 8°C or between -20°C and -70°C. The cold chain is essential for products such as vaccines, biologics, and some medications that are sensitive to heat or cold. Salsel Express company uses the following advanced procedures for the safety of such products.</p>
+
+                        <h2>Cold Chain and Pharma Delivery Services</h2>
+                        <p class="mb-4">Pharma delivery services are responsible for the safe and timely transportation of pharmaceutical products. These services must ensure that the products are transported under the right conditions to maintain their efficacy and safety. Salsel Express Cold chain pharma delivery services provide specialized logistics and transportation services that are tailored to meet the unique needs of the pharmaceutical industry. Our Company use specialized vehicles, packaging materials, and monitoring systems to maintain the required temperature range during transportation.</p>
+
+                        <p class="mb-4">Our Company offer a range of cold chain transportation options, including refrigerated trucks, air freight, and ocean freight. These services must adhere to strict regulations and guidelines to ensure the safety and efficacy of the products they transport.</p>
+
+                        <h2>Benefits of Cold Chain and Pharma Delivery Services</h2>
+                        <p class="mb-4">The benefits of cold chain and pharma delivery services include, Maintaining Product Efficacy – Cold chain pharma delivery services ensure that products remain within the required temperature range throughout transportation, which maintains their efficacy and safety.</p>
+
+                        <p class="mb-4">Regulatory Compliance – These services must comply with strict regulations and guidelines to ensure that products are transported safely and effectively</p>
+
+                        <p class="mb-4">Reduced Risk of Product Spoilage – We use of specialized packaging, monitoring systems, and vehicles significantly reduces the risk of product spoilage during transportation.</p>
+
+                        <p class="mb-4">Timely Delivery – Our Cold chain pharma delivery services are designed to ensure that products are delivered on time, even in remote or hard-to-reach locations.</p>
+
+                        <p class="mb-4">Improved Supply Chain Efficiency – Our specialized logistics and transportation services helps to streamline the supply chain, reduce waste and costs, and improve efficiency.</p>
+
+                        <p>
+                            In conclusion, door-to-door domestic and international express shipments offer a convenient, reliable, and efficient way to send and receive packages. You can rest assured that your package will be delivered safely and on time. So the next time you need to send a package, consider using a door-to-door express shipment service to make the process quick and easy.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="img-container">
+                            <img src="../assets/imgs/service-7.jpg" alt="">
+                        </div>
+                        <div class="services-section">
+                            <div class="label mb-4"> Services</div>
+                            <div class="truckload-service mb-4">
+                                <h6>Truckload freight</h6>
+                                <span>Truckload freight is a type of shipping that involves the transportation of large amounts of goods in a single truck. It is a popular option</span>
+                            </div>
+
+                            <div class="truckload-service mb-4">
+                                <h6>Special Delivery Channel including Bank Cards Delivery</h6>
+                                <span>Sales Express is providing the service of a Special Delivery Channel including Bank Cards Delivery to deliver your shipment in a secure manner. In today’s</span>
+                            </div>
+
+                            <div class="truckload-service mb-4">
+                                <h6>Sea Cargo FCL, LCL, Break bulk cargo & RORO Services</h6>
+                                <span>We provide FCL, LCL, Break bulk cargo & RORO Services. Sea cargo, also known as ocean freight, refers to the transportation of goods by sea</span>
+                            </div>
+
+                            <div class="truckload-service mb-4">
+                                <h6>Road Freight Cross-border (TRI-TRO) to GCC and ME Countries</h6>
+                                <span>Road freight transportation is an essential component of global trade and this is also one of the best services of Sales Express. The movement of</span>
+                            </div>
+
+                            <div class="truckload-service mb-4">
+                                <h6>Repair & Return Shipments Management</h6>
+                                <span>Our company is one of the best Repair & Return Shipments Management service providers. In today’s world, businesses have to operate in a highly competitive</span>
+                            </div>
+
+                            <div class="truckload-service mb-4">
+                                <h6>E-Commerce Delivery Solutions</h6>
+                                <span>E-commerce has transformed the way we shop and do business, making it possible to buy and sell goods online, from the comfort of our homes.</span>
+                            </div>
+                            
+                            <div class="special-delivery"></div>
+                            <div class="sea-cargo"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    <!-- main service detail section end -->
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="contact-card">
+                <div class="infos">
+                    <h3>SALSEL EXPRESS <br> SHIPPING CO. L.L.C <br>
+                        سلاسل اكسبرس للشحن ذ.م.م</h3>
+
+                    <p class="star">
+                        <i class="fa-solid fa-star"></i>
+                    </p>
+                    <h3 class="number">+97142879993</h3>
+                    <p class="timings">available from 10:00 – 19:00</p>
+                    <p class="address">Address St 304, Um Ramool, Dubai UAE</p>
+                    <p class="email-address">Email info@salselexpress.com</p>
+                </div>
+                <div class="form">
+                    <h6 class="section-title mb-4">Get In Touch</h6>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-lg" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="First Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-lg" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="Last Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-lg" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control form-control-lg" id="exampleInputPassword1"
+                                placeholder="Phone Number" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="contact-message" id="" cols="30" rows="7"
+                                class="form-control form-control-lg" placeholder="Message"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg mt-3">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Section -->
+
+    <section class="has-bg-img py-0">
+        <div class="container">
+            <div class="footer">
+                <div class="footer-lists">
+                    <ul class="list">
+                        <!-- <li class="list-head">
+                            <h6 class="font-weight-bold">ABOUT US</h6>
+                        </li> -->
+                        <li class="list-body">
+                            <a href="#" class="logo">
+                                <img src="../assets/imgs/logo_.png" width="100%"
+                                    alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, Creative studio Landing page">
+                            </a>
+                            <p>We reduce your distance from the world. No matter where you are, just choose the product of any brand and we will deliver it to you.</p>
+                            <!-- <p class="mt-3">
+                                Copyright
+                                <script>document.write(new Date().getFullYear())</script> &copy; <a
+                                    class="d-inline text-primary" href="http://www.devcrud.com">DevCRUD</a>
+                            </p> -->
+                        </li>
+                    </ul>
+                    <ul class="list">
+                        <li class="list-head">
+                            <h6 class="font-weight-bold">USEFUL LINKS</h6>
+                        </li>
+                        <li class="list-body">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="../index.html#home">Home</a>
+                                    <a href="../screens/shop&ship.html">Shop & Ship</a>
+                                    <!-- <a href="#portfolio">Help Desk</a> -->
+                                    <a href="../index.html#home">Track Order</a>
+                                </div>
+                                <div class="col">
+                                    <a href="#contact">Contact Us</a>
+                                    <a href="#blog">About us</a>
+                                    <a href="#">Login/Register</a>
+                                    <a href="#">My Account</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="list">
+                        <li class="list-head">
+                            <h6 class="font-weight-bold">Subscribe Now</h6>
+                            <p>Don’t miss our future updates! Get Subscribed Today!</p>
+                            <input type="text" > <button>Subscribe</button>
+                        </li>
+                        <li class="list-body">
+                            <!-- <p>Contact us and we'll get back to you within 24 hours.</p>
+                            <p><i class="ti-location-pin"></i> 12345 Fake ST NoWhere AB Country</p>
+                            <p><i class="ti-email"></i> info@website.com</p> -->
+                            <div class="social-links">
+                            <h6 class="font-weight-bold">CONTACT INFO</h6>
+                                <a href="javascript:void(0)" class="link"><i class="ti-facebook"></i></a>
+                                <a href="javascript:void(0)" class="link"><i class="ti-twitter-alt"></i></a>
+                                <a href="javascript:void(0)" class="link"><i class="ti-google"></i></a>
+                                <a href="javascript:void(0)" class="link"><i class="ti-pinterest-alt"></i></a>
+                                <a href="javascript:void(0)" class="link"><i class="ti-instagram"></i></a>
+                                <a href="javascript:void(0)" class="link"><i class="ti-rss"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="socialmedia-toggle" onclick="expand()">
+        <i class="fa fa-plus" id="plus"></i>
+      </div>
+  
+      <div class="menu_group" id="menu">
+        <a href="https://www.instagram.com/bachassllc/" class="toggle_items" target="_blank"><img alt=""
+            id="toggle-images1" src="../assets/imgs/social/instagramIcon.png" /></a>
+        <a href="https://wa.me/13074564966" class="toggle_items" target="_blank"><img alt="" id="toggle-images2"
+            src="../assets/imgs/social/whatsAppIcon.png" /></a>
+        <a href="https://twitter.com/BachassLLC" class="toggle_items" target="_blank"><img alt="" id="toggle-images3"
+            src="../assets/imgs/social/twitterIcon.png" /></a>
+      </div>
+
+    <script>
+        AOS.init();
+    </script>
+
+    <!-- core  -->
+    <script src="../assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="../assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap affix -->
+    <script src="../assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Creative Studio js -->
+    <script src="../assets/js/creative-studio.js"></script>
+
+    <script type="text/javascript">
+        // function googleTranslateElementInit() {
+        //     new google.translate.TranslateElement({
+        //         pageLanguage: 'en',  // Change this to the default language of your website
+        //         includedLanguages: 'en,es,fr,de,ar',  // Add the languages you want to support
+        //         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        //         autoDisplay: false,
+        //         suppressInitialPostRender: false  // Add this option to suppress the initial toolbar display
+        //     }, 'google_translate_element');
+        // }
+
+
+        function updateFlagImage(languageCode) {
+            console.log('Updating flag for language:', languageCode);
+        }
+
+        // Call the function
+        updateFlagImage('ar');
+        function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',  // Change this to the default language of your website
+            includedLanguages: 'en,es,fr,de,ar',  // Add the languages you want to support
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+            suppressInitialPostRender: false  // Add this option to suppress the initial toolbar display
+        }, 'google_translate_element');
+    }
+
+    function hideGoogleTranslateToolbar() {
+        var googleTranslateFrame = document.querySelector('.goog-te-banner-frame');
+        var googleTranslateParent = googleTranslateFrame ? googleTranslateFrame.parentNode : null;
+
+        if (googleTranslateParent) {
+            googleTranslateParent.style.display = 'none';
+        }
+    }
+
+    function updateFlagImage(languageCode) {
+        debugger
+        console.log('Updating flag for language:', languageCode);
+        var flagMappings = {
+            'en': 'english.png',
+            'es': 'spanish.png',
+            'fr': 'french.png',
+            'de': 'german.png',
+            'ar': 'arabic.png'
+            // Add more mappings as needed
+        };
+
+        var flagFileName = flagMappings[languageCode];
+        if (flagFileName) {
+            var flagPath = 'assets/imgs/'+flagFileName;
+            console.log(flagPath);
+            var flagImage = document.getElementById('selected_language_flag');
+
+            if (flagImage) {
+                flagImage.src = flagPath;
+            }
+        }
+    }
+
+    // Trigger the function after the translation is complete
+    function googleTranslateOnLoad() {
+        setTimeout(function () {
+            hideGoogleTranslateToolbar();
+            debugger
+
+            var translateElement = document.getElementById('google_translate_element');
+            if (translateElement) {
+                translateElement.addEventListener('change', function () {
+                    var selectedLanguage = translateElement.querySelector(':checked').value;
+                    updateFlagImage(selectedLanguage);
+                });
+            }
+        }, 500);
+    }
+    </script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+
+</html>
