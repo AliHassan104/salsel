@@ -91,22 +91,19 @@ function showTickets() {
         debugger
         const row = `
             <tr onclick="goInDetails()">
+            <td style="text-align: center;">
+                    <span class="action-edit"><i class="fa-regular fa-pen-to-square"></i></span>
+                    <span class="action-delete"><i class="fa-solid fa-trash-can"></i></span>
+                    <span class="action-enforce-delete"><i class="fa-solid fa-delete-left"></i></span>
+                </td>
+                <td>${data.createdAt}</td>
+                <td scope="row">${data.ticketType}</td>
+                <td>${data.ticketStatus}</td>
+                <td>${data.ticketFlag}</td>
                 <td>${data.category}</td>
-                <td scope="row">${data.Title}</td>
-                <td>${data.deliveryAddress}</td>
-                <td>${data.department}</td>
+                <td>${data.assignedTo}</td>
                 <td>${data.departmentCategory}</td>
-                <td>${data.destinationCity}</td>
-                <td>${data.originCity}</td>
-                <td>
-                    <span style="color: #1572e8; display: inline-block; padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec; background: #f8fcfe;">New</span>
-                    <span style="color: #ed8e00; display: inline-block; padding: 6px 10px; font-weight: bold; border: 1px solid #ebecec; background: #f8fcfe;">High</span>
-                </td>
-                <td colspan="3" style="text-align: center;">
-                    <span class="action-edit"><i class="fa-regular fa-pen-to-square"></i> Edit Ticket</span>
-                    <span class="action-delete"><i class="fa-solid fa-trash-can"></i> Delete</span>
-                    <span class="action-enforce-delete"><i class="fa-solid fa-delete-left"></i> Enforce Delete</span>
-                </td>
+                
             </tr>`;
 
         // Append the row to the table body
@@ -199,28 +196,28 @@ function selectTicketType(ticketType) {
 
     switch (ticketType) {
         case "Subject":
-        document.getElementById("shipmentInquiry").style.display = 'flex'
-        document.getElementById("pickupRequest").style.display = 'none'
+            document.getElementById("shipmentInquiry").style.display = 'flex'
+            document.getElementById("pickupRequest").style.display = 'none'
 
-        break;
+            break;
 
         case "Text Box":
-        document.getElementById("shipmentInquiry").style.display = 'none'
-        document.getElementById("pickupRequest").style.display = 'flex'
-        break;
+            document.getElementById("shipmentInquiry").style.display = 'none'
+            document.getElementById("pickupRequest").style.display = 'flex'
+            break;
 
         case "Priority":
-        document.getElementById("priority").style.display = 'flex'
-        break;
-        
+            document.getElementById("priority").style.display = 'flex'
+            break;
+
         case "Attachements":
-        document.getElementById("rateInquiry").style.display = 'flex'
-        break;
- 
+            document.getElementById("rateInquiry").style.display = 'flex'
+            break;
+
     }
 }
 
-function createTicket(){
+function createTicket() {
     const ticketType = document.getElementById('ticketType').value;
     const name = document.getElementById('inputPassword4').value;
     const email = document.getElementById('inputEmail4').value;
@@ -258,10 +255,10 @@ function createTicket(){
         pickupAddress: "string",
         pickupDate: "2024-01-03",
         pickupTime: {
-          hour: "string",
-          minute: "string",
-          nano: 0,
-          second: "string"
+            hour: "string",
+            minute: "string",
+            nano: 0,
+            second: "string"
         },
         recipientContactNumber: "string",
         recipientName: "string",
@@ -271,8 +268,8 @@ function createTicket(){
         status: true,
         ticketFlag: "string",
         ticketStatus: "string"
-      };
-      
-      console.log(ticketObject);
-      
+    };
+
+    console.log(ticketObject);
+
 }

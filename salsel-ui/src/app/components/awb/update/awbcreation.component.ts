@@ -292,6 +292,10 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           deliveryAddress: this.singleTicket.deliveryAddress,
           pickupDate: pickDate,
           pickupTime: pickTime,
+          deliveryStreetName: this.singleTicket.deliveryStreetName,
+          deliveryDistrict: this.singleTicket.deliveryDistrict,
+          pickupStreetName: this.singleTicket.pickupStreetName,
+          pickupDistrict: this.singleTicket.pickupDistrict,
         });
       });
     }
