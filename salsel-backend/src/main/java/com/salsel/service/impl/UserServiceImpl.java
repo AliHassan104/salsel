@@ -3,6 +3,7 @@ package com.salsel.service.impl;
 import com.salsel.dto.UserDto;
 import com.salsel.exception.InvalidResetCodeException;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.exception.UserAlreadyExistAuthenticationException;
 import com.salsel.model.Otp;
 import com.salsel.model.Role;
 import com.salsel.model.User;
@@ -41,6 +42,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto registerUser(UserDto userdto) {
         User user = toEntity(userdto);
+
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        if(existingUser.isPresent()){
+            throw new UserAlreadyExistAuthenticationException("User Already Exist");
+        }
+
         user.setStatus(true);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Set<Role> roleList = new HashSet<>();
@@ -58,6 +65,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto registerRoleCustomerUser(UserDto userdto) {
         User user = toEntity(userdto);
+
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        if(existingUser.isPresent()){
+            throw new UserAlreadyExistAuthenticationException("User Already Exist");
+        }
+
         user.setStatus(true);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Set<Role> roleList = new HashSet<>();

@@ -25,6 +25,16 @@ public class GlobalExceptionHandler
         return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = UserAlreadyExistAuthenticationException.class)
+    public ResponseEntity<ErrorMessage<Object>> UserAlreadyExistException(UserAlreadyExistAuthenticationException ex)
+    {
+        ErrorMessage<Object> errorMessage = ErrorMessage.builder()
+                .error(ex.getMessage())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
