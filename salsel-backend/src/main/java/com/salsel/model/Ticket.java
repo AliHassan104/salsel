@@ -42,7 +42,6 @@ public class Ticket {
     private String weight;
     private String email;
     private String phone;
-    private String textarea;
     private String airwayNumber;
     private String ticketType;
 
@@ -51,6 +50,10 @@ public class Ticket {
 
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime pickupTime;
+
+    @Column(length = 1000)
+    private String textarea;
+
 
     private String category;
     private String ticketFlag;
