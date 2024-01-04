@@ -99,6 +99,11 @@ public class AwbServiceImpl implements AwbService {
         model.addAttribute("dutyAndTaxesBillTo", awb.getDutyAndTaxesBillTo());
         model.addAttribute("productType", awb.getProductType());
         model.addAttribute("serviceType", awb.getServiceType());
+        model.addAttribute("serviceTypeCode",awb.getServiceTypeCode());
+        model.addAttribute("deliveryDistrict",awb.getDeliveryDistrict());
+        model.addAttribute("deliveryStreetName",awb.getDeliveryStreetName());
+        model.addAttribute("pickupDistrict",awb.getPickupDistrict());
+        model.addAttribute("pickupStreetName",awb.getPickupStreetName());
         return pdfGenerationService.generatePdf("Awb", model, awbId);
     }
 
@@ -154,6 +159,12 @@ public class AwbServiceImpl implements AwbService {
         existingAwb.setRequestType(awbDto.getRequestType());
         existingAwb.setDutyAndTaxesBillTo(awbDto.getDutyAndTaxesBillTo());
         existingAwb.setAwbStatus(awbDto.getAwbStatus());
+        existingAwb.setAccountNumber(awbDto.getAccountNumber());
+        existingAwb.setServiceTypeCode(awbDto.getServiceTypeCode());
+        existingAwb.setDeliveryDistrict(awbDto.getDeliveryDistrict());
+        existingAwb.setDeliveryStreetName(awbDto.getDeliveryStreetName());
+        existingAwb.setPickupStreetName(awbDto.getPickupStreetName());
+        existingAwb.setPickupDistrict(awbDto.getPickupDistrict());
 
         Awb updatedAwb = awbRepository.save(existingAwb);
         return toDto(updatedAwb);
@@ -190,6 +201,12 @@ public class AwbServiceImpl implements AwbService {
                 .emailFlag(awb.getEmailFlag())
                 .awbUrl(awb.getAwbUrl())
                 .awbStatus(awb.getAwbStatus())
+                .accountNumber(awb.getAccountNumber())
+                .serviceTypeCode(awb.getServiceTypeCode())
+                .pickupDistrict(awb.getPickupDistrict())
+                .pickupStreetName(awb.getPickupStreetName())
+                .deliveryDistrict(awb.getDeliveryDistrict())
+                .deliveryStreetName(awb.getDeliveryStreetName())
                 .build();
     }
 
@@ -224,6 +241,12 @@ public class AwbServiceImpl implements AwbService {
                 .emailFlag(awbDto.getEmailFlag())
                 .awbUrl(awbDto.getAwbUrl())
                 .awbStatus(awbDto.getAwbStatus())
+                .accountNumber(awbDto.getAccountNumber())
+                .serviceTypeCode(awbDto.getServiceTypeCode())
+                .pickupDistrict(awbDto.getPickupDistrict())
+                .pickupStreetName(awbDto.getPickupStreetName())
+                .deliveryDistrict(awbDto.getDeliveryDistrict())
+                .deliveryStreetName(awbDto.getDeliveryStreetName())
                 .build();
     }
 }

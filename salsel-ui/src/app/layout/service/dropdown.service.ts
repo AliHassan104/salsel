@@ -59,4 +59,10 @@ export class DropdownService {
   extractNames(array: any[]): string[] {
     return array.map<any>((item) => item.name);
   }
+  extractCode(array: any[]): string[] {
+    return array.map<any>((item) => item.code);
+  }
+  extractaccountNumber(array: any[]): string[] {
+    return array.map<any>((item) => item.accountNumber);
+  }
 }

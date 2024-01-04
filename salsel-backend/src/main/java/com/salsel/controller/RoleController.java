@@ -24,7 +24,6 @@ public class RoleController {
     }
 
     @GetMapping("/role")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<RoleDto>> getAllRole() {
         List<RoleDto> roleDtoList = roleService.getAll();
         return ResponseEntity.ok(roleDtoList);

@@ -22,4 +22,15 @@ export interface Ticket {
   ticketFlag?: string;
   status?: true;
   createdBy?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  airwayNumber?: string;
+  weight?: string;
+  deliveryDistrict?: string;
+  deliveryStreetName?: string;
+  pickupDistrict?: string;
+  pickupStreetName?: string;
+  textarea?: string;
+  ticketType?: string;
 }

@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 export class UserComponent implements OnInit {
   user?: IUser;
+  id?: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -23,8 +24,8 @@ export class UserComponent implements OnInit {
 
   paramsSetup() {
     this.activatedRoute.paramMap.subscribe((res) => {
-      var id = res.get("id");
-      this.getSingleUser(id);
+      this.id = res.get("id");
+      this.getSingleUser(this.id);
     });
   }
 

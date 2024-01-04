@@ -19,12 +19,12 @@
 <!--        <p>Fred L Scott <br></br> 20 Bridge St <br></br> Olney MK46 4AB <br></br> England</p>-->
         <h3 class="h31">From:</h3>
         <p class="truncate-text p1" th:text="${shipperName} + '  -  ' + ${shipperContactNumber}"></p>
-        <p class="truncate-text p12" th:text="'Street Name' + '  -  ' + 'District'"></p>
+        <p class="truncate-text p12" th:text="${pickupStreetName} + '  -  ' + ${pickupDistrict}"></p>
 <!--        <p class="truncate-text p2" th:text="${pickupAddress}"></p>-->
         <p class="truncate-text p2" th:text="${originCity} + '  -  ' + ${originCountry}"></p>
         <h3 class="h32">To:</h3>
         <p class="truncate-text p4" th:text="${recipientsName} + '  -  ' +  ${recipientsContactNumber}"></p>
-        <p class="truncate-text p42" th:text="'Street Name' + '  -  ' + 'District'"></p>
+        <p class="truncate-text p42" th:text="${deliveryStreetName} + '  -  ' + ${deliveryDistrict}"></p>
         <p class="truncate-text p5" th:text="${deliveryAddress}"></p>
         <p class="truncate-text p6" th:text="${destinationCity} + '  -  ' +  ${destinationCountry}"></p>
         <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
@@ -40,7 +40,7 @@
             <p class="b4" th:text="'Weight: '  + ${weight} + ' kg' +  '  /  Pieces: '  +  ${pieces}"></p>
         </div>
         <div class="code">
-            <p class="code-service" th:text="'SSCFCD'"></p>
+            <p class="code-service" th:text="${serviceTypeCode}"></p>
             <h1 class="heading" th:text="${amount}"></h1>
             <p class="request-type" th:text="${requestType}"></p>
         </div>

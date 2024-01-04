@@ -8,6 +8,7 @@ import { PermissionsComponent } from "./components/permissions/permissions.compo
 import { AuthGuardService } from "./components/auth/service/auth-guard.service";
 import { ForgotPasswordComponent } from "./components/auth/forgot-password/forgot-password.component";
 import { NewPasswordComponent } from "./components/auth/new-password/new-password.component";
+import { UserProfileComponent } from "./components/auth/usermanagement/user-profile/user-profile.component";
 
 @NgModule({
   imports: [
@@ -205,6 +206,11 @@ import { NewPasswordComponent } from "./components/auth/new-password/new-passwor
             {
               path: "permissions",
               component: PermissionsComponent,
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "profile",
+              component: UserProfileComponent,
               canActivate: [AuthGuardService],
             },
           ],

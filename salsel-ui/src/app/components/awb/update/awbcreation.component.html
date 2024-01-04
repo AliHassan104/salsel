@@ -6,6 +6,18 @@
         <form action="" [formGroup]="awbForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
                 <!-- Shipper Details -->
+                <!-- Account Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="accountNumber">Account Number</label>
+                    <p-dropdown [options]="accountNumbers" placeholder="Select Account Number"
+                        formControlName="accountNumber"
+                        [ngClass]="{'ng-dirty':awbForm.get('accountNumber')?.touched && awbForm.get('accountNumber')?.invalid}"
+                        [required]="true"></p-dropdown>
+                    <small *ngIf="!awbForm.get('accountNumber')?.valid && awbForm.get('accountNumber')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
                 <!-- Shipper Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="shippername">Shipper Name</label>
@@ -135,7 +147,7 @@
                     <label htmlFor="servicetype">Service Type</label>
                     <p-dropdown [options]="serviceType" placeholder="Select Service Type" formControlName="serviceType"
                         [ngClass]="{'ng-dirty':awbForm.get('serviceType')?.touched && awbForm.get('serviceType')?.invalid}"
-                        [required]="true"></p-dropdown>
+                        (onChange)="getServiceType($event)" [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('serviceType')?.valid && awbForm.get('serviceType')?.touched"
                         class="text-red-500">
                         Required
@@ -168,19 +180,6 @@
                         [ngClass]="{'ng-dirty':awbForm.get('content')?.touched && awbForm.get('content')?.invalid}"
                         placeholder="Enter Content" [required]="true" />
                     <small *ngIf="!awbForm.get('content')?.valid && awbForm.get('content')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-                <!-- Account Number -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="accountNumber">Account Number</label>
-                    <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-                        placeholder="Enter Account Number" formControlName="accountNumber"
-                        [ngClass]="{'ng-dirty':awbForm.get('accountNumber')?.touched && awbForm.get('accountNumber')?.invalid}"
-                        [required]="true">
-                    </p-inputNumber>
-                    <small *ngIf="!awbForm.get('accountNumber')?.valid && awbForm.get('accountNumber')?.touched"
                         class="text-red-500">
                         Required
                     </small>
