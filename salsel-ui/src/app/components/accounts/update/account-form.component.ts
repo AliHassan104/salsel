@@ -9,6 +9,7 @@ import { FormvalidationService } from "../../Tickets/service/formvalidation.serv
 import { CityService } from "../../City/service/city.service";
 import { CountryService } from "../../country/service/country.service";
 import { filter } from "rxjs";
+import { UserService } from "../../auth/usermanagement/service/user.service";
 
 @Component({
   selector: "app-account-form",
@@ -48,7 +49,8 @@ export class AccountFormComponent implements OnInit {
     private formService: FormvalidationService,
     private router: Router,
     private cityService: CityService,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -152,10 +154,15 @@ export class AccountFormComponent implements OnInit {
           .productFieldValuesList
       );
 
-      this.salesAgents = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Sales Agent")[0]
-          .productFieldValuesList
-      );
+      this.userService.getAllUser({ status: true }).subscribe((res: any) => {
+        this.salesAgents = res;
+        console.log(this.salesAgents[0].roles);
+
+        const filteredData = this.salesAgents.filter(
+          (item) => item.roles[0]?.name === "ROLE_SALES_AGENT"
+        );
+        this.salesAgents = this.dropdownService.extractNames(filteredData);
+      });
     });
 
     this.countryService.getAllCountries(this.params).subscribe((res) => {

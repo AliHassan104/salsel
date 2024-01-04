@@ -189,9 +189,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       .getAllAccounts({ status: true })
       .subscribe((res: any) => {
         this.accountNumbers = res.body;
-        this.accountNumbers = this.dropdownService.extractaccountNumber(
-          this.accountNumbers
-        );
+        console.log(this.accountNumbers);
       });
   }
 

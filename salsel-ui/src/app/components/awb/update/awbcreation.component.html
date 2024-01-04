@@ -9,8 +9,8 @@
                 <!-- Account Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="accountNumber">Account Number</label>
-                    <p-dropdown [options]="accountNumbers" placeholder="Select Account Number"
-                        formControlName="accountNumber"
+                    <p-dropdown [options]="accountNumbers" optionLabel="accountNumber"
+                        placeholder="Select Account Number" filter="true" formControlName="accountNumber"
                         [ngClass]="{'ng-dirty':awbForm.get('accountNumber')?.touched && awbForm.get('accountNumber')?.invalid}"
                         [required]="true"></p-dropdown>
                     <small *ngIf="!awbForm.get('accountNumber')?.valid && awbForm.get('accountNumber')?.touched"
