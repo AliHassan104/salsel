@@ -51,6 +51,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   // SINGLE BILL AND TICKET STORE IN IT
   singleBill?: IAwbDto;
   singleTicket?: Ticket;
+  preprocessedAccountNumbers: any;
 
   //   CONSTRUCTOR
   constructor(
@@ -190,6 +191,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       .subscribe((res: any) => {
         this.accountNumbers = res.body;
         console.log(this.accountNumbers);
+        this.preprocessedAccountNumbers = this.accountNumbers.map(
+          (account) => ({
+            label: `${account.accountNumber}, ${account.customerName}`,
+            value: account.number,
+          })
+        );
       });
   }
 
