@@ -40,7 +40,8 @@ INSERT INTO permissions (name, value) VALUES
         (4,'ROLE_CUSTOMER_CARE_AGENT'),
         (5,'ROLE_MANAGEMENT_USER'),
         (6,'ROLE_OPERATION_USER'),
-        (7,'ROLE_CUSTOMER_USER');
+        (7,'ROLE_CUSTOMER_USER'),
+        (8,'ROLE_SALES_AGENT');
 
 
 INSERT INTO `role_permissions` VALUES
@@ -260,10 +261,12 @@ VALUES
     ('Bill Shipper', 'Active', 5),
     ('Bill Consignee', 'Active', 5),
 
-    ('Subject', 'Active', 6),
-    ('Text Box', 'Active', 6),
-    ('Priority', 'Active', 6),
-    ('Attachments', 'Active', 6),
+    ('Shipment Inquiry', 'Active', 6),
+    ('Pickup Request', 'Active', 6),
+    ('Rate Inquiry', 'Active', 6),
+    ('Pre Sales Request', 'Active', 6),
+    ('Account Opening Request', 'Active', 6),
+    ('Exclusive Partnership Program', 'Active', 6),
 
     ('Active', 'Active', 7),
     ('In Active', 'Active', 7),
