@@ -51,11 +51,27 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/user/{id}")
+    @PatchMapping("/user/{id}")
     @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         UserDto updatedUserDto = userService.update(id, userDto);
         return ResponseEntity.ok(updatedUserDto);
+    }
+
+    @PutMapping("/user/regenerate-password/{id}")
+    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
+    public ResponseEntity<String> regeneratePassword(@PathVariable Long id) {
+        String password = userService.regeneratePassword(id);
+        return ResponseEntity.ok(password);
+    }
+
+    @PutMapping("/user/change-password/{id}")
+    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
+    public ResponseEntity<String> changePassword(@PathVariable Long id,
+                                                 @RequestParam(value = "currentPassword") String currentPassword,
+                                                 @RequestParam(value = "newPassword") String newPassword) {
+        String password = userService.changePassword(id, currentPassword, newPassword);
+        return ResponseEntity.ok(password);
     }
 
     @PutMapping("/user/status/{id}")

@@ -2,10 +2,14 @@ package com.salsel.service.impl;
 
 import com.salsel.dto.AccountDto;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.exception.UserAlreadyExistAuthenticationException;
 import com.salsel.model.Account;
+import com.salsel.model.User;
 import com.salsel.repository.AccountRepository;
+import com.salsel.repository.UserRepository;
 import com.salsel.service.AccountService;
 import com.salsel.service.BucketService;
+import com.salsel.utils.EmailUtils;
 import com.salsel.utils.HelperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +19,23 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
     private final HelperUtils helperUtils;
+    private final EmailUtils emailUtils;
     private final BucketService bucketService;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
 
-    public AccountServiceImpl(AccountRepository accountRepository, HelperUtils helperUtils, BucketService bucketService) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, HelperUtils helperUtils, EmailUtils emailUtils, BucketService bucketService) {
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
         this.helperUtils = helperUtils;
+        this.emailUtils = emailUtils;
         this.bucketService = bucketService;
     }
 
@@ -35,6 +44,18 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto save(AccountDto accountDto, MultipartFile pdf) {
         Account account = toEntity(accountDto);
         account.setStatus(true);
+
+        Optional<User> existingUser = userRepository.findByEmail(account.getEmail());
+        if(existingUser.isPresent()){
+            throw new UserAlreadyExistAuthenticationException("User Already Exist");
+        }
+
+        String password = helperUtils.generateResetPassword();
+        User user = new User();
+        user.setEmail(account.getEmail());
+        user.setPassword(password);
+        User createdUser = userRepository.save(user);
+        emailUtils.sendWelcomeEmail(createdUser, password);
         Account createdAccount = accountRepository.save(account);
 
         // Save PDF to S3 bucket
@@ -122,6 +143,7 @@ public class AccountServiceImpl implements AccountService {
         return AccountDto.builder()
                 .id(account.getId())
                 .accountType(account.getAccountType())
+                .email(account.getEmail())
                 .businessActivity(account.getBusinessActivity())
                 .accountNumber(account.getAccountNumber())
                 .customerName(account.getCustomerName())
@@ -144,6 +166,7 @@ public class AccountServiceImpl implements AccountService {
     public Account toEntity(AccountDto accountDto) {
         return Account.builder()
                 .id(accountDto.getId())
+                .email(accountDto.getEmail())
                 .accountType(accountDto.getAccountType())
                 .businessActivity(accountDto.getBusinessActivity())
                 .accountNumber(accountDto.getAccountNumber())

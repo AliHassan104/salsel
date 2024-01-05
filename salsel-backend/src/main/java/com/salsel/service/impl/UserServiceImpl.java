@@ -4,6 +4,7 @@ import com.salsel.dto.UserDto;
 import com.salsel.exception.InvalidResetCodeException;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.exception.UserAlreadyExistAuthenticationException;
+import com.salsel.model.Account;
 import com.salsel.model.Otp;
 import com.salsel.model.Role;
 import com.salsel.model.User;
@@ -83,6 +84,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public String regeneratePassword(Long id) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", id)));
+
+        String password = helperUtils.generateResetPassword();
+        existingUser.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(existingUser);
+        emailUtils.sendPasswordRegeneratedEmail(existingUser, password);
+        return password;
+    }
+
+    @Override
+    @Transactional
+    public String changePassword(Long id, String currentPassword, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+        if (bCryptPasswordEncoder.matches(currentPassword, user.getPassword())) {
+            String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
+
+            userRepository.updatePassword(id, encodedNewPassword);
+
+            return "Password updated successfully";
+        } else {
+            return "Current password is incorrect";
+        }
+    }
+
+    @Override
     public List<UserDto> getAll(Boolean status) {
         List<User> userList = userRepository.findAllInDesOrderByIdAndStatus(status);
         List<UserDto> userDtoList = new ArrayList<>();
@@ -147,15 +178,20 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", id)));
 
-        existingUser.setName(userDto.getName());
-        existingUser.setEmail(userDto.getEmail());
-        existingUser.setPhone(userDto.getPhone());
-        existingUser.setFirstname(userDto.getFirstname());
-        existingUser.setLastname(userDto.getLastname());
-        existingUser.setEmployeeId(userDto.getEmployeeId());
-        existingUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        if (userDto.getEmail() != null) {
+            existingUser.setName(userDto.getName());
+            existingUser.setEmail(userDto.getEmail());
+            existingUser.setPhone(userDto.getPhone());
+            existingUser.setFirstname(userDto.getFirstname());
+            existingUser.setLastname(userDto.getLastname());
+            existingUser.setEmployeeId(userDto.getEmployeeId());
+            existingUser.getRoles().removeIf(role -> !userDto.getRoles().contains(role));
+        }
 
-        existingUser.getRoles().removeIf(role -> !userDto.getRoles().contains(role));
+        // Check if the password is provided before attempting to encode it
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            existingUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        }
 
         Set<Role> roleList = userDto.getRoles().stream()
                 .map(role -> roleRepository.findById(role.getId())
@@ -166,6 +202,7 @@ public class UserServiceImpl implements UserService {
         User updatedUser = userRepository.save(existingUser);
         return toDto(updatedUser);
     }
+
 
     @Override
     @Transactional

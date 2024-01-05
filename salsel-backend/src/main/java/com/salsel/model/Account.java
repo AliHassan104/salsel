@@ -19,6 +19,7 @@ public class Account {
     private Long id;
 
     private String accountType;
+    private String email;
     private String businessActivity;
     private String accountNumber;
     private String customerName;
