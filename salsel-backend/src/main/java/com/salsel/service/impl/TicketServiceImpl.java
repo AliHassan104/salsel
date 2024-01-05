@@ -10,13 +10,17 @@ import com.salsel.repository.TicketRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.TicketService;
 import com.salsel.specification.FilterSpecification;
+import com.salsel.utils.HelperUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -28,10 +32,14 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+    private final HelperUtils helperUtils;
+    private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository){
+
+    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository, HelperUtils helperUtils){
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
+        this.helperUtils = helperUtils;
     }
 
     @Autowired
@@ -39,13 +47,21 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     @Transactional
-    public TicketDto save(TicketDto ticketDto) {
+    public TicketDto save(TicketDto ticketDto, MultipartFile pdf) {
         Ticket ticket = toEntity(ticketDto);
         ticket.setStatus(true);
         ticket.setTicketStatus("Open");
         ticket.setTicketFlag("Normal");
         Ticket createdTicket = ticketRepository.save(ticket);
-        return toDto(createdTicket);
+
+        // Save PDF to S3 bucket
+        if (pdf != null && !pdf.isEmpty()) {
+            String folderName = "Ticket_" + createdTicket.getId();
+            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            createdTicket.setTicketUrl(savedPdfUrl);
+            logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
+        }
+        return toDto(ticketRepository.save(createdTicket));
     }
 
     @Override
@@ -195,6 +211,7 @@ public class TicketServiceImpl implements TicketService {
                 .pickupDistrict(ticket.getPickupDistrict())
                 .pickupStreetName(ticket.getPickupStreetName())
                 .name(ticket.getName())
+                .ticketUrl(ticket.getTicketUrl())
                 .email(ticket.getEmail())
                 .weight(ticket.getWeight())
                 .phone(ticket.getPhone())
@@ -219,6 +236,7 @@ public class TicketServiceImpl implements TicketService {
                 .pickupTime(ticketDto.getPickupTime())
                 .ticketStatus(ticketDto.getTicketStatus())
                 .status(ticketDto.getStatus())
+                .ticketUrl(ticketDto.getTicketUrl())
                 .category(ticketDto.getCategory())
                 .ticketFlag(ticketDto.getTicketFlag())
                 .originCity(ticketDto.getOriginCity())

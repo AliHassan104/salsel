@@ -38,6 +38,7 @@ public class TicketDto {
     private String textarea;
     private String airwayNumber;
     private String ticketType;
+    private String ticketUrl;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
