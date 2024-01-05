@@ -8,6 +8,7 @@ import { RolesService } from "../../../permissions/service/roles.service";
 import { UserService } from "../service/user.service";
 import { IUser } from "../model/userDto";
 import { LoginService } from "../../service/login.service";
+import { Password } from "primeng/password";
 
 @Component({
   selector: "app-add-user",
@@ -44,10 +45,10 @@ export class AddUserComponent implements OnInit {
       firstname: new FormControl(null, [Validators.required]),
       lastname: new FormControl(null, [Validators.required]),
       phone: new FormControl(null, Validators.required),
-      //   password: new FormControl(null, [
-      //     Validators.required,
-      //     Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
-      //   ]),
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
+      ]),
       roles: new FormControl(null, Validators.required),
       employeeId: new FormControl(null, Validators.required),
     });
@@ -125,7 +126,7 @@ export class AddUserComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.userForm.valid) {
+    if (this.editMode) {
       let formValue = this.userForm.value;
       let fullname = formValue.firstname + " " + formValue.lastname;
       const data = {
@@ -142,21 +143,37 @@ export class AddUserComponent implements OnInit {
         ],
         status: true,
       };
-
-      if (this.editMode) {
-        this.userService.updateUser(this.editId, data).subscribe((res) => {
-          this.userForm.reset();
-          this.router.navigate(["user/list"]);
-        });
-      } else {
+      this.userService.updateUser(this.editId, data).subscribe((res) => {
+        this.userForm.reset();
+        this.router.navigate(["user/list"]);
+      });
+    } else {
+      if (this.userForm.valid) {
+        let formValue = this.userForm.value;
+        let fullname = formValue.firstname + " " + formValue.lastname;
+        const data = {
+          firstname: formValue.firstname,
+          lastname: formValue.lastname,
+          name: fullname,
+          phone: formValue.phone,
+          email: formValue.email,
+          password: formValue.password,
+          employeeId: formValue.employeeId,
+          roles: [
+            {
+              id: formValue.roles.id,
+            },
+          ],
+          status: true,
+        };
         this.loginService.signUp(data).subscribe((res) => {
           this.userForm.reset();
           this.router.navigate(["user/list"]);
         });
+      } else {
+        this.alert();
+        this.formService.markFormGroupTouched(this.userForm);
       }
-    } else {
-      this.alert();
-      this.formService.markFormGroupTouched(this.userForm);
     }
   }
 

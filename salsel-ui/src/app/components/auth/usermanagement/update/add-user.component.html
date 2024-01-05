@@ -10,7 +10,7 @@
                 <div class="field col-12 md:col-6">
                     <label htmlFor="firstname"><strong>First Name</strong></label>
                     <input pInputText id="firstname" type="text" formControlName="firstname"
-                        placeholder="Enetr First Name"
+                        placeholder="Enter First Name"
                         [ngClass]="{'ng-dirty':userForm.get('firstname')?.touched && userForm.get('firstname')?.invalid}" />
                     <small *ngIf="!userForm.get('firstname')?.valid && userForm.get('firstname')?.touched"
                         class="text-red-500">
@@ -46,8 +46,8 @@
                     </small>
                 </div>
                 <!-- Password -->
-                <!-- <div class="field col-12 md:col-6">
-                    <label htmlFor="address"><strong>Password</strong></label>
+                <div class="field col-12 md:col-6" *ngIf="!editMode">
+                    <label htmlFor=" address"><strong>Password</strong></label>
                     <p-password [toggleMask]="true" class="w-20rem" placeholder="Enter Password"
                         autocomplete="current-password" [strongRegex]="true"
                         [ngClass]="{'ng-dirty':userForm.get('password')?.touched && userForm.get('password')?.invalid}"
@@ -65,7 +65,7 @@
                             <li *ngIf="isShortPassword()">Minimum length of 8 characters</li>
                         </ul>
                     </small>
-                </div> -->
+                </div>
                 <!-- Employee Id -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="employeeId"><strong>Employee Id</strong></label>

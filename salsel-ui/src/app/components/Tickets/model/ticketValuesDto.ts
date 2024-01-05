@@ -33,4 +33,5 @@ export interface Ticket {
   pickupStreetName?: string;
   textarea?: string;
   ticketType?: string;
+  ticketUrl?: string;
 }
