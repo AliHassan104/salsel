@@ -102,6 +102,7 @@ export class UserProfileComponent implements OnInit {
     this.inputField.nativeElement.focus();
     this.userForm.get("role").disable();
     this.userForm.get("employeeId").disable();
+    this.userForm.get("email").disable();
     this.editMode = true;
   }
 

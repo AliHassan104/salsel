@@ -48,8 +48,7 @@
                 <!-- Password -->
                 <div class="field col-12 md:col-6" *ngIf="!editMode">
                     <label htmlFor=" address"><strong>Password</strong></label>
-                    <p-password [toggleMask]="true" class="w-20rem" placeholder="Enter Password"
-                        autocomplete="current-password" [strongRegex]="true"
+                    <p-password [toggleMask]="true" class="w-20rem" placeholder="Enter Password" [strongRegex]="true"
                         [ngClass]="{'ng-dirty':userForm.get('password')?.touched && userForm.get('password')?.invalid}"
                         [strongLabel]="true" formControlName="password" [feedback]="false"
                         placeholder="Enter strong password"></p-password>
