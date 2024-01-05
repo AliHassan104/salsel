@@ -18,7 +18,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/account")
+    @PostMapping("/accountt")
     @PreAuthorize("hasAuthority('CREATE_ACCOUNT') and hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<AccountDto> createAccount(@RequestPart AccountDto accountDto,
                                                     @RequestPart("file") MultipartFile file) {

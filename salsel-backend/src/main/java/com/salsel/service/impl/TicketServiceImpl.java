@@ -10,13 +10,17 @@ import com.salsel.repository.TicketRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.TicketService;
 import com.salsel.specification.FilterSpecification;
+import com.salsel.utils.HelperUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -28,10 +32,14 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+    private final HelperUtils helperUtils;
+    private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository){
+
+    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository, HelperUtils helperUtils){
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
+        this.helperUtils = helperUtils;
     }
 
     @Autowired
@@ -39,11 +47,21 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     @Transactional
-    public TicketDto save(TicketDto ticketDto) {
+    public TicketDto save(TicketDto ticketDto, MultipartFile pdf) {
         Ticket ticket = toEntity(ticketDto);
         ticket.setStatus(true);
+        ticket.setTicketStatus("Open");
+        ticket.setTicketFlag("Normal");
         Ticket createdTicket = ticketRepository.save(ticket);
-        return toDto(createdTicket);
+
+        // Save PDF to S3 bucket
+        if (pdf != null && !pdf.isEmpty()) {
+            String folderName = "Ticket_" + createdTicket.getId();
+            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            createdTicket.setTicketUrl(savedPdfUrl);
+            logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
+        }
+        return toDto(ticketRepository.save(createdTicket));
     }
 
     @Override
@@ -144,6 +162,20 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setCreatedBy(ticketDto.getCreatedBy());
         existingTicket.setDepartment(ticketDto.getDepartment());
         existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
+        existingTicket.setCreatedBy(ticketDto.getCreatedBy());
+        existingTicket.setDepartment(ticketDto.getDepartment());
+        existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
+        existingTicket.setDeliveryStreetName(ticketDto.getDeliveryStreetName());
+        existingTicket.setDeliveryDistrict(ticketDto.getDeliveryDistrict());
+        existingTicket.setPickupStreetName(ticketDto.getPickupStreetName());
+        existingTicket.setPickupDistrict(ticketDto.getPickupDistrict());
+        existingTicket.setName(ticketDto.getName());
+        existingTicket.setWeight(ticketDto.getWeight());
+        existingTicket.setEmail(ticketDto.getEmail());
+        existingTicket.setPhone(ticketDto.getPhone());
+        existingTicket.setTextarea(ticketDto.getTextarea());
+        existingTicket.setAirwayNumber(ticketDto.getAirwayNumber());
+        existingTicket.setTicketType(ticketDto.getTicketType());
 
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return toDto(updatedTicket);
@@ -174,6 +206,18 @@ public class TicketServiceImpl implements TicketService {
                 .assignedTo(ticket.getAssignedTo())
                 .department(ticket.getDepartment())
                 .departmentCategory(ticket.getDepartmentCategory())
+                .deliveryDistrict(ticket.getDeliveryDistrict())
+                .deliveryStreetName(ticket.getDeliveryStreetName())
+                .pickupDistrict(ticket.getPickupDistrict())
+                .pickupStreetName(ticket.getPickupStreetName())
+                .name(ticket.getName())
+                .ticketUrl(ticket.getTicketUrl())
+                .email(ticket.getEmail())
+                .weight(ticket.getWeight())
+                .phone(ticket.getPhone())
+                .textarea(ticket.getTextarea())
+                .airwayNumber(ticket.getAirwayNumber())
+                .ticketType(ticket.getTicketType())
                 .build();
     }
 
@@ -192,6 +236,7 @@ public class TicketServiceImpl implements TicketService {
                 .pickupTime(ticketDto.getPickupTime())
                 .ticketStatus(ticketDto.getTicketStatus())
                 .status(ticketDto.getStatus())
+                .ticketUrl(ticketDto.getTicketUrl())
                 .category(ticketDto.getCategory())
                 .ticketFlag(ticketDto.getTicketFlag())
                 .originCity(ticketDto.getOriginCity())
@@ -202,6 +247,17 @@ public class TicketServiceImpl implements TicketService {
                 .assignedTo(ticketDto.getAssignedTo())
                 .department(ticketDto.getDepartment())
                 .departmentCategory(ticketDto.getDepartmentCategory())
+                .deliveryDistrict(ticketDto.getDeliveryDistrict())
+                .deliveryStreetName(ticketDto.getDeliveryStreetName())
+                .pickupDistrict(ticketDto.getPickupDistrict())
+                .pickupStreetName(ticketDto.getPickupStreetName())
+                .name(ticketDto.getName())
+                .email(ticketDto.getEmail())
+                .weight(ticketDto.getWeight())
+                .phone(ticketDto.getPhone())
+                .textarea(ticketDto.getTextarea())
+                .airwayNumber(ticketDto.getAirwayNumber())
+                .ticketType(ticketDto.getTicketType())
                 .build();
     }
 }

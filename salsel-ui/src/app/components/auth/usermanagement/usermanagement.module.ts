@@ -21,6 +21,8 @@ import { UserlistComponent } from "./list/userlist.component";
 import { UserComponent } from "./view/user.component";
 import { PasswordModule } from "primeng/password";
 import { TooltipModule } from "primeng/tooltip";
+import { AvatarModule } from "primeng/avatar";
+import { UserProfileModule } from "./user-profile/user-profile.module";
 
 @NgModule({
   declarations: [UserlistComponent, UserComponent],
@@ -46,6 +48,8 @@ import { TooltipModule } from "primeng/tooltip";
     TagModule,
     PasswordModule,
     TooltipModule,
+    AvatarModule,
+    UserProfileModule,
   ],
 })
 export class UsermanagementModule {}

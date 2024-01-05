@@ -35,12 +35,18 @@ public class Awb {
     private String originCountry;
     private String originCity;
     private String pickupAddress;
+    private String pickupStreetName;
+    private String pickupDistrict;
     private String shipperRefNumber;
     private String recipientsName;
     private String recipientsContactNumber;
     private String destinationCountry;
     private String destinationCity;
     private String deliveryAddress;
+    private String deliveryStreetName;
+    private String deliveryDistrict;
+    private String accountNumber;
+    private String serviceTypeCode;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;

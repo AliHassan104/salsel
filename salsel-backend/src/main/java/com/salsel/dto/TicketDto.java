@@ -27,6 +27,18 @@ public class TicketDto {
     private String recipientName;
     private String recipientContactNumber;
     private String deliveryAddress;
+    private String deliveryStreetName;
+    private String deliveryDistrict;
+    private String pickupStreetName;
+    private String pickupDistrict;
+    private String name;
+    private String weight;
+    private String email;
+    private String phone;
+    private String textarea;
+    private String airwayNumber;
+    private String ticketType;
+    private String ticketUrl;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;

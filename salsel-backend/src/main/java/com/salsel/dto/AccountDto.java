@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class AccountDto {
     private Long id;
     private String accountType;
+    private String email;
     private String businessActivity;
     private String accountNumber;
     private String customerName;

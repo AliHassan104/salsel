@@ -1,3 +1,5 @@
+import { S } from "@fullcalendar/core/internal-common";
+
 export interface IAwbDto {
   amount?: number;
   content?: string;
@@ -24,4 +26,10 @@ export interface IAwbDto {
   status?: boolean;
   weight?: number;
   requestType?: string;
+  serviceTypeCode?: string;
+  accountNumber?: string;
+  deliveryStreetName?: string;
+  deliveryDistrict?: string;
+  pickupStreetName?: string;
+  pickupDistrict?: string;
 }

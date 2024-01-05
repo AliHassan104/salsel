@@ -42,6 +42,9 @@ export class TicketformComponent implements OnInit {
   editMode;
   editId;
   singleTicket: Ticket;
+  pickDate;
+  pickTime;
+  userRole;
 
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
@@ -60,7 +63,8 @@ export class TicketformComponent implements OnInit {
     private cityService: CityService,
     private departmentService: DepartmentService,
     private departmentCategoryService: DepartmentCategoryService,
-    private roleService: RolesService
+    private roleService: RolesService,
+    private sessionStorageService: SessionStorageService
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +81,8 @@ export class TicketformComponent implements OnInit {
 
     // ON FORM EDIT
     this.editForm();
+
+    this.userRole = this.sessionStorageService.getRoleName();
   }
 
   ticketFormSetup() {
@@ -106,6 +112,11 @@ export class TicketformComponent implements OnInit {
       pickupDistrict: new FormControl(null),
       ticketType: new FormControl(null, Validators.required),
       weight: new FormControl(null),
+      name: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      phone: new FormControl(null, Validators.required),
+      textarea: new FormControl(null),
+      airwayNumber: new FormControl(null),
     });
   }
 
@@ -131,10 +142,17 @@ export class TicketformComponent implements OnInit {
           this.singleTicket.department
         );
 
-        let pickDate = new Date(this.singleTicket.pickupDate);
-        let cretedAt = new Date(this.singleTicket.createdAt);
-        let pickTimeArray = this.singleTicket.pickupTime;
-        let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
+        if (
+          this.singleTicket.pickupTime != null &&
+          this.singleTicket.pickupDate != null
+        ) {
+          this.pickDate = new Date(this.singleTicket.pickupDate);
+          let pickTimeArray = this.singleTicket.pickupTime;
+          this.pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
+        } else {
+          this.pickDate = null;
+          this.pickTime = null;
+        }
 
         this.ticketForm.setValue({
           shipperName: this.singleTicket.shipperName,
@@ -148,14 +166,25 @@ export class TicketformComponent implements OnInit {
           destinationCountry: this.singleTicket.destinationCountry,
           destinationCity: this.singleTicket.destinationCity,
           deliveryAddress: this.singleTicket.deliveryAddress,
-          pickupDate: pickDate,
-          pickupTime: pickTime,
+          pickupDate: this.pickDate,
+          pickupTime: this.pickTime,
           department: this.singleTicket.department,
           departmentCategory: this.singleTicket.departmentCategory,
           assignedTo: this.singleTicket.assignedTo,
           category: this.singleTicket.category,
           ticketStatus: this.singleTicket.ticketStatus,
           ticketFlag: this.singleTicket.ticketFlag,
+          deliveryStreetName: this.singleTicket.deliveryStreetName,
+          deliveryDistrict: this.singleTicket.deliveryDistrict,
+          pickupStreetName: this.singleTicket.pickupStreetName,
+          pickupDistrict: this.singleTicket.pickupDistrict,
+          ticketType: this.singleTicket.ticketType,
+          weight: this.singleTicket.weight,
+          name: this.singleTicket.name,
+          email: this.singleTicket.email,
+          phone: this.singleTicket.phone,
+          textarea: this.singleTicket.textarea,
+          airwayNumber: this.singleTicket.airwayNumber,
         });
       });
     }
@@ -166,7 +195,6 @@ export class TicketformComponent implements OnInit {
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
-      console.log(res);
 
       //   Categories From Product Field
       this.categories = this.dropdownService.extractNames(
@@ -185,7 +213,7 @@ export class TicketformComponent implements OnInit {
       );
 
       this.ticketType = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Product Type")[0]
+        this.productFields.filter((data) => data.name == "Ticket Type")[0]
           .productFieldValuesList
       );
     });
@@ -302,25 +330,19 @@ export class TicketformComponent implements OnInit {
   //  ON TICKET FORM SUBMIT
 
   onSubmit() {
-    console.log(this.ticketForm.value);
-
-    if (this.ticketForm.valid) {
+    if (
+      this.ticketForm.get("name")?.valid &&
+      this.ticketForm.get("email")?.valid &&
+      this.ticketForm.get("phone")?.valid &&
+      this.ticketForm.get("ticketType")?.valid
+    ) {
       // Date and Time get from form
       let ticketDate: Date = this.ticketForm.value.pickupDate;
       let ticketT: Date = this.ticketForm.value.pickupTime;
-      //   let createdAt: Date = this.ticketForm.value.createdAt;
-      // Now converting date in to our desired format
       let formattedDate: string = this._ticketService.formatDate(ticketDate);
-
-      // Now converting date in to our desired format
-      //   let formattedCreatedAt: string =
-      //     this._ticketService.formatCreatedAt(createdAt);
-
-      // Now converting Time in to our desired format
       const ticketTime: string =
         this._ticketService.formatDateToHHMMSS(ticketT);
 
-      //   To save time
       const formValue = this.ticketForm.value;
       const ticketData: Ticket = {
         assignedTo: formValue.assignedTo,
@@ -342,24 +364,64 @@ export class TicketformComponent implements OnInit {
         ticketFlag: formValue.ticketFlag,
         department: formValue.department,
         departmentCategory: formValue.departmentCategory,
+        deliveryStreetName: formValue.deliveryStreetName,
+        deliveryDistrict: formValue.deliveryDistrict,
+        pickupStreetName: formValue.pickupStreetName,
+        pickupDistrict: formValue.pickupDistrict,
+        ticketType: formValue.ticketType,
+        weight: formValue.weight,
+        name: formValue.name,
+        email: formValue.email,
+        phone: formValue.phone,
+        textarea: formValue.textarea,
+        airwayNumber: formValue.airwayNumber,
         createdBy: localStorage.getItem("loginUserEmail"),
       };
 
-      if (this.editMode) {
-        this.http
-          .put<any>(`${environment.URL}ticket/${this.editId}`, ticketData)
-          .subscribe(() => {
-            this.update();
-            this.router.navigate(["ticket/list"]);
-          });
-      } else {
-        //   Create Ticket
+      if (this.ticketForm.get("ticketType")?.value === "Pickup Request") {
+        if (
+          this.ticketForm.get("pickupDate")?.valid &&
+          this.ticketForm.get("pickupTime")?.valid
+        ) {
+          if (this.editMode) {
+            this.http
+              .put<any>(`${environment.URL}ticket/${this.editId}`, ticketData)
+              .subscribe(() => {
+                this.update();
+                this.router.navigate(["ticket/list"]);
+              });
+          } else {
+            //   Create Ticket
 
-        this._ticketService.createTicket(ticketData).subscribe((res: any) => {
-          this.success();
-          this.router.navigate(["ticket/list"]);
-          this.ticketForm.reset();
-        });
+            this._ticketService
+              .createTicket(ticketData)
+              .subscribe((res: any) => {
+                this.success();
+                this.router.navigate(["ticket/list"]);
+                this.ticketForm.reset();
+              });
+          }
+        } else {
+          this.alert();
+          this.formService.markFormGroupTouched(this.ticketForm);
+        }
+      } else {
+        if (this.editMode) {
+          this.http
+            .put<any>(`${environment.URL}ticket/${this.editId}`, ticketData)
+            .subscribe(() => {
+              this.update();
+              this.router.navigate(["ticket/list"]);
+            });
+        } else {
+          //   Create Ticket
+
+          this._ticketService.createTicket(ticketData).subscribe((res: any) => {
+            this.success();
+            this.router.navigate(["ticket/list"]);
+            this.ticketForm.reset();
+          });
+        }
       }
     } else {
       this.alert();

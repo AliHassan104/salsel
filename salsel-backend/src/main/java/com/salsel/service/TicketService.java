@@ -6,13 +6,14 @@ import com.salsel.dto.TicketDto;
 import com.salsel.model.Ticket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface TicketService {
 
     Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable);
-    TicketDto save(TicketDto ticketDto);
+    TicketDto save(TicketDto ticketDto, MultipartFile pdf);
     List<TicketDto> getAll(Boolean status);
     List<TicketDto> getTicketsByLoggedInUser(Boolean status);
     TicketDto findById(Long id);

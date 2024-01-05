@@ -46,9 +46,23 @@ public class HelperUtils {
         return uuid.substring(0, 6);
     }
 
+    public String generateResetPassword() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.substring(0, 8);
+    }
+
     public String savePdfToS3(MultipartFile pdf, String folderName) {
         try {
-            String filename = "Agreement";
+            String filename;
+            String type;
+            if(folderName.equalsIgnoreCase("Account")){
+                filename = "Agreement";
+                type = "Account";
+            }
+            else {
+                filename = pdf.getOriginalFilename();
+                type = "Ticket";
+            }
 
             // Extract file extension using FilenameUtils
             String fileExtension = "." + FilenameUtils.getExtension(pdf.getOriginalFilename());
@@ -60,7 +74,7 @@ public class HelperUtils {
             String newFileName = FilenameUtils.getBaseName(filename) + "_" + timestamp + fileExtension;
 
             // Save to S3 bucket
-            return bucketService.save(pdf.getBytes(), folderName, newFileName, "Account"); // Save PDF and return the URL
+            return bucketService.save(pdf.getBytes(), folderName, newFileName, type); // Save PDF and return the URL
 
         } catch (IOException e) {
             logger.error("Failed to save PDF to S3", e);

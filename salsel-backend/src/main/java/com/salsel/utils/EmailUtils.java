@@ -118,4 +118,60 @@ public class EmailUtils {
         }
     }
 
+    @Async
+    public void sendWelcomeEmail(User user, String generatedPassword) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(sender);
+            helper.setTo(user.getEmail());
+            helper.setSubject("Welcome to Salassil Express");
+
+            String emailContent = "Dear " + user.getName() + ",\n\n"
+                    + "Welcome to Salassil Express! Your account has been successfully created.\n\n"
+                    + "Your login details:\n"
+                    + "Email: " + user.getEmail() + "\n"
+                    + "Password: " + generatedPassword + "\n\n"
+                    + "If you have any questions, feel free to contact our support team.\n\n"
+                    + "Best regards,\n"
+                    + "Salassil Express Team";
+
+            helper.setText(emailContent);
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.err.println("Error sending email: " + e.getMessage());
+        }
+    }
+
+    @Async
+    public void sendPasswordRegeneratedEmail(User user, String newPassword) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(sender);
+            helper.setTo(user.getEmail());
+            helper.setSubject("Password Regenerated");
+
+            String emailContent = "Dear " + user.getName() + ",\n\n"
+                    + "Your password for Salassil Express has been successfully regenerated upon your request.\n\n"
+                    + "Your new password is:\n"
+                    + newPassword + "\n\n"
+                    + "Please log in using this new password.\n\n"
+                    + "If you did not request this password regeneration, please contact our support team immediately.\n\n"
+                    + "Best regards,\n"
+                    + "Salassil Express Team";
+
+            helper.setText(emailContent);
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.err.println("Error sending email: " + e.getMessage());
+        }
+    }
+
+
+
 }
