@@ -25,12 +25,20 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
+//    @PostMapping("/ticket")
+//    @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
+//    public ResponseEntity<TicketDto> createTicket(@RequestPart TicketDto ticketDto,
+//                                                  @RequestPart("file") MultipartFile file) {
+//        return ResponseEntity.ok(ticketService.save(ticketDto, file));
+//    }
+
     @PostMapping("/ticket")
     @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
     public ResponseEntity<TicketDto> createTicket(@RequestPart TicketDto ticketDto,
-                                                  @RequestPart("file") MultipartFile file) {
+                                                  @RequestPart(name = "file", required = false) MultipartFile file) {
         return ResponseEntity.ok(ticketService.save(ticketDto, file));
     }
+
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("")
