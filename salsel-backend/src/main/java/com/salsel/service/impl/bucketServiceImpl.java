@@ -4,6 +4,7 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
+import com.salsel.exception.RecordNotFoundException;
 import com.salsel.service.BucketService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class bucketServiceImpl implements BucketService {
 
     public static final String ACCOUNT = "Account";
     public static final String AWB = "Awb";
+    public static final String TICKET = "Ticket";
     @Autowired
     private AmazonS3 s3Client;
     @Value("${application.bucket.name}")
@@ -45,8 +47,10 @@ public class bucketServiceImpl implements BucketService {
                 folderKey = ACCOUNT + "/" + folderName;
             } else if (folderType.equalsIgnoreCase(AWB)) {
                 folderKey = AWB + "/" + folderName;
+            } else if (folderType.equalsIgnoreCase(TICKET)) {
+                folderKey = TICKET + "/" + folderName;
             } else {
-                throw new IllegalArgumentException("Invalid folder type: " + folderType);
+                throw new RecordNotFoundException("Invalid folder type: " + folderType);
             }
 
             if (!s3Client.doesObjectExist(bucketName, folderKey + "/")) {
