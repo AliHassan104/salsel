@@ -24,11 +24,27 @@ export class UserService {
   }
 
   updateUser(id: any, data: any) {
-    return this.http.put(`${this.url}user/${id}`, data);
+    return this.http.patch(`${this.url}user/${id}`, data);
   }
 
   deactivateUser(id: any) {
     return this.http.delete(`${this.url}user/${id}`);
+  }
+
+  regeneratePassword(id: any) {
+    return this.http.put(
+      `${this.url}user/regenerate-password/${id}`,
+      {},
+      { responseType: "text" as "json" }
+    );
+  }
+
+  changePassword(id: any, params: any) {
+    return this.http.put(
+      `${this.url}user/change-password/${id}`,
+      {},
+      { params, responseType: "text" as "json" }
+    );
   }
 
   getUserByName(name: string) {

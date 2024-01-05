@@ -1,10 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { UserService } from "../service/user.service";
 import { IUser } from "../model/userDto";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { Password } from "primeng/password";
 import { MessageService } from "primeng/api";
+import { FormvalidationService } from "src/app/components/Tickets/service/formvalidation.service";
 
 @Component({
   selector: "app-user-profile",
@@ -25,7 +33,8 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private formService: FormvalidationService
   ) {}
 
   ngOnInit(): void {
@@ -38,16 +47,34 @@ export class UserProfileComponent implements OnInit {
       role: new FormControl(null, Validators.required),
     });
 
-    this.newPasswordForm = new FormGroup({
-      currentPassword: new FormControl(null, Validators.required),
-      password: new FormControl(null, Validators.required),
-      confirmPassword: new FormControl(null, Validators.required),
-    });
+    this.newPasswordForm = new FormGroup(
+      {
+        currentPassword: new FormControl(null, Validators.required),
+        password: new FormControl(null, Validators.required),
+        confirmPassword: new FormControl(null, Validators.required),
+      },
+      { validators: this.matchPassword }
+    );
 
     this.userEmail = localStorage.getItem("loginUserEmail");
 
     this.getActiveUser();
   }
+
+  matchPassword: ValidatorFn = (
+    control: AbstractControl
+  ): ValidationErrors | null => {
+    let password = control.get("password");
+    let confirmPassword = control.get("confirmPassword");
+    if (
+      password &&
+      confirmPassword &&
+      password?.value != confirmPassword.value
+    ) {
+      return { passwordMatchError: true };
+    }
+    return null;
+  };
 
   patchFormVlues() {
     this.userForm.disable();
@@ -67,7 +94,6 @@ export class UserProfileComponent implements OnInit {
       this.activeUser = res;
 
       this.patchFormVlues();
-      console.log(this.activeUser);
     });
   }
 
@@ -99,7 +125,6 @@ export class UserProfileComponent implements OnInit {
           },
         ],
         employeeId: this.activeUser.employeeId,
-        password: "Qwerty.@12",
         status: true,
       };
       this.userService
@@ -133,7 +158,48 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  onChangePass() {}
+  onChangePass(data: any) {
+    if (this.newPasswordForm.valid) {
+      const params = {
+        currentPassword: data.currentPassword,
+        newPassword: data.password,
+      };
+
+      this.userService.changePassword(this.activeUser.id, params).subscribe(
+        (res: any) => {
+          if (res == "Current password is incorrect") {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: res,
+            });
+          } else {
+            this.messageService.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Password Updated Successfully",
+            });
+            this.newPasswordForm.reset();
+            this.visible = false;
+          }
+        },
+        (error: any) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: error.error.error,
+          });
+        }
+      );
+    } else {
+      this.formService.markFormGroupTouched(this.newPasswordForm);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Fill in all the required information",
+      });
+    }
+  }
 
   showDialog() {
     this.visible = true;

@@ -54,6 +54,7 @@ public class AccountServiceImpl implements AccountService {
         User user = new User();
         user.setEmail(account.getEmail());
         user.setPassword(password);
+        user.setStatus(true);
         User createdUser = userRepository.save(user);
         emailUtils.sendWelcomeEmail(createdUser, password);
         Account createdAccount = accountRepository.save(account);

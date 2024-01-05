@@ -36,6 +36,8 @@ export class UserlistComponent implements OnInit {
   loading?;
   deleteDialog?;
   generateDialog;
+  regeneratedDialog?;
+  generatedPassword?;
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -46,6 +48,7 @@ export class UserlistComponent implements OnInit {
     const params = { status: this.activeStatus };
     this.userService.getAllUser(params).subscribe((res: any) => {
       this.users = res;
+      console.log(this.users);
     });
   }
 
@@ -93,7 +96,16 @@ export class UserlistComponent implements OnInit {
     this.deleteDialog = true;
   }
 
-  confirmGeneratePassword() {}
+  confirmGeneratePassword() {
+    this.generateDialog = false;
+    this.userService
+      .regeneratePassword(this.generateId)
+      .subscribe((res: any) => {
+        this.generatedPassword = res;
+
+        this.regeneratedDialog = true;
+      });
+  }
 
   onGeneratePassword(id: any) {
     this.generateId = id;

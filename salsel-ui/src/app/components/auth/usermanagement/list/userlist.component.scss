@@ -1,3 +1,12 @@
 tr td {
   text-align: center;
 }
+
+.customBtn:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.customBtn span {
+  font-size: 20px !important;
+}

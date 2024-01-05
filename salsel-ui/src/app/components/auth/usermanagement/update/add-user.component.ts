@@ -44,10 +44,10 @@ export class AddUserComponent implements OnInit {
       firstname: new FormControl(null, [Validators.required]),
       lastname: new FormControl(null, [Validators.required]),
       phone: new FormControl(null, Validators.required),
-      password: new FormControl(null, [
-        Validators.required,
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
-      ]),
+      //   password: new FormControl(null, [
+      //     Validators.required,
+      //     Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
+      //   ]),
       roles: new FormControl(null, Validators.required),
       employeeId: new FormControl(null, Validators.required),
     });
@@ -102,7 +102,7 @@ export class AddUserComponent implements OnInit {
 
         this.rolesService.getRoles().subscribe((res: any) => {
           const role = res.filter(
-            (value) => value.name == this.singleUser.roles[0].name
+            (value) => value.name == this.singleUser?.roles[0]?.name
           );
 
           this.userForm.patchValue({
@@ -110,9 +110,8 @@ export class AddUserComponent implements OnInit {
             firstname: this.singleUser.firstname,
             lastname: this.singleUser.lastname,
             phone: this.singleUser.phone,
-            password: this.singleUser.password,
             employeeId: this.singleUser.employeeId,
-            roles: role[0],
+            roles: role != null ? role[0] : "",
           });
         });
       });
@@ -134,7 +133,6 @@ export class AddUserComponent implements OnInit {
         lastname: formValue.lastname,
         name: fullname,
         phone: formValue.phone,
-        password: formValue.password,
         email: formValue.email,
         employeeId: formValue.employeeId,
         roles: [

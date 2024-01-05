@@ -65,13 +65,13 @@
                         " class="p-button-rounded p-button-secondary p-button-outlined mx-2"
                                 routerLink="{{user.id}}"></button>
 
-                            <button [disabled]="user?.roles[0].name == 'ROLE_ADMIN'"
+                            <button [disabled]="user?.roles[0]?.name == 'ROLE_ADMIN'"
                                 *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_USER')"
                                 pTooltip="Edit" tooltipPosition="bottom" pButton pRipple type="button"
                                 icon="pi pi-file-edit" class="p-button-rounded p-button-outlined mx-2"
                                 (click)="onEditUser(user.id)"></button>
 
-                            <button [disabled]="user?.roles[0].name == 'ROLE_ADMIN'" pTooltip="Deactivate"
+                            <button [disabled]="user?.roles[0]?.name == 'ROLE_ADMIN'" pTooltip="Deactivate"
                                 tooltipPosition="bottom"
                                 *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_USER')" pButton
                                 pRipple type="button" icon="pi pi-times"
@@ -102,7 +102,7 @@
                             {{ user?.employeeId }}
                         </td>
                         <td>
-                            {{ user?.roles[0]?.name }}
+                            {{ user?.roles != [] ? user?.roles[0]?.name : "" }}
                         </td>
 
                     </tr>
@@ -147,4 +147,11 @@
             <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                 (click)="confirmGeneratePassword()"></button>
         </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="regeneratedDialog" header="Generated Password" styleClass="customDialog" [modal]="true"
+        [style]="{width:'450px'}">
+        <div class="flex align-items-center justify-content-center">
+            <button class="customBtn" [label]="generatedPassword" pButton></button>
+        </div>
     </p-dialog>
