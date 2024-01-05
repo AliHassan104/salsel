@@ -14,8 +14,17 @@ export class TicktingService {
 
   // Create Ticket
 
-  createTicket(data: Ticket): Observable<any> {
-    return this.http.post<any>(`${this.url}ticket`, data);
+  createTicket(data: Ticket, file: File): Observable<any> {
+    const formData = new FormData();
+
+    const accountDtoBlob = new Blob([JSON.stringify(data)], {
+      type: "application/json",
+    });
+    formData.append("ticketDto", accountDtoBlob, "ticketDto.txt");
+
+    formData.append("file", file);
+
+    return this.http.post<any>(`${this.url}ticket`, formData);
   }
 
   //  Get All Tickets

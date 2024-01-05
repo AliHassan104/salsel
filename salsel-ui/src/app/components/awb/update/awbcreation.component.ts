@@ -190,7 +190,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       .getAllAccounts({ status: true })
       .subscribe((res: any) => {
         this.accountNumbers = res.body;
-        console.log(this.accountNumbers);
         this.preprocessedAccountNumbers = this.accountNumbers.map(
           (account) => ({
             label: `${account.accountNumber}, ${account.customerName}`,
@@ -221,8 +220,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         );
         this.serviceTypeCode =
           this.dropdownService.extractCode(filterServiceType)[0];
-
-        console.log(this.serviceTypeCode);
       });
   }
 
@@ -292,6 +289,10 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           deliveryAddress: this.singleTicket.deliveryAddress,
           pickupDate: pickDate,
           pickupTime: pickTime,
+          deliveryStreetName: this.singleTicket.deliveryStreetName,
+          deliveryDistrict: this.singleTicket.deliveryDistrict,
+          pickupStreetName: this.singleTicket.pickupStreetName,
+          pickupDistrict: this.singleTicket.pickupDistrict,
         });
       });
     }

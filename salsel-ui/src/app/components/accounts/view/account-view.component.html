@@ -6,24 +6,34 @@
         <button pButton icon="pi pi-download" label="Agreement" (click)="downloadAgreement()"
             class="downloadBtn"></button>
     </div>
+    <hr>
     <div class="grid custom-modal">
 
         <div class="col-12 md:col-6 lg:col-6 mt-3 ">
-            <p><strong>Account Number:</strong> {{singleAccount?.accountNumber}}</p>
-            <p><strong>Account Type:</strong> {{singleAccount?.accountType}}</p>
+            <h4>Customer Information</h4>
             <p><strong>Customer Name:</strong> {{singleAccount?.customerName}}</p>
             <p><strong>Cust Name: </strong>{{singleAccount?.custName}}</p>
+            <p><strong>Account Number:</strong> {{singleAccount?.accountNumber}}</p>
+            <p><strong>Account Type:</strong> {{singleAccount?.accountType}}</p>
+        </div>
+        <div class="col-12 md:col-6 lg:col-6 mt-3 ">
+            <h4>Contact Information</h4>
+            <p><strong>Email: </strong>{{singleAccount?.email}}</p>
             <p><strong>Contact Number: </strong>{{singleAccount?.contactNumber}}</p>
             <p><strong>Address:</strong> {{singleAccount?.address}}</p>
             <p><strong>Country:</strong> {{singleAccount?.county}}</p>
             <p><strong>City:</strong> {{singleAccount?.city}}</p>
         </div>
         <div class="col-12 md:col-6 lg:col-6 mt-3">
+            <h4>Billing and Document Information</h4>
+            <p><strong>Billing POC Name:</strong> {{singleAccount?.billingPocName}}</p>
+            <p><strong>Tax Document Number:</strong> {{singleAccount?.taxDocumentNo}}</p>
+            <p><strong>Trade License Number:</strong> {{singleAccount?.tradeLicenseNo}}</p>
+        </div>
+        <div class="col-12 md:col-6 lg:col-6 mt-2">
+            <h4>Business and Project Information</h4>
             <p><strong>Business Activity:</strong> {{singleAccount?.businessActivity}}</p>
             <p><strong>Project Name:</strong> {{singleAccount?.projectName}}</p>
-            <p><strong>Trade License Number:</strong> {{singleAccount?.tradeLicenseNo}}</p>
-            <p><strong>Tax Document Number:</strong> {{singleAccount?.taxDocumentNo}}</p>
-            <p><strong>Billing POC Name:</strong> {{singleAccount?.billingPocName}}</p>
             <p><strong>Sales Region:</strong> {{singleAccount?.salesRegion}}</p>
             <p><strong>Sales Agent Name:</strong> {{singleAccount?.salesAgentName}}</p>
         </div>

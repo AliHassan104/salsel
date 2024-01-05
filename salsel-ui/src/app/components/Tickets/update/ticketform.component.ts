@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
@@ -14,6 +14,7 @@ import { DepartmentService } from "../../department/service/department.service";
 import { DepartmentCategoryService } from "../../department-category/service/department-category.service";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { RolesService } from "../../permissions/service/roles.service";
+import { AccountService } from "../../accounts/service/account.service";
 
 @Component({
   selector: "app-ticketform",
@@ -46,9 +47,14 @@ export class TicketformComponent implements OnInit {
   pickTime;
   userRole;
 
+  fileName: string = "";
+  ticketAttachment?;
+
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
   ticketType?: string[];
+
+  @ViewChild("fileInput") fileInput: ElementRef;
 
   //   CONSTRUCTOR
   constructor(
@@ -64,7 +70,8 @@ export class TicketformComponent implements OnInit {
     private departmentService: DepartmentService,
     private departmentCategoryService: DepartmentCategoryService,
     private roleService: RolesService,
-    private sessionStorageService: SessionStorageService
+    private sessionStorageService: SessionStorageService,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
@@ -136,6 +143,7 @@ export class TicketformComponent implements OnInit {
     if (this.editId != null) {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
+        this.attachAgreement(this.singleTicket?.ticketUrl);
         this.getAllCitiesAndDepartmentCategories(
           this.singleTicket.destinationCountry,
           this.singleTicket.originCountry,
@@ -385,7 +393,11 @@ export class TicketformComponent implements OnInit {
         ) {
           if (this.editMode) {
             this.http
-              .put<any>(`${environment.URL}ticket/${this.editId}`, ticketData)
+              .put<any>(
+                `${environment.URL}ticket/${this.editId}`,
+                ticketData,
+                this.ticketAttachment
+              )
               .subscribe(() => {
                 this.update();
                 this.router.navigate(["ticket/list"]);
@@ -394,7 +406,7 @@ export class TicketformComponent implements OnInit {
             //   Create Ticket
 
             this._ticketService
-              .createTicket(ticketData)
+              .createTicket(ticketData, this.ticketAttachment)
               .subscribe((res: any) => {
                 this.success();
                 this.router.navigate(["ticket/list"]);
@@ -416,17 +428,66 @@ export class TicketformComponent implements OnInit {
         } else {
           //   Create Ticket
 
-          this._ticketService.createTicket(ticketData).subscribe((res: any) => {
-            this.success();
-            this.router.navigate(["ticket/list"]);
-            this.ticketForm.reset();
-          });
+          this._ticketService
+            .createTicket(ticketData, this.ticketAttachment)
+            .subscribe((res: any) => {
+              this.success();
+              this.router.navigate(["ticket/list"]);
+              this.ticketForm.reset();
+            });
         }
       }
     } else {
       this.alert();
       this.formService.markFormGroupTouched(this.ticketForm);
     }
+  }
+
+  onFileChange(event: any): void {
+    const fileInput = event.target;
+    if (fileInput.files && fileInput.files.length > 0) {
+      const selectedFile = fileInput.files[0];
+
+      // Check if the selected file has a PDF extension
+      if (selectedFile.name.toLowerCase().endsWith(".pdf")) {
+        this.fileName = selectedFile.name;
+        this.ticketAttachment = selectedFile;
+      } else {
+        fileInput.value = null;
+        this.messageService.add({
+          severity: "error",
+          summary: "Invalid File",
+          detail: "Only PDF files are allowed.",
+        });
+      }
+    }
+  }
+
+  attachAgreement(attachmentUrl: string) {
+    this.accountService.downloadAgreement(attachmentUrl).subscribe(
+      (blob: Blob) => {
+        const file = new File([blob], `ticketAttachment_${this.editId}.pdf`, {
+          type: "application/pdf",
+        });
+        // Create a DataTransfer object
+        const dataTransfer = new DataTransfer();
+
+        // Add the file to the DataTransfer object
+        dataTransfer.items.add(file);
+
+        // Set the files property of the input element
+        this.fileInput.nativeElement.files = dataTransfer.files;
+        this.ticketAttachment = file;
+      },
+      (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Attachment Not Found",
+        });
+        // Handle the error (e.g., show a user-friendly message)
+      }
+    );
   }
 
   // PART OF POPUP

@@ -35,7 +35,7 @@ export class AccountService {
 
     formData.append("file", file);
 
-    return this.http.post<any>(`${this.url}account`, formData);
+    return this.http.post<any>(`${this.url}accountt`, formData);
   }
 
   // DELETE ACCOUNT

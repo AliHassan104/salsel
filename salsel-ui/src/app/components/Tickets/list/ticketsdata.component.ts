@@ -6,6 +6,7 @@ import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
+import { AccountService } from "../../accounts/service/account.service";
 
 @Component({
   selector: "app-ticketsdata",
@@ -27,7 +28,8 @@ export class TicketsdataComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private dropdownService: DropdownService,
-    public sessionStorageService: SessionStorageService
+    public sessionStorageService: SessionStorageService,
+    private accountService: AccountService
   ) {}
 
   loading: any;
@@ -97,6 +99,34 @@ export class TicketsdataComponent implements OnInit {
       this.alert();
       this.getTickets();
       this.deleteProductsDialog = false;
+    });
+  }
+
+  onDownloadAttachment(url, id) {
+    this.accountService.downloadAgreement(url).subscribe(
+      (res: any) => {
+        this.downloadSuccess();
+        this.accountService.downloadFile(res, `Ticket_Attachment_${id}`);
+      },
+      (error) => {
+        this.downloadError();
+      }
+    );
+  }
+
+  downloadError() {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Attachment Not Found",
+    });
+  }
+
+  downloadSuccess() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "File Successfully Downloaded",
     });
   }
 

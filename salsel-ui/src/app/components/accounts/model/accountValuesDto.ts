@@ -15,6 +15,7 @@ export interface IAccountData {
   salesRegion?: string;
   salesAgentName?: string;
   accountUrl?: string;
+  email?: string;
 }
 
 export class accounts implements IAccountData {

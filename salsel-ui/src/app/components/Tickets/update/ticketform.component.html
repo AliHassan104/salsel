@@ -49,16 +49,21 @@
                         Required
                     </small>
                 </div>
-
                 <!-- Text Box -->
-                <div class="field col-12">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="textarea"><strong>Details</strong></label>
                     <textarea #textArea pInputTextarea rows="3" placeholder="Enter Your Note if any"
                         formControlName="textarea"></textarea>
                 </div>
+                <!-- Agreement -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="agreement"><strong>Upload File, If any</strong></label>
 
-                <ng-container
-                    *ngIf="ticketForm.get('ticketType')?.value == 'Pickup Request' &&this.userRole == 'CUSTOMER_SERVICE_AGENT'">
+                    <!-- Hidden input for file upload -->
+                    <input #fileInput id="agreement" type="file" (change)="onFileChange($event)" accept=".pdf" />
+                </div>
+
+                <ng-container *ngIf="this.userRole == 'CUSTOMER_SERVICE_AGENT'">
                     <!-- Department -->
                     <div class="field col-12 md:col-3">
                         <label htmlFor="department"><strong>Department</strong></label>

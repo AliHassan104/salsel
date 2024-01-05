@@ -8,6 +8,7 @@ import { RolesService } from "../../../permissions/service/roles.service";
 import { UserService } from "../service/user.service";
 import { IUser } from "../model/userDto";
 import { LoginService } from "../../service/login.service";
+import { Password } from "primeng/password";
 
 @Component({
   selector: "app-add-user",
@@ -102,7 +103,7 @@ export class AddUserComponent implements OnInit {
 
         this.rolesService.getRoles().subscribe((res: any) => {
           const role = res.filter(
-            (value) => value.name == this.singleUser.roles[0].name
+            (value) => value.name == this.singleUser?.roles[0]?.name
           );
 
           this.userForm.patchValue({
@@ -110,9 +111,8 @@ export class AddUserComponent implements OnInit {
             firstname: this.singleUser.firstname,
             lastname: this.singleUser.lastname,
             phone: this.singleUser.phone,
-            password: this.singleUser.password,
             employeeId: this.singleUser.employeeId,
-            roles: role[0],
+            roles: role != null ? role[0] : "",
           });
         });
       });
@@ -126,7 +126,7 @@ export class AddUserComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.userForm.valid) {
+    if (this.editMode) {
       let formValue = this.userForm.value;
       let fullname = formValue.firstname + " " + formValue.lastname;
       const data = {
@@ -134,7 +134,6 @@ export class AddUserComponent implements OnInit {
         lastname: formValue.lastname,
         name: fullname,
         phone: formValue.phone,
-        password: formValue.password,
         email: formValue.email,
         employeeId: formValue.employeeId,
         roles: [
@@ -144,21 +143,37 @@ export class AddUserComponent implements OnInit {
         ],
         status: true,
       };
-
-      if (this.editMode) {
-        this.userService.updateUser(this.editId, data).subscribe((res) => {
-          this.userForm.reset();
-          this.router.navigate(["user/list"]);
-        });
-      } else {
+      this.userService.updateUser(this.editId, data).subscribe((res) => {
+        this.userForm.reset();
+        this.router.navigate(["user/list"]);
+      });
+    } else {
+      if (this.userForm.valid) {
+        let formValue = this.userForm.value;
+        let fullname = formValue.firstname + " " + formValue.lastname;
+        const data = {
+          firstname: formValue.firstname,
+          lastname: formValue.lastname,
+          name: fullname,
+          phone: formValue.phone,
+          email: formValue.email,
+          password: formValue.password,
+          employeeId: formValue.employeeId,
+          roles: [
+            {
+              id: formValue.roles.id,
+            },
+          ],
+          status: true,
+        };
         this.loginService.signUp(data).subscribe((res) => {
           this.userForm.reset();
           this.router.navigate(["user/list"]);
         });
+      } else {
+        this.alert();
+        this.formService.markFormGroupTouched(this.userForm);
       }
-    } else {
-      this.alert();
-      this.formService.markFormGroupTouched(this.userForm);
     }
   }
 

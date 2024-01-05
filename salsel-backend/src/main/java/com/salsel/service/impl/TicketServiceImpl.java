@@ -45,6 +45,25 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     FilterSpecification<Ticket> ticketFilterSpecification;
 
+//    @Override
+//    @Transactional
+//    public TicketDto save(TicketDto ticketDto, MultipartFile pdf) {
+//        Ticket ticket = toEntity(ticketDto);
+//        ticket.setStatus(true);
+//        ticket.setTicketStatus("Open");
+//        ticket.setTicketFlag("Normal");
+//        Ticket createdTicket = ticketRepository.save(ticket);
+//
+//        // Save PDF to S3 bucket
+//        if (pdf != null && !pdf.isEmpty()) {
+//            String folderName = "Ticket_" + createdTicket.getId();
+//            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+//            createdTicket.setTicketUrl(savedPdfUrl);
+//            logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
+//        }
+//        return toDto(ticketRepository.save(createdTicket));
+//    }
+
     @Override
     @Transactional
     public TicketDto save(TicketDto ticketDto, MultipartFile pdf) {
@@ -54,15 +73,17 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketFlag("Normal");
         Ticket createdTicket = ticketRepository.save(ticket);
 
-        // Save PDF to S3 bucket
+        // Save PDF to S3 bucket if provided
         if (pdf != null && !pdf.isEmpty()) {
             String folderName = "Ticket_" + createdTicket.getId();
             String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
             createdTicket.setTicketUrl(savedPdfUrl);
             logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
         }
+
         return toDto(ticketRepository.save(createdTicket));
     }
+
 
     @Override
     public Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable) {
