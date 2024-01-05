@@ -12,7 +12,8 @@
             <hr>
             <p-table #dt1 [value]="accounts" dataKey="id" [rows]="10" [loading]="loading" [rowHover]="true"
                 styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
-                [globalFilterFields]="['accountNumber','accountType','customerName']" responsiveLayout="scroll">
+                [globalFilterFields]="['accountNumber','accountType','customerName','businessActivity','projectName','tradeLicenseNo','taxDocumentNo']"
+                responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <div class="mb-2">

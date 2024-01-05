@@ -57,8 +57,7 @@
                         formControlName="textarea"></textarea>
                 </div>
 
-                <ng-container
-                    *ngIf="ticketForm.get('ticketType')?.value == 'Pickup Request' &&this.userRole == 'CUSTOMER_SERVICE_AGENT'">
+                <ng-container *ngIf="this.userRole == 'CUSTOMER_SERVICE_AGENT'">
                     <!-- Department -->
                     <div class="field col-12 md:col-3">
                         <label htmlFor="department"><strong>Department</strong></label>
