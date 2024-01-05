@@ -196,12 +196,19 @@ export class AccountFormComponent implements OnInit {
             this.router.navigate(["account/list"]);
           });
       } else {
-        this.accountService
-          .addAccount(data, this.accountAgeement)
-          .subscribe((res) => {
+        this.accountService.addAccount(data, this.accountAgeement).subscribe(
+          (res) => {
             this.accountForm.reset();
             this.router.navigate(["account/list"]);
-          });
+          },
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Warning",
+              detail: error.error.error,
+            });
+          }
+        );
       }
     } else {
       this.alert();

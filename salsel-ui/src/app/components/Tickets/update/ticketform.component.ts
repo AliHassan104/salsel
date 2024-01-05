@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
@@ -46,9 +46,14 @@ export class TicketformComponent implements OnInit {
   pickTime;
   userRole;
 
+  fileName: string = "";
+  ticketAttachment?;
+
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
   ticketType?: string[];
+
+  @ViewChild("fileInput") fileInput: ElementRef;
 
   //   CONSTRUCTOR
   constructor(
@@ -187,6 +192,26 @@ export class TicketformComponent implements OnInit {
           airwayNumber: this.singleTicket.airwayNumber,
         });
       });
+    }
+  }
+
+  onFileChange(event: any): void {
+    const fileInput = event.target;
+    if (fileInput.files && fileInput.files.length > 0) {
+      const selectedFile = fileInput.files[0];
+
+      // Check if the selected file has a PDF extension
+      if (selectedFile.name.toLowerCase().endsWith(".pdf")) {
+        this.fileName = selectedFile.name;
+        this.ticketAttachment = selectedFile;
+      } else {
+        fileInput.value = null;
+        this.messageService.add({
+          severity: "error",
+          summary: "Invalid File",
+          detail: "Only PDF files are allowed.",
+        });
+      }
     }
   }
 
