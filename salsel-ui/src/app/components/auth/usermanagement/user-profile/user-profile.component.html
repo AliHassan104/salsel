@@ -1,7 +1,12 @@
 <div class="card">
-    <h1 class=""
-        style="color: #93003c; font-size: 19px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
-        User Profile</h1>
+    <div class="flex justify-content-between">
+        <h1 class=""
+            style="color: #93003c; font-size: 19px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+            User Profile</h1>
+
+        <button pButton type="button" label="Update" (click)="updateInfo()"
+            class="mx-3 changePassBtn submit-btn p-button-secondary p-button-outlined"></button>
+    </div>
     <hr>
     <div class="p-fluid p-formgrid grid custom-modal">
 
@@ -12,28 +17,100 @@
                 <div class="ml-4">
                     <h5 class="mt-3 mb-1">{{activeUser?.name | titlecase}}</h5>
                     <p class="employeeId">Id: {{activeUser?.employeeId}}</p>
+                    <button pButton icon="pi pi-lock" class="changePassBtn p-button-secondary p-button-outlined"
+                        label="Change Password" (click)="showDialog()"></button>
                 </div>
             </div>
         </div>
-        <!--First Name -->
-        <div class="field col-12 md:col-6">
-            <label htmlFor="firstname"><strong>First Name</strong></label>
-            <input pInputText id="firstname" type="text" disabled="true" ngModel="{{activeUser?.firstname}}" />
-        </div>
-        <!--Last Name -->
-        <div class="field col-12 md:col-6">
-            <label htmlFor="lastname"><strong>Last Name</strong></label>
-            <input pInputText id="lastname" type="text" />
-        </div>
-        <!-- Email -->
-        <div class="field col-12 md:col-6">
-            <label htmlFor="email"><strong>Email</strong></label>
-            <input pInputText id="email" type="email" />
-        </div>
-        <!-- Phone -->
-        <div class="field col-12 md:col-6">
-            <label htmlFor="phone"><strong>Phone Number</strong></label>
-            <input pInputText id="phone" type="text" />
-        </div>
+        <form class="grid formgrid p-fluid col-12" [formGroup]="userForm" (ngSubmit)="onSubmit(userForm.value)">
+            <!--First Name -->
+            <div class="field col-12 md:col-6">
+                <label htmlFor="firstname"><strong>First Name</strong></label>
+                <input #inputField pInputText id="firstname" type="text" formControlName="firstname" />
+            </div>
+            <!--Last Name -->
+            <div class="field col-12 md:col-6">
+                <label htmlFor="lastname"><strong>Last Name</strong></label>
+                <input pInputText id="lastname" type="text" formControlName="lastname" />
+            </div>
+            <!-- Email -->
+            <div class="field col-12 md:col-6">
+                <label htmlFor="email"><strong>Email</strong></label>
+                <input pInputText id="email" type="email" formControlName="email" />
+            </div>
+            <!-- Phone -->
+            <div class="field col-12 md:col-6">
+                <label htmlFor="phone"><strong>Phone Number</strong></label>
+                <input pInputText id="phone" type="text" formControlName="phone" />
+            </div>
+            <!-- Employee Id -->
+            <div class="field col-12 md:col-6">
+                <label htmlFor="phone"><strong>Employee Id</strong></label>
+                <input pInputText id="employeeId" type="text" formControlName="employeeId" />
+            </div>
+            <!-- Role -->
+            <div class="field col-12 md:col-6">
+                <label htmlFor="phone"><strong>Role</strong></label>
+                <input pInputText id="role" type="text" formControlName="role" />
+            </div>
+
+            <div class="flex justify-content-end w-full" *ngIf="editMode">
+                <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"
+                    (click)="onCancel()"></button>
+                <button pButton type="Submit" label="Update" class="mx-3 submit-btn "></button>
+            </div>
+        </form>
     </div>
 </div>
+
+
+<p-dialog header="Change Password" [(visible)]="visible" styleClass="customDialog">
+    <form [formGroup]="newPasswordForm" (ngSubmit)="onChangePass()">
+        <div class="flex flex-column gap-4 align-items-center py-2">
+            <i class="pi pi-lock" style="font-size: xx-large; color: #93003c;"></i>
+        </div>
+        <div class="flex flex-column px-8 py-5 gap-4">
+            <div class="inline-flex flex-column gap-2">
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-key z-5"></i>
+                    <p-password [toggleMask]="true" class="w-20rem"
+                        [inputStyle]="{'width':'20rem','padding-left':'35px'}"
+                        [ngClass]="{'ng-dirty':newPasswordForm.get('currentPassword')?.invalid && newPasswordForm.get('currentPassword')?.touched}"
+                        placeholder="Current Password" [strongRegex]="true" [strongLabel]="true"
+                        formControlName="currentPassword" [feedback]="false">
+                    </p-password>
+                </span>
+            </div>
+            <div class="inline-flex flex-column gap-2">
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-key z-5"></i>
+                    <p-password [toggleMask]="true" class="w-20rem"
+                        [inputStyle]="{'width':'20rem','padding-left':'35px'}"
+                        [ngClass]="{'ng-dirty':newPasswordForm.get('password')?.invalid && newPasswordForm.get('password')?.touched}"
+                        placeholder="New Password" [strongRegex]="true" [strongLabel]="true" formControlName="password"
+                        [feedback]="false">
+                    </p-password>
+                </span>
+            </div>
+            <div class="inline-flex flex-column gap-2">
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-key z-5"></i>
+                    <p-password [toggleMask]="true" class="w-20rem"
+                        [inputStyle]="{'width':'20rem','padding-left':'35px'}"
+                        [ngClass]="{'ng-dirty':newPasswordForm?.invalid && newPasswordForm.get('confirmPassword')?.touched}"
+                        placeholder="Confirm New Password" [strongRegex]="true" [strongLabel]="true"
+                        formControlName="confirmPassword" [feedback]="false">
+                    </p-password>
+                </span>
+            </div>
+            <div class="flex align-items-center gap-2">
+                <p-button label="Change Password" type="submit" styleClass="w-full" class="w-full"></p-button>
+            </div>
+            <p class="text-center">Forgot password? <a class="text-primary hover:underline cursor-pointer font-medium"
+                    (click)="navigateToForgotPassword()">Click here</a> to
+                reset.</p>
+        </div>
+    </form>
+</p-dialog>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

@@ -19,6 +19,7 @@ export class UserlistComponent implements OnInit {
   selectedStatus: string = "Active";
   activeStatus: boolean = true;
   deleteId: any;
+  generateId: any;
 
   constructor(
     private userService: UserService,
@@ -34,6 +35,7 @@ export class UserlistComponent implements OnInit {
 
   loading?;
   deleteDialog?;
+  generateDialog;
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -89,6 +91,13 @@ export class UserlistComponent implements OnInit {
   onDeleteUser(id) {
     this.deleteId = id;
     this.deleteDialog = true;
+  }
+
+  confirmGeneratePassword() {}
+
+  onGeneratePassword(id: any) {
+    this.generateId = id;
+    this.generateDialog = true;
   }
 
   onEditUser(id) {

@@ -190,7 +190,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       .getAllAccounts({ status: true })
       .subscribe((res: any) => {
         this.accountNumbers = res.body;
-        console.log(this.accountNumbers);
         this.preprocessedAccountNumbers = this.accountNumbers.map(
           (account) => ({
             label: `${account.accountNumber}, ${account.customerName}`,
@@ -221,8 +220,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         );
         this.serviceTypeCode =
           this.dropdownService.extractCode(filterServiceType)[0];
-
-        console.log(this.serviceTypeCode);
       });
   }
 

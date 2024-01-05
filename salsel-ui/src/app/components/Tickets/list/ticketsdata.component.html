@@ -42,6 +42,11 @@
                         </th>
                         <th style="min-width: 13rem">
                             <div class="flex justify-content-center align-items-center">
+                                Ticket Type
+                            </div>
+                        </th>
+                        <th style="min-width: 13rem">
+                            <div class="flex justify-content-center align-items-center">
                                 Ticket Status
                             </div>
                         </th>
@@ -92,6 +97,9 @@
                         </td>
                         <td>
                             {{ data?.createdAt }}
+                        </td>
+                        <td>
+                            {{ data?.ticketType }}
                         </td>
                         <td>
                             {{data?.ticketStatus}}

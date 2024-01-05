@@ -29,7 +29,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="min-width: 15rem">
+                        <th style="min-width: 20rem">
                             <div class="flex justify-content-center align-items-center">
                                 Actions
                             </div>
@@ -84,6 +84,13 @@
                                 type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveUser(user.id)"></button>
+
+                            <button pTooltip="Generate Password" tooltipPosition="bottom" tooltipPosition="bottom"
+                                *ngIf="activeStatus" pButton
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_USER')" pRipple
+                                type="button" icon="pi pi-sync"
+                                class="p-button-rounded p-button-success p-button-outlined mx-2"
+                                (click)="onGeneratePassword(user.id)"></button>
                         </td>
                         <td>
                             {{ user?.email }}
@@ -126,5 +133,18 @@
                 (click)="deleteDialog = false"></button>
             <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                 (click)="confirmDeleteSelected()"></button>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="generateDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+            <span>Are you sure you want to generate a new password for the selected user?</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                (click)="generateDialog = false"></button>
+            <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                (click)="confirmGeneratePassword()"></button>
         </ng-template>
     </p-dialog>

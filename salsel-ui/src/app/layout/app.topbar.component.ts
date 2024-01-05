@@ -19,16 +19,28 @@ export class AppTopBarComponent implements OnInit {
   @ViewChild("topbarmenu") menu!: ElementRef;
 
   userDetails;
-  loginUserName?;
-  loginUser;
-  loginUserEmail?;
+  public loginUserName?;
+  public loginUser;
+  public loginUserEmail?;
   role;
 
   constructor(
     public layoutService: LayoutService,
     private sessionService: SessionStorageService,
     private userSevice: UserService
-  ) {}
+  ) {
+    this.userSevice.loginUserName.subscribe((res) => {
+      this.loginUserName = res;
+    });
+
+    this.userSevice.loginUserEmail.subscribe((res) => {
+      this.loginUserEmail = res;
+    });
+
+    this.userSevice.loginUser.subscribe((res) => {
+      this.loginUser = res;
+    });
+  }
 
   ngOnInit(): void {
     this.role = this.sessionService.getRoleName();
@@ -37,9 +49,11 @@ export class AppTopBarComponent implements OnInit {
       .getUserByEmail(localStorage.getItem("loginUserEmail"))
       .subscribe((res: any) => {
         this.userDetails = res;
-        this.loginUserName = this.userDetails.name;
-        this.loginUser = this.loginUserName.charAt(0).toUpperCase();
-        this.loginUserEmail = this.userDetails.email;
+        this.userSevice.loginUserName.next(this.userDetails.name);
+        this.userSevice.loginUserEmail.next(this.userDetails.email);
+        this.userSevice.loginUser.next(
+          this.userDetails.name.charAt(0).toUpperCase()
+        );
         localStorage.setItem("loginUserName", this.userDetails.name);
       });
   }

@@ -30,7 +30,7 @@ export class AccountFormComponent implements OnInit {
 
   fileName: string = "";
 
-  singleAccount: IAccountData;
+  singleAccount?: IAccountData;
   editMode;
   editId: any;
   params: any = { status: true };
@@ -91,6 +91,7 @@ export class AccountFormComponent implements OnInit {
       billingPocName: new FormControl(null, Validators.required),
       salesRegion: new FormControl(null, Validators.required),
       salesAgentName: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required, Validators.email]),
     });
   }
 
@@ -112,6 +113,7 @@ export class AccountFormComponent implements OnInit {
       billingPocName: this.singleAccount.billingPocName,
       salesRegion: this.singleAccount.salesRegion,
       salesAgentName: this.singleAccount.salesAgentName,
+      email: this.singleAccount.email,
     });
   }
 
@@ -156,7 +158,6 @@ export class AccountFormComponent implements OnInit {
 
       this.userService.getAllUser({ status: true }).subscribe((res: any) => {
         this.salesAgents = res;
-        console.log(this.salesAgents[0].roles);
 
         const filteredData = this.salesAgents.filter(
           (item) => item.roles[0]?.name === "ROLE_SALES_AGENT"

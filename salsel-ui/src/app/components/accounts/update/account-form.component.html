@@ -9,8 +9,20 @@
                 <div class="field col-12 md:col-6">
                     <label htmlFor="accountNumber"><strong>Account Number</strong></label>
                     <input pInputText id="accountNumber" type="text" formControlName="accountNumber"
+                        placeholder="Enter your Acount Number"
                         [ngClass]="{'ng-dirty':accountForm.get('accountNumber')?.touched && accountForm.get('accountNumber')?.invalid}" />
                     <small *ngIf="!accountForm.get('accountNumber')?.valid && accountForm.get('accountNumber')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Email -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="email"><strong>Email</strong></label>
+                    <input pInputText id="email" type="email" formControlName="email"
+                        [ngClass]="{'ng-dirty':accountForm.get('email')?.touched && accountForm.get('email')?.invalid}"
+                        placeholder="Enter Email" [required]="true" />
+                    <small *ngIf="!accountForm.get('email')?.valid && accountForm.get('email')?.touched"
                         class="text-red-500">
                         Required
                     </small>
@@ -29,6 +41,7 @@
                 <div class="field col-12 md:col-6">
                     <label htmlFor="customerName"><strong>Customer Name</strong></label>
                     <input pInputText id="customerName" type="text" formControlName="customerName"
+                        placeholder="Enter Name"
                         [ngClass]="{'ng-dirty':accountForm.get('customerName')?.touched && accountForm.get('customerName')?.invalid}" />
                     <small *ngIf="!accountForm.get('customerName')?.valid && accountForm.get('customerName')?.touched"
                         class="text-red-500">
@@ -39,6 +52,7 @@
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contact"><strong>Contact Number</strong></label>
                     <input pInputText id="contactNumber" type="text" formControlName="contactNumber"
+                        placeholder="Enter Contact Number"
                         [ngClass]="{'ng-dirty':accountForm.get('contactNumber')?.touched && accountForm.get('contactNumber')?.invalid}" />
                     <small *ngIf="!accountForm.get('contactNumber')?.valid && accountForm.get('contactNumber')?.touched"
                         class="text-red-500">
@@ -46,9 +60,9 @@
                     </small>
                 </div>
                 <!-- Address -->
-                <div class="field col-12">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="address"><strong>Address</strong></label>
-                    <input pInputTextarea id="address" rows="4" formControlName="address"
+                    <input pInputText id="address" formControlName="address"
                         [ngClass]="{'ng-dirty':accountForm.get('address')?.touched && accountForm.get('address')?.invalid}" />
                     <small *ngIf="!accountForm.get('address')?.valid && accountForm.get('address')?.touched"
                         class="text-red-500">

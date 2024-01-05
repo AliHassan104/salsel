@@ -2158,6 +2158,15 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem #c7d2fe;
 }
+
+.changePassBtn .p-button-label {
+  flex: none !important;
+}
+
+.changePassBtn .p-button-icon {
+  line-height: 0% !important;
+}
+
 .p-button .p-button-label {
   transition-duration: 0.2s;
 }
@@ -5068,9 +5077,19 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
 }
+
+.p-dialog.customDialog .p-dialog-header,
+.p-dialog.customDialog .p-dialog-content {
+  background: #eff3f8 !important;
+}
+
 .p-dialog .p-dialog-header .p-dialog-title {
   font-weight: 700;
   font-size: 2.25rem;
+}
+
+.p-dialog.customDialog .p-dialog-header .p-dialog-title {
+  font-size: 1.5rem !important;
 }
 .p-dialog .p-dialog-header .p-dialog-header-icon {
   width: 2rem;
