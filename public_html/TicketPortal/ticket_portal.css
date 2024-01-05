@@ -1,53 +1,60 @@
 
-
 .table-container {
-    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    /* box-shadow: 0 0 40px rgba(8, 7, 16, 0.6); */
     margin-top: 40px !important;
     width: 95%;
     margin: auto;
     padding: 20px;
-}
-
-
-.table tbody tr {
+  }
+  
+  .table {
+    padding: 20px !important;
+  }
+  
+  .table tbody tr {
     padding: 10px !important;
-}
-
-.table tbody tr td {
+  }
+  
+  .table thead th {
+    min-width: 14rem;
+    text-align: center;
+  }
+  
+  .table tbody tr td {
     padding: 15px 2px;
-}
-
-.table-header {
+    min-width: 14rem;
+    text-align: center;
+  }
+  
+  .table-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.table-header button {
+  }
+  
+  .table-header button {
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 1.4px;
-    fill: #FFFFFF;
-    color: #FFFFFF;
-    background-color: #93003C;
+    fill: #ffffff;
+    color: #ffffff;
+    background-color: #93003c;
     border-radius: 3px;
     padding: 15px 20px;
     border: unset !important;
     cursor: pointer !important;
-
-}
-
-.table-header button:hover {
+  }
+  
+  .table-header button:hover {
     background-color: transparent;
-    border: 2px solid #93003C !important;
+    border: 2px solid #93003c !important;
     color: black;
     cursor: pointer !important;
-}
-
-
-.action-edit,
-.action-delete,
-.action-enforce-delete {
+  }
+  
+  .action-edit,
+  .action-delete,
+  .action-enforce-delete {
     float: left;
     padding: 0 10px;
     margin-right: 5px;
@@ -58,40 +65,40 @@
     border: 1px solid #ebecec;
     background: #fff;
     color: #575455;
-}
-
-.action-edit i {
+  }
+  
+  .action-edit i {
     color: #1572e8;
-}
-.action-delete i {
+  }
+  .action-delete i {
     color: #ce7172;
-}
-.action-enforce-delete  i {
+  }
+  .action-enforce-delete i {
     color: #ce7172;
-}
-
-.action-edit:hover {
+  }
+  
+  .action-edit:hover {
     border-color: #1572e8;
     cursor: pointer;
-}
-.action-delete:hover {
+  }
+  .action-delete:hover {
     border-color: #ce7172;
     cursor: pointer;
-}
-.action-enforce-delete:hover {
+  }
+  .action-enforce-delete:hover {
     border-color: #ce7172;
     cursor: pointer;
-}
-
-.col-md-12 > p {
+  }
+  
+  .col-md-12 > p {
     text-align: unset !important;
-}
-
-.open-closed {
+  }
+  
+  .open-closed {
     padding: 25px 9px;
-}
-
-.open-closed .tag{
+  }
+  
+  .open-closed .tag {
     width: 100%;
     height: 70px;
     background-color: #5bb12f;
@@ -99,22 +106,21 @@
     align-items: center;
     margin-bottom: 15px !important  ;
     justify-content: center;
-}
-.open-closed .tag h3{
+  }
+  .open-closed .tag h3 {
     color: white;
     font-weight: bold;
-}
-.open-closed > p {
+  }
+  .open-closed > p {
     text-align: unset !important;
     margin: 5px 0 !important;
-}
-
-.col-md-12 .priority {
+  }
+  
+  .col-md-12 .priority {
     padding: 10px;
-
-}
-
-.col-md-12 .priority .priority-imp {
+  }
+  
+  .col-md-12 .priority .priority-imp {
     width: 100%;
     height: 70px;
     background-color: #c7cbf5;
@@ -123,21 +129,21 @@
     margin-bottom: 15px !important  ;
     justify-content: center;
     margin-top: 10px;
-}
-
-.col-md-12 .priority .priority-imp h3 {
+  }
+  
+  .col-md-12 .priority .priority-imp h3 {
     color: white;
     font-weight: bold;
-}
-
-.ds-tickets {
+  }
+  
+  .ds-tickets {
     padding: 10px;
-}
-.remove-padding {
+  }
+  .remove-padding {
     padding: unset !important;
-}
-
-.ticket-thread-header {
+  }
+  
+  .ticket-thread-header {
     float: left;
     width: 100%;
     padding: 15px;
@@ -145,9 +151,9 @@
     margin-bottom: 20px;
     color: #fff;
     background: #32373c;
-}
-
-.post-reply {
+  }
+  
+  .post-reply {
     float: left;
     width: 100%;
     padding: 15px;
@@ -155,21 +161,18 @@
     margin-bottom: 20px;
     color: #fff;
     background: #32373c;
-}
-.remove-padding .content {
+  }
+  .remove-padding .content {
     padding: 10px 25px !important;
-}
-
-@media (min-width: 1200px) {
+  }
+  
+  @media (min-width: 1200px) {
     .container {
-        max-width: 1430px !important;
+      max-width: 1430px !important;
     }
-}
-
-
-
-
-.socialmedia-toggle {
+  }
+  
+  .socialmedia-toggle {
     visibility: visible;
     opacity: 1;
     bottom: 17px;
@@ -278,81 +281,84 @@
     transform: scale(1.1);
   }
   
-
   .table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-}
-
-/* Header styles */
-.table thead {
+  }
+  
+  /* Header styles */
+  .table thead {
     background-color: #3498db;
     color: #fff;
-}
-
-.table th, .table td {
+  }
+  
+  .table th,
+  .table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
-}
-
-/* Alternating row colors */
-.table tbody tr:nth-child(even) {
+  }
+  
+  /* Alternating row colors */
+  .table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
-}
-
-/* Hover effect on rows */
-.table tbody tr:hover {
+  }
+  
+  /* Hover effect on rows */
+  .table tbody tr:hover {
     background-color: #e0f7fa;
-}
-
-
-/* Tag styles */
-.tag {
+  }
+  
+  /* Tag styles */
+  .tag {
     display: inline-block;
     padding: 6px 10px;
     font-weight: bold;
     border: 1px solid #ebecec;
     background-color: #f8fcfe;
-}
-
-/* Action styles */
-.action-edit, .action-delete, .action-enforce-delete {
+  }
+  
+  /* Action styles */
+  .action-edit,
+  .action-delete,
+  .action-enforce-delete {
     cursor: pointer;
     color: #3498db;
     transition: color 0.3s ease;
     margin-right: 10px;
-}
-
-.action-edit:hover, .action-delete:hover, .action-enforce-delete:hover {
+  }
+  
+  .action-edit:hover,
+  .action-delete:hover,
+  .action-enforce-delete:hover {
     color: #ff5252;
-}
-
-.create-form {
+  }
+  
+  .create-form {
     width: 85%;
     margin: auto;
     box-shadow: 0 0 20px rgba(25, 21, 49, 0.3);
     margin-bottom: 20px;
     border-radius: 10px;
     overflow: auto;
-}
-
-.create-form form {
+  }
+  
+  .create-form form {
     padding: 30px;
-}
-
-.create-form form label {
+  }
+  
+  .create-form form label {
     color: black !important;
-}
-
-.create-form form .label {
+  }
+  
+  .create-form form .label {
     color: #93003c;
-}
-
-#shipmentInquiry,
-#pickupRequest,
-#priority,
-#rateInquiry {
+  }
+  
+  #shipmentInquiry,
+  #pickupRequest,
+  #priority,
+  #rateInquiry {
     display: none;
-}
+  }
