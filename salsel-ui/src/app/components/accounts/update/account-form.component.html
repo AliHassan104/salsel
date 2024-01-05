@@ -21,7 +21,7 @@
                     <label htmlFor="email"><strong>Email</strong></label>
                     <input pInputText id="email" type="email" formControlName="email"
                         [ngClass]="{'ng-dirty':accountForm.get('email')?.touched && accountForm.get('email')?.invalid}"
-                        placeholder="Enter Email" [required]="true" />
+                        placeholder="Enter a Valid Email" [required]="true" />
                     <small *ngIf="!accountForm.get('email')?.valid && accountForm.get('email')?.touched"
                         class="text-red-500">
                         Required
