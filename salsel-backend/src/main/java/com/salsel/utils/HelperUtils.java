@@ -46,6 +46,11 @@ public class HelperUtils {
         return uuid.substring(0, 6);
     }
 
+    public String generateResetPassword() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.substring(0, 8);
+    }
+
     public String savePdfToS3(MultipartFile pdf, String folderName) {
         try {
             String filename = "Agreement";

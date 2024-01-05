@@ -22,6 +22,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.status = true WHERE u.id = :id")
     void setStatusActive(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE User u SET u.password = :pass WHERE u.id = :id")
+    void updatePassword(@Param("id") Long id, @Param("pass") String pass);
+
     @Query("SELECT u FROM User u WHERE u.status = :status ORDER BY u.id DESC")
     List<User> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
