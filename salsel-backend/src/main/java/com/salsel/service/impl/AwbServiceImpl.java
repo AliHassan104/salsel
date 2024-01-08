@@ -31,39 +31,12 @@ public class AwbServiceImpl implements AwbService {
         this.pdfGenerationService = pdfGenerationService;
     }
 
-//    @Override
-//    @Transactional
-//    public AwbDto save(AwbDto awbDto) {
-//        try {
-//            Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
-//            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
-//
-//            Awb awb = toEntity(awbDto);
-//            awb.setAwbStatus("AWB Created");
-//            awb.setStatus(true);
-//            awb.setEmailFlag(false);
-//            Awb createdAwb = awbRepository.save(awb);
-//            Long awbId = createdAwb.getId();
-//
-//            codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
-//            codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
-//            codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
-//
-//            return toDto(createdAwb);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RecordNotFoundException("Error occurred while processing the request");
-//        }
-//    }
-
     @Override
     @Transactional
     public AwbDto save(AwbDto awbDto) {
         try {
-            String maxUniqueNumberStr = String.valueOf(awbRepository.findMaxUniqueNumber());
-            Long maxUniqueNumber = (maxUniqueNumberStr == null) ? 900_000_001L : Long.parseLong(maxUniqueNumberStr);
-
-            awbDto.setUniqueNumber(generateUniqueNumber(maxUniqueNumber));
+            Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
+            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
 
             Awb awb = toEntity(awbDto);
             awb.setAwbStatus("AWB Created");
@@ -72,9 +45,9 @@ public class AwbServiceImpl implements AwbService {
             Awb createdAwb = awbRepository.save(awb);
             Long awbId = createdAwb.getId();
 
-            codeGenerationService.generateBarcode(awb.getUniqueNumber(), awbId);
-            codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber(), awbId);
-            codeGenerationService.generateQRCode(awb.getUniqueNumber(), awbId);
+            codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
+            codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
+            codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
 
             return toDto(createdAwb);
         } catch (Exception e) {
@@ -83,11 +56,7 @@ public class AwbServiceImpl implements AwbService {
         }
     }
 
-    private String generateUniqueNumber(Long maxUniqueNumber) {
-        maxUniqueNumber++;
-        // Format the unique number as "900 000 00"
-        return String.format("%,d", maxUniqueNumber).replace(",", " ");
-    }
+
 
 
     @Override
@@ -115,7 +84,6 @@ public class AwbServiceImpl implements AwbService {
         model.addAttribute("recipientsName", awb.getRecipientsName());
         model.addAttribute("deliveryAddress", awb.getDeliveryAddress());
         model.addAttribute("shipperRefNumber", awb.getShipperRefNumber());
-        model.addAttribute("uniqueNumber", awb.getUniqueNumber());
         model.addAttribute("currency", awb.getCurrency());
         model.addAttribute("originCountry", awb.getOriginCountry());
         model.addAttribute("originCity", awb.getOriginCity());
@@ -137,6 +105,10 @@ public class AwbServiceImpl implements AwbService {
         model.addAttribute("deliveryStreetName",awb.getDeliveryStreetName());
         model.addAttribute("pickupDistrict",awb.getPickupDistrict());
         model.addAttribute("pickupStreetName",awb.getPickupStreetName());
+
+        String formatUniqueNumber = String.format("%,d", awb.getUniqueNumber()).replace(",", " ");
+
+        model.addAttribute("uniqueNumber", formatUniqueNumber);
         return pdfGenerationService.generatePdf("Awb", model, awbId);
     }
 

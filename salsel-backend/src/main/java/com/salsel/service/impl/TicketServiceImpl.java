@@ -79,7 +79,7 @@ public class TicketServiceImpl implements TicketService {
         // Save PDF to S3 bucket if provided
         if (pdf != null && !pdf.isEmpty()) {
             String folderName = "Ticket_" + createdTicket.getId();
-            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            String savedPdfUrl = helperUtils.saveTicketPdfToS3(pdf, folderName);
             createdTicket.setTicketUrl(savedPdfUrl);
             logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
         }
@@ -205,7 +205,7 @@ public class TicketServiceImpl implements TicketService {
             String folderKey = "Ticket/Ticket_" + id;
             bucketService.deleteFileAtPath(folderKey,fileName);
             String folderName = "Ticket_" + existingTicket.getId();
-            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            String savedPdfUrl = helperUtils.saveTicketPdfToS3(pdf, folderName);
             existingTicket.setTicketUrl(savedPdfUrl);
             logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
         }

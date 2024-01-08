@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
         // Save PDF to S3 bucket
         if (pdf != null && !pdf.isEmpty()) {
             String folderName = "Account_" + createdAccount.getId();
-            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            String savedPdfUrl = helperUtils.saveAccountPdfToS3(pdf, folderName);
             createdAccount.setAccountUrl(savedPdfUrl);
             logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
         }
@@ -130,7 +130,7 @@ public class AccountServiceImpl implements AccountService {
             String folderKey = "Account/Account_" + id;
             bucketService.deleteFilesStartingWith(folderKey,"Agreement_");
             String folderName = "Account_" + existingAccount.getId();
-            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            String savedPdfUrl = helperUtils.saveAccountPdfToS3(pdf, folderName);
             existingAccount.setAccountUrl(savedPdfUrl);
             logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
         }

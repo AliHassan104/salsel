@@ -51,18 +51,9 @@ public class HelperUtils {
         return uuid.substring(0, 8);
     }
 
-    public String savePdfToS3(MultipartFile pdf, String folderName) {
+    public String saveAccountPdfToS3(MultipartFile pdf, String folderName) {
         try {
-            String filename;
-            String type;
-            if(folderName.equalsIgnoreCase("Account")){
-                filename = "Agreement";
-                type = "Account";
-            }
-            else {
-                filename = pdf.getOriginalFilename();
-                type = "Ticket";
-            }
+            String filename = "Agreement";
 
             // Extract file extension using FilenameUtils
             String fileExtension = "." + FilenameUtils.getExtension(pdf.getOriginalFilename());
@@ -74,7 +65,7 @@ public class HelperUtils {
             String newFileName = FilenameUtils.getBaseName(filename) + "_" + timestamp + fileExtension;
 
             // Save to S3 bucket
-            return bucketService.save(pdf.getBytes(), folderName, newFileName, type); // Save PDF and return the URL
+            return bucketService.save(pdf.getBytes(), folderName, newFileName, "Account"); // Save PDF and return the URL
 
         } catch (IOException e) {
             logger.error("Failed to save PDF to S3", e);
@@ -82,5 +73,26 @@ public class HelperUtils {
         }
     }
 
+    public String saveTicketPdfToS3(MultipartFile pdf, String folderName) {
+        try {
+            String filename = pdf.getOriginalFilename();
+
+            // Extract file extension using FilenameUtils
+            String fileExtension = "." + FilenameUtils.getExtension(pdf.getOriginalFilename());
+
+            // Generate timestamp
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
+
+            // Append timestamp to the original filename
+            String newFileName = FilenameUtils.getBaseName(filename) + "_" + timestamp + fileExtension;
+
+            // Save to S3 bucket
+            return bucketService.save(pdf.getBytes(), folderName, newFileName, "Ticket"); // Save PDF and return the URL
+
+        } catch (IOException e) {
+            logger.error("Failed to save PDF to S3", e);
+            throw new RuntimeException("Failed to save PDF to S3: " + e.getMessage());
+        }
+    }
 
 }
