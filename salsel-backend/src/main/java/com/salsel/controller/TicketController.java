@@ -25,12 +25,20 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
+//    @PostMapping("/ticket")
+//    @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
+//    public ResponseEntity<TicketDto> createTicket(@RequestPart TicketDto ticketDto,
+//                                                  @RequestPart("file") MultipartFile file) {
+//        return ResponseEntity.ok(ticketService.save(ticketDto, file));
+//    }
+
     @PostMapping("/ticket")
     @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
     public ResponseEntity<TicketDto> createTicket(@RequestPart TicketDto ticketDto,
-                                                  @RequestPart("file") MultipartFile file) {
+                                                  @RequestPart(name = "file", required = false) MultipartFile file) {
         return ResponseEntity.ok(ticketService.save(ticketDto, file));
     }
+
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_WORKER')")
     @GetMapping("")
@@ -72,10 +80,11 @@ public class TicketController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/ticket/{id}")
+    @PutMapping("/ticket/{id}/filename/{fileName}")
     @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
-    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id, @RequestBody TicketDto ticketDto) {
-        TicketDto updatedTicketDto = ticketService.update(id, ticketDto);
+    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id, @RequestPart TicketDto ticketDto,
+                                                  @RequestPart("file") MultipartFile file, @PathVariable String fileName) {
+        TicketDto updatedTicketDto = ticketService.update(id, ticketDto, file, fileName);
         return ResponseEntity.ok(updatedTicketDto);
     }
 

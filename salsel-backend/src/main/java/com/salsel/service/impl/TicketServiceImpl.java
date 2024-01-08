@@ -8,6 +8,7 @@ import com.salsel.model.Ticket;
 import com.salsel.model.User;
 import com.salsel.repository.TicketRepository;
 import com.salsel.repository.UserRepository;
+import com.salsel.service.BucketService;
 import com.salsel.service.TicketService;
 import com.salsel.specification.FilterSpecification;
 import com.salsel.utils.HelperUtils;
@@ -33,17 +34,38 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final HelperUtils helperUtils;
+    private final BucketService bucketService;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
 
-    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository, HelperUtils helperUtils){
+    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository, HelperUtils helperUtils, BucketService bucketService){
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.helperUtils = helperUtils;
+        this.bucketService = bucketService;
     }
 
     @Autowired
     FilterSpecification<Ticket> ticketFilterSpecification;
+
+//    @Override
+//    @Transactional
+//    public TicketDto save(TicketDto ticketDto, MultipartFile pdf) {
+//        Ticket ticket = toEntity(ticketDto);
+//        ticket.setStatus(true);
+//        ticket.setTicketStatus("Open");
+//        ticket.setTicketFlag("Normal");
+//        Ticket createdTicket = ticketRepository.save(ticket);
+//
+//        // Save PDF to S3 bucket
+//        if (pdf != null && !pdf.isEmpty()) {
+//            String folderName = "Ticket_" + createdTicket.getId();
+//            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+//            createdTicket.setTicketUrl(savedPdfUrl);
+//            logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
+//        }
+//        return toDto(ticketRepository.save(createdTicket));
+//    }
 
     @Override
     @Transactional
@@ -54,15 +76,17 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketFlag("Normal");
         Ticket createdTicket = ticketRepository.save(ticket);
 
-        // Save PDF to S3 bucket
+        // Save PDF to S3 bucket if provided
         if (pdf != null && !pdf.isEmpty()) {
             String folderName = "Ticket_" + createdTicket.getId();
             String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
             createdTicket.setTicketUrl(savedPdfUrl);
             logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
         }
+
         return toDto(ticketRepository.save(createdTicket));
     }
+
 
     @Override
     public Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable) {
@@ -138,7 +162,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     @Transactional
-    public TicketDto update(Long id, TicketDto ticketDto) {
+    public TicketDto update(Long id, TicketDto ticketDto, MultipartFile pdf, String fileName) {
         Ticket existingTicket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Ticket not found for id => %d", id)));
 
@@ -176,6 +200,15 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setTextarea(ticketDto.getTextarea());
         existingTicket.setAirwayNumber(ticketDto.getAirwayNumber());
         existingTicket.setTicketType(ticketDto.getTicketType());
+
+        if (pdf != null && !pdf.isEmpty()) {
+            String folderKey = "Ticket/Ticket_" + id;
+            bucketService.deleteFileAtPath(folderKey,fileName);
+            String folderName = "Ticket_" + existingTicket.getId();
+            String savedPdfUrl = helperUtils.savePdfToS3(pdf, folderName);
+            existingTicket.setTicketUrl(savedPdfUrl);
+            logger.info("PDF is uploaded to S3 in folder '{}'.", folderName);
+        }
 
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return toDto(updatedTicket);

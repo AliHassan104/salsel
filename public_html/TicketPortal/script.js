@@ -1,7 +1,3 @@
-function goInDetails() {
-    window.location.href = "ticket-detail.html"
-}
-
 authenticate();
 
 function authenticate() {
@@ -13,14 +9,6 @@ function authenticate() {
 
 
 getAllTickets();
-
-// function getAllTickets(){
-
-//     https://api.salselexpress.com/api/ticket/logged-in-user?status=false
-
-// }
-
-
 
 function showLoader() {
     document.getElementById("loader-container").style.display = "flex";
@@ -34,12 +22,13 @@ function hideLoader() {
 var getUser;
 var allTickets = [];
 function getAllTickets() {
+    debugger
 
     showLoader();
     getUser = JSON.parse(localStorage.getItem("loggedInUser"))
     jwtToken = JSON.parse(localStorage.getItem("token"))
 
-    let apiUrl = `https://api.salselexpress.com/api/ticket?status=true`;
+    let apiUrl = `https://api.salassilexpress.com/api/ticket/logged-in-user?status=true`;
 
 
     fetch(apiUrl, {
@@ -68,43 +57,31 @@ function getAllTickets() {
             hideLoader();
             console.error('There was a problem with the fetch operation:', error);
         });
-
-    // let ajax= new XMLHttpRequest();
-    // ajax.open("GET" , apiUrl);
-    // ajax.setRequestHeader("content-type", "application/json");
-    // ajax.setRequestHeader("Authorization", "Bearer " + jwtToken);
-    // ajax.onprogress = function(){}
-    // ajax.onload = function(){
-    //     console.log(this.response);
-    // }
-    // ajax.send();
 }
 
 function showTickets() {
-    debugger
     const tableBody = document.querySelector('#myTable tbody');
     // Clear existing rows
     tableBody.innerHTML = '';
 
     // Iterate through the array and create table rows
     allTickets.forEach(data => {
-        debugger
         const row = `
-            <tr onclick="goInDetails()">
-            <td style="text-align: center;">
-                    <span class="action-edit"><i class="fa-regular fa-pen-to-square"></i></span>
-                    <span class="action-delete"><i class="fa-solid fa-trash-can"></i></span>
-                    <span class="action-enforce-delete"><i class="fa-solid fa-delete-left"></i></span>
-                </td>
-                <td>${data.createdAt}</td>
-                <td scope="row">${data.ticketType}</td>
-                <td>${data.ticketStatus}</td>
-                <td>${data.ticketFlag}</td>
-                <td>${data.category}</td>
-                <td>${data.assignedTo}</td>
-                <td>${data.departmentCategory}</td>
-                
-            </tr>`;
+        <tr>
+        <td style="text-align: center;">
+                <span class="action-edit" onclick="edit(${data.id})"><i class="fa-regular fa-pen-to-square"></i></span>
+                <span class="action-delete"><i class="fa-solid fa-trash-can"></i></span>
+                <span class="action-enforce-delete" onclick="deleteTicket(${data.id})"><i class="fa-solid fa-delete-left"></i></span>
+            </td>
+            <td>${data.createdAt}</td>
+            <td scope="row">${data.ticketType}</td>
+            <td>${data.ticketStatus}</td>
+            <td>${data.ticketFlag}</td>
+            <td>${data.category}</td>
+            <td>${data.assignedTo}</td>
+            <td>${data.departmentCategory}</td>
+            
+        </tr>`;
 
         // Append the row to the table body
         tableBody.innerHTML += row;
@@ -123,46 +100,54 @@ function logOut() {
     window.location.href = "../screens/login.html"
 }
 
-var ticketType = []
+// var ticketType = []
 function getApiController(token, endPoint) {
-    fetch(`https://api.salselexpress.com/api${endPoint}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwtToken.jwt}`
-            // Add any additional headers if needed
-        }
-    })
-        .then(response => {
-            hideLoader();
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+    return new Promise((resolve, reject) => {
+        fetch(`https://api.salassilexpress.com/api${endPoint}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+                // Add any additional headers if needed
             }
-            return response.json();
         })
-        .then(data => {
-
-            ticketType = data;
-            if (ticketType != null) {
-                showTicketType();
-            }
-
-        })
-        .catch(error => {
-            hideLoader();
-            console.error('There was a problem with the fetch operation:', error);
-        });
-
+            .then(response => {
+                hideLoader();
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                resolve(data);
+            })
+            .catch(error => {
+                hideLoader();
+                console.error('There was a problem with the fetch operation:', error);
+                reject(error);
+            });
+    });
 }
+
+
+
+async function getTicketType() {
+    try {
+        jwtToken = JSON.parse(localStorage.getItem("token"))
+        endPoint = '/product-field'
+        
+        var ticketType = await getApiController(jwtToken.jwt, endPoint)
+        if (ticketType) {
+            showTicketType(ticketType)
+        }
+    } catch (error) {
+        console.error('Error getting ticket type data:', error);
+    }
+}
+
 getTicketType();
 
-function getTicketType() {
-    jwtToken = JSON.parse(localStorage.getItem("token"))
-    endPoint = '/product-field'
-    getApiController(jwtToken.jwt, endPoint)
-}
-
-function showTicketType() {
+function showTicketType(ticketType) {
     var ticketTypeName = []
     ticketType.forEach(element => {
         if (element.name == 'Ticket Type') {
@@ -187,89 +172,114 @@ function showTicketType() {
     });
 }
 
+var selectedTicketType
 
 function selectTicketType(ticketType) {
-    debugger
+    selectedTicketType = ticketType
 
-    debugger
+}
 
+function edit(ticketId){
+    window.location.href = `create-ticket.html?id=${ticketId}`;
+}
 
-    switch (ticketType) {
-        case "Subject":
-            document.getElementById("shipmentInquiry").style.display = 'flex'
-            document.getElementById("pickupRequest").style.display = 'none'
+async function deleteApiController(token, endPoint) {
+    showLoader();
 
-            break;
+    try {
+        const response = await fetch(`https://api.salassilexpress.com/api/${endPoint}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token.jwt}`
+                // Add any additional headers if needed
+            },
+        });
 
-        case "Text Box":
-            document.getElementById("shipmentInquiry").style.display = 'none'
-            document.getElementById("pickupRequest").style.display = 'flex'
-            break;
+        hideLoader();
 
-        case "Priority":
-            document.getElementById("priority").style.display = 'flex'
-            break;
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-        case "Attachements":
-            document.getElementById("rateInquiry").style.display = 'flex'
-            break;
+        const data = await response.json();
+        return data;
+        // Process the response data as needed
 
+    } catch (error) {
+        hideLoader();
+        console.error('There was a problem with the fetch operation:', error);
     }
 }
 
-function createTicket() {
-    const ticketType = document.getElementById('ticketType').value;
-    const name = document.getElementById('inputPassword4').value;
-    const email = document.getElementById('inputEmail4').value;
-    const phone = document.getElementById('inputAddress').value;
 
-    const entryAirwayOrReferenceNumber = document.getElementById('shipmentInquiry').querySelector('input').value;
+async function deleteTicket(ticketId){
+    jwtToken = JSON.parse(localStorage.getItem("token"))
+    const endPoint = `ticket/${ticketId}`
+    debugger
+    var ticketDelete = await deleteApiController(jwtToken , endPoint)
+    getAllTickets()
 
-    const shipperName = document.getElementById('pickupRequest').querySelector('input[placeholder="Shipper Name"]').value;
-    const shipperContactNumber = document.getElementById('pickupRequest').querySelector('input[placeholder="Contact Number"]').value;
-    const originCountryAndCity = document.getElementById('pickupRequest').querySelector('select').value;
-    const pickupAddress = document.getElementById('pickupRequest').querySelector('input[placeholder="PickUp Address"]').value;
-    const shipperRef = document.getElementById('pickupRequest').querySelector('input[placeholder="Shipper Ref#"]').value;
-    const recipientsName = document.getElementById('pickupRequest').querySelector('input[placeholder="Recipients Name"]').value;
-    const recipientsContactNumber = document.getElementById('pickupRequest').querySelector('input[placeholder="Contact Number"]').value;
-    const recipientsOriginCountryAndCity = document.getElementById('pickupRequest').querySelectorAll('select')[1].value;
-    const recipientsPickUpAddress = document.getElementById('pickupRequest').querySelector('input[placeholder="Recipients PickUp Address"]').value;
+}
 
-    const entryAirwayOrReferenceNumberRateInquiry = document.getElementById('rateInquiry').querySelector('input').value;
+var allTickets = [];
+function getAllTickets() {
 
-    const textareaValue = document.querySelector('textarea').value;
+    showLoader();
+    getUser = JSON.parse(localStorage.getItem("loggedInUser"))
+    jwtToken = JSON.parse(localStorage.getItem("token"))
 
-    const ticket = {
-        assignedTo: "string",
-        category: "string",
-        createdAt: "2024-01-03T13:26:15.459Z",
-        createdBy: "string",
-        deliveryAddress: "string",
-        department: "string",
-        departmentCategory: "string",
-        destinationCity: "string",
-        destinationCountry: "string",
-        id: 0,
-        originCity: "string",
-        originCountry: "string",
-        pickupAddress: "string",
-        pickupDate: "2024-01-03",
-        pickupTime: {
-            hour: "string",
-            minute: "string",
-            nano: 0,
-            second: "string"
-        },
-        recipientContactNumber: "string",
-        recipientName: "string",
-        shipperContactNumber: "string",
-        shipperName: "string",
-        shipperRefNumber: "string",
-        status: true,
-        ticketFlag: "string",
-        ticketStatus: "string"
-    };
+    let apiUrl = `https://api.salassilexpress.com/api/ticket/logged-in-user?status=true`;
 
-    console.log(ticketObject);
 
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken.jwt}`
+            // Add any additional headers if needed
+        }
+    })
+        .then(response => {
+            hideLoader();
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle the response data
+            // You can redirect the user or perform any other action based on the response
+            allTickets = data;
+            const tableBody = document.querySelector('#myTable tbody');
+            // Clear existing rows
+            tableBody.innerHTML = '';
+        
+            // Iterate through the array and create table rows
+            allTickets.forEach(data => {
+                const row = `
+                <tr>
+                <td style="text-align: center;">
+                        <span class="action-edit" onclick="edit(${data.id})"><i class="fa-regular fa-pen-to-square"></i></span>
+                        <span class="action-delete"><i class="fa-solid fa-trash-can"></i></span>
+                        <span class="action-enforce-delete" onclick="deleteTicket(${data.id})"><i class="fa-solid fa-delete-left"></i></span>
+                    </td>
+                    <td>${data.createdAt}</td>
+                    <td scope="row">${data.ticketType}</td>
+                    <td>${data.ticketStatus}</td>
+                    <td>${data.ticketFlag}</td>
+                    <td>${data.category}</td>
+                    <td>${data.assignedTo}</td>
+                    <td>${data.departmentCategory}</td>
+                    
+                </tr>`;
+        
+                // Append the row to the table body
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            hideLoader();
+            console.error('There was a problem with the fetch operation:', error);
+        });
 }

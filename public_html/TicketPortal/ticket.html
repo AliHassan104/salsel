@@ -124,15 +124,15 @@
     </nav>
 
     <!-- tickets section start -->
-    <div class="table-container" style="height: 100vh;">
+    <div class="table-container">
 
         <div class="table-header">
             <h1>All Tickets</h1>
             <button onclick="window.location.href=`create-ticket.html`">Create Ticket</button>
         </div>
 
-        <div class="card table-responsive">
-            <table class="table table-hover table-sm" id="myTable">
+        <div class="table-responsive">
+            <table class="table table-sm" id="myTable">
                 <thead>
                     <tr>
                         <th>Actions</th>
@@ -145,7 +145,7 @@
                         <th scope="col">Department Category</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     <!-- <tr onclick="goInDetails()">
                         <td>Usman</td>
                         <td scope="row">Arrange My Pup</td>
@@ -312,19 +312,19 @@
 
     <div class="socialmedia-toggle" onclick="expand()">
         <i class="fa fa-plus" id="plus"></i>
-    </div>
-
-    <div class="menu_group" id="menu">
+      </div>
+  
+      <div class="menu_group" id="menu">
         <a href="https://www.instagram.com/bachassllc/" class="toggle_items" target="_blank"><img alt=""
-                id="toggle-images1" src="../assets/imgs/social/instagramIcon.png" /></a>
+            id="toggle-images1" src="../assets/imgs/social/instagramIcon.png" /></a>
         <a href="https://wa.me/13074564966" class="toggle_items" target="_blank"><img alt="" id="toggle-images2"
-                src="../assets/imgs/social/whatsAppIcon.png" /></a>
+            src="../assets/imgs/social/whatsAppIcon.png" /></a>
         <a href="https://twitter.com/BachassLLC" class="toggle_items" target="_blank"><img alt="" id="toggle-images3"
-                src="../assets/imgs/social/twitterIcon.png" /></a>
-    </div>
+            src="../assets/imgs/social/twitterIcon.png" /></a>
+      </div>
 
     <script>
-
+        
         var plusIcon = document.querySelector("#plus");
         var socialIcons = document.querySelector("#menu");
         var toggle = 0;

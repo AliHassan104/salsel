@@ -136,20 +136,20 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputPassword4">Name</label>
-                    <input type="password" class="form-control" id="inputPassword4" placeholder="Name">
+                    <input type="text" class="form-control" id="name" placeholder="Name">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputEmail4">Email</label>
-                    <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                    <input type="email" class="form-control" id="email" placeholder="Email">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputAddress">Phone</label>
-                    <input type="number" class="form-control" id="inputAddress" placeholder="Phone">
+                    <input type="number" class="form-control" id="phone" placeholder="Phone">
                 </div>
 
             </div>
 
-            <div class="form-row" id="shipmentInquiry">
+            <!-- <div class="form-row" id="shipmentInquiry">
                 <div class="form-group col-md-6" >
                     <label for="inputPassword4">Entry Airway Or Reference Number</label>
                     <input type="text" class="form-control" placeholder="Entry Airway Or Reference Number">
@@ -207,13 +207,13 @@
                     <label for="inputPassword4">Entry Airway Or Reference Number</label>
                     <input type="text" class="form-control" placeholder="Entry Airway Or Reference Number">
                 </div>
-            </div>
+            </div> -->
             <div class="form-row">
                 <div class="form-group col-md-12">
                     <label for="inputCity">textarea</label>
-                    <textarea
+                    <textarea 
                         style="border:1px solid #ced4da; display: block; border-radius: 0.25rem; color: black; resize: none; padding: 0.375rem 0.75rem;"
-                        name="" id="" cols="149" rows="3"></textarea>
+                        name="" id="textarea" cols="149" rows="3"></textarea>
                 </div>
 
 
@@ -226,7 +226,7 @@
                 </label>
               </div>
             </div> -->
-            <button type="submit" class="btn btn-primary " style="background-color: #93003c; border: transparent;">Create</button>
+            <button type="button" onclick="createTicket()" class="btn btn-primary " style="background-color: #93003c; border: transparent;" id="submit-button" >Create</button>
         </form>
     </div>
 
@@ -383,7 +383,6 @@
         }
 
         function updateFlagImage(languageCode) {
-            debugger
             console.log('Updating flag for language:', languageCode);
             var flagMappings = {
                 'en': 'english.png',
@@ -410,7 +409,6 @@
         function googleTranslateOnLoad() {
             setTimeout(function () {
                 hideGoogleTranslateToolbar();
-                debugger
 
                 var translateElement = document.getElementById('google_translate_element');
                 if (translateElement) {
@@ -426,6 +424,7 @@
         src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script src="script.js"></script>
+    <script src="edit-ticket.js"></script>
 </body>
 
 </html>

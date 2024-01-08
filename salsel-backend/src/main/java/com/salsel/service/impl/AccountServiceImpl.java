@@ -45,19 +45,18 @@ public class AccountServiceImpl implements AccountService {
         Account account = toEntity(accountDto);
         account.setStatus(true);
 
+        Account createdAccount;
         Optional<User> existingUser = userRepository.findByEmail(account.getEmail());
-        if(existingUser.isPresent()){
-            throw new UserAlreadyExistAuthenticationException("User Already Exist");
+        if (!existingUser.isPresent()) {
+            String password = helperUtils.generateResetPassword();
+            User user = new User();
+            user.setEmail(account.getEmail());
+            user.setPassword(password);
+            user.setStatus(true);
+            User createdUser = userRepository.save(user);
+            emailUtils.sendWelcomeEmail(createdUser, password);
         }
-
-        String password = helperUtils.generateResetPassword();
-        User user = new User();
-        user.setEmail(account.getEmail());
-        user.setPassword(password);
-        user.setStatus(true);
-        User createdUser = userRepository.save(user);
-        emailUtils.sendWelcomeEmail(createdUser, password);
-        Account createdAccount = accountRepository.save(account);
+        createdAccount = accountRepository.save(account);
 
         // Save PDF to S3 bucket
         if (pdf != null && !pdf.isEmpty()) {
