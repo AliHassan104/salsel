@@ -117,7 +117,7 @@ export class UserProfileComponent implements OnInit {
       const userData = {
         firstname: data.firstname,
         lastname: data.lastname,
-        email: data.email,
+        email: this.activeUser.email,
         phone: data.phone,
         name: name,
         roles: [
@@ -132,14 +132,12 @@ export class UserProfileComponent implements OnInit {
         .updateUser(this.activeUser.id, userData)
         .subscribe((res) => {
           this.editMode = false;
-          this.getActiveUser();
           this.userService.loginUserName.next(name);
           this.userService.loginUser.next(name.charAt(0).toUpperCase());
-          this.userService.loginUserEmail.next(data.email);
+          this.userService.loginUserEmail.next(this.activeUser.email);
           localStorage.removeItem("loginUserName");
-          localStorage.removeItem("loginUserEmail");
           localStorage.setItem("loginUserName", name);
-          localStorage.setItem("loginUserEmail", data.email);
+          this.getActiveUser();
           this.success();
         });
     } else {
