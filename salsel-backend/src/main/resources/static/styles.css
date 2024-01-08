@@ -96,9 +96,9 @@ body {
 .img-3 {
   position: absolute;
   right: 32px;
-  height: 140%;
+  height: 120%;
   width: 8%;
-  top: -50px;
+  top: -57px;
 }
 
 .barcode-num {
@@ -142,12 +142,12 @@ body {
 }
 
 .code-service {
-   margin-left: 36px;
+   margin-left: 48px;
     font-weight: bold;
     margin-top: 0px;
     margin-bottom: 15px;
     font-size: 21px;
-    min-width:120px;
+    min-width:180px;
 }
 
 .heading {
@@ -176,9 +176,9 @@ body {
 .img-4 {
   position: absolute;
   top: 18px;
-  left: -190px;
+  left: -70px;
   height: 48%;
-  width: 150%;
+  width: 130%;
 }
 
 .truncate-text {
