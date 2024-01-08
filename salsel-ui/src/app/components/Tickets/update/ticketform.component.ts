@@ -143,6 +143,7 @@ export class TicketformComponent implements OnInit {
     if (this.editId != null) {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
+
         this.attachAgreement(this.singleTicket?.ticketUrl);
         this.getAllCitiesAndDepartmentCategories(
           this.singleTicket.destinationCountry,
@@ -454,14 +455,10 @@ export class TicketformComponent implements OnInit {
     if (fileInput.files && fileInput.files.length > 0) {
       const selectedFile = fileInput.files[0];
 
-      const customFileName = `ticketAttachment_${this.editId}.pdf`;
-
       // Check if the selected file has a PDF extension
       if (selectedFile.name.toLowerCase().endsWith(".pdf")) {
-        this.fileName = customFileName;
-        this.ticketAttachment = new File([selectedFile], customFileName, {
-          type: "application/pdf",
-        });
+        this.fileName = selectedFile.name;
+        this.ticketAttachment = selectedFile;
       } else {
         fileInput.value = null;
         this.messageService.add({
