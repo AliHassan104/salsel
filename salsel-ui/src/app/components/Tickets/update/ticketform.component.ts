@@ -392,12 +392,8 @@ export class TicketformComponent implements OnInit {
           this.ticketForm.get("pickupTime")?.valid
         ) {
           if (this.editMode) {
-            this.http
-              .put<any>(
-                `${environment.URL}ticket/${this.editId}`,
-                ticketData,
-                this.ticketAttachment
-              )
+            this._ticketService
+              .editTicket(this.editId, ticketData, this.ticketAttachment)
               .subscribe(() => {
                 this.update();
                 this.router.navigate(["ticket/list"]);
@@ -419,8 +415,8 @@ export class TicketformComponent implements OnInit {
         }
       } else {
         if (this.editMode) {
-          this.http
-            .put<any>(`${environment.URL}ticket/${this.editId}`, ticketData)
+          this._ticketService
+            .editTicket(this.editId, ticketData, this.ticketAttachment)
             .subscribe(() => {
               this.update();
               this.router.navigate(["ticket/list"]);

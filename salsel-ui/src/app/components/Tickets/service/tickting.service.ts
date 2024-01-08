@@ -49,6 +49,19 @@ export class TicktingService {
     return this.http.put(`${this.url}ticket/status/${id}`, {});
   }
 
+  editTicket(id: any, data: any, file: File) {
+    const formData = new FormData();
+
+    const ticketDtoBlob = new Blob([JSON.stringify(data)], {
+      type: "application/json",
+    });
+    formData.append("ticketDto", ticketDtoBlob, "ticketDto.txt");
+
+    formData.append("file", file);
+
+    return this.http.put<any>(`${this.url}ticket/${id}`, formData);
+  }
+
   //   Get formated Date
   formatDate(date: Date): string {
     if (date != null) {
