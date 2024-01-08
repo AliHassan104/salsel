@@ -6,7 +6,7 @@ export const environment = {
   production: false,
 
   URL : "http://localhost:8080/api/",
-  // URL : "https://api.salassilxpress.com/api/"
+  // URL : "https://api.salassilexpress.com/api/"
 };
 
 /*
