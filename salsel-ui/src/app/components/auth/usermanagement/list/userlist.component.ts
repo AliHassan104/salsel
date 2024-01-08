@@ -48,7 +48,6 @@ export class UserlistComponent implements OnInit {
     const params = { status: this.activeStatus };
     this.userService.getAllUser(params).subscribe((res: any) => {
       this.users = res;
-      console.log(this.users);
     });
   }
 

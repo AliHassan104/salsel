@@ -49,7 +49,7 @@ export class TicktingService {
     return this.http.put(`${this.url}ticket/status/${id}`, {});
   }
 
-  editTicket(id: any, data: any, file: File) {
+  editTicket(id: any, data: any, file: File, filename: string) {
     const formData = new FormData();
 
     const ticketDtoBlob = new Blob([JSON.stringify(data)], {
@@ -59,7 +59,10 @@ export class TicktingService {
 
     formData.append("file", file);
 
-    return this.http.put<any>(`${this.url}ticket/${id}`, formData);
+    return this.http.put<any>(
+      `${this.url}ticket/${id}/filename/${filename}`,
+      formData
+    );
   }
 
   //   Get formated Date

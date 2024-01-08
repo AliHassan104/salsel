@@ -393,7 +393,12 @@ export class TicketformComponent implements OnInit {
         ) {
           if (this.editMode) {
             this._ticketService
-              .editTicket(this.editId, ticketData, this.ticketAttachment)
+              .editTicket(
+                this.editId,
+                ticketData,
+                this.ticketAttachment,
+                this.fileName
+              )
               .subscribe(() => {
                 this.update();
                 this.router.navigate(["ticket/list"]);
@@ -416,7 +421,12 @@ export class TicketformComponent implements OnInit {
       } else {
         if (this.editMode) {
           this._ticketService
-            .editTicket(this.editId, ticketData, this.ticketAttachment)
+            .editTicket(
+              this.editId,
+              ticketData,
+              this.ticketAttachment,
+              this.fileName
+            )
             .subscribe(() => {
               this.update();
               this.router.navigate(["ticket/list"]);
@@ -444,10 +454,14 @@ export class TicketformComponent implements OnInit {
     if (fileInput.files && fileInput.files.length > 0) {
       const selectedFile = fileInput.files[0];
 
+      const customFileName = `ticketAttachment_${this.editId}.pdf`;
+
       // Check if the selected file has a PDF extension
       if (selectedFile.name.toLowerCase().endsWith(".pdf")) {
-        this.fileName = selectedFile.name;
-        this.ticketAttachment = selectedFile;
+        this.fileName = customFileName;
+        this.ticketAttachment = new File([selectedFile], customFileName, {
+          type: "application/pdf",
+        });
       } else {
         fileInput.value = null;
         this.messageService.add({
@@ -467,6 +481,8 @@ export class TicketformComponent implements OnInit {
         });
         // Create a DataTransfer object
         const dataTransfer = new DataTransfer();
+
+        this.fileName = file.name;
 
         // Add the file to the DataTransfer object
         dataTransfer.items.add(file);
