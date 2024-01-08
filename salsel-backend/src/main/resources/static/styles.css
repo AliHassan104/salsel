@@ -96,7 +96,7 @@ body {
 .img-3 {
   position: absolute;
   right: 32px;
-  height: 120%;
+  height: 150%;
   width: 8%;
   top: -57px;
 }
@@ -176,9 +176,9 @@ body {
 .img-4 {
   position: absolute;
   top: 18px;
-  left: -70px;
+  left: -250px;
   height: 48%;
-  width: 130%;
+  width: 170%;
 }
 
 .truncate-text {
