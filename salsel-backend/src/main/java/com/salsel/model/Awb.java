@@ -28,7 +28,7 @@ public class Awb {
     private LocalDateTime createdAt;
 
     @Column(unique = true, nullable = false)
-    private Long uniqueNumber;
+    private String uniqueNumber;
 
     private String shipperName;
     private String shipperContactNumber;

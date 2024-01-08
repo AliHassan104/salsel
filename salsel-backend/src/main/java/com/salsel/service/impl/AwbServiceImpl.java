@@ -31,12 +31,39 @@ public class AwbServiceImpl implements AwbService {
         this.pdfGenerationService = pdfGenerationService;
     }
 
+//    @Override
+//    @Transactional
+//    public AwbDto save(AwbDto awbDto) {
+//        try {
+//            Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
+//            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
+//
+//            Awb awb = toEntity(awbDto);
+//            awb.setAwbStatus("AWB Created");
+//            awb.setStatus(true);
+//            awb.setEmailFlag(false);
+//            Awb createdAwb = awbRepository.save(awb);
+//            Long awbId = createdAwb.getId();
+//
+//            codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
+//            codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
+//            codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
+//
+//            return toDto(createdAwb);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RecordNotFoundException("Error occurred while processing the request");
+//        }
+//    }
+
     @Override
     @Transactional
     public AwbDto save(AwbDto awbDto) {
         try {
-            Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
-            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
+            String maxUniqueNumberStr = String.valueOf(awbRepository.findMaxUniqueNumber());
+            Long maxUniqueNumber = (maxUniqueNumberStr == null) ? 900_000_001L : Long.parseLong(maxUniqueNumberStr);
+
+            awbDto.setUniqueNumber(generateUniqueNumber(maxUniqueNumber));
 
             Awb awb = toEntity(awbDto);
             awb.setAwbStatus("AWB Created");
@@ -45,15 +72,21 @@ public class AwbServiceImpl implements AwbService {
             Awb createdAwb = awbRepository.save(awb);
             Long awbId = createdAwb.getId();
 
-            codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
-            codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
-            codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
+            codeGenerationService.generateBarcode(awb.getUniqueNumber(), awbId);
+            codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber(), awbId);
+            codeGenerationService.generateQRCode(awb.getUniqueNumber(), awbId);
 
             return toDto(createdAwb);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RecordNotFoundException("Error occurred while processing the request");
         }
+    }
+
+    private String generateUniqueNumber(Long maxUniqueNumber) {
+        maxUniqueNumber++;
+        // Format the unique number as "900 000 00"
+        return String.format("%,d", maxUniqueNumber).replace(",", " ");
     }
 
 

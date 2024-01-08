@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @Data
 public class AwbDto {
     private Long id;
-    private Long uniqueNumber;
+    private String uniqueNumber;
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     private String shipperName;

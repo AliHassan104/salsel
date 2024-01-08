@@ -12,7 +12,7 @@
 <div class="info">
     <div class="img">
         <img th:src="@{classpath:/static/images/logo.jpeg}"  class="img1"></img>
-        <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/qrcode_' + awbId + '.png'}" alt="QR Code" class="img2"></img>
+        <img th:src="${'https://api.salassilexpress.com/api/file/Awb/awb_' + awbId + '/qrcode_' + awbId + '.png'}" alt="QR Code" class="img2"></img>
 
     </div>
     <div class="content">
@@ -27,7 +27,7 @@
         <p class="truncate-text p42" th:text="${deliveryStreetName} + '  -  ' + ${deliveryDistrict}"></p>
         <p class="truncate-text p5" th:text="${deliveryAddress}"></p>
         <p class="truncate-text p6" th:text="${destinationCity} + '  -  ' +  ${destinationCountry}"></p>
-        <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
+        <img th:src="${'https://api.salassilexpress.com/api/file/Awb/awb_' + awbId + '/vertical_barcode_' + awbId + '.png'}" alt="VerticalBarcode" class="img-3"></img>
     </div>
     <div style="z-index: 1000; position: relative;">
         <hr style="border: none; margin: 20px; height: 3px; background-color: #787779;"></hr>
@@ -46,8 +46,8 @@
         </div>
     </div>
     <div class="footer-img">
-        <h1 class="unique-num" th:text="'TRK#' + ' 900 000 001'"></h1>
-        <img th:src="${'http://api.salselexpress.com/api/file/Awb/awb_' + awbId + '/barcode_' + awbId + '.png'}" alt="Barcode" class="img-4"></img>
+        <h1 class="unique-num" th:text="'TRK#' + ' ' + ${uniqueNumber}"></h1>
+        <img th:src="${'https://api.salassilexpress.com/api/file/Awb/awb_' + awbId + '/barcode_' + awbId + '.png'}" alt="Barcode" class="img-4"></img>
         <p class="duty-tax" th:text="${dutyAndTaxesBillTo}"></p>
     </div>
 </div>

@@ -29,7 +29,12 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
     @Query("SELECT a FROM Awb a WHERE a.status = true And a.emailFlag = false")
     List<Awb> findAllWhereStatusIsTrueAndEmailFlagIsFalse();
 
-    @Query("SELECT MAX(a.uniqueNumber) FROM Awb a")
+    @Query("SELECT MAX(CAST(a.uniqueNumber AS long)) FROM Awb a")
     Long findMaxUniqueNumber();
+
+
+
+//    @Query("SELECT MAX(a.uniqueNumber) FROM Awb a")
+//    Long findMaxUniqueNumber();
 
 }
