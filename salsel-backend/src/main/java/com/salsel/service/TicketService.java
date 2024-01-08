@@ -19,5 +19,5 @@ public interface TicketService {
     TicketDto findById(Long id);
     void deleteById(Long id);
     void setToActiveById(Long id);
-    TicketDto update(Long id, TicketDto ticketDto);
+    TicketDto update(Long id, TicketDto ticketDto, MultipartFile pdf, String fileName);
 }

@@ -108,6 +108,20 @@ public class bucketServiceImpl implements BucketService {
     }
 
     @Override
+    public void deleteFileAtPath(String folderKey, String fileName) {
+        try {
+            String objectKey = folderKey + "/" + fileName;
+            s3Client.deleteObject(new DeleteObjectRequest(bucketName, objectKey));
+
+            logger.info("File deleted successfully: {}", objectKey);
+        } catch (Exception e) {
+            logger.error("Error deleting file {} from path {} in S3 bucket: {}", fileName, folderKey, e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+    @Override
     public void deleteFilesStartingWith(String folderKey, String prefix) {
         try {
             // List the objects in the specified folder
