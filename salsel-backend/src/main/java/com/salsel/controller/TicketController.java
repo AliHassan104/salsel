@@ -34,9 +34,9 @@ public class TicketController {
 
     @PostMapping("/ticket")
     @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
-    public ResponseEntity<TicketDto> createTicket(@RequestPart TicketDto ticketDto,
-                                                  @RequestPart(name = "file", required = false) MultipartFile file) {
-        return ResponseEntity.ok(ticketService.save(ticketDto, file));
+    public ResponseEntity<TicketDto> createTicket(@RequestPart("ticketDto") TicketDto ticketDto,
+                                                  @RequestPart(name = "files", required = false) List<MultipartFile> files) {
+        return ResponseEntity.ok(ticketService.save(ticketDto, files));
     }
 
 
@@ -80,13 +80,23 @@ public class TicketController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/ticket/{id}/filename/{fileName}")
+//    @PutMapping("/ticket/{id}/filename/{fileName}")
+//    @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
+//    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id, @RequestPart TicketDto ticketDto,
+//                                                  @RequestPart("file") MultipartFile file, @PathVariable String fileName) {
+//        TicketDto updatedTicketDto = ticketService.update(id, ticketDto, file, fileName);
+//        return ResponseEntity.ok(updatedTicketDto);
+//    }
+
+    @PutMapping("/ticket/{id}/filenames")
     @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")
-    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id, @RequestPart TicketDto ticketDto,
-                                                  @RequestPart("file") MultipartFile file, @PathVariable String fileName) {
-        TicketDto updatedTicketDto = ticketService.update(id, ticketDto, file, fileName);
+    public ResponseEntity<TicketDto> updateTicket(@PathVariable Long id, @RequestPart("ticketDto") TicketDto ticketDto,
+                                                  @RequestPart("files") List<MultipartFile> files,
+                                                  @RequestParam("fileNames") List<String> fileNames) {
+        TicketDto updatedTicketDto = ticketService.update(id, ticketDto, files, fileNames);
         return ResponseEntity.ok(updatedTicketDto);
     }
+
 
     @PutMapping("/ticket/status/{id}")
     @PreAuthorize("hasAuthority('CREATE_TICKET') and hasAuthority('READ_TICKET')")

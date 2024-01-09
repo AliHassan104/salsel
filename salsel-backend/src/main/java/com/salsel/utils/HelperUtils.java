@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -94,5 +96,28 @@ public class HelperUtils {
             throw new RuntimeException("Failed to save PDF to S3: " + e.getMessage());
         }
     }
+
+    public List<String> saveTicketPdfListToS3(List<MultipartFile> pdfFiles, String folderName) {
+        try {
+            List<String> savedPdfUrls = new ArrayList<>();
+
+            for (MultipartFile pdf : pdfFiles) {
+                String filename = pdf.getOriginalFilename();
+                String fileExtension = "." + FilenameUtils.getExtension(pdf.getOriginalFilename());
+                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
+                String newFileName = FilenameUtils.getBaseName(filename) + "_" + timestamp + fileExtension;
+
+                // Save to S3 bucket
+                String savedPdfUrl = bucketService.save(pdf.getBytes(), folderName, newFileName, "Ticket");
+                savedPdfUrls.add(savedPdfUrl);
+            }
+
+            return savedPdfUrls;
+        } catch (IOException e) {
+            logger.error("Failed to save PDFs to S3", e);
+            throw new RuntimeException("Failed to save PDFs to S3: " + e.getMessage());
+        }
+    }
+
 
 }

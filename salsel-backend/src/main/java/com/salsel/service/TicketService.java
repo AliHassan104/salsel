@@ -13,11 +13,11 @@ import java.util.List;
 public interface TicketService {
 
     Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable);
-    TicketDto save(TicketDto ticketDto, MultipartFile pdf);
+TicketDto save(TicketDto ticketDto, List<MultipartFile> pdfFiles);
     List<TicketDto> getAll(Boolean status);
     List<TicketDto> getTicketsByLoggedInUser(Boolean status);
     TicketDto findById(Long id);
     void deleteById(Long id);
     void setToActiveById(Long id);
-    TicketDto update(Long id, TicketDto ticketDto, MultipartFile pdf, String fileName);
+    TicketDto update(Long id, TicketDto ticketDto, List<MultipartFile> pdfFiles, List<String> fileNames);
 }

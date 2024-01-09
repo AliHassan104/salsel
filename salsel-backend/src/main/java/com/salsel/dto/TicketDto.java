@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -58,4 +59,5 @@ public class TicketDto {
     private String departmentCategory;
     private String ticketStatus;
     private Boolean status;
+    private List<TicketAttachmentDto> attachments;
 }

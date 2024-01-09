@@ -17,7 +17,9 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -69,6 +71,55 @@ public class bucketServiceImpl implements BucketService {
             }
         } catch (Exception e) {
             logger.error("File {} not uploaded to S3 bucket", fileName, e);
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> saveMultipleFiles(Map<String, byte[]> files, String folderName, String folderType) {
+        try {
+            // Validate input parameters
+            if (files == null || folderName == null || folderType == null) {
+                throw new IllegalArgumentException("Invalid input parameters");
+            }
+
+            List<String> fileKeys = new ArrayList<>();
+
+            // Check if the folder exists
+            String folderKey;
+            if (folderType.equalsIgnoreCase(ACCOUNT)) {
+                folderKey = ACCOUNT + "/" + folderName;
+            } else if (folderType.equalsIgnoreCase(AWB)) {
+                folderKey = AWB + "/" + folderName;
+            } else if (folderType.equalsIgnoreCase(TICKET)) {
+                folderKey = TICKET + "/" + folderName;
+            } else {
+                throw new RecordNotFoundException("Invalid folder type: " + folderType);
+            }
+
+            if (!s3Client.doesObjectExist(bucketName, folderKey + "/")) {
+                // Create an empty object to simulate the directory
+                s3Client.putObject(bucketName, folderKey + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
+            }
+
+            for (Map.Entry<String, byte[]> entry : files.entrySet()) {
+                String fileName = entry.getKey();
+                byte[] pdf = entry.getValue();
+
+                // Use try-with-resources to automatically close the input stream
+                try (ByteArrayInputStream inputStream = new ByteArrayInputStream(pdf)) {
+                    String key = folderKey + "/" + fileName;
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setContentLength(pdf.length);
+
+                    s3Client.putObject(new PutObjectRequest(bucketName, key, inputStream, metadata));
+                    fileKeys.add(key);
+                }
+            }
+
+            return fileKeys;
+        } catch (Exception e) {
+            logger.error("Files not uploaded to S3 bucket", e);
             throw new RuntimeException(e.getMessage());
         }
     }

@@ -1,6 +1,7 @@
 package com.salsel.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salsel.dto.TicketAttachmentDto;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -68,4 +70,8 @@ public class Ticket {
     private String departmentCategory;
     private String ticketStatus;
     private Boolean status;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "ticket_id")
+    private List<TicketAttachment> attachments;
 }
