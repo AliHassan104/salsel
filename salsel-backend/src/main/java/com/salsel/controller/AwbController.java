@@ -33,6 +33,13 @@ public class AwbController {
         return ResponseEntity.ok(awbDtoList);
     }
 
+    @GetMapping("/awb/logged-in-user")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity<List<AwbDto>> getAllAwbByLoggedInUser(@RequestParam(value = "status") Boolean status) {
+        List<AwbDto> awbDtoList = awbService.getAwbByLoggedInUser(status);
+        return ResponseEntity.ok(awbDtoList);
+    }
+
     @GetMapping("/awb/pdf/{file-name}/{awbId}")
     public ResponseEntity<byte[]> getAwbPdf(@PathVariable(name = "file-name") String fileName,
                                             @PathVariable(name = "awbId") Long awbId) {

@@ -10,3 +10,14 @@ tr td {
 .customBtn span {
   font-size: 20px !important;
 }
+
+.pi-copy {
+  font-size: 20px;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.pi-copy:hover {
+  color: #93003c;
+}

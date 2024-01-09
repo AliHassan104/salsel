@@ -1,9 +1,12 @@
 package com.salsel.service.impl;
 
 import com.salsel.dto.AccountDto;
+import com.salsel.dto.CustomUserDetail;
+import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.exception.UserAlreadyExistAuthenticationException;
 import com.salsel.model.Account;
+import com.salsel.model.Ticket;
 import com.salsel.model.User;
 import com.salsel.repository.AccountRepository;
 import com.salsel.repository.UserRepository;
@@ -13,6 +16,7 @@ import com.salsel.utils.EmailUtils;
 import com.salsel.utils.HelperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -79,6 +83,27 @@ public class AccountServiceImpl implements AccountService {
             accountDtoList.add(accountDto);
         }
         return accountDtoList;
+    }
+
+    @Override
+    public List<AccountDto> getAccountsByLoggedInUser(Boolean status) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+            List<Account> accountList = accountRepository.findAllInDesOrderByEmailAndStatus(status,user.getEmail());
+            List<AccountDto> accountDtoList = new ArrayList<>();
+
+            for (Account account : accountList) {
+                AccountDto accountDto = toDto(account);
+                accountDtoList.add(accountDto);
+            }
+            return accountDtoList;
+        }
+        return null;
     }
 
     @Override

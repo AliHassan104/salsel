@@ -1,6 +1,7 @@
 package com.salsel.repository;
 
 import com.salsel.model.Awb;
+import com.salsel.model.Ticket;
 import com.salsel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,6 +35,9 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
 
     @Query("SELECT a FROM Awb a WHERE a.status = :status ORDER BY a.id DESC")
     Awb findLatestRecord(@Param("status") boolean status);
+
+    @Query("SELECT a FROM Awb a WHERE a.status = :status And a.createdBy = :createdBy ORDER BY a.id DESC")
+    List<Awb> findAllInDesOrderByEmailAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy);
 
 
 

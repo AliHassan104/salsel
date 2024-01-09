@@ -219,7 +219,8 @@ export class AccountFormComponent implements OnInit {
   attachAgreement(agreementUrl: string) {
     this.accountService.downloadAgreement(agreementUrl).subscribe(
       (blob: Blob) => {
-        const file = new File([blob], `agreement_${this.editId}.pdf`, {
+        const fileName = agreementUrl.split("/").pop();
+        const file = new File([blob], fileName, {
           type: "application/pdf",
         });
         // Create a DataTransfer object

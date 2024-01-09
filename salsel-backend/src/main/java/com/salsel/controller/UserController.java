@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasAuthority('CREATE_USER') and hasAuthority('READ_USER')")
+    @PreAuthorize("hasAuthority('READ_USER')")
     public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam(value = "status") Boolean status) {
         List<UserDto> userDtoList = userService.getAll(status);
         return ResponseEntity.ok(userDtoList);

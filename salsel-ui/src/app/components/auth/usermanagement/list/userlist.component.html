@@ -152,6 +152,10 @@
     <p-dialog [(visible)]="regeneratedDialog" header="Generated Password" styleClass="customDialog" [modal]="true"
         [style]="{width:'450px'}">
         <div class="flex align-items-center justify-content-center">
-            <button class="customBtn" [label]="generatedPassword" pButton></button>
+            <button [pTooltip]="getPass" tooltipPosition="bottom" type="button" (click)="copyToClipboard()"
+                class="customBtn" [label]="generatedPassword" pButton></button>
         </div>
     </p-dialog>
+
+
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

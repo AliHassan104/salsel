@@ -20,6 +20,7 @@ export class UserlistComponent implements OnInit {
   activeStatus: boolean = true;
   deleteId: any;
   generateId: any;
+  getPass: string = "Copy";
 
   constructor(
     private userService: UserService,
@@ -49,6 +50,29 @@ export class UserlistComponent implements OnInit {
     this.userService.getAllUser(params).subscribe((res: any) => {
       this.users = res;
     });
+  }
+
+  copyToClipboard() {
+    const textToCopy = this.generatedPassword;
+    const dummyElement = document.createElement("textarea");
+
+    dummyElement.value = textToCopy;
+
+    document.body.appendChild(dummyElement);
+
+    dummyElement.select();
+    dummyElement.setSelectionRange(0, 99999); // For mobile devices
+
+    document.execCommand("copy");
+
+    document.body.removeChild(dummyElement);
+
+    this.messageService.add({
+      severity: "success",
+      summary: "Copied",
+    });
+
+    // Optionally, you can display a message or perform other actions after copying
   }
 
   onStatusChange(data) {

@@ -186,7 +186,6 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setCreatedBy(ticketDto.getCreatedBy());
         existingTicket.setDepartment(ticketDto.getDepartment());
         existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
-        existingTicket.setCreatedBy(ticketDto.getCreatedBy());
         existingTicket.setDepartment(ticketDto.getDepartment());
         existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
         existingTicket.setDeliveryStreetName(ticketDto.getDeliveryStreetName());

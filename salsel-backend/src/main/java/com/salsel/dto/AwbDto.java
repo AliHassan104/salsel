@@ -36,6 +36,7 @@ public class AwbDto {
     private String deliveryDistrict;
     private String accountNumber;
     private String serviceTypeCode;
+    private String createdBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;

@@ -22,4 +22,7 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     List<Account> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
     @Query("SELECT a FROM Account a WHERE a.id = :id AND a.status = true")
     Account findByIdWhereStatusIsTrue(@Param("id") Long id);
+
+    @Query("SELECT a FROM Account a WHERE a.status = :status And a.email = :email ORDER BY a.id DESC")
+    List<Account> findAllInDesOrderByEmailAndStatus(@Param("status") boolean status, @Param("email") String email);
 }

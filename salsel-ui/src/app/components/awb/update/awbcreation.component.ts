@@ -52,6 +52,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   singleBill?: IAwbDto;
   singleTicket?: Ticket;
   preprocessedAccountNumbers: any;
+  loginUserEmail;
 
   //   CONSTRUCTOR
   constructor(
@@ -88,6 +89,9 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
 
     // GET VALUES OF DROPDOWNS
     this.getAllProductField();
+
+    this.loginUserEmail = localStorage.getItem("loginUserEmail");
+    console.log(this.loginUserEmail);
   }
 
   awbFormSetup() {
@@ -391,6 +395,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         deliveryDistrict: formValue.deliveryDistrict,
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
+        createdBy: this.loginUserEmail,
       };
 
       //   Create Ticket

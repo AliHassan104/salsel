@@ -1,5 +1,6 @@
 package com.salsel.service;
 
+import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 public interface AwbService {
     AwbDto save(AwbDto awbDto);
     byte[] downloadAwbPdf(String fileName, Long awbId);
+    List<AwbDto> getAwbByLoggedInUser(Boolean status);
     List<AwbDto> getAll(Boolean status);
     AwbDto findById(Long id);
     void deleteById(Long id);

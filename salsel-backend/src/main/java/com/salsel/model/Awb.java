@@ -30,6 +30,7 @@ public class Awb {
     @Column(unique = true, nullable = false)
     private Long uniqueNumber;
 
+    private String createdBy;
     private String shipperName;
     private String shipperContactNumber;
     private String originCountry;

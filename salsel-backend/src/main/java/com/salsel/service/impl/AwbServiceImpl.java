@@ -1,13 +1,19 @@
 package com.salsel.service.impl;
 
+import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
+import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Account;
 import com.salsel.model.Awb;
+import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
+import com.salsel.repository.UserRepository;
 import com.salsel.service.AwbService;
 import com.salsel.service.CodeGenerationService;
 import com.salsel.service.PdfGenerationService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
@@ -22,11 +28,13 @@ public class AwbServiceImpl implements AwbService {
     @Value("${spring.mail.username}")
     private String sender;
     private final AwbRepository awbRepository;
+    private final UserRepository userRepository;
     private final CodeGenerationService codeGenerationService;
     private final PdfGenerationService pdfGenerationService;
 
-    public AwbServiceImpl(AwbRepository awbRepository, CodeGenerationService codeGenerationService, PdfGenerationService pdfGenerationService) {
+    public AwbServiceImpl(AwbRepository awbRepository, UserRepository userRepository, CodeGenerationService codeGenerationService, PdfGenerationService pdfGenerationService) {
         this.awbRepository = awbRepository;
+        this.userRepository = userRepository;
         this.codeGenerationService = codeGenerationService;
         this.pdfGenerationService = pdfGenerationService;
     }
@@ -110,6 +118,27 @@ public class AwbServiceImpl implements AwbService {
 
         model.addAttribute("uniqueNumber", formatUniqueNumber);
         return pdfGenerationService.generatePdf("Awb", model, awbId);
+    }
+
+    @Override
+    public List<AwbDto> getAwbByLoggedInUser(Boolean status) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+            List<Awb> awbList = awbRepository.findAllInDesOrderByEmailAndStatus(status,user.getEmail());
+            List<AwbDto> awbDtoList = new ArrayList<>();
+
+            for (Awb awb : awbList) {
+                AwbDto awbDto = toDto(awb);
+                awbDtoList.add(awbDto);
+            }
+            return awbDtoList;
+        }
+        return null;
     }
 
     @Override
@@ -212,6 +241,7 @@ public class AwbServiceImpl implements AwbService {
                 .pickupStreetName(awb.getPickupStreetName())
                 .deliveryDistrict(awb.getDeliveryDistrict())
                 .deliveryStreetName(awb.getDeliveryStreetName())
+                .createdBy(awb.getCreatedBy())
                 .build();
     }
 
@@ -252,6 +282,7 @@ public class AwbServiceImpl implements AwbService {
                 .pickupStreetName(awbDto.getPickupStreetName())
                 .deliveryDistrict(awbDto.getDeliveryDistrict())
                 .deliveryStreetName(awbDto.getDeliveryStreetName())
+                .createdBy(awbDto.getCreatedBy())
                 .build();
     }
 }
