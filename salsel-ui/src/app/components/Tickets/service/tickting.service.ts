@@ -12,17 +12,17 @@ export class TicktingService {
 
   url = environment.URL;
 
-  // Create Ticket
-
-  createTicket(data: Ticket, file: File): Observable<any> {
+  createTicket(data: Ticket, files: File[]): Observable<any> {
     const formData = new FormData();
 
-    const accountDtoBlob = new Blob([JSON.stringify(data)], {
+    const ticketDtoBlob = new Blob([JSON.stringify(data)], {
       type: "application/json",
     });
-    formData.append("ticketDto", accountDtoBlob, "ticketDto.txt");
+    formData.append("ticketDto", ticketDtoBlob, "ticketDto.txt");
 
-    formData.append("file", file);
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
 
     return this.http.post<any>(`${this.url}ticket`, formData);
   }
@@ -49,7 +49,7 @@ export class TicktingService {
     return this.http.put(`${this.url}ticket/status/${id}`, {});
   }
 
-  editTicket(id: any, data: any, file: File, filename: string) {
+  editTicket(id: any, data: any, files: File[], params: any) {
     const formData = new FormData();
 
     const ticketDtoBlob = new Blob([JSON.stringify(data)], {
@@ -57,12 +57,13 @@ export class TicktingService {
     });
     formData.append("ticketDto", ticketDtoBlob, "ticketDto.txt");
 
-    formData.append("file", file);
+    for (let i = 0; i < files.length; i++) {
+      formData.append(`files`, files[i]);
+    }
 
-    return this.http.put<any>(
-      `${this.url}ticket/${id}/filename/${filename}`,
-      formData
-    );
+    return this.http.put<any>(`${this.url}ticket/${id}/filenames`, formData, {
+      params,
+    });
   }
 
   //   Get formated Date

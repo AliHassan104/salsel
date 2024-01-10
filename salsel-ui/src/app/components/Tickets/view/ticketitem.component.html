@@ -12,9 +12,9 @@
 
 <div class="grid">
     <div class="col-12 lg:col-8">
-        <div class="card p-fluid">
+        <div class="card p-fluid" style="padding-bottom: 10rem;">
             <div class="grid customP">
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Shipper Infomation</h4>
                     <p><strong>Shipper Name:</strong> {{singleTicket?.shipperName}}</p>
                     <p><strong>Shipper Contact Number:</strong> {{singleTicket?.shipperContactNumber}}</p>
@@ -25,7 +25,7 @@
                     <p><strong>Origin Country:</strong> {{singleTicket?.originCountry}}</p>
                     <p><strong>Origin City:</strong> {{singleTicket?.originCity}}</p>
                 </div>
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Recipient Infomation</h4>
                     <p><strong>Recipient Name:</strong> {{singleTicket?.recipientName}}</p>
                     <p><strong>Recipient Contact Number:</strong> {{singleTicket?.recipientContactNumber}}</p>
@@ -35,29 +35,29 @@
                     <p><strong>Destination Country:</strong> {{singleTicket?.destinationCountry}}</p>
                     <p><strong>Destination City:</strong> {{singleTicket?.destinationCity}}</p>
                 </div>
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Department Information</h4>
                     <p><strong>Department:</strong> {{singleTicket?.department}}</p>
                     <p><strong>Department Category:</strong> {{singleTicket?.departmentCategory}}</p>
                 </div>
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Schedule Information</h4>
                     <p><strong>Pickup Date:</strong> {{singleTicket?.pickupDate}}</p>
                     <p><strong>Pickup Time: </strong> {{singleTicket?.pickupTime}}</p>
                 </div>
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Inquiry Information</h4>
                     <p><strong>Category:</strong> {{singleTicket?.category}}</p>
                     <p><strong>Created At:</strong> {{singleTicket?.createdAt}}</p>
                     <p><strong>Created By:</strong> {{singleTicket?.createdBy}}</p>
                 </div>
 
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Ticket Status</h4>
                     <p><strong>Status:</strong> {{singleTicket?.ticketStatus}}</p>
                     <p><strong>Flag:</strong> {{singleTicket?.ticketFlag}}</p>
                 </div>
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Assignment Details</h4>
                     <p><strong>Assigned To:</strong> {{singleTicket?.assignedTo}}</p>
                 </div>
@@ -88,14 +88,72 @@
 
         <div class="card">
             <div class="grid">
-                <h5 class="col-8 m-0"> <i class="pi pi-money-bill mr-3
- "></i> Priority
+                <h5 class="col-8 m-0"> <i class="pi pi-money-bill mr-3"></i>
+                    Priority
                 </h5>
                 <p (click)="updateTicket(singleTicket?.id)" class="col-4 headingP text-right inline-flex">Change</p>
             </div>
             <div class="grid p-fluid my-2">
                 <button class="uppercase customBtn" [ngClass]="getPriorityClass()" [label]="singleTicket?.ticketFlag"
                     pButton></button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="grid">
+                <h5 class="col-8 m-0"> <i class="pi pi-money-bill mr-3"></i>
+                    Attachments
+                </h5>
+            </div>
+            <div class="grid p-fluid my-1">
+                <div class="col-12">
+                    <p-table #dt1 styleClass="customTable" [value]="ticketAttachments" dataKey="id" [rows]="5"
+                        [loading]="loading" [scrollable]="true" scrollHeight="280px" [rowHover]="true"
+                        styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="min-width: 10rem">
+                                    <div class="flex justify-content-center align-items-center">
+                                        Actions
+                                    </div>
+                                </th>
+                                <th style="min-width: 10rem">
+                                    <div class="flex justify-content-start align-items-center">
+                                        File Name
+                                    </div>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-data>
+                            <tr>
+                                <td>
+                                    <button pTooltip="View" tooltipPosition="bottom" pButton pRipple type="button"
+                                        icon="pi pi-eye" (click)="showImage(data.filePath)"
+                                        (click)="onViewAttachment(data.filePath)"
+                                        class="p-button-rounded p-button-secondary p-button-outlined mx-2"></button>
+                                    <button pTooltip="Download" tooltipPosition="bottom" pButton pRipple type="button"
+                                        icon="pi pi-download"
+                                        class="p-button-rounded p-button-success p-button-outlined mx-1"
+                                        (click)="onDownloadAttachment(data.filePath,data.id)"></button>
+                                </td>
+                                <td style="font-size: 14px;">
+                                    {{ data?.filePath | extractFileName}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td style="text-align: start !important;" colspan="8">No Attachment found</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="loadingbody">
+                            <tr>
+                                <td style="text-align: start !important;" colspan="8">Loading Attachmetns. Please wait.
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
             </div>
         </div>
     </div>
@@ -158,3 +216,11 @@
 
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+
+
+<p-dialog [(visible)]="visible" [style]="{ width: '50vw', height: '50vw' }" maximizable="true" [modal]="true">
+    <div *ngIf="imageUrl" style="display: contents;">
+        <img [src]="imageUrl" alt="" style="width: 100%; height: auto;">
+    </div>
+    <iframe *ngIf="pdfUrl" [src]="pdfUrl" style="width: 100%; height: 100%;" frameborder="0"></iframe>
+</p-dialog>

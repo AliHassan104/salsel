@@ -13,6 +13,8 @@ import { TicketCommentsService } from "../service/ticket-comments.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { FormvalidationService } from "../service/formvalidation.service";
+import { AccountService } from "../../accounts/service/account.service";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 @Component({
   selector: "app-ticketitem",
@@ -21,6 +23,7 @@ import { FormvalidationService } from "../service/formvalidation.service";
   providers: [MessageService],
 })
 export class TicketitemComponent implements OnInit {
+  visible: boolean = false;
   @ViewChild("textArea") textArea!: ElementRef;
 
   editMode: any;
@@ -32,8 +35,13 @@ export class TicketitemComponent implements OnInit {
     public sessionStorageService: SessionStorageService,
     private commentsService: TicketCommentsService,
     private messageServie: MessageService,
-    private formService: FormvalidationService
+    private formService: FormvalidationService,
+    private accountService: AccountService,
+    private sanitizer: DomSanitizer
   ) {}
+
+  imageUrl: SafeResourceUrl;
+  pdfUrl: SafeResourceUrl;
 
   loginUserName?;
   loginUserEmail?;
@@ -46,7 +54,8 @@ export class TicketitemComponent implements OnInit {
   ticketComments?;
   singleComment?;
   commentCount?;
-
+  loading: any;
+  ticketAttachments;
   postCommentForm!: FormGroup;
 
   ngOnInit(): void {
@@ -80,6 +89,7 @@ export class TicketitemComponent implements OnInit {
     this.display = true;
     this._ticketService.getSingleTicket(id).subscribe((res) => {
       this.singleTicket = res;
+      this.ticketAttachments = this.singleTicket.attachments;
     });
   }
 
@@ -93,6 +103,77 @@ export class TicketitemComponent implements OnInit {
       });
     });
   }
+
+  onDownloadAttachment(name, id) {
+    this.accountService.downloadAgreement(name).subscribe(
+      (res: any) => {
+        this.downloadSuccess();
+        this.accountService.downloadFile(res, name.split("/").pop());
+      },
+      (error) => {
+        this.downloadError();
+      }
+    );
+  }
+
+  downloadError() {
+    this.messageServie.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Attachment Not Found",
+    });
+  }
+
+  downloadSuccess() {
+    this.messageServie.add({
+      severity: "success",
+      summary: "Success",
+      detail: "File Successfully Downloaded",
+    });
+  }
+
+  showImage() {
+    this.visible = true;
+  }
+
+  onViewAttachment(name) {
+    this.accountService.downloadAgreement(name).subscribe(
+      (res: any) => {
+        const extension = this.getFileExtension(name);
+
+        if (extension === "pdf") {
+          // For PDF files
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            URL.createObjectURL(new Blob([res], { type: "application/pdf" }))
+          );
+          this.imageUrl = null;
+        } else if (this.isImageExtension(extension)) {
+          // For image files
+          this.imageUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            URL.createObjectURL(new Blob([res], { type: "image/" + extension }))
+          );
+          this.pdfUrl = null;
+        }
+
+        this.visible = true; // Open the dialog
+      },
+      (error) => {
+        this.downloadError();
+      }
+    );
+  }
+
+  isImageExtension(extension: string): boolean {
+    const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp"];
+    console.log(extension); // Add this line
+    return imageExtensions.includes(extension.toLowerCase());
+  }
+
+  // Helper function to get the file extension
+  getFileExtension(filename: string): string {
+    return filename.split(".").pop();
+  }
+
   onCancel() {
     this.editMode = false;
     this.postCommentForm.reset();

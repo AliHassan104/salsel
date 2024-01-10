@@ -102,34 +102,6 @@ export class TicketsdataComponent implements OnInit {
     });
   }
 
-  onDownloadAttachment(url, id) {
-    this.accountService.downloadAgreement(url).subscribe(
-      (res: any) => {
-        this.downloadSuccess();
-        this.accountService.downloadFile(res, `Ticket_Attachment_${id}`);
-      },
-      (error) => {
-        this.downloadError();
-      }
-    );
-  }
-
-  downloadError() {
-    this.messageService.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Attachment Not Found",
-    });
-  }
-
-  downloadSuccess() {
-    this.messageService.add({
-      severity: "success",
-      summary: "Success",
-      detail: "File Successfully Downloaded",
-    });
-  }
-
   //   Delete Ticket
 
   onDeleteTicket(id) {

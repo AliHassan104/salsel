@@ -32,7 +32,10 @@ export class AirbilldetailsComponent implements OnInit {
     this._airbillService.downloadBill(this.id).subscribe(
       (res: any) => {
         this.downloadSuccess();
-        this._airbillService.downloadFile(res, `awb_${this.id}.pdf`);
+        this._airbillService.downloadFile(
+          res,
+          `Awb_${this.singleBill.uniqueNumber}.pdf`
+        );
       },
       (error) => {
         this.downloadError();

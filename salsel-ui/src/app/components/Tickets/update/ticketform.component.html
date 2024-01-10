@@ -52,15 +52,23 @@
                 <!-- Text Box -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="textarea"><strong>Details</strong></label>
-                    <textarea #textArea pInputTextarea rows="3" placeholder="Enter Your Note if any"
+                    <textarea #textArea pInputTextarea rows="5" placeholder="Enter Your Note if any"
                         formControlName="textarea"></textarea>
                 </div>
-                <!-- Agreement -->
+                <!-- Attachment -->
                 <div class="field col-12 md:col-6">
-                    <label htmlFor="agreement"><strong>Upload File, If any</strong></label>
+                    <label htmlFor="attachment"><strong>Upload Files, If any</strong></label>
 
                     <!-- Hidden input for file upload -->
-                    <input #fileInput id="agreement" type="file" (change)="onFileChange($event)" accept=".pdf" />
+                    <input #fileInput id="attachment" type="file" (change)="onFileChange($event)" multiple
+                        [ngClass]="{'inputBorder':ticketAttachment}" />
+                    <div class="files" *ngIf="ticketAttachment">
+                        <ul>
+                            <li *ngFor="let item of ticketAttachment">
+                                {{item.name}}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <ng-container *ngIf="this.userRole == 'CUSTOMER_SERVICE_AGENT'">

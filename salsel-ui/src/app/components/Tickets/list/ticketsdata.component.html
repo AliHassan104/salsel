@@ -90,10 +90,6 @@
                                 pButton pRipple type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
                                 (click)="onDeleteTicket(data.id)"></button>
-                            <button pTooltip="Download Agreement" tooltipPosition="bottom" *ngIf="activeStatus" pButton
-                                pRipple type="button" icon="pi pi-download"
-                                class="p-button-rounded p-button-success p-button-outlined mx-1"
-                                (click)="onDownloadAttachment(data.ticketUrl,data.id)"></button>
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus"
                                 [disabled]="!this.sessionStorageService.hasPermission('DELETE_TICKET')" pButton pRipple
                                 type="button" icon="pi pi-check"

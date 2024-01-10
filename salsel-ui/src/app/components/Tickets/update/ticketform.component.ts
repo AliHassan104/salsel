@@ -49,10 +49,12 @@ export class TicketformComponent implements OnInit {
 
   fileName: string = "";
   ticketAttachment?;
+  ticketEditParams?;
 
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
   ticketType?: string[];
+  fileList: File[] = [];
 
   @ViewChild("fileInput") fileInput: ElementRef;
 
@@ -144,7 +146,22 @@ export class TicketformComponent implements OnInit {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
 
-        this.attachAgreement(this.singleTicket?.ticketUrl);
+        const filePaths = this.singleTicket.attachments.map(
+          (attachment) => attachment.filePath
+        );
+        console.log(this.singleTicket.attachments[0].filePath);
+
+        const FileNames = filePaths.join(",");
+
+        this.ticketEditParams = { fileNames: FileNames };
+
+        for (let i = 0; i < this.singleTicket.attachments.length; i++) {
+          this.attachAgreement(
+            this.singleTicket.attachments[i].filePath,
+            this.singleTicket.attachments[i].filePath.split("/").pop()
+          );
+        }
+
         this.getAllCitiesAndDepartmentCategories(
           this.singleTicket.destinationCountry,
           this.singleTicket.originCountry,
@@ -398,7 +415,7 @@ export class TicketformComponent implements OnInit {
                 this.editId,
                 ticketData,
                 this.ticketAttachment,
-                this.fileName
+                this.ticketEditParams
               )
               .subscribe(() => {
                 this.update();
@@ -426,7 +443,7 @@ export class TicketformComponent implements OnInit {
               this.editId,
               ticketData,
               this.ticketAttachment,
-              this.fileName
+              this.ticketEditParams
             )
             .subscribe(() => {
               this.update();
@@ -450,43 +467,77 @@ export class TicketformComponent implements OnInit {
     }
   }
 
+  //   onFileChange(event: any): void {
+  //     const fileInput = event.target;
+  //     if (fileInput.files && fileInput.files.length > 0) {
+  //       const selectedFiles = fileInput.files;
+  //       this.fileName = selectedFiles.name;
+  //       this.ticketAttachment = selectedFiles;
+  //       console.log(this.ticketAttachment);
+  //     } else {
+  //       this.ticketAttachment = null;
+  //       this.messageService.add({
+  //         severity: "error",
+  //         summary: "No File Selected",
+  //       });
+  //     }
+  //   }
+
   onFileChange(event: any): void {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files.length > 0) {
-      const selectedFile = fileInput.files[0];
+      const selectedFiles = fileInput.files;
 
-      // Check if the selected file has a PDF extension
-      if (selectedFile.name.toLowerCase().endsWith(".pdf")) {
-        this.fileName = selectedFile.name;
-        this.ticketAttachment = selectedFile;
+      // Check file extensions
+      const allowedExtensions = /\.(pdf|jpg|jpeg|png|gif)$/i;
+      let isValid = true;
+
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        if (!allowedExtensions.test(file.name)) {
+          isValid = false;
+          break;
+        }
+      }
+
+      if (isValid) {
+        this.fileName = selectedFiles[0].name; // Assuming you want to display the name of the first file
+        this.ticketAttachment = selectedFiles;
+        console.log(this.ticketAttachment);
       } else {
-        fileInput.value = null;
+        this.clearFileInput();
+        this.ticketAttachment = null;
         this.messageService.add({
           severity: "error",
           summary: "Invalid File",
-          detail: "Only PDF files are allowed.",
+          detail: "Only PDF, JPG, JPEG, PNG, GIF files are allowed.",
         });
       }
+    } else {
+      this.ticketAttachment = null;
+      this.clearFileInput();
+      this.messageService.add({
+        severity: "error",
+        summary: "No File Selected",
+      });
     }
   }
 
-  attachAgreement(attachmentUrl: string) {
+  clearFileInput(): void {
+    // Reset the file input field
+    const fileInput = document.getElementById("attachment") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = null;
+    }
+  }
+
+  attachAgreement(attachmentUrl: string, fileName: string) {
     this.accountService.downloadAgreement(attachmentUrl).subscribe(
       (blob: Blob) => {
-        const file = new File([blob], `ticketAttachment_${this.editId}.pdf`, {
+        const file = new File([blob], `${fileName}`, {
           type: "application/pdf",
         });
-        // Create a DataTransfer object
-        const dataTransfer = new DataTransfer();
-
-        this.fileName = file.name;
-
-        // Add the file to the DataTransfer object
-        dataTransfer.items.add(file);
-
-        // Set the files property of the input element
-        this.fileInput.nativeElement.files = dataTransfer.files;
-        this.ticketAttachment = file;
+        this.attachFiles(file);
       },
       (error) => {
         this.messageService.add({
@@ -494,9 +545,23 @@ export class TicketformComponent implements OnInit {
           summary: "Error",
           detail: "Attachment Not Found",
         });
-        // Handle the error (e.g., show a user-friendly message)
       }
     );
+  }
+
+  attachFiles(file: File) {
+    // Add the file to the global array
+    this.fileList.push(file);
+
+    // Set the files property of the input element
+    const dataTransfer = new DataTransfer();
+    this.fileList.forEach((f, index) => {
+      dataTransfer.items.add(f);
+    });
+    this.fileInput.nativeElement.files = dataTransfer.files;
+    console.log(this.fileList);
+    this.ticketAttachment = this.fileList;
+    console.log(this.ticketAttachment);
   }
 
   // PART OF POPUP

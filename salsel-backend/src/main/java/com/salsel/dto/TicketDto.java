@@ -1,6 +1,7 @@
 package com.salsel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salsel.model.TicketAttachment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,5 +60,5 @@ public class TicketDto {
     private String departmentCategory;
     private String ticketStatus;
     private Boolean status;
-    private List<TicketAttachmentDto> attachments;
+    private List<TicketAttachment> attachments;
 }

@@ -261,6 +261,7 @@ public class TicketServiceImpl implements TicketService {
                 .textarea(ticket.getTextarea())
                 .airwayNumber(ticket.getAirwayNumber())
                 .ticketType(ticket.getTicketType())
+                .attachments(ticket.getAttachments())
                 .build();
     }
 
@@ -301,6 +302,7 @@ public class TicketServiceImpl implements TicketService {
                 .textarea(ticketDto.getTextarea())
                 .airwayNumber(ticketDto.getAirwayNumber())
                 .ticketType(ticketDto.getTicketType())
+                .attachments(ticketDto.getAttachments())
                 .build();
     }
 }

@@ -179,7 +179,7 @@
                             <button pTooltip="Download Scan" tooltipPosition="bottom" *ngIf="activeStatus" pButton
                                 pRipple type="button" icon="pi pi-download"
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
-                                (click)="onDownloadBill(data.id)"></button>
+                                (click)="onDownloadBill(data.id,data.uniqueNumber)"></button>
 
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton
                                 [disabled]="!this.sessionStorageService.hasPermission('DELETE_AWB')" pRipple
