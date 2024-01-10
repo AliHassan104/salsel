@@ -14,8 +14,6 @@ import { CityService } from "../../City/service/city.service";
 import { ProductTypeService } from "../../product-type/service/product-type.service";
 import { ServiceTypeService } from "../../service-type/service/service-type.service";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
-import { map } from "rxjs/operators";
-import { filter } from "rxjs";
 import { AccountService } from "../../accounts/service/account.service";
 
 @Component({
@@ -26,6 +24,9 @@ import { AccountService } from "../../accounts/service/account.service";
 })
 export class AwbcreationComponent implements OnInit, OnDestroy {
   //   ALL PRODUCT FIELD FOR DROPDOWNS
+
+  pickupDate;
+  pickupTime;
   productFields?;
 
   // DROPDOWNS FORM PRODUCT FIELD
@@ -276,9 +277,18 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           this.singleTicket.destinationCountry,
           this.singleTicket.originCountry
         );
-        let pickDate = new Date(this.singleTicket.pickupDate);
-        let pickTimeArray = this.singleTicket.pickupTime;
-        let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
+
+        if (
+          this.singleTicket.pickupTime != null &&
+          this.singleTicket.pickupDate != null
+        ) {
+          this.pickupDate = new Date(this.singleTicket.pickupDate);
+          let pickTimeArray = this.singleTicket.pickupTime;
+          this.pickupTime = new Date(`2023-11-12 ${pickTimeArray}`);
+        } else {
+          this.pickupDate = null;
+          this.pickupTime = null;
+        }
         this.awbForm.patchValue({
           shipperName: this.singleTicket.shipperName,
           shipperContactNumber: this.singleTicket.shipperContactNumber,
@@ -291,8 +301,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           destinationCountry: this.singleTicket.destinationCountry,
           destinationCity: this.singleTicket.destinationCity,
           deliveryAddress: this.singleTicket.deliveryAddress,
-          pickupDate: pickDate,
-          pickupTime: pickTime,
+          pickupDate: this.pickupDate,
+          pickupTime: this.pickupTime,
           deliveryStreetName: this.singleTicket.deliveryStreetName,
           deliveryDistrict: this.singleTicket.deliveryDistrict,
           pickupStreetName: this.singleTicket.pickupStreetName,
