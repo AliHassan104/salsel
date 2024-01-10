@@ -92,7 +92,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     this.getAllProductField();
 
     this.loginUserEmail = localStorage.getItem("loginUserEmail");
-    console.log(this.loginUserEmail);
   }
 
   awbFormSetup() {

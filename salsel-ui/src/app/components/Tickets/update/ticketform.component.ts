@@ -149,7 +149,6 @@ export class TicketformComponent implements OnInit {
         const filePaths = this.singleTicket.attachments.map(
           (attachment) => attachment.filePath
         );
-        console.log(this.singleTicket.attachments[0].filePath);
 
         const FileNames = filePaths.join(",");
 
@@ -467,22 +466,6 @@ export class TicketformComponent implements OnInit {
     }
   }
 
-  //   onFileChange(event: any): void {
-  //     const fileInput = event.target;
-  //     if (fileInput.files && fileInput.files.length > 0) {
-  //       const selectedFiles = fileInput.files;
-  //       this.fileName = selectedFiles.name;
-  //       this.ticketAttachment = selectedFiles;
-  //       console.log(this.ticketAttachment);
-  //     } else {
-  //       this.ticketAttachment = null;
-  //       this.messageService.add({
-  //         severity: "error",
-  //         summary: "No File Selected",
-  //       });
-  //     }
-  //   }
-
   onFileChange(event: any): void {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files.length > 0) {
@@ -503,7 +486,6 @@ export class TicketformComponent implements OnInit {
       if (isValid) {
         this.fileName = selectedFiles[0].name; // Assuming you want to display the name of the first file
         this.ticketAttachment = selectedFiles;
-        console.log(this.ticketAttachment);
       } else {
         this.clearFileInput();
         this.ticketAttachment = null;
@@ -559,9 +541,7 @@ export class TicketformComponent implements OnInit {
       dataTransfer.items.add(f);
     });
     this.fileInput.nativeElement.files = dataTransfer.files;
-    console.log(this.fileList);
     this.ticketAttachment = this.fileList;
-    console.log(this.ticketAttachment);
   }
 
   // PART OF POPUP

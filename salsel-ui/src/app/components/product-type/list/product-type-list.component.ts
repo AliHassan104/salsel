@@ -42,7 +42,6 @@ export class ProductTypeListComponent {
     this.productTypeService.getProductTypes(params).subscribe((res) => {
       if (res && res.body) {
         this.productTypes = res.body;
-        console.log(this.productTypes);
       }
     });
   }

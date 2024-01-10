@@ -165,7 +165,6 @@ export class TicketitemComponent implements OnInit {
 
   isImageExtension(extension: string): boolean {
     const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp"];
-    console.log(extension); // Add this line
     return imageExtensions.includes(extension.toLowerCase());
   }
 
