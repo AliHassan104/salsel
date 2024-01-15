@@ -18,6 +18,8 @@
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
+                            <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
+                                style="font-weight: bold;"></i>
                         </div>
 
                         <span class="p-input-icon-left mb-2">

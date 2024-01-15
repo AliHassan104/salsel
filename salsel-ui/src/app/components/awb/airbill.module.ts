@@ -27,9 +27,14 @@ import { AirbillroutingModule } from "./airbillrouting.module";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { TooltipModule } from "primeng/tooltip";
 import { HistoryModule } from "./history/history.module";
+import { ExtractNumericPipe } from "./pipe/extract-numeric.pipe";
 
 @NgModule({
-  declarations: [AirbilldetailsComponent, AirbilldataComponent],
+  declarations: [
+    AirbilldetailsComponent,
+    AirbilldataComponent,
+    ExtractNumericPipe,
+  ],
   imports: [
     CommonModule,
     FormsModule,

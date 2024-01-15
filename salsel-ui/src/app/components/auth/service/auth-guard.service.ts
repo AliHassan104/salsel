@@ -16,7 +16,7 @@ export class AuthGuardService implements CanActivate {
   constructor(private router: Router) {}
 
   get token(): string {
-    return localStorage.getItem("token")!;
+    return sessionStorage.getItem("token")!;
   }
 
   canActivate(
@@ -27,7 +27,7 @@ export class AuthGuardService implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const jwtToken = localStorage.getItem("token");
+    const jwtToken = sessionStorage.getItem("token");
     if (jwtToken) {
       const decodedToken = this.getDecodedAccessToken(jwtToken);
       const userPermissions = decodedToken.PERMISSIONS;

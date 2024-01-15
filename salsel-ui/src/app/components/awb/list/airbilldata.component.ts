@@ -6,6 +6,7 @@ import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-airbilldata",
@@ -20,6 +21,8 @@ export class AirbilldataComponent implements OnInit {
   activeStatus: boolean = true;
 
   deleteProductsDialog: any;
+  refresh: boolean = true;
+
   constructor(
     private _airbillService: AirbillService,
     private router: Router,
@@ -40,9 +43,21 @@ export class AirbilldataComponent implements OnInit {
   getAirbills() {
     const params = { status: this.activeStatus };
 
-    this._airbillService.getBills(params).subscribe((res) => {
-      this.bills = res;
-    });
+    this._airbillService
+      .getBills(params)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
+      .subscribe((res) => {
+        this.bills = res;
+      });
+  }
+
+  onRefresh() {
+    this.refresh = true;
+    this.getAirbills();
   }
 
   onStatusChange(data) {

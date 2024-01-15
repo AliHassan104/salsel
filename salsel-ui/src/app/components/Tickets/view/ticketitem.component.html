@@ -218,7 +218,7 @@
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
 
 
-<p-dialog [(visible)]="visible" [style]="{ width: '50vw', height: '50vw' }" maximizable="true" [modal]="true">
+<p-dialog [(visible)]="visible" (onHide)="onCloseDialog()" [style]="{ width: '50vw', height: '50vw' }" maximizable="true" [modal]="true">
     <div *ngIf="imageUrl" style="display: contents;">
         <img [src]="imageUrl" alt="" style="width: 100%; height: auto;">
     </div>

@@ -76,7 +76,7 @@ export class AccountFormComponent implements OnInit {
 
   FormSetup() {
     this.accountForm = new FormGroup({
-      accountNumber: new FormControl(null, Validators.required),
+      //   accountNumber: new FormControl(null, Validators.required),
       accountType: new FormControl(null, Validators.required),
       customerName: new FormControl(null, Validators.required),
       contactNumber: new FormControl(null, Validators.required),
@@ -98,7 +98,6 @@ export class AccountFormComponent implements OnInit {
   // Forms Values Edit
   editForm() {
     this.accountForm.setValue({
-      accountNumber: this.singleAccount.accountNumber,
       accountType: this.singleAccount.accountType,
       customerName: this.singleAccount.customerName,
       contactNumber: this.singleAccount.contactNumber,

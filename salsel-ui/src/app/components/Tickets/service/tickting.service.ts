@@ -20,8 +20,10 @@ export class TicktingService {
     });
     formData.append("ticketDto", ticketDtoBlob, "ticketDto.txt");
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        formData.append(`files`, files[i]);
+      }
     }
 
     return this.http.post<any>(`${this.url}ticket`, formData);
@@ -57,8 +59,10 @@ export class TicktingService {
     });
     formData.append("ticketDto", ticketDtoBlob, "ticketDto.txt");
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append(`files`, files[i]);
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        formData.append(`files`, files[i]);
+      }
     }
 
     return this.http.put<any>(`${this.url}ticket/${id}/filenames`, formData, {

@@ -6,6 +6,7 @@ import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { IUser } from "../model/userDto";
 import { Table } from "primeng/table";
 import { SessionStorageService } from "../../service/session-storage.service";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-userlist",
@@ -21,6 +22,8 @@ export class UserlistComponent implements OnInit {
   deleteId: any;
   generateId: any;
   getPass: string = "Copy";
+
+  refresh: boolean = true;
 
   constructor(
     private userService: UserService,
@@ -47,9 +50,21 @@ export class UserlistComponent implements OnInit {
 
   getAllUsers() {
     const params = { status: this.activeStatus };
-    this.userService.getAllUser(params).subscribe((res: any) => {
-      this.users = res;
-    });
+    this.userService
+      .getAllUser(params)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
+      .subscribe((res: any) => {
+        this.users = res;
+      });
+  }
+
+  onRefresh() {
+    this.refresh = true;
+    this.getAllUsers();
   }
 
   copyToClipboard() {
@@ -121,13 +136,19 @@ export class UserlistComponent implements OnInit {
 
   confirmGeneratePassword() {
     this.generateDialog = false;
-    this.userService
-      .regeneratePassword(this.generateId)
-      .subscribe((res: any) => {
+    this.userService.regeneratePassword(this.generateId).subscribe(
+      (res: any) => {
         this.generatedPassword = res;
-
         this.regeneratedDialog = true;
-      });
+      },
+      (error: any) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: "An error occurred. Please try again in a few minutes.",
+        });
+      }
+    );
   }
 
   onGeneratePassword(id: any) {

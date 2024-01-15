@@ -400,7 +400,7 @@ export class TicketformComponent implements OnInit {
         phone: formValue.phone,
         textarea: formValue.textarea,
         airwayNumber: formValue.airwayNumber,
-        createdBy: localStorage.getItem("loginUserEmail"),
+        createdBy: sessionStorage.getItem("loginUserEmail"),
       };
 
       if (this.ticketForm.get("ticketType")?.value === "Pickup Request") {

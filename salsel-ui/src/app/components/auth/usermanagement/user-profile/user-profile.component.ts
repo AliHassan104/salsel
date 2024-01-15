@@ -56,7 +56,7 @@ export class UserProfileComponent implements OnInit {
       { validators: this.matchPassword }
     );
 
-    this.userEmail = localStorage.getItem("loginUserEmail");
+    this.userEmail = sessionStorage.getItem("loginUserEmail");
 
     this.getActiveUser();
   }
@@ -128,18 +128,25 @@ export class UserProfileComponent implements OnInit {
         employeeId: this.activeUser.employeeId,
         status: true,
       };
-      this.userService
-        .updateUser(this.activeUser.id, userData)
-        .subscribe((res) => {
+      this.userService.updateUser(this.activeUser.id, userData).subscribe(
+        (res) => {
           this.editMode = false;
           this.userService.loginUserName.next(name);
           this.userService.loginUser.next(name.charAt(0).toUpperCase());
           this.userService.loginUserEmail.next(this.activeUser.email);
-          localStorage.removeItem("loginUserName");
-          localStorage.setItem("loginUserName", name);
+          sessionStorage.removeItem("loginUserName");
+          sessionStorage.setItem("loginUserName", name);
           this.getActiveUser();
           this.success();
-        });
+        },
+        (error: any) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "Error Updating User",
+          });
+        }
+      );
     } else {
       this.messageService.add({
         severity: "error",

@@ -7,6 +7,7 @@ import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { AccountService } from "../../accounts/service/account.service";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-ticketsdata",
@@ -23,6 +24,8 @@ export class TicketsdataComponent implements OnInit {
 
   deleteProductsDialog: any;
   serachText?: string;
+  refresh: boolean = true;
+
   constructor(
     private _ticktingService: TicktingService,
     private router: Router,
@@ -51,11 +54,23 @@ export class TicketsdataComponent implements OnInit {
       status: this.activeStatus,
     };
 
-    this._ticktingService.getTickets(queryParams).subscribe((res: any) => {
-      if (res.status == 200) {
-        this.tickets = res.body;
-      }
-    });
+    this._ticktingService
+      .getTickets(queryParams)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
+      .subscribe((res: any) => {
+        if (res.status == 200) {
+          this.tickets = res.body;
+        }
+      });
+  }
+
+  onRefresh() {
+    this.refresh = true;
+    this.getTickets();
   }
 
   onPageChange(event?: any) {

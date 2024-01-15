@@ -91,7 +91,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     // GET VALUES OF DROPDOWNS
     this.getAllProductField();
 
-    this.loginUserEmail = localStorage.getItem("loginUserEmail");
+    this.loginUserEmail = sessionStorage.getItem("loginUserEmail");
   }
 
   awbFormSetup() {
@@ -362,6 +362,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    console.log(this.awbForm.value);
+
     if (this.awbForm.valid) {
       // Date and Time get from form
       let ticketDate: Date = this.awbForm.value.pickupDate;
@@ -405,6 +407,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
         createdBy: this.loginUserEmail,
+        accountNumber: formValue.accountNumber.label,
       };
 
       //   Create Ticket

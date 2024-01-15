@@ -136,6 +136,11 @@ export class TicketitemComponent implements OnInit {
     this.visible = true;
   }
 
+  onCloseDialog() {
+    this.imageUrl = null;
+    this.pdfUrl = null;
+  }
+
   onViewAttachment(name) {
     this.accountService.downloadAgreement(name).subscribe(
       (res: any) => {
@@ -182,7 +187,7 @@ export class TicketitemComponent implements OnInit {
     if (this.postCommentForm.valid) {
       let data = {
         comment: this.postCommentForm.value.postComment,
-        name: localStorage.getItem("loginUserName"),
+        name: sessionStorage.getItem("loginUserName"),
         ticket: { id: this.id },
       };
       if (this.editMode) {
