@@ -7,6 +7,7 @@ import { MessageService } from "primeng/api";
 import { IAccountData } from "src/app/components/accounts/model/accountValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { UploadEvent } from "primeng/fileupload";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-account-list",
@@ -25,6 +26,7 @@ export class AccountListComponent implements OnInit {
   file;
 
   deleteId: any;
+  refresh: boolean = true;
 
   @ViewChild("fileUpload", { static: false }) fileUpload: any;
 
@@ -48,11 +50,23 @@ export class AccountListComponent implements OnInit {
   //   GET ALL ACCOUNTS
   getAllAccount() {
     const params = { status: this.activeStatus };
-    this.accountService.getAllAccounts(params).subscribe((res) => {
-      if (res && res.body) {
-        this.accounts = res.body;
-      }
-    });
+    this.accountService
+      .getAllAccounts(params)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.accounts = res.body;
+        }
+      });
+  }
+
+  onRefresh() {
+    this.refresh = true;
+    this.getAllAccount();
   }
 
   onStatusChange(data) {

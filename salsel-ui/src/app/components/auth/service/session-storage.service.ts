@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { AuthGuardService } from "./auth-guard.service";
-import { BehaviorSubject } from "rxjs";
 import { UserService } from "../usermanagement/service/user.service";
 
 @Injectable({
@@ -18,7 +17,7 @@ export class SessionStorageService {
   }
 
   updatePermission() {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
 
     if (decodedToken) {

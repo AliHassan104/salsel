@@ -31,17 +31,17 @@ export class ProductTypeComponent {
   ) {}
 
   ngOnInit(): void {
+    this.productTypeForm = this.fb.group({
+      name: [null, Validators.required],
+      code: [null, Validators.required],
+    });
+
     this.route.queryParams.subscribe((params) => {
       this.id = params["id"];
       if (this.id) {
         this.mode = "Update";
         this.updateForm(this.id);
       }
-    });
-
-    this.productTypeForm = this.fb.group({
-      name: [null, Validators.required],
-      code: [null, Validators.required],
     });
   }
 

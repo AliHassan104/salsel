@@ -18,10 +18,12 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String accountNumber;
+
     private String accountType;
     private String email;
     private String businessActivity;
-    private String accountNumber;
     private String customerName;
     private String projectName;
     private String tradeLicenseNo;

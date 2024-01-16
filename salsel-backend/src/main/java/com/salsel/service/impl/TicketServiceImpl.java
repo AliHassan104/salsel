@@ -218,6 +218,15 @@ public class TicketServiceImpl implements TicketService {
             // Save attachments to the database
             ticketAttachmentRepository.saveAll(ticketAttachmentList);
             logger.info("PDFs are updated on S3 in folder '{}'.", folderName);
+        }else {
+            // No new files attached, delete existing files
+            for (String fileName : fileNames) {
+                bucketService.deleteFile(fileName);
+            }
+
+            // Clear existing attachments in the database
+            existingTicket.getAttachments().clear();
+            logger.info("Existing PDFs are deleted.");
         }
 
         Ticket updatedTicket = ticketRepository.save(existingTicket);

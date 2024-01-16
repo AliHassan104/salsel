@@ -46,6 +46,18 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public AccountDto save(AccountDto accountDto, MultipartFile pdf) {
+
+        Long maxAccountNumber = accountRepository.findMaxAccountNumber();
+        String formattedAccountNumber;
+
+        if (maxAccountNumber == null) {
+            formattedAccountNumber = String.format("%08d", 1L);
+        } else {
+            formattedAccountNumber = String.format("%08d", maxAccountNumber + 1);
+        }
+
+        accountDto.setAccountNumber(formattedAccountNumber);
+
         Account account = toEntity(accountDto);
         account.setStatus(true);
 
@@ -137,7 +149,6 @@ public class AccountServiceImpl implements AccountService {
 
         existingAccount.setAccountType(accountDto.getAccountType());
         existingAccount.setBusinessActivity(accountDto.getBusinessActivity());
-        existingAccount.setAccountNumber(accountDto.getAccountNumber());
         existingAccount.setCustomerName(accountDto.getCustomerName());
         existingAccount.setProjectName(accountDto.getProjectName());
         existingAccount.setTradeLicenseNo(accountDto.getTradeLicenseNo());
