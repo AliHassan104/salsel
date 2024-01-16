@@ -14,7 +14,7 @@ public class AccountDto {
     private String accountType;
     private String email;
     private String businessActivity;
-    private String accountNumber;
+    private Long accountNumber;
     private String customerName;
     private String projectName;
     private String tradeLicenseNo;

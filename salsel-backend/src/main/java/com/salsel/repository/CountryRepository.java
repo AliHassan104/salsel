@@ -37,4 +37,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
     @Query("SELECT c FROM Country c WHERE c.id = :id AND c.status = true")
     Country findByIdWhereStatusIsTrue(@Param("id") Long id);
+
+    @Query("SELECT c.code FROM Country c WHERE c.name = :countryName")
+    Integer findCountryCodeByCountryName(@Param("countryName") String countryName);
 }

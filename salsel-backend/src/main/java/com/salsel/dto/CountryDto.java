@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class CountryDto {
     private Long id;
+    private Integer code;
+    private String alphaCode;
     private String name;
     private Boolean status;
 }

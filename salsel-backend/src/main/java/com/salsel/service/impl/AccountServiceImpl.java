@@ -2,13 +2,11 @@ package com.salsel.service.impl;
 
 import com.salsel.dto.AccountDto;
 import com.salsel.dto.CustomUserDetail;
-import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.exception.UserAlreadyExistAuthenticationException;
 import com.salsel.model.Account;
-import com.salsel.model.Ticket;
 import com.salsel.model.User;
 import com.salsel.repository.AccountRepository;
+import com.salsel.repository.CountryRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.AccountService;
 import com.salsel.service.BucketService;
@@ -32,34 +30,43 @@ public class AccountServiceImpl implements AccountService {
     private final HelperUtils helperUtils;
     private final EmailUtils emailUtils;
     private final BucketService bucketService;
+    private final CountryRepository countryRepository;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
 
-    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, HelperUtils helperUtils, EmailUtils emailUtils, BucketService bucketService) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, HelperUtils helperUtils, EmailUtils emailUtils, BucketService bucketService, CountryRepository countryRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.helperUtils = helperUtils;
         this.emailUtils = emailUtils;
         this.bucketService = bucketService;
+        this.countryRepository = countryRepository;
     }
 
     @Override
     @Transactional
     public AccountDto save(AccountDto accountDto, MultipartFile pdf) {
 
-        Long maxAccountNumber = accountRepository.findMaxAccountNumber();
-        String formattedAccountNumber;
-
-        if (maxAccountNumber == null) {
-            formattedAccountNumber = String.format("%08d", 1L);
-        } else {
-            formattedAccountNumber = String.format("%08d", maxAccountNumber + 1);
-        }
-
-        accountDto.setAccountNumber(formattedAccountNumber);
-
         Account account = toEntity(accountDto);
         account.setStatus(true);
+
+        Long accountNumberWithCountryCode = accountRepository.findAccountNumberByLatestId();
+
+        if(accountNumberWithCountryCode != null){
+            accountNumberWithCountryCode++;
+            String accountNumber = accountNumberWithCountryCode.toString().substring(3);
+            Integer countryCode = countryRepository.findCountryCodeByCountryName(accountDto.getCounty());
+            String concatenatedValue = countryCode.toString() + accountNumber;
+            Long combinedValue = Long.parseLong(concatenatedValue);
+            account.setAccountNumber(combinedValue);
+        }
+        else{
+            String firstAccountNumber = "0000001";
+            Integer countryCode = countryRepository.findCountryCodeByCountryName(accountDto.getCounty());
+            String concatenatedValue = countryCode.toString() + firstAccountNumber;
+            Long combinedValue = Long.parseLong(concatenatedValue);
+            account.setAccountNumber(combinedValue);
+        }
 
         Account createdAccount;
         Optional<User> existingUser = userRepository.findByEmail(account.getEmail());

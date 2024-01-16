@@ -19,7 +19,7 @@ public class Account {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String accountNumber;
+    private Long accountNumber;
 
     private String accountType;
     private String email;

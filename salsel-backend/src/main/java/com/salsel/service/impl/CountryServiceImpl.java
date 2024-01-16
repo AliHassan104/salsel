@@ -135,6 +135,8 @@ public class CountryServiceImpl implements CountryService {
     public CountryDto toDto(Country country) {
         return CountryDto.builder()
                 .id(country.getId())
+                .code(country.getCode())
+                .alphaCode(country.getAlphaCode())
                 .name(country.getName())
                 .status(country.getStatus())
                 .build();
@@ -143,6 +145,8 @@ public class CountryServiceImpl implements CountryService {
     public Country toEntity(CountryDto countryDto) {
         return Country.builder()
                 .id(countryDto.getId())
+                .code(countryDto.getCode())
+                .alphaCode(countryDto.getAlphaCode())
                 .name(countryDto.getName())
                 .status(countryDto.getStatus())
                 .build();

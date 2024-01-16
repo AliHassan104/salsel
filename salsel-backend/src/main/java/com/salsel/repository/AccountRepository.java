@@ -26,6 +26,12 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     @Query("SELECT MAX(CAST(a.accountNumber AS long)) FROM Account a")
     Long findMaxAccountNumber();
 
+    @Query("SELECT a.accountNumber FROM Account a WHERE a.id = (SELECT MAX(b.id) FROM Account b)")
+    Long findAccountNumberByLatestId();
+
+
     @Query("SELECT a FROM Account a WHERE a.status = :status And a.email = :email ORDER BY a.id DESC")
     List<Account> findAllInDesOrderByEmailAndStatus(@Param("status") boolean status, @Param("email") String email);
+
+
 }
