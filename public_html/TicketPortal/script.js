@@ -22,7 +22,6 @@ function hideLoader() {
 var getUser;
 var allTickets = [];
 function getAllTickets() {
-    debugger
 
     showLoader();
     getUser = JSON.parse(localStorage.getItem("loggedInUser"))
@@ -70,7 +69,7 @@ function showTickets() {
         <tr>
         <td style="text-align: center;">
                 <span class="action-edit" onclick="edit(${data.id})"><i class="fa-regular fa-pen-to-square"></i></span>
-                <span class="action-delete"><i class="fa-solid fa-trash-can"></i></span>
+                <span ><i class="fas fa-view"></i></span>
                 <span class="action-enforce-delete" onclick="deleteTicket(${data.id})"><i class="fa-solid fa-delete-left"></i></span>
             </td>
             <td>${data.createdAt}</td>
@@ -182,6 +181,9 @@ function selectTicketType(ticketType) {
 function edit(ticketId){
     window.location.href = `create-ticket.html?id=${ticketId}`;
 }
+function view(ticketId){
+    window.location.href = `ticket-detail.html?id=${ticketId}`;
+}
 
 async function deleteApiController(token, endPoint) {
     showLoader();
@@ -216,7 +218,6 @@ async function deleteApiController(token, endPoint) {
 async function deleteTicket(ticketId){
     jwtToken = JSON.parse(localStorage.getItem("token"))
     const endPoint = `ticket/${ticketId}`
-    debugger
     var ticketDelete = await deleteApiController(jwtToken , endPoint)
     getAllTickets()
 
@@ -260,8 +261,8 @@ function getAllTickets() {
                 const row = `
                 <tr>
                 <td style="text-align: center;">
+                        <span class="action-edit" onclick="view(${data.id})"><i class="fa-solid fa-eye"></i></span>
                         <span class="action-edit" onclick="edit(${data.id})"><i class="fa-regular fa-pen-to-square"></i></span>
-                        <span class="action-delete"><i class="fa-solid fa-trash-can"></i></span>
                         <span class="action-enforce-delete" onclick="deleteTicket(${data.id})"><i class="fa-solid fa-delete-left"></i></span>
                     </td>
                     <td>${data.createdAt}</td>

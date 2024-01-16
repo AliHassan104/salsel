@@ -7,7 +7,7 @@
     <meta name="description" content="Start your development with Creative Studio landing page.">
     <meta name="author" content="Devcrud">
     <title>Tickets Management</title>
-    <link rel="icon" href="../assets/imgs/Logo_.png" style="width: 100% !important;" type="image/x-icon">
+    <link rel="icon" href="https://admin.salassilexpress.com/assets/logo/logo.png" style="width: 100% !important;" type="image/x-icon">
 
 
     <!-- font icons -->
@@ -37,13 +37,18 @@
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+    <div id="loader-container" class="loader-container">
+        <!-- Loader element -->
+        <div class="loader"></div>
+    </div>
+
 
     <!-- Page Navigation -->
 
     <nav class="navbar custom-navbar navbar-expand-lg navbar-dark affix" style="position: unset !important;">
         <div class="container">
             <a class="navbar-brand" href="../index.html">
-                <img src="../assets/imgs/logo_.png"
+                <img src="https://admin.salassilexpress.com/assets/logo/logo.png"
                     alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, Creative studio Landing page">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -97,7 +102,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../screens/login.html">LOGIN</a>
+                        <a class="nav-link" href="../screens/login.html">LOGOUT</a>
                     </li>
                     <!-- <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
@@ -110,8 +115,8 @@
                         <a>
                             <div id="google_translate_element"></div>
                         </a>
-                        <img id="selected_language_flag" style="position: absolute; top: 2px; left: 2px;"
-                            src="assets/imgs/english.png" width="20px" height="20px" alt="Selected Language Flag">
+                        <img id="selected_language_flag" style="position: absolute; top: 2px; right: 2px;"
+                            src="../assets/imgs/english.png" width="20px" height="20px" alt="Selected Language Flag">
                     </li>
                 </ul>
             </div>
@@ -125,96 +130,123 @@
         <h1>Ticket Detail</h1>
         <div class="row">
 
-            <div class="col-md-8" style=" margin-right: 10px; height: 1800px;">
-                <div class="row"
-                    style="height: 60%;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2); margin-bottom: 40px; padding: 10px;">
+            <div class="col-md-8 col-12" style=" margin-right: 10px; height: auto;">
+                <div class="row responsive"
+                    style="height: auto;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2); margin-bottom: 40px; padding: 10px;">
                     <div class="col-md-12">
 
-                        <p>Final Setting for hide field for user</p><br><br><br>
-                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
-                        <p><b>Shipper Name :</b> sammm</p>
-                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
-                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
-                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
-                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
-                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
-                        <p><b>Pick Up Address </b>dsdsdsd</p>
-                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
-                        <p><b>Shipper City :</b> ddsds</p>
-                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
-                        <p><b>Pick Up Address </b>dsdsdsd</p>
-                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
-                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
-                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
-                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
-                        <p><b>Shipper Origin Country : </b> Bangladesh</p>
-                        <p><b>Pick Up Address </b>dsdsdsd</p>
-                        <p><b>Enter Airway or Reference Number (Optional) :</b></p>
-                        <p><b>Shipper City :</b> ddsds</p>
-                        <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
-                        <p><b>Pick Up Address </b>dsdsdsd</p>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <p style="color: #93003c; font-size: 17px; text-decoration: underline;">Shipper
+                                    Infomation</p>
+                                <p><b>Shipper Name :</b> <span id="shipperName"></span></p>
+                                <p><b>Shipper Contact Number (Optional) : </b> <span id="shipperContactNumber"></span>
+                                </p>
+                                <p><b>Shipper Origin Country : </b> <span id="pickupAddress"></span></p>
+                                <p><b>Shipper Contact Number (Optional) : </b> <span id="streetName"></span></p>
+                                <p><b>Shipper Origin Country : </b> <span id="district"></span></p>
+                                <p><b>Shipper Contact Number (Optional) : </b> <span id="shipperRef"></span></p>
+                                <p><b>Shipper Origin Country : </b> <span id="originCountry"></span></p>
+                                <p><b>Shipper Contact Number (Optional) : </b> <span id="originCity"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="color: #93003c; font-size: 17px; text-decoration: underline;">Recipient
+                                    Infomation</p>
+                                <p><b>Recipient Name:</b> <span id="recipientName"></span> </p>
+                                <p><b>Recipient Contact Number:</b> <span id="recipientContactNumber"></span> </p>
+                                <p><b>Delivery Address:</b> <span id="deliveryAddress"></span> </p>
+                                <p><b>Street Name:</b> <span id="streetName"></span> </p>
+                                <p><b>District:</b> <span id="district"></span> </p>
+                                <p><b>Destination Country:</b> <span id="destinationCountry"></span> </p>
+                                <p><b>Destination City:</b> <span id="destinationCity"></span> </p>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <p style="color: #93003c; font-size: 17px; text-decoration: underline;">Department
+                                    Information</p>
+                                <p><b>Department:</b> <span id="department"></span> </p>
+                                <p><b>Department Category:</b> <span id="departmentCategory"></span> </p>
+
+                            </div>
+                            <div class="col-md-6">
+                                <p style="color: #93003c; font-size: 17px; text-decoration: underline;">Schedule
+                                    Information</p>
+                                <p><b>Pickup Date:</b> <span id="pickupDate"></span> </p>
+                                <p><b>Pickup Time:</b> <span id="pickupTime"></span> </p>
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <p style="color: #93003c; font-size: 17px; text-decoration: underline;">Inquiry
+                                    Information</p>
+                                <p><b>Category:</b> <span id="category"></span> </p>
+                                <p><b>Created At:</b> <span id="createdAt"></span> </p>
+                                <p><b>Created By:</b> <span id="createdBy"></span> </p>
+
+                            </div>
+                            <div class="col-md-6">
+                                <p style="color: #93003c; font-size: 17px; text-decoration: underline;">Ticket Status
+                                </p>
+                                <p><b>Status:</b> <span id="status"></span> </p>
+                                <p><b>Flag:</b> <span id="flag"></span> </p>
+
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <p style="color: #93003c; font-size: 17px; text-decoration: underline;">Assignment
+                                    Details</p>
+                                <p><b>Assigned To:</b> <span id="assignedTo"></span> </p>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-                <div class="row" style="height: 15%; margin-bottom: 40px; box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
+                <div class="row" style="height: auto; margin-bottom: 40px; overflow: auto; overflow-x: hidden; box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
                     <div class="col-md-12 remove-padding">
 
                         <div class="ticket-thread-header">
                             <h3>Ticket Thread</h3>
                         </div>
 
-                        <div class="row mb-3 content">
-                            <div class="col-md-2">
-                                <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
-                                    width="120px" alt="">
-                            </div>
-                            <div class="col-md-10">
-                                <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
-                                <p style="text-align: unset !important;">Department: Operation Department</p>
-                                <button style="background-color:#c7cbf5; float: left;
-                                padding: 5px 10px;
-                                margin-right: 3px;
-                                font-size: 14px;
-                                color: #fff;
-                                border: unset;
-                                font-weight: bold;
-                                text-transform: uppercase;">Normal</button>
-                                <br>
-                                <p>Thursday September 07, 2023, 04:19:21</p>
-                            </div>
+                        <div class="mb-3 content" id="comments">
+                            
                         </div>
                     </div>
                 </div>
-                <div class="row" style="height: 25%; margin-bottom: 40px; box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
+                <div class="row" style="height: auto; margin-bottom: 40px; box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
 
-                    <div class="col-md-12 remove-padding">
+                    <div class="col-md-12 col-12 remove-padding">
 
                         <div class="post-reply">
                             <h3>Post Reply</h3>
                         </div>
 
-                        <textarea style="margin-left: 15px;" name="" id="" cols="123" rows="10"></textarea>
+                        <textarea style="margin-left: 15px; resize: none; width: 97%;" name="" id="commentBox" rows="10"></textarea>
                     </div>
                 </div>
             </div>
 
 
-            <div class="col-md-4" style=" height: 1000px;">
-                <div class="row" style="height: 30%; margin-bottom: 40px;  box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
+            <div class="col-md-4 col-12 responsive-status" style=" height: auto;">
+                <div class="row" style="height: auto; margin-bottom: 40px;  box-shadow: 0 0 3px 2px rgba(0,0,0,0.2);">
                     <div class="col-md-12">
                         <div class="open-closed">
                             <div class="tag">
-                                <h3>Open</h3>
+                                <h3 id="ticketStatus"></h3>
                             </div>
-                            <p><b>Enter Airway or Reference Number (Optional) :</b></p>
-                            <p><b>Shipper Name :</b> sammm</p>
-                            <p><b>Shipper Contact Number (Optional) : </b> +2156534433</p>
-                            <p><b>Shipper Origin Country : </b> Bangladesh</p>
-                            <p><b>Department :IT Department</p>
+                            <p><b>Created:</b> <span id="created"></span></p>
+                            <p><b>Due Date:</b> <span id="dueDate"></span></p>
+                            <p><b>Department: </b> <span id="department"></span></p>
+                            <p><b>Ticket ID : </b> <span id="ticketId"></span></p>
                         </div>
                     </div>
                 </div>
-                <div class="row" style="height: 15%; margin-bottom: 40px;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2);">
+                <div class="row" style="height: auto; margin-bottom: 40px;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2);">
                     <div class="col-md-12">
                         <div class="priority">
                             <span style="display: flex; align-items: baseline;"> <img
@@ -223,82 +255,30 @@
                                 <h3>Priority</h3>
                             </span>
                             <div class="priority-imp">
-                                <h3>Normal</h3>
+                                <h3 id="ticketFlag"></h3>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row" style="height: 45%;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2);">
+                <div class="row" style="height: auto; margin-bottom: 40px;  box-shadow:0 0 3px 2px rgba(0,0,0,0.2);">
                     <div class="col-md-12">
-                        <div class="ds-tickets">
-                            <h3 style="margin-bottom: 30px;">dsds Tickets</h3>
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
-                                        width="100%" alt="">
-                                </div>
-                                <div class="col-md-9">
-                                    <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
-                                    <p style="text-align: unset !important;">Department: Operation Department</p>
-                                    <button style="background-color:#c7cbf5; float: left;
-                                    padding: 5px 10px;
-                                    margin-right: 3px;
-                                    font-size: 14px;
-                                    color: #fff;
-                                    border: unset;
-                                    font-weight: bold;
-                                    text-transform: uppercase;">Normal</button>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
-                                        width="100%" alt="">
-                                </div>
-                                <div class="col-md-9">
-                                    <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
-                                    <p style="text-align: unset !important;">Department: Operation Department</p>
-                                    <button style="background-color:#c7cbf5; float: left;
-                                    padding: 5px 10px;
-                                    margin-right: 3px;
-                                    font-size: 14px;
-                                    color: #fff;
-                                    border: unset;
-                                    font-weight: bold;
-                                    text-transform: uppercase;">Normal</button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <img src="https://i0.wp.com/salselexpress.com/wp-content/plugins/js-support-ticket//includes/images/user.png?ssl=1"
-                                        width="100%" alt="">
-                                </div>
-                                <div class="col-md-9">
-                                    <p style="text-align: unset !important; margin-bottom: 3px;">pickup request</p>
-                                    <p style="text-align: unset !important;">Department: Operation Department</p>
-                                    <button style="background-color:#c7cbf5; float: left;
-                                    padding: 5px 10px;
-                                    margin-right: 3px;
-                                    font-size: 14px;
-                                    color: #fff;
-                                    border: unset;
-                                    font-weight: bold;
-                                    text-transform: uppercase;">Normal</button>
-                                </div>
-                            </div>
-                        </div>
+                       <table class="table-responsive" id="attachementTable">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            
+                        </tbody>
+
+                       </table>
                     </div>
                 </div>
             </div>
+            <button class="add-comment" onclick="postComment()">Post</button>
         </div>
-        <button style="    float: left;
-        width: 100%;
-        text-align: center;
-        padding: 20px 0;
-        border-top: 2px solid #32373c;
-        background: #209e24;
-    border: 1px solid #368534;
-    color: #fff;">Post</button>
     </div>
 
     <!-- tickets section end -->
@@ -314,7 +294,7 @@
                         </li> -->
                         <li class="list-body">
                             <a href="#" class="logo">
-                                <img src="../assets/imgs/logo_.png" width="100%"
+                                <img src="https://admin.salassilexpress.com/assets/logo/logo.png" width="100%"
                                     alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, Creative studio Landing page">
                             </a>
                             <p>We reduce your distance from the world. No matter where you are, just choose the product
@@ -375,16 +355,16 @@
 
     <div class="socialmedia-toggle" onclick="expand()">
         <i class="fa fa-plus" id="plus"></i>
-      </div>
-  
-      <div class="menu_group" id="menu">
+    </div>
+
+    <div class="menu_group" id="menu">
         <a href="https://www.instagram.com/bachassllc/" class="toggle_items" target="_blank"><img alt=""
-            id="toggle-images1" src="assets/imgs/social/instagramIcon.png" /></a>
+                id="toggle-images1" src="../assets/imgs/social/instagramIcon.png" /></a>
         <a href="https://wa.me/13074564966" class="toggle_items" target="_blank"><img alt="" id="toggle-images2"
-            src="assets/imgs/social/whatsAppIcon.png" /></a>
+                src="../assets/imgs/social/whatsAppIcon.png" /></a>
         <a href="https://twitter.com/BachassLLC" class="toggle_items" target="_blank"><img alt="" id="toggle-images3"
-            src="assets/imgs/social/twitterIcon.png" /></a>
-      </div>
+                src="../assets/imgs/social/twitterIcon.png" /></a>
+    </div>
 
     <script>
         AOS.init();
@@ -439,7 +419,6 @@
         }
 
         function updateFlagImage(languageCode) {
-            debugger
             console.log('Updating flag for language:', languageCode);
             var flagMappings = {
                 'en': 'english.png',
@@ -481,7 +460,7 @@
     <script type="text/javascript"
         src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <script src="script.js"></script>
+    <script src="view-ticket.js"></script>
 </body>
 
 </html>

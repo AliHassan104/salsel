@@ -1,4 +1,5 @@
 async function getApiController(token, endPoint) {
+    showLoader();
     try {
         const response = await fetch(`https://api.salassilexpress.com/api${endPoint}`, {
             method: 'GET',
@@ -25,17 +26,24 @@ async function getApiController(token, endPoint) {
 }
 
 async function postApiController(token, endPoint, payload) {
+    showLoader();
+
     try {
-        showLoader();
+        const formData = new FormData();
+        formData.append('ticketDto', new Blob([JSON.stringify(payload.ticketDto)], { type: 'application/json' }));
+        // formData.append('file', payload.file, `${selectedFileName}.pdf`);
+        for (let i = 0; i < payload.file.length; i++) {
+            formData.append('files', payload.file[i]);
+        }
 
         const response = await fetch(`https://api.salassilexpress.com/api/${endPoint}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token.jwt}`
+
                 // Add any additional headers if needed
             },
-            body: JSON.stringify(payload)
+            body: formData,
         });
 
         hideLoader();
@@ -46,8 +54,6 @@ async function postApiController(token, endPoint, payload) {
 
         const data = await response.json();
         return data;
-        // You can perform additional actions with the data if needed
-
     } catch (error) {
         hideLoader();
         console.error('There was a problem with the fetch operation:', error);
@@ -59,16 +65,20 @@ async function putApiController(token, endPoint, payload) {
     showLoader();
 
     try {
+        const formData = new FormData();
+        formData.append('ticketDto', new Blob([JSON.stringify(payload.ticketDto)], { type: 'application/json' }));
+        // formData.append('file', payload.file, `${selectedFileNames}`);
+        for (let i = 0; i < payload.file.length; i++) {
+            formData.append('files', payload.file[i]);
+        }
+
         const response = await fetch(`https://api.salassilexpress.com/api/${endPoint}`, {
-            method: 'PUT', // Change method to 'PUT'
+            method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token.jwt}`
                 // Add any additional headers if needed
             },
-            body: JSON.stringify(payload)
-            // If you have data to send in the request body, include it here
-            // body: JSON.stringify({ key1: 'value1', key2: 'value2' })
+            body: formData,
         });
 
         hideLoader();
@@ -78,9 +88,7 @@ async function putApiController(token, endPoint, payload) {
         }
 
         const data = await response.json();
-        return data
-        // Process the response data as needed
-
+        return data;
     } catch (error) {
         hideLoader();
         console.error('There was a problem with the fetch operation:', error);
@@ -95,6 +103,8 @@ async function createTicket() {
     const phone = document.getElementById('phone').value;
     const textareaValue = document.getElementById('textarea').value;
     const ticketType = document.getElementById('ticketType').value;
+    const fileInput = document.getElementById('yourFileInputId');
+    const file = fileInput.files;
 
     loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"))
 
@@ -102,7 +112,17 @@ async function createTicket() {
     const ticketId = urlParams.get('id');
 
     const endPoint = `/ticket/${ticketId}`
+    if (!name || !email || !ticketType) {
+        // Show the error toast
+        
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+        return;
+    }
 
+    var errorToast = new bootstrap.Toast(document.getElementById('errorToast'), {
+        delay: 5000 // Set the delay to 5000 milliseconds (5 seconds)
+    });
     if (ticketId) {
         try {
             var getTicketById = await getApiController(jwtToken.jwt, endPoint);
@@ -142,10 +162,16 @@ async function createTicket() {
                     airwayNumber: getTicketById.airwayNumber,
                     createdBy: loggedInUser
                 }
+
                 jwtToken = JSON.parse(localStorage.getItem("token"))
 
-                var updatedTicket = await putApiController(jwtToken, `ticket/${getTicketById.id}`, ticket)
-                if(updatedTicket != null){
+                const payload = {
+                    ticketDto: ticket,
+                    file: file,
+                };
+                var updatedTicket = await putApiController(jwtToken, `ticket/${getTicketById.id}/filenames?fileNames=${selectedFileNames.join(',')}`, payload)
+
+                if (updatedTicket != null) {
                     window.location.href = "ticket.html"
                 }
             }
@@ -188,20 +214,26 @@ async function createTicket() {
         }
         jwtToken = JSON.parse(localStorage.getItem("token"))
 
-        var createTicket = await postApiController(jwtToken, `ticket`, ticket)
-        if(createTicket != null){
+        const payload = {
+            ticketDto: ticket,
+            file: file,
+        };
+
+        var createTicket = await postApiController(jwtToken, `ticket`, payload)
+        if (createTicket != null) {
             window.location.href = "ticket.html"
         }
     }
 
 
 }
-
+getTicket();
 async function getTicket() {
     const urlParams = new URLSearchParams(window.location.search);
     const ticketId = urlParams.get('id');
     if (ticketId) {
         document.getElementById("submit-button").innerHTML = "Update"
+        document.getElementById("create-header").innerHTML = "Update Ticket"
     }
 
     jwtToken = JSON.parse(localStorage.getItem("token"))
@@ -218,28 +250,48 @@ async function getTicket() {
                 document.getElementById('email').value = getTicketById.email;
                 document.getElementById('phone').value = getTicketById.phone;
                 document.querySelector('textarea').value = getTicketById.textarea;
+                const attachementEndPoint = `/file/${getTicketById.ticketUrl}`;
+                // const getAttachement = await getApiController(jwtToken.jwt, attachementEndPoint);
+
+                // const blob = new Blob([getAttachement], { type: 'application/pdf' });
+
+                // const fileInput = document.getElementById('yourFileInputId');
+                // const fileList = new DataTransfer();
+                
+                // const fileName = getTicketById.ticketUrl.split('/').pop(); // Extracting the file name
+                
+                // fileList.items.add(new File([blob], fileName, { type: 'application/pdf' }));
+                // fileInput.files = fileList.files;
+                
+                // fileInput.dispatchEvent(new Event('change'));
+                displayAttachments(getTicketById.attachments);
 
                 setTimeout(() => {
                     updateTicketTypeDropdown(getTicketById.ticketType);
                 }, 100);
-                // const ticketType = document.getElementById('ticketType');
-
-                // for (let i = 0; i < ticketType.options.length; i++) {
-                //     const option = ticketType.options[i];
-
-                //     if (option.value === getTicketById.ticketType) {
-                //         option.selected = true;
-                //         break;
-                //     }
-                // }
-
-                // console.log(getTicketById);
             }
         } catch (error) {
             console.error('Error getting ticket data:', error);
         }
     }
 
+}
+
+function displayAttachments(attachments) {
+    const fileInput = document.getElementById('yourFileInputId');
+    const fileList = new DataTransfer();
+
+    if (attachments && attachments.length > 0) {
+        attachments.forEach(attachment => {
+            const blob = new Blob([attachment.filePath], { type: 'application/pdf' });
+            const fileName = attachment.filePath.split('/').pop();
+
+            fileList.items.add(new File([blob], fileName, { type: 'application/pdf' }));
+        });
+    }
+
+    fileInput.files = fileList.files;
+    fileInput.dispatchEvent(new Event('change'));
 }
 
 function updateTicketTypeDropdown(selectedValue) {
@@ -256,4 +308,22 @@ function updateTicketTypeDropdown(selectedValue) {
 }
 
 
-getTicket();
+
+let selectedFileNames = [];
+
+function onFileChange(event) {
+    const fileInput = event.target;
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+    selectedFileNames = []; // Clear the array before updating with new files
+
+    if (fileInput.files.length > 0) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+            selectedFileNames.push(fileInput.files[i].name);
+        }
+
+        fileNameDisplay.innerText = selectedFileNames.join(', ');
+    } else {
+        fileNameDisplay.innerText = 'No file selected';
+    }
+}
