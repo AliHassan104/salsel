@@ -40,17 +40,17 @@ export class DepartmentCategoryComponent {
   ) {}
 
   ngOnInit(): void {
+    this.departmentCategoryForm = this.fb.group({
+      name: [null, Validators.required],
+      type: [null, Validators.required],
+    });
+
     this.route.queryParams.subscribe((params) => {
       this.departmentCategoryId = params["id"];
       if (this.departmentCategoryId) {
         this.mode = "Update";
         this.updateForm(this.departmentCategoryId);
       }
-    });
-
-    this.departmentCategoryForm = this.fb.group({
-      name: [null, Validators.required],
-      type: [null, Validators.required],
     });
 
     this.getAllDepartments();

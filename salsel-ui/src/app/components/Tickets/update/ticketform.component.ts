@@ -146,6 +146,8 @@ export class TicketformComponent implements OnInit {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
 
+        // Attachments
+
         const filePaths = this.singleTicket.attachments.map(
           (attachment) => attachment.filePath
         );
@@ -485,7 +487,7 @@ export class TicketformComponent implements OnInit {
       }
 
       if (isValid) {
-        this.fileName = selectedFiles[0].name; // Assuming you want to display the name of the first file
+        this.fileName = selectedFiles[0].name;
         for (let i = 0; i < selectedFiles.length; i++) {
           this.ticketAttachment.push(selectedFiles[i]);
         }

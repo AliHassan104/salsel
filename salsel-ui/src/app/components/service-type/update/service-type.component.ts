@@ -36,18 +36,18 @@ export class ServiceTypeComponent {
   ) {}
 
   ngOnInit(): void {
+    this.serviceTypeForm = this.fb.group({
+      name: [null, Validators.required],
+      code: [null, Validators.required],
+      type: [null, Validators.required],
+    });
+
     this.route.queryParams.subscribe((params) => {
       this.id = params["id"];
       if (this.id) {
         this.mode = "Update";
         this.updateForm(this.id);
       }
-    });
-
-    this.serviceTypeForm = this.fb.group({
-      name: [null, Validators.required],
-      code: [null, Validators.required],
-      type: [null, Validators.required],
     });
 
     this.getAllProductTypes();
