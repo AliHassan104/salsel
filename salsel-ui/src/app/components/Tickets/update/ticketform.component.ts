@@ -48,7 +48,7 @@ export class TicketformComponent implements OnInit {
   userRole;
 
   fileName: string = "";
-  ticketAttachment?;
+  ticketAttachment?: File[] = [];
   ticketEditParams?;
 
   //   FORM GROUP TICKET FORM
@@ -468,6 +468,7 @@ export class TicketformComponent implements OnInit {
 
   onFileChange(event: any): void {
     const fileInput = event.target;
+
     if (fileInput.files && fileInput.files.length > 0) {
       const selectedFiles = fileInput.files;
 
@@ -485,10 +486,14 @@ export class TicketformComponent implements OnInit {
 
       if (isValid) {
         this.fileName = selectedFiles[0].name; // Assuming you want to display the name of the first file
-        this.ticketAttachment = selectedFiles;
+        for (let i = 0; i < selectedFiles.length; i++) {
+          this.ticketAttachment.push(selectedFiles[i]);
+        }
+        this.updateFileInput();
       } else {
-        this.clearFileInput();
-        this.ticketAttachment = null;
+        this.updateFileInput();
+        // this.clearFileInput();
+        // this.ticketAttachment = [];
         this.messageService.add({
           severity: "error",
           summary: "Invalid File",
@@ -496,12 +501,29 @@ export class TicketformComponent implements OnInit {
         });
       }
     } else {
-      this.ticketAttachment = null;
-      this.clearFileInput();
+      //   this.ticketAttachment = [];
+      //   this.clearFileInput();
+      this.updateFileInput();
       this.messageService.add({
-        severity: "error",
+        severity: "warn",
         summary: "No File Selected",
       });
+    }
+  }
+
+  removeFile(index: number): void {
+    this.ticketAttachment.splice(index, 1);
+    this.updateFileInput();
+  }
+
+  updateFileInput(): void {
+    const fileInput = document.getElementById("attachment") as HTMLInputElement;
+    if (fileInput) {
+      const newFileList = new DataTransfer();
+      for (const file of this.ticketAttachment) {
+        newFileList.items.add(file);
+      }
+      fileInput.files = newFileList.files;
     }
   }
 

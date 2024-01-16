@@ -61,13 +61,20 @@
 
                     <!-- Hidden input for file upload -->
                     <input #fileInput id="attachment" type="file" (change)="onFileChange($event)" multiple
-                        [ngClass]="{'inputBorder':ticketAttachment}" />
-                    <div class="files" *ngIf="ticketAttachment">
-                        <ul>
-                            <li *ngFor="let item of ticketAttachment">
-                                {{item.name}}
-                            </li>
-                        </ul>
+                        [ngClass]="{'inputBorder':ticketAttachment.length > 0}" />
+                    <div class="files p-2" *ngIf="ticketAttachment.length > 0">
+                        <div class="p-fluid grid justify-content-center align-content-center attachmentName"
+                            *ngFor="let item of ticketAttachment; let i = index">
+                            <p class="col-1" style="font-size: 15px; font-weight: bold;">{{i + 1 }}</p>
+                            <div class="col-9" style="white-space: pre-wrap;">
+                                <p style="word-break: break-all;">{{item.name}}</p>
+                            </div>
+                            <div class="col-2">
+                                <button pTooltip="Remove" tooltipPosition="bottom" pButton pRipple type="button"
+                                    icon="pi pi-times" (click)="removeFile(i)"
+                                    class="p-button-rounded p-button-danger p-button-outlined mx-2"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
