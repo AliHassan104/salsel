@@ -156,10 +156,10 @@ export class TicketformComponent implements OnInit {
 
         this.ticketEditParams = { fileNames: FileNames };
 
-        for (let i = 0; i < this.singleTicket.attachments.length; i++) {
+        for (let i = 0; i < this.singleTicket?.attachments?.length; i++) {
           this.attachAgreement(
-            this.singleTicket.attachments[i].filePath,
-            this.singleTicket.attachments[i].filePath.split("/").pop()
+            this.singleTicket?.attachments[i]?.filePath,
+            this.singleTicket?.attachments[i]?.filePath.split("/").pop()
           );
         }
 
@@ -276,7 +276,7 @@ export class TicketformComponent implements OnInit {
       this.originCities = res;
       //   Destination Cities
       let filterDestinationCities = this.destinationCities.filter(
-        (value) => value.country.name == destinationCountry
+        (value) => value?.country?.name == destinationCountry
       );
       this.destinationCities = this.dropdownService.extractNames(
         filterDestinationCities
@@ -284,7 +284,7 @@ export class TicketformComponent implements OnInit {
 
       //   Origin Cities
       let filterOriginCities = this.originCities.filter(
-        (value) => value.country.name == originCountry
+        (value) => value?.country?.name == originCountry
       );
       this.originCities = this.dropdownService.extractNames(filterOriginCities);
     });
@@ -295,7 +295,7 @@ export class TicketformComponent implements OnInit {
       .subscribe((res) => {
         this.departmentCategory = res.body;
         let filterDepartments = this.departmentCategory.filter(
-          (city) => city.department.name == department
+          (city) => city?.department?.name == department
         );
 
         // Disable
@@ -317,7 +317,7 @@ export class TicketformComponent implements OnInit {
       .subscribe((res) => {
         this.departmentCategory = res.body;
         let filterDepartments = this.departmentCategory.filter(
-          (city) => city.department.name == department.value
+          (city) => city?.department?.name == department.value
         );
 
         // Disable
@@ -337,7 +337,7 @@ export class TicketformComponent implements OnInit {
     this.cityService.getAllCities(this.params).subscribe((res) => {
       this.destinationCities = res;
       let filterCities = this.destinationCities.filter(
-        (city) => city.country.name == country.value
+        (city) => city?.country?.name == country.value
       );
       this.destinationCities = this.dropdownService.extractNames(filterCities);
     });
@@ -348,7 +348,7 @@ export class TicketformComponent implements OnInit {
     this.cityService.getAllCities(this.params).subscribe((res) => {
       this.originCities = res;
       let filterCities = this.originCities.filter(
-        (city) => city.country.name == country.value
+        (city) => city?.country?.name == country.value
       );
       this.originCities = this.dropdownService.extractNames(filterCities);
     });

@@ -55,10 +55,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
 
     this.ticketService.getTickets({ status: true }).subscribe((res: any) => {
-      this.activeTicketsCount = res.body.length;
+      this.activeTicketsCount = res?.body?.length;
 
       this.ticketService.getTickets({ status: false }).subscribe((res: any) => {
-        this.inActiveTicketsCount = res.body.length;
+        this.inActiveTicketsCount = res?.body?.length;
         this.totalTickets = this.activeTicketsCount + this.inActiveTicketsCount;
 
         this.pieChartSetup();
@@ -77,12 +77,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.accountsService
       .getAllAccounts({ status: true })
       .subscribe((res: any) => {
-        this.activeAccountCount = res.body.length;
+        this.activeAccountCount = res?.body?.length;
 
         this.accountsService
           .getAllAccounts({ status: false })
           .subscribe((res: any) => {
-            this.inactiveAccountCount = res.body.length;
+            this.inactiveAccountCount = res?.body?.length;
             this.totalAccountCount =
               this.activeAccountCount + this.inactiveAccountCount;
 

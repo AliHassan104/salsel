@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
   onLogin(value) {
     if (this.loginForm.valid) {
       this._loginService.login(value).subscribe(
-        (res) => {
+        (res: any) => {
           this.token = res;
           sessionStorage.setItem("token", this.token.jwt);
           sessionStorage.setItem("loginUserEmail", value.email);

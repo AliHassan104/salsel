@@ -102,10 +102,10 @@ export class UserlistComponent implements OnInit {
 
   //   Get All Product Fields
   getAllProductFields() {
-    this.dropdownService.getAllProductFields().subscribe((res) => {
+    this.dropdownService.getAllProductFields().subscribe((res: any) => {
       this.productField = res;
       this.status = this.dropdownService.extractNames(
-        this.productField.filter((data) => data.name == "Status")[0]
+        this.productField.filter((data) => data?.name == "Status")[0]
           .productFieldValuesList
       );
     });
@@ -164,7 +164,7 @@ export class UserlistComponent implements OnInit {
   }
 
   onActiveUser(id) {
-    this.userService.updateUserStatus(id).subscribe((res) => {
+    this.userService.updateUserStatus(id).subscribe((res: any) => {
       this.success();
       this.selectedStatus = "Active";
       this.onStatusChange(this.selectedStatus);

@@ -107,7 +107,7 @@
                             <button pTooltip="Download Agreement" tooltipPosition="bottom" *ngIf="activeStatus" pButton
                                 pRipple type="button" icon="pi pi-download"
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
-                                (click)="onDownloadAgreement(data.accountUrl,data.id)"></button>
+                                (click)="onDownloadAgreement(data.accountUrl,data.id,data.accountNumber)"></button>
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
                                 type="button" icon="pi pi-check"
                                 [disabled]="!this.sessionStorageService.hasPermission('DELETE_ACCOUNT')"

@@ -50,7 +50,7 @@ export class AirbilldataComponent implements OnInit {
           this.refresh = false;
         })
       )
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         this.bills = res;
       });
   }
@@ -74,7 +74,7 @@ export class AirbilldataComponent implements OnInit {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productField = res;
       this.status = this.dropdownService.extractNames(
-        this.productField.filter((data) => data.name == "Status")[0]
+        this.productField.filter((data) => data?.name == "Status")[0]
           .productFieldValuesList
       );
     });
@@ -125,7 +125,7 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onActiveBill(id) {
-    this._airbillService.updateBillStatus(id).subscribe((res) => {
+    this._airbillService.updateBillStatus(id).subscribe((res: any) => {
       this.success();
       this.selectedStatus = "Active";
       this.onStatusChange(this.selectedStatus);

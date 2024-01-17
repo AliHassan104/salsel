@@ -32,7 +32,10 @@ export class AccountViewComponent implements OnInit {
     this.accountService.downloadAgreement(this.agreementUrl).subscribe(
       (res: any) => {
         this.downloadSuccess();
-        this.accountService.downloadFile(res, `Agreement_${this.id}`);
+        this.accountService.downloadFile(
+          res,
+          `Agreement_${this.singleAccount?.accountNumber}`
+        );
       },
       (error) => {
         this.downloadError();
@@ -57,7 +60,7 @@ export class AccountViewComponent implements OnInit {
   }
 
   getSingleAccount(id) {
-    this.accountService.getSingleAccount(id).subscribe((res) => {
+    this.accountService.getSingleAccount(id).subscribe((res: any) => {
       this.singleAccount = res;
       this.agreementUrl = this.singleAccount.accountUrl;
     });

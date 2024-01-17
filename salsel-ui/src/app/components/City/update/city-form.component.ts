@@ -64,22 +64,24 @@ export class CityFormComponent implements OnInit {
 
   editForm() {
     if (this.editMode) {
-      this.cityService.getSingleCity(this.editId).subscribe((res) => {
+      this.cityService.getSingleCity(this.editId).subscribe((res: any) => {
         this.singleCity = res;
 
         //For Country
-        this.countryService.getAllCountries(this.params).subscribe((res) => {
-          this.editedCountry = res;
-          this.editedCountry = this.editedCountry.filter(
-            (country) => country.name == this.singleCity.country.name
-          );
-          this.cityForm.patchValue({
-            country: this.editedCountry[0],
+        this.countryService
+          .getAllCountries(this.params)
+          .subscribe((res: any) => {
+            this.editedCountry = res;
+            this.editedCountry = this.editedCountry.filter(
+              (country) => country?.name == this.singleCity?.country?.name
+            );
+            this.cityForm.patchValue({
+              country: this.editedCountry[0],
+            });
           });
-        });
 
         this.cityForm.patchValue({
-          name: this.singleCity.name,
+          name: this.singleCity?.name,
         });
       });
     }
@@ -87,7 +89,7 @@ export class CityFormComponent implements OnInit {
 
   //   GET ALL COUNTRIES
   getAllCountries() {
-    this.countryService.getAllCountries(this.params).subscribe((res) => {
+    this.countryService.getAllCountries(this.params).subscribe((res: any) => {
       this.countries = res;
     });
   }
@@ -96,10 +98,10 @@ export class CityFormComponent implements OnInit {
     if (this.cityForm.valid) {
       const city = {
         country: {
-          id: data.country.id,
-          name: data.country.name,
+          id: data?.country?.id,
+          name: data?.country?.name,
         },
-        name: data.name,
+        name: data?.name,
       };
 
       if (this.editMode) {

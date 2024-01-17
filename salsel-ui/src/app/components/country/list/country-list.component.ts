@@ -45,7 +45,7 @@ export class CountryListComponent implements OnInit {
   getAllCountries() {
     const params = { status: this.activeStatus };
 
-    this._countryService.getAllCountries(params).subscribe((res) => {
+    this._countryService.getAllCountries(params).subscribe((res: any) => {
       this.countries = res;
     });
   }
@@ -62,10 +62,10 @@ export class CountryListComponent implements OnInit {
 
   //   Get All Product Fields
   getAllProductFields() {
-    this.dropdownService.getAllProductFields().subscribe((res) => {
+    this.dropdownService.getAllProductFields().subscribe((res: any) => {
       this.productField = res;
       this.status = this.dropdownService.extractNames(
-        this.productField.filter((data) => data.name == "Status")[0]
+        this.productField.filter((data) => data?.name == "Status")[0]
           .productFieldValuesList
       );
     });

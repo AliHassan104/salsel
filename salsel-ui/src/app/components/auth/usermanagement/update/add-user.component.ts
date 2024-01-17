@@ -103,15 +103,15 @@ export class AddUserComponent implements OnInit {
 
         this.rolesService.getRoles().subscribe((res: any) => {
           const role = res.filter(
-            (value) => value.name == this.singleUser?.roles[0]?.name
+            (value) => value?.name == this.singleUser?.roles[0]?.name
           );
 
           this.userForm.patchValue({
-            email: this.singleUser.email,
-            firstname: this.singleUser.firstname,
-            lastname: this.singleUser.lastname,
-            phone: this.singleUser.phone,
-            employeeId: this.singleUser.employeeId,
+            email: this.singleUser?.email,
+            firstname: this.singleUser?.firstname,
+            lastname: this.singleUser?.lastname,
+            phone: this.singleUser?.phone,
+            employeeId: this.singleUser?.employeeId,
             roles: role != null ? role[0] : "",
           });
         });
@@ -143,7 +143,7 @@ export class AddUserComponent implements OnInit {
         ],
         status: true,
       };
-      this.userService.updateUser(this.editId, data).subscribe((res) => {
+      this.userService.updateUser(this.editId, data).subscribe((res: any) => {
         this.userForm.reset();
         this.router.navigate(["user/list"]);
       });
@@ -166,7 +166,7 @@ export class AddUserComponent implements OnInit {
           ],
           status: true,
         };
-        this.loginService.signUp(data).subscribe((res) => {
+        this.loginService.signUp(data).subscribe((res: any) => {
           this.userForm.reset();
           this.router.navigate(["user/list"]);
         });

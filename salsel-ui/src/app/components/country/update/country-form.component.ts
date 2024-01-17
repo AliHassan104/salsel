@@ -53,25 +53,29 @@ export class CountryFormComponent implements OnInit {
 
   editForm() {
     if (this.editMode) {
-      this.countryService.getSingleCountry(this.editId).subscribe((res) => {
-        this.singleCountry = res;
+      this.countryService
+        .getSingleCountry(this.editId)
+        .subscribe((res: any) => {
+          this.singleCountry = res;
 
-        this.countryForm.patchValue({
-          name: this.singleCountry.name,
+          this.countryForm.patchValue({
+            name: this.singleCountry?.name,
+          });
         });
-      });
     }
   }
 
   onSubmit(data) {
     if (this.countryForm.valid) {
       if (this.editMode) {
-        this.countryService.editCountry(this.editId, data).subscribe((res) => {
-          this.countryForm.reset();
-          this.router.navigate(["country/list"]);
-        });
+        this.countryService
+          .editCountry(this.editId, data)
+          .subscribe((res: any) => {
+            this.countryForm.reset();
+            this.router.navigate(["country/list"]);
+          });
       } else {
-        this.countryService.addCountry(data).subscribe((res) => {
+        this.countryService.addCountry(data).subscribe((res: any) => {
           this.countryForm.reset();
           this.router.navigate(["country/list"]);
         });

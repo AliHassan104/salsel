@@ -80,16 +80,16 @@ export class TicketitemComponent implements OnInit {
       .getAllTicketCommentsByTicketId(this.id)
       .subscribe((res: any) => {
         this.ticketComments = res;
-        this.commentCount = this.ticketComments.length;
+        this.commentCount = this.ticketComments?.length;
       });
   }
 
   //   On Single Ticket View
   onView(id) {
     this.display = true;
-    this._ticketService.getSingleTicket(id).subscribe((res) => {
+    this._ticketService.getSingleTicket(id).subscribe((res: any) => {
       this.singleTicket = res;
-      this.ticketAttachments = this.singleTicket.attachments;
+      this.ticketAttachments = this.singleTicket?.attachments;
     });
   }
 
@@ -99,7 +99,7 @@ export class TicketitemComponent implements OnInit {
       this.singleComment = res;
       this.textArea.nativeElement.focus();
       this.postCommentForm.setValue({
-        postComment: this.singleComment.comment,
+        postComment: this.singleComment?.comment,
       });
     });
   }
@@ -147,24 +147,40 @@ export class TicketitemComponent implements OnInit {
         const extension = this.getFileExtension(name);
 
         if (extension === "pdf") {
-          // For PDF files
+          const pdfBlob = new Blob([res], { type: "application/pdf" });
           this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-            URL.createObjectURL(new Blob([res], { type: "application/pdf" }))
+            URL.createObjectURL(pdfBlob)
           );
           this.imageUrl = null;
+          this.visible = true;
+
+          if (this.isMobileDevice()) {
+            const downloadLink = document.createElement("a");
+            downloadLink.href = URL.createObjectURL(pdfBlob);
+            downloadLink.target = "_blank";
+            downloadLink.download = name.split("/").pop();
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            this.visible = false;
+          }
         } else if (this.isImageExtension(extension)) {
-          // For image files
           this.imageUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
             URL.createObjectURL(new Blob([res], { type: "image/" + extension }))
           );
           this.pdfUrl = null;
+          this.visible = true;
         }
-
-        this.visible = true; // Open the dialog
       },
       (error) => {
         this.downloadError();
       }
+    );
+  }
+
+  isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
     );
   }
 

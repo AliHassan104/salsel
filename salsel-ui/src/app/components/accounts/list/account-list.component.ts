@@ -57,7 +57,7 @@ export class AccountListComponent implements OnInit {
           this.refresh = false;
         })
       )
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         if (res && res.body) {
           this.accounts = res.body;
         }
@@ -81,10 +81,10 @@ export class AccountListComponent implements OnInit {
 
   //   Get All Product Fields
   getAllProductFields() {
-    this.dropdownService.getAllProductFields().subscribe((res) => {
+    this.dropdownService.getAllProductFields().subscribe((res: any) => {
       this.productField = res;
       this.status = this.dropdownService.extractNames(
-        this.productField.filter((data) => data.name == "Status")[0]
+        this.productField.filter((data) => data?.name == "Status")[0]
           .productFieldValuesList
       );
     });
@@ -103,7 +103,7 @@ export class AccountListComponent implements OnInit {
   //   Confirmation message for delete country
 
   confirmDeleteSelected() {
-    this.accountService.deleteAccount(this.deleteId).subscribe((res) => {
+    this.accountService.deleteAccount(this.deleteId).subscribe((res: any) => {
       this.alert();
       this.getAllAccount();
       this.deleteAccountDialog = false;
@@ -126,18 +126,18 @@ export class AccountListComponent implements OnInit {
   }
 
   onActiveAccount(id) {
-    this.accountService.updateAccountStatus(id).subscribe((res) => {
+    this.accountService.updateAccountStatus(id).subscribe((res: any) => {
       this.success();
       this.selectedStatus = "Active";
       this.onStatusChange(this.selectedStatus);
     });
   }
 
-  onDownloadAgreement(url, id) {
+  onDownloadAgreement(url, id, accountNumber) {
     this.accountService.downloadAgreement(url).subscribe(
       (res: any) => {
         this.downloadSuccess();
-        this.accountService.downloadFile(res, `Agreement_${id}`);
+        this.accountService.downloadFile(res, `Agreement_${accountNumber}`);
       },
       (error) => {
         this.downloadError();

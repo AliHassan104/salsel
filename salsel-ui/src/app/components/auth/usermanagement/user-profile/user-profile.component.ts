@@ -85,7 +85,7 @@ export class UserProfileComponent implements OnInit {
       email: this.activeUser?.email,
       phone: this.activeUser?.phone,
       employeeId: this.activeUser?.employeeId,
-      role: this.activeUser?.roles[0].name,
+      role: this.activeUser?.roles[0]?.name,
     });
   }
 
@@ -122,14 +122,14 @@ export class UserProfileComponent implements OnInit {
         name: name,
         roles: [
           {
-            id: this.activeUser?.roles[0].id,
+            id: this.activeUser?.roles[0]?.id,
           },
         ],
         employeeId: this.activeUser.employeeId,
         status: true,
       };
       this.userService.updateUser(this.activeUser.id, userData).subscribe(
-        (res) => {
+        (res: any) => {
           this.editMode = false;
           this.userService.loginUserName.next(name);
           this.userService.loginUser.next(name.charAt(0).toUpperCase());

@@ -43,7 +43,7 @@ export class CityListComponent {
   getAllCities() {
     const params = { status: this.activeStatus };
 
-    this._cityService.getAllCities(params).subscribe((res) => {
+    this._cityService.getAllCities(params).subscribe((res: any) => {
       this.cities = res;
     });
   }
@@ -60,10 +60,10 @@ export class CityListComponent {
 
   //   Get All Product Fields
   getAllProductFields() {
-    this.dropdownService.getAllProductFields().subscribe((res) => {
+    this.dropdownService.getAllProductFields().subscribe((res: any) => {
       this.productField = res;
       this.status = this.dropdownService.extractNames(
-        this.productField.filter((data) => data.name == "Status")[0]
+        this.productField.filter((data) => data?.name == "Status")[0]
           .productFieldValuesList
       );
     });
@@ -82,7 +82,7 @@ export class CityListComponent {
   //   Confirmation message for delete country
 
   confirmDeleteSelected() {
-    this._cityService.deleteCity(this.deleteId).subscribe((res) => {
+    this._cityService.deleteCity(this.deleteId).subscribe((res: any) => {
       this.alert();
       this.getAllCities();
       this.deleteCityDialog = false;
@@ -105,7 +105,7 @@ export class CityListComponent {
   }
 
   onActiveCity(id) {
-    this._cityService.updateCityStatus(id).subscribe((res) => {
+    this._cityService.updateCityStatus(id).subscribe((res: any) => {
       this.success();
       this.selectedStatus = "Active";
       this.onStatusChange(this.selectedStatus);

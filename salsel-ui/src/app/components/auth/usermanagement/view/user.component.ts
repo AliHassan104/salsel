@@ -23,7 +23,7 @@ export class UserComponent implements OnInit {
   }
 
   paramsSetup() {
-    this.activatedRoute.paramMap.subscribe((res) => {
+    this.activatedRoute.paramMap.subscribe((res: any) => {
       this.id = res.get("id");
       this.getSingleUser(this.id);
     });

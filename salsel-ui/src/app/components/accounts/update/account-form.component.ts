@@ -65,10 +65,10 @@ export class AccountFormComponent implements OnInit {
 
   //   Get All Cities
   getAllCities(countryName) {
-    this.cityService.getAllCities(this.params).subscribe((res) => {
+    this.cityService.getAllCities(this.params).subscribe((res: any) => {
       this.cities = res;
       let filterCities = this.cities.filter(
-        (city) => city.country.name == countryName
+        (city) => city?.country?.name == countryName
       );
       this.cities = this.dropdownService.extractNames(filterCities);
     });
@@ -130,13 +130,15 @@ export class AccountFormComponent implements OnInit {
     });
 
     if (this.editId != null) {
-      this.accountService.getSingleAccount(this.editId).subscribe((res) => {
-        this.singleAccount = res;
-        this.attachAgreement(this.singleAccount.accountUrl);
+      this.accountService
+        .getSingleAccount(this.editId)
+        .subscribe((res: any) => {
+          this.singleAccount = res;
+          this.attachAgreement(this.singleAccount.accountUrl);
 
-        this.getAllCities(this.singleAccount.county);
-        this.editForm();
-      });
+          this.getAllCities(this.singleAccount.county);
+          this.editForm();
+        });
     }
   }
 
@@ -146,12 +148,12 @@ export class AccountFormComponent implements OnInit {
       this.productFields = res;
 
       this.accountTypes = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Account Types")[0]
+        this.productFields.filter((data) => data?.name == "Account Types")[0]
           .productFieldValuesList
       );
 
       this.salesRegion = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Sales Region")[0]
+        this.productFields.filter((data) => data?.name == "Sales Region")[0]
           .productFieldValuesList
       );
 
@@ -159,7 +161,7 @@ export class AccountFormComponent implements OnInit {
         this.salesAgents = res;
 
         const filteredData = this.salesAgents.filter(
-          (item) => item.roles[0]?.name === "ROLE_SALES_AGENT"
+          (item) => item?.roles[0]?.name === "ROLE_SALES_AGENT"
         );
         this.salesAgents = this.dropdownService.extractNames(filteredData);
       });
@@ -172,11 +174,11 @@ export class AccountFormComponent implements OnInit {
   }
 
   //   GET COUNTRY FROM DROPDOWN
-  getCountry(country) {
-    this.cityService.getAllCities(this.params).subscribe((res) => {
+  getCountry(country: any) {
+    this.cityService.getAllCities(this.params).subscribe((res: any) => {
       this.cities = res;
       let filterCities = this.cities.filter(
-        (city) => city.country.name == country.value
+        (city: any) => city?.country?.name == country.value
       );
       this.cities = this.dropdownService.extractNames(filterCities);
     });
@@ -190,13 +192,13 @@ export class AccountFormComponent implements OnInit {
       if (this.editMode) {
         this.accountService
           .editAccount(this.editId, data, this.accountAgeement)
-          .subscribe((res) => {
+          .subscribe((res: any) => {
             this.accountForm.reset();
             this.router.navigate(["account/list"]);
           });
       } else {
         this.accountService.addAccount(data, this.accountAgeement).subscribe(
-          (res) => {
+          (res: any) => {
             this.accountForm.reset();
             this.router.navigate(["account/list"]);
           },

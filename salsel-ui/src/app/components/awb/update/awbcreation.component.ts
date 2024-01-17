@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AirbillService } from "../service/airbill.service";
 import { MessageService } from "primeng/api";
 import { TicktingService } from "../../Tickets/service/tickting.service";
-import { environment } from "src/environments/environment";
 import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
@@ -76,19 +75,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   awbForm!: FormGroup;
 
   ngOnInit(): void {
-    //Setting Up Reactive Form
     this.awbFormSetup();
 
-    // Query Param for edit and create from ticket
     this.queryParamsSetup();
 
-    // FOR EDIT BILL
-    // this.UpdateBill();
-
-    // Create From Ticket
     this.CreateAwbFromTicket();
 
-    // GET VALUES OF DROPDOWNS
     this.getAllProductField();
 
     this.loginUserEmail = sessionStorage.getItem("loginUserEmail");
@@ -145,7 +137,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   //   }
 
   queryParamsSetup() {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe((params: any) => {
       if (params["id"] != null) {
         this.ticketMode = true;
         this.TicketId = +params["id"];
@@ -156,38 +148,41 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   }
 
   getAllProductField() {
-    this.dropdownService.getAllProductFields().subscribe((res) => {
+    this.dropdownService.getAllProductFields().subscribe((res: any) => {
       this.productFields = res;
 
       this.currencies = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Currency")[0]
+        this.productFields.filter((data: any) => data?.name == "Currency")[0]
           .productFieldValuesList
       );
 
       this.dutyTaxes = this.dropdownService.extractNames(
         this.productFields.filter(
-          (data) => data.name == "Duty And Tax Billing"
+          (data: any) => data?.name == "Duty And Tax Billing"
         )[0].productFieldValuesList
       );
 
       this.requestTypes = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Request Type")[0]
-          .productFieldValuesList
+        this.productFields.filter(
+          (data: any) => data?.name == "Request Type"
+        )[0].productFieldValuesList
       );
     });
 
     // Get All Countries
 
-    this.countryService.getAllCountries(this.params).subscribe((res) => {
+    this.countryService.getAllCountries(this.params).subscribe((res: any) => {
       this.countries = res;
       this.countries = this.dropdownService.extractNames(this.countries);
     });
 
     // GET ALL PRODUCT TYPES
-    this.productTypeService.getProductTypes(this.params).subscribe((res) => {
-      this.productType = res.body;
-      this.productType = this.dropdownService.extractNames(this.productType);
-    });
+    this.productTypeService
+      .getProductTypes(this.params)
+      .subscribe((res: any) => {
+        this.productType = res.body;
+        this.productType = this.dropdownService.extractNames(this.productType);
+      });
 
     // GET ALL AccountNumbers
     this.accountService
@@ -195,7 +190,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       .subscribe((res: any) => {
         this.accountNumbers = res.body;
         this.preprocessedAccountNumbers = this.accountNumbers.map(
-          (account) => ({
+          (account: any) => ({
             label: `${account.accountNumber}, ${account.customerName}`,
             value: account.number,
           })
@@ -204,15 +199,17 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   }
 
   getProductType(data) {
-    this.serviceTypeService.getServiceTypes(this.params).subscribe((res) => {
-      this.serviceType = res.body;
+    this.serviceTypeService
+      .getServiceTypes(this.params)
+      .subscribe((res: any) => {
+        this.serviceType = res.body;
 
-      let filterServiceType = this.serviceType.filter(
-        (type) => type.productType.name == data.value
-      );
+        let filterServiceType = this.serviceType.filter(
+          (type: any) => type?.productType?.name == data.value
+        );
 
-      this.serviceType = this.dropdownService.extractNames(filterServiceType);
-    });
+        this.serviceType = this.dropdownService.extractNames(filterServiceType);
+      });
   }
 
   getServiceType(data) {
@@ -220,7 +217,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       .getServiceTypes(this.params)
       .subscribe((res: any) => {
         let filterServiceType = res.body.filter(
-          (type) => type.name == data.value
+          (type: any) => type?.name == data.value
         );
         this.serviceTypeCode =
           this.dropdownService.extractCode(filterServiceType)[0];
@@ -270,44 +267,46 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
 
   CreateAwbFromTicket() {
     if (this.ticketMode) {
-      this._ticketService.getSingleTicket(this.TicketId).subscribe((res) => {
-        this.singleTicket = res;
-        this.getAllCities(
-          this.singleTicket.destinationCountry,
-          this.singleTicket.originCountry
-        );
+      this._ticketService
+        .getSingleTicket(this.TicketId)
+        .subscribe((res: any) => {
+          this.singleTicket = res;
+          this.getAllCities(
+            this.singleTicket.destinationCountry,
+            this.singleTicket.originCountry
+          );
 
-        if (
-          this.singleTicket.pickupTime != null &&
-          this.singleTicket.pickupDate != null
-        ) {
-          this.pickupDate = new Date(this.singleTicket.pickupDate);
-          let pickTimeArray = this.singleTicket.pickupTime;
-          this.pickupTime = new Date(`2023-11-12 ${pickTimeArray}`);
-        } else {
-          this.pickupDate = null;
-          this.pickupTime = null;
-        }
-        this.awbForm.patchValue({
-          shipperName: this.singleTicket.shipperName,
-          shipperContactNumber: this.singleTicket.shipperContactNumber,
-          pickupAddress: this.singleTicket.pickupAddress,
-          shipperRefNumber: this.singleTicket.shipperRefNumber,
-          originCountry: this.singleTicket.originCountry,
-          originCity: this.singleTicket.originCity,
-          recipientsName: this.singleTicket.recipientName,
-          recipientsContactNumber: this.singleTicket.recipientContactNumber,
-          destinationCountry: this.singleTicket.destinationCountry,
-          destinationCity: this.singleTicket.destinationCity,
-          deliveryAddress: this.singleTicket.deliveryAddress,
-          pickupDate: this.pickupDate,
-          pickupTime: this.pickupTime,
-          deliveryStreetName: this.singleTicket.deliveryStreetName,
-          deliveryDistrict: this.singleTicket.deliveryDistrict,
-          pickupStreetName: this.singleTicket.pickupStreetName,
-          pickupDistrict: this.singleTicket.pickupDistrict,
+          if (
+            this.singleTicket.pickupTime != null &&
+            this.singleTicket.pickupDate != null
+          ) {
+            this.pickupDate = new Date(this.singleTicket.pickupDate);
+            let pickTimeArray = this.singleTicket.pickupTime;
+            this.pickupTime = new Date(`2023-11-12 ${pickTimeArray}`);
+          } else {
+            this.pickupDate = null;
+            this.pickupTime = null;
+          }
+          this.awbForm.patchValue({
+            shipperName: this.singleTicket.shipperName,
+            shipperContactNumber: this.singleTicket.shipperContactNumber,
+            pickupAddress: this.singleTicket.pickupAddress,
+            shipperRefNumber: this.singleTicket.shipperRefNumber,
+            originCountry: this.singleTicket.originCountry,
+            originCity: this.singleTicket.originCity,
+            recipientsName: this.singleTicket.recipientName,
+            recipientsContactNumber: this.singleTicket.recipientContactNumber,
+            destinationCountry: this.singleTicket.destinationCountry,
+            destinationCity: this.singleTicket.destinationCity,
+            deliveryAddress: this.singleTicket.deliveryAddress,
+            pickupDate: this.pickupDate,
+            pickupTime: this.pickupTime,
+            deliveryStreetName: this.singleTicket.deliveryStreetName,
+            deliveryDistrict: this.singleTicket.deliveryDistrict,
+            pickupStreetName: this.singleTicket.pickupStreetName,
+            pickupDistrict: this.singleTicket.pickupDistrict,
+          });
         });
-      });
     }
   }
 
@@ -317,7 +316,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       this.originCities = res;
       //   Destination Cities
       let filterDestinationCities = this.destinationCities.filter(
-        (value) => value.country.name == destinationCountry
+        (value) => value?.country?.name == destinationCountry
       );
       this.destinationCities = this.dropdownService.extractNames(
         filterDestinationCities
@@ -325,7 +324,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
 
       //   Origin Cities
       let filterOriginCities = this.originCities.filter(
-        (value) => value.country.name == originCountry
+        (value) => value?.country?.name == originCountry
       );
       this.originCities = this.dropdownService.extractNames(filterOriginCities);
     });
@@ -335,17 +334,17 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     this.serviceTypeService.getServiceTypes(this.params).subscribe((res) => {
       this.serviceType = res.body;
       let filterServiceType = this.serviceType.filter(
-        (type) => type.productType.name == productType
+        (type) => type?.productType?.name == productType
       );
       this.serviceType = this.dropdownService.extractNames(filterServiceType);
     });
   }
 
   getDestinationCountry(country) {
-    this.cityService.getAllCities(this.params).subscribe((res) => {
+    this.cityService.getAllCities(this.params).subscribe((res: any) => {
       this.destinationCities = res;
       let filterCities = this.destinationCities.filter(
-        (city) => city.country.name == country.value
+        (city: any) => city?.country?.name == country.value
       );
       this.destinationCities = this.dropdownService.extractNames(filterCities);
     });
@@ -355,15 +354,13 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     this.cityService.getAllCities(this.params).subscribe((res) => {
       this.originCities = res;
       let filterCities = this.originCities.filter(
-        (city) => city.country.name == country.value
+        (city: any) => city?.country?.name == country.value
       );
       this.originCities = this.dropdownService.extractNames(filterCities);
     });
   }
 
   onSubmit() {
-    console.log(this.awbForm.value);
-
     if (this.awbForm.valid) {
       // Date and Time get from form
       let ticketDate: Date = this.awbForm.value.pickupDate;
@@ -407,7 +404,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
         createdBy: this.loginUserEmail,
-        accountNumber: formValue.accountNumber.label,
+        accountNumber: formValue.accountNumber?.label,
       };
 
       //   Create Ticket
