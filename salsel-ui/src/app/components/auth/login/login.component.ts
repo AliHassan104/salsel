@@ -1,12 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
 import { LoginService } from "../service/login.service";
 import { MessageService } from "primeng/api";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { UserService } from "../usermanagement/service/user.service";
-import { SessionStorageService } from "../service/session-storage.service";
 
 @Component({
   selector: "app-login",
@@ -26,7 +24,7 @@ export class LoginComponent implements OnInit {
   token;
 
   ngOnInit(): void {
-    sessionStorage.clear();
+    localStorage.clear();
 
     this.loginForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
@@ -43,8 +41,8 @@ export class LoginComponent implements OnInit {
       this._loginService.login(value).subscribe(
         (res: any) => {
           this.token = res;
-          sessionStorage.setItem("token", this.token.jwt);
-          sessionStorage.setItem("loginUserEmail", value.email);
+          localStorage.setItem("token", this.token.jwt);
+          localStorage.setItem("loginUserEmail", value.email);
           this.router.navigate([""]);
           this.loginForm.reset();
         },

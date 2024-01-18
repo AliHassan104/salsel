@@ -46,7 +46,7 @@ export class AppTopBarComponent implements OnInit {
     this.role = this.sessionService.getRoleName();
 
     this.userSevice
-      .getUserByEmail(sessionStorage.getItem("loginUserEmail"))
+      .getUserByEmail(localStorage.getItem("loginUserEmail"))
       .subscribe((res: any) => {
         this.userDetails = res;
         this.userSevice.loginUserName.next(this.userDetails.name);
@@ -54,7 +54,7 @@ export class AppTopBarComponent implements OnInit {
         this.userSevice.loginUser.next(
           this.userDetails.name.charAt(0).toUpperCase()
         );
-        sessionStorage.setItem("loginUserName", this.userDetails.name);
+        localStorage.setItem("loginUserName", this.userDetails.name);
       });
   }
 }

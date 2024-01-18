@@ -100,8 +100,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       datasets: [
         {
           data: [this.activeAccountCount, this.inactiveAccountCount],
-          backgroundColor: ["#8e44ad", "#d35400"],
-          hoverBackgroundColor: ["#9b59b6", "#e74c3c"],
+          backgroundColor: ["#d35400", "#8e44ad"],
+          hoverBackgroundColor: ["#e74c3c", "#9b59b6"],
         },
       ],
     };

@@ -11,6 +11,7 @@ public interface UserService {
     UserDto registerRoleCustomerUser(UserDto userdto);
     String regeneratePassword(Long id);
     String changePassword(Long id, String currentPassword, String newPassword);
+    List<UserDto> getUsersByRoleName(String roleName);
     List<UserDto> getAll(Boolean status);
     UserDto findById(Long id);
     UserDto findByName(String name);

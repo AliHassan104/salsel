@@ -33,4 +33,5 @@ export interface IAwbDto {
   pickupStreetName?: string;
   pickupDistrict?: string;
   createdBy?: string;
+  assignedTo?: string;
 }

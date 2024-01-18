@@ -58,6 +58,7 @@ public class TicketServiceImpl implements TicketService {
         ticket.setStatus(true);
         ticket.setTicketStatus("Open");
         ticket.setTicketFlag("Normal");
+        ticket.setAssignedTo("ROLE_CUSTOMER_SERVICE_AGENT");
         Ticket createdTicket = ticketRepository.save(ticket);
 
         // Save PDFs to S3 bucket if provided
@@ -116,7 +117,6 @@ public class TicketServiceImpl implements TicketService {
             String email = ((CustomUserDetail) principal).getEmail();
             User user = userRepository.findByEmailAndStatusIsTrue(email)
                     .orElseThrow(() -> new RecordNotFoundException("User not found"));
-
             List<Ticket> ticketList = ticketRepository.findAllInDesOrderByEmailAndStatus(status,user.getEmail());
             List<TicketDto> ticketDtoList = new ArrayList<>();
 

@@ -23,13 +23,22 @@ public class UserController {
         List<UserDto> userDtoList = userService.getAll(status);
         return ResponseEntity.ok(userDtoList);
     }
-
     @GetMapping("/user/{id}")
     @PreAuthorize("hasAuthority('READ_USER')")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         UserDto userDto = userService.findById(id);
         return ResponseEntity.ok(userDto);
     }
+
+
+    @GetMapping("/user/role/{roleName}")
+    @PreAuthorize("hasAuthority('READ_USER')")
+    public ResponseEntity<List<UserDto>> getUserByRoleName(@PathVariable String roleName) {
+        List<UserDto> userDtoList = userService.getUsersByRoleName(roleName);
+        return ResponseEntity.ok(userDtoList);
+    }
+
+
     @GetMapping("/user/name/{name}")
     @PreAuthorize("hasAuthority('READ_USER')")
     public ResponseEntity<UserDto> getUserByName(@PathVariable String name) {

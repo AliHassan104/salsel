@@ -56,7 +56,7 @@ export class UserProfileComponent implements OnInit {
       { validators: this.matchPassword }
     );
 
-    this.userEmail = sessionStorage.getItem("loginUserEmail");
+    this.userEmail = localStorage.getItem("loginUserEmail");
 
     this.getActiveUser();
   }
@@ -134,8 +134,8 @@ export class UserProfileComponent implements OnInit {
           this.userService.loginUserName.next(name);
           this.userService.loginUser.next(name.charAt(0).toUpperCase());
           this.userService.loginUserEmail.next(this.activeUser.email);
-          sessionStorage.removeItem("loginUserName");
-          sessionStorage.setItem("loginUserName", name);
+          localStorage.removeItem("loginUserName");
+          localStorage.setItem("loginUserName", name);
           this.getActiveUser();
           this.success();
         },

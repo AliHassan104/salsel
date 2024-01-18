@@ -14,6 +14,7 @@ import { ProductTypeService } from "../../product-type/service/product-type.serv
 import { ServiceTypeService } from "../../service-type/service/service-type.service";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { AccountService } from "../../accounts/service/account.service";
+import { RolesService } from "../../permissions/service/roles.service";
 
 @Component({
   selector: "app-awbcreation",
@@ -38,6 +39,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   destinationCities?;
   productType?;
   serviceType?;
+  assignedTo?;
 
   // FOR EDIT AND CREATE AIRBILL FROM TICKET
   ticketMode;
@@ -68,7 +70,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     private cityService: CityService,
     private productTypeService: ProductTypeService,
     private serviceTypeService: ServiceTypeService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private roleService: RolesService
   ) {}
 
   params = { status: true };
@@ -77,13 +80,13 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.awbFormSetup();
 
+    this.getAllProductField();
+
     this.queryParamsSetup();
 
     this.CreateAwbFromTicket();
 
-    this.getAllProductField();
-
-    this.loginUserEmail = sessionStorage.getItem("loginUserEmail");
+    this.loginUserEmail = localStorage.getItem("loginUserEmail");
   }
 
   awbFormSetup() {
@@ -115,6 +118,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
       deliveryDistrict: new FormControl(null),
       pickupStreetName: new FormControl(null),
       pickupDistrict: new FormControl(null),
+      assignedTo: new FormControl(null),
     });
   }
 
@@ -167,6 +171,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
           (data: any) => data?.name == "Request Type"
         )[0].productFieldValuesList
       );
+
+      // Get All Roles
+      this.roleService.getRoles().subscribe((res: any) => {
+        this.assignedTo = res;
+        this.assignedTo = this.dropdownService.extractNames(this.assignedTo);
+      });
     });
 
     // Get All Countries
@@ -405,6 +415,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
         pickupDistrict: formValue.pickupDistrict,
         createdBy: this.loginUserEmail,
         accountNumber: formValue.accountNumber?.label,
+        assignedTo: formValue.assignedTo,
       };
 
       //   Create Ticket

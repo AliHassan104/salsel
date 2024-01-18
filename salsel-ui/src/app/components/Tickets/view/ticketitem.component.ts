@@ -203,7 +203,7 @@ export class TicketitemComponent implements OnInit {
     if (this.postCommentForm.valid) {
       let data = {
         comment: this.postCommentForm.value.postComment,
-        name: sessionStorage.getItem("loginUserName"),
+        name: localStorage.getItem("loginUserName"),
         ticket: { id: this.id },
       };
       if (this.editMode) {

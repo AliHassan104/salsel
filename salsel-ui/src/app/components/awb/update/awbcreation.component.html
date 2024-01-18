@@ -208,18 +208,6 @@
                         Required
                     </small>
                 </div>
-
-                <!-- Status -->
-                <!-- <div class="field col-12 md:col-6">
-                    <label htmlFor="status">Status</label>
-                    <p-dropdown [options]="status" placeholder="Select status" formControlName="status"
-                        [ngClass]="{'ng-dirty':awbForm.get('status')?.touched && awbForm.get('status')?.invalid}"
-                        [required]="true"></p-dropdown>
-                    <small *ngIf="!awbForm.get('status')?.valid && awbForm.get('pickupTstatusime')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div> -->
                 <!-- Duty & Taxes Bill To -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="dutytaxes">Duty and Taxes Bill To</label>
@@ -243,6 +231,12 @@
                         class="text-red-500">
                         Required
                     </small>
+                </div>
+                <!-- Status -->
+                <div class="field col-12 md:col-6" *ngIf="awbForm.get('requestType')?.value == 'Pick-up'">
+                    <label htmlFor="status">Assigned To</label>
+                    <p-dropdown [options]="assignedTo" placeholder="Assigned To"
+                        formControlName="assignedTo"></p-dropdown>
                 </div>
 
                 <div class="flex justify-content-end w-full">

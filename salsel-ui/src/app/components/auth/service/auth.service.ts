@@ -19,10 +19,10 @@ export class AuthService {
   }
 
   idLoggedIn() {
-    return sessionStorage.getItem("token") != null;
+    return localStorage.getItem("token") != null;
   }
 
   getToken() {
-    return sessionStorage.getItem("token") || "";
+    return localStorage.getItem("token") || "";
   }
 }

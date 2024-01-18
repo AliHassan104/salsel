@@ -1,17 +1,18 @@
 package com.salsel.service.impl;
 
-import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.Account;
 import com.salsel.model.Awb;
+import com.salsel.model.Role;
 import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.AwbService;
 import com.salsel.service.CodeGenerationService;
 import com.salsel.service.PdfGenerationService;
+import com.salsel.utils.AssignmentEmailsUtils;
+import com.salsel.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,15 @@ public class AwbServiceImpl implements AwbService {
     private final AwbRepository awbRepository;
     private final UserRepository userRepository;
     private final CodeGenerationService codeGenerationService;
+    private final AssignmentEmailsUtils assignmentEmailsUtils;
+
     private final PdfGenerationService pdfGenerationService;
 
-    public AwbServiceImpl(AwbRepository awbRepository, UserRepository userRepository, CodeGenerationService codeGenerationService, PdfGenerationService pdfGenerationService) {
+    public AwbServiceImpl(AwbRepository awbRepository, UserRepository userRepository, CodeGenerationService codeGenerationService, AssignmentEmailsUtils assignmentEmailsUtils, PdfGenerationService pdfGenerationService) {
         this.awbRepository = awbRepository;
         this.userRepository = userRepository;
         this.codeGenerationService = codeGenerationService;
+        this.assignmentEmailsUtils = assignmentEmailsUtils;
         this.pdfGenerationService = pdfGenerationService;
     }
 
@@ -47,6 +51,8 @@ public class AwbServiceImpl implements AwbService {
             awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
 
             Awb awb = toEntity(awbDto);
+
+
             awb.setAwbStatus("AWB Created");
             awb.setStatus(true);
             awb.setEmailFlag(false);
@@ -56,6 +62,15 @@ public class AwbServiceImpl implements AwbService {
             codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
             codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
             codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
+
+            String roleName = createdAwb.getAssignedTo();
+            if(roleName != null){
+                List<User> userList = userRepository.findAllByRoleName(roleName);
+
+                for(User user : userList){
+                    assignmentEmailsUtils.sendAssignedAwb(user,createdAwb.getUniqueNumber(),createdAwb.getId());
+                }
+            }
 
             return toDto(createdAwb);
         } catch (Exception e) {
@@ -141,6 +156,32 @@ public class AwbServiceImpl implements AwbService {
         return null;
     }
 
+
+    @Override
+    public List<AwbDto> getAwbByLoggedInUserRole(Boolean status) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+            List<AwbDto> awbDtoList = new ArrayList<>();
+
+            for (Role role : user.getRoles()) {
+                String roleName = role.getName();
+                List<Awb> awbList = awbRepository.findAllInDesOrderByRoleAndStatus(status, roleName);
+
+                for (Awb awb : awbList) {
+                    AwbDto awbDto = toDto(awb);
+                    awbDtoList.add(awbDto);
+                }
+            }
+            return awbDtoList;
+        }
+        return null;
+    }
+
     @Override
     public AwbDto findById(Long id) {
         Awb awb = awbRepository.findById(id)
@@ -199,6 +240,7 @@ public class AwbServiceImpl implements AwbService {
         existingAwb.setDeliveryStreetName(awbDto.getDeliveryStreetName());
         existingAwb.setPickupStreetName(awbDto.getPickupStreetName());
         existingAwb.setPickupDistrict(awbDto.getPickupDistrict());
+        existingAwb.setAssignedTo(awbDto.getAssignedTo());
 
         Awb updatedAwb = awbRepository.save(existingAwb);
         return toDto(updatedAwb);
@@ -242,6 +284,7 @@ public class AwbServiceImpl implements AwbService {
                 .deliveryDistrict(awb.getDeliveryDistrict())
                 .deliveryStreetName(awb.getDeliveryStreetName())
                 .createdBy(awb.getCreatedBy())
+                .assignedTo(awb.getAssignedTo())
                 .build();
     }
 
@@ -283,6 +326,7 @@ public class AwbServiceImpl implements AwbService {
                 .deliveryDistrict(awbDto.getDeliveryDistrict())
                 .deliveryStreetName(awbDto.getDeliveryStreetName())
                 .createdBy(awbDto.getCreatedBy())
+                .assignedTo(awbDto.getAssignedTo())
                 .build();
     }
 }

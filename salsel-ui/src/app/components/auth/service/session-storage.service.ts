@@ -17,7 +17,7 @@ export class SessionStorageService {
   }
 
   updatePermission() {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
 
     if (decodedToken) {

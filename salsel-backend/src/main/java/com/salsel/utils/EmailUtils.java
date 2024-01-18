@@ -25,6 +25,7 @@ public class EmailUtils {
     private final AwbRepository awbRepository;
     private final AwbService awbService;
 
+
     public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, AwbService awbService) {
         this.javaMailSender = javaMailSender;
         this.awbRepository = awbRepository;

@@ -97,6 +97,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDto> getUsersByRoleName(String roleName) {
+        List<User> userList = userRepository.findAllByRoleName(roleName);
+        List<UserDto> userDtoList = new ArrayList<>();
+
+        for (User user : userList) {
+            UserDto userDto = toDto(user);
+            userDtoList.add(userDto);
+        }
+        return userDtoList;
+    }
+
+    @Override
     @Transactional
     public String changePassword(Long id, String currentPassword, String newPassword) {
         User user = userRepository.findById(id)

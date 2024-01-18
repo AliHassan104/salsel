@@ -81,12 +81,9 @@ export class TicketformComponent implements OnInit {
 
     this.ticketFormSetup();
 
-    // QUERY PARAMS FOR EDIT PURPOSE
-    this.queryParamSetup();
-
-    // GET ALL DROPDOWNS FROM PRODUCT FIELD UPON PAGE RELOAD
-
     this.getAllProductFields();
+
+    this.queryParamSetup();
 
     // ON FORM EDIT
     this.editForm();
@@ -402,7 +399,7 @@ export class TicketformComponent implements OnInit {
         phone: formValue.phone,
         textarea: formValue.textarea,
         airwayNumber: formValue.airwayNumber,
-        createdBy: sessionStorage.getItem("loginUserEmail"),
+        createdBy: localStorage.getItem("loginUserEmail"),
       };
 
       if (this.ticketForm.get("ticketType")?.value === "Pickup Request") {
