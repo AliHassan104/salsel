@@ -1,5 +1,8 @@
 package com.salsel.service.impl;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfCopy;
+import com.lowagie.text.pdf.PdfReader;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
@@ -20,6 +23,8 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +53,9 @@ public class AwbServiceImpl implements AwbService {
     public AwbDto save(AwbDto awbDto) {
         try {
             Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
-            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
+            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 10);
 
             Awb awb = toEntity(awbDto);
-
-
             awb.setAwbStatus("AWB Created");
             awb.setStatus(true);
             awb.setEmailFlag(false);
@@ -78,9 +81,6 @@ public class AwbServiceImpl implements AwbService {
             throw new RecordNotFoundException("Error occurred while processing the request");
         }
     }
-
-
-
 
     @Override
     public List<AwbDto> getAll(Boolean status) {
@@ -116,7 +116,6 @@ public class AwbServiceImpl implements AwbService {
         model.addAttribute("recipientsContactNumber", awb.getRecipientsContactNumber());
         model.addAttribute("pickupAddress", awb.getPickupAddress());
         model.addAttribute("deliveryAddress", awb.getDeliveryAddress());
-        model.addAttribute("pieces", awb.getPieces());
         model.addAttribute("amount", awb.getAmount());
         model.addAttribute("content", awb.getContent());
         model.addAttribute("requestType", awb.getRequestType());
@@ -130,9 +129,41 @@ public class AwbServiceImpl implements AwbService {
         model.addAttribute("pickupStreetName",awb.getPickupStreetName());
 
         String formatUniqueNumber = String.format("%,d", awb.getUniqueNumber()).replace(",", " ");
-
         model.addAttribute("uniqueNumber", formatUniqueNumber);
-        return pdfGenerationService.generatePdf("Awb", model, awbId);
+
+        int pieces = awb.getPieces().intValue();
+        int count = pieces;
+        int checkPieces = 1;
+        try (ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream()) {
+            Document document = new Document();
+            PdfCopy copy = new PdfCopy(document, mergedOutputStream);
+            document.open();
+
+            for (int i = 0; i < count; i++) {
+                model.addAttribute("pieces", awb.getPieces().intValue());
+
+                if(checkPieces != awb.getPieces()){
+                    model.addAttribute("pieceNumber", checkPieces);
+                    checkPieces++;
+                }
+                else{
+                    model.addAttribute("pieceNumber", awb.getPieces().intValue());
+                }
+
+                byte[] individualPdf = pdfGenerationService.generatePdf("Awb", model, awbId);
+
+                PdfReader reader = new PdfReader(new ByteArrayInputStream(individualPdf));
+                for (int pageNum = 1; pageNum <= reader.getNumberOfPages(); pageNum++) {
+                    copy.addPage(copy.getImportedPage(reader, pageNum));
+                }
+                pieces--;
+            }
+
+            document.close();
+            return mergedOutputStream.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error merging PDFs: " + e.getMessage(), e);
+        }
     }
 
     @Override
