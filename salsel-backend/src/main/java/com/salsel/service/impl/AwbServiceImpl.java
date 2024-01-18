@@ -183,6 +183,32 @@ public class AwbServiceImpl implements AwbService {
     }
 
     @Override
+    public List<AwbDto> getAwbByLoggedInUserAndRole(Boolean status) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+            List<AwbDto> awbDtoList = new ArrayList<>();
+
+
+            for (Role role : user.getRoles()) {
+                String roleName = role.getName();
+                List<Awb> awbList = awbRepository.findAllInDesOrderByCreatedByOrAssignedToAndStatus(status, user.getEmail(),roleName);
+
+                for (Awb awb : awbList) {
+                    AwbDto awbDto = toDto(awb);
+                    awbDtoList.add(awbDto);
+                }
+            }
+            return awbDtoList;
+        }
+        return null;
+    }
+
+    @Override
     public AwbDto findById(Long id) {
         Awb awb = awbRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", id)));

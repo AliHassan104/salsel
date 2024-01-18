@@ -29,6 +29,14 @@ export class AirbillService {
     return this.http.get(`${this.url}awb`, { params });
   }
 
+  getBillsByUserRole(params: any) {
+    return this.http.get(`${this.url}awb/logged-in-user-role`, { params });
+  }
+
+  getBillsByUserEmailAndRole(params: any) {
+    return this.http.get(`${this.url}awb/logged-in-user-and-role`, { params });
+  }
+
   //   Get Single Ticket
 
   getSingleBill(id) {

@@ -22,7 +22,7 @@ export class AirbilldataComponent implements OnInit {
 
   deleteProductsDialog: any;
   refresh: boolean = true;
-
+  userRole?;
   constructor(
     private _airbillService: AirbillService,
     private router: Router,
@@ -38,6 +38,7 @@ export class AirbilldataComponent implements OnInit {
   ngOnInit(): void {
     this.getAirbills();
     this.getAllProductFields();
+    this.userRole = this.sessionStorageService.getRoleName();
   }
 
   getAirbills() {

@@ -10,6 +10,7 @@ public interface AwbService {
     byte[] downloadAwbPdf(String fileName, Long awbId);
     List<AwbDto> getAwbByLoggedInUser(Boolean status);
     List<AwbDto> getAwbByLoggedInUserRole(Boolean status);
+    List<AwbDto> getAwbByLoggedInUserAndRole(Boolean status);
     List<AwbDto> getAll(Boolean status);
     AwbDto findById(Long id);
     void deleteById(Long id);
