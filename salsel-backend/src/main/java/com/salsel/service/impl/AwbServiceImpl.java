@@ -96,55 +96,6 @@ public class AwbServiceImpl implements AwbService {
         return awbDtoList;
     }
 
-//    @Override
-//    public byte[] downloadAwbPdf(String fileName, Long awbId) {
-//        Awb awb = awbRepository.findById(awbId)
-//                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", awbId)));
-//
-//        Model model = new ExtendedModelMap();
-//        model.addAttribute("awbId", awbId);
-//        model.addAttribute("weight", awb.getWeight());
-//        model.addAttribute("shipperName", awb.getShipperName());
-//        model.addAttribute("pickupAddress", awb.getPickupAddress());
-//        model.addAttribute("recipientsName", awb.getRecipientsName());
-//        model.addAttribute("deliveryAddress", awb.getDeliveryAddress());
-//        model.addAttribute("shipperRefNumber", awb.getShipperRefNumber());
-//        model.addAttribute("currency", awb.getCurrency());
-//        model.addAttribute("originCountry", awb.getOriginCountry());
-//        model.addAttribute("originCity", awb.getOriginCity());
-//        model.addAttribute("destinationCountry", awb.getDestinationCountry());
-//        model.addAttribute("destinationCity", awb.getDestinationCity());
-//        model.addAttribute("shipperContactNumber", awb.getShipperContactNumber());
-//        model.addAttribute("recipientsContactNumber", awb.getRecipientsContactNumber());
-//        model.addAttribute("pickupAddress", awb.getPickupAddress());
-//        model.addAttribute("deliveryAddress", awb.getDeliveryAddress());
-//        model.addAttribute("amount", awb.getAmount());
-//        model.addAttribute("content", awb.getContent());
-//        model.addAttribute("requestType", awb.getRequestType());
-//        model.addAttribute("dutyAndTaxesBillTo", awb.getDutyAndTaxesBillTo());
-//        model.addAttribute("productType", awb.getProductType());
-//        model.addAttribute("serviceType", awb.getServiceType());
-//        model.addAttribute("serviceTypeCode",awb.getServiceTypeCode());
-//        model.addAttribute("deliveryDistrict",awb.getDeliveryDistrict());
-//        model.addAttribute("deliveryStreetName",awb.getDeliveryStreetName());
-//        model.addAttribute("pickupDistrict",awb.getPickupDistrict());
-//        model.addAttribute("pickupStreetName",awb.getPickupStreetName());
-//
-//        String formatUniqueNumber = String.format("%,d", awb.getUniqueNumber()).replace(",", " ");
-//        model.addAttribute("uniqueNumber", formatUniqueNumber);
-//
-//        int pieces = awb.getPieces().intValue();
-//        int count = pieces;
-//        for(int i = 0; i < count; i++){
-//            model.addAttribute("pieces", pieces);
-//            pdfGenerationService.generatePdf("Awb", model, awbId);
-//            pieces--;
-//        }
-//
-//
-//        return pdfGenerationService.generatePdf("Awb", model, awbId);
-//    }
-
     @Override
     public byte[] downloadAwbPdf(String fileName, Long awbId) {
         Awb awb = awbRepository.findById(awbId)
