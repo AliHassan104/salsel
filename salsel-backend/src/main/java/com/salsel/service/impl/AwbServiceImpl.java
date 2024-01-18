@@ -53,11 +53,9 @@ public class AwbServiceImpl implements AwbService {
     public AwbDto save(AwbDto awbDto) {
         try {
             Long maxUniqueNumber = awbRepository.findMaxUniqueNumber();
-            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 1);
+            awbDto.setUniqueNumber(maxUniqueNumber == null ? 900000001L : maxUniqueNumber + 10);
 
             Awb awb = toEntity(awbDto);
-
-
             awb.setAwbStatus("AWB Created");
             awb.setStatus(true);
             awb.setEmailFlag(false);
