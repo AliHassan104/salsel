@@ -1,0 +1,101 @@
+<div>
+    <div class="card">
+        <h1 class="mb-5"
+            style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+            {{editMode?"Update User":"Add User"}}</h1>
+        <form action="" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <div class="p-fluid p-formgrid grid">
+                <!-- User Details -->
+                <!--First Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="firstname"><strong>First Name</strong></label>
+                    <input pInputText id="firstname" type="text" formControlName="firstname"
+                        placeholder="Enetr First Name"
+                        [ngClass]="{'ng-dirty':userForm.get('firstname')?.touched && userForm.get('firstname')?.invalid}" />
+                    <small *ngIf="!userForm.get('firstname')?.valid && userForm.get('firstname')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!--Last Name -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="lastname"><strong>Last Name</strong></label>
+                    <input pInputText id="lastname" type="text" formControlName="lastname" placeholder="Enter Last Name"
+                        [ngClass]="{'ng-dirty':userForm.get('lastname')?.touched && userForm.get('lastname')?.invalid}" />
+                    <small *ngIf="!userForm.get('lastname')?.valid && userForm.get('lastname')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Email -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="email"><strong>Email</strong></label>
+                    <input pInputText id="email" type="email" formControlName="email" placeholder="Enter Email"
+                        [ngClass]="{'ng-dirty':userForm.get('email')?.touched && userForm.get('email')?.invalid}" />
+                    <small *ngIf="!userForm.get('email')?.valid && userForm.get('email')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Phone -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="phone"><strong>Phone Number</strong></label>
+                    <input pInputText id="phone" type="number" formControlName="phone" placeholder="Enter Phone Number"
+                        [ngClass]="{'ng-dirty':userForm.get('phone')?.touched && userForm.get('phone')?.invalid}" />
+                    <small *ngIf="!userForm.get('phone')?.valid && userForm.get('phone')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Password -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="address"><strong>Password</strong></label>
+                    <p-password [toggleMask]="true" class="w-20rem" placeholder="Enter Password"
+                        autocomplete="current-password" [strongRegex]="true"
+                        [ngClass]="{'ng-dirty':userForm.get('password')?.touched && userForm.get('password')?.invalid}"
+                        [strongLabel]="true" formControlName="password" [feedback]="false"
+                        placeholder="Enter strong password"></p-password>
+                    <small *ngIf="!userForm.get('password')?.valid && userForm.get('password')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                    <small class="pass smalltext" *ngIf="userForm.get('password')?.errors?.['pattern']">
+                        <ul class="text-left text-red-500">
+                            <li *ngIf="isLowerCaseMissing()">At least one lowercase letter</li>
+                            <li *ngIf="isUpperCaseMissing()">At least one uppercase letter</li>
+                            <li *ngIf="isDigitMissing()">At least one digit</li>
+                            <li *ngIf="isShortPassword()">Minimum length of 8 characters</li>
+                        </ul>
+                    </small>
+                </div>
+                <!-- Employee Id -->
+                <div class="field col-12 md:col-2">
+                    <label htmlFor="employeeId"><strong>Employee Id</strong></label>
+                    <input pInputText id="employeeId" type="number" formControlName="employeeId"
+                        placeholder="Enter Employee Id"
+                        [ngClass]="{'ng-dirty':userForm.get('employeeId')?.touched && userForm.get('employeeId')?.invalid}" />
+                    <small *ngIf="!userForm.get('employeeId')?.valid && userForm.get('employeeId')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="department"><strong>Role</strong></label>
+                    <p-dropdown [options]="roles" optionLabel="name" placeholder="Select Role" formControlName="roles"
+                        [ngClass]="{'ng-dirty':userForm.get('roles')?.touched && userForm.get('roles')?.invalid}"></p-dropdown>
+                    <small *ngIf="!userForm.get('roles')?.valid && userForm.get('roles')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
+                <div class="flex justify-content-end w-full">
+                    <button pButton label="Cancel" type="button" class="mx-3 p-button-secondary editBtn"
+                        *ngIf="editMode" (click)="onCancel()"></button>
+                    <button pButton type="Submit" label="{{!editMode?'Create
+                        ':'Update'}}" class="mx-3 submit-btn"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

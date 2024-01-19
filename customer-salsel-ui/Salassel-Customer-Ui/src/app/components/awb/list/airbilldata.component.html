@@ -1,0 +1,296 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h1 class="m-0"
+                style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+                Air Waybills</h1>
+            <div class="flex justify-content-end addBtn">
+                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_AWB')" pButton label="Create AWB"
+                    class="mb-2" routerLink="/create-awb"></button>
+            </div>
+            <hr>
+            <p-table #dt1 [value]="bills" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+                styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
+                [globalFilterFields]="['shipperName','recipientsName','uniqueNumber']" responsiveLayout="scroll">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="mb-2">
+                            <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                                (click)="clear(dt1)"></button>
+                            <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
+                                (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
+                            <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
+                                style="font-weight: bold;"></i>
+                        </div>
+
+                        <span class="p-input-icon-left mb-2">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+                                placeholder="Search Keyword" class="w-full" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 18rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Actions
+                            </div>
+                        </th>
+                        <th style="min-width: 16rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Created At
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                AWB Number
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Shipper Name
+                            </div>
+                        </th>
+                        <th style="min-width: 15rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Shipper Contact Number
+                            </div>
+                        </th>
+                        <!-- <th style="min-width: 14rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Pickup Address
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Shipper Ref Number
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Origin Country
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Origin City
+                            </div>
+                        </th> -->
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Recipient Name
+                            </div>
+                        </th>
+                        <th style="min-width: 15rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Recipient Contact Number
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Status
+                            </div>
+                        </th>
+                        <!-- <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Delivery Address
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Destination Country
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Destination City
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Pickup Date
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Pickup Time
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Product Type
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Service Type
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Pieces
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Content
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Weight
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Currency
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Amount
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Duty and Taxes Bill To
+                            </div>
+                        </th> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data>
+                    <tr>
+                        <td>
+                            <button pTooltip="View" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-eye
+                        " class="p-button-rounded p-button-secondary p-button-outlined mx-2"
+                                routerLink="{{data.id}}"></button>
+                            <button pTooltip="View History" tooltipPosition="bottom" *ngIf="activeStatus" pButton
+                                pRipple type="button" icon="pi pi-history"
+                                class="p-button-rounded p-button-outlined mx-1" [routerLink]="'/awb-history/' + data.id"
+                                routerLinkActive="router-link-active"></button>
+
+                            <button pTooltip="Deactivate" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_AWB')" pButton
+                                pRipple type="button" icon="pi pi-times"
+                                class="p-button-rounded p-button-danger p-button-outlined mx-1"
+                                (click)="onDeleteBill(data.id)"></button>
+
+                            <button pTooltip="Download Scan" tooltipPosition="bottom" *ngIf="activeStatus" pButton
+                                pRipple type="button" icon="pi pi-download"
+                                class="p-button-rounded p-button-success p-button-outlined mx-1"
+                                (click)="onDownloadBill(data.id,data.uniqueNumber)"></button>
+
+                            <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_AWB')" pRipple
+                                type="button" icon="pi pi-check"
+                                class="p-button-rounded p-button-success p-button-outlined mx-1"
+                                (click)="onActiveBill(data.id)"></button>
+                        </td>
+                        <td>
+                            {{data?.createdAt}}
+                        </td>
+                        <td>
+                            {{data?.uniqueNumber}}
+                        </td>
+                        <td>
+                            {{data?.shipperName}}
+                        </td>
+                        <td>
+                            {{data?.shipperContactNumber}}
+                        </td>
+                        <!-- <td>
+                            {{data?.pickupAddress}}
+                        </td>
+                        <td>
+                            {{data?.shipperRefNumber}}
+                        </td>
+                        <td>
+                            {{data?.originCountry}}
+                        </td>
+                        <td>
+                            {{data?.originCity}}
+                        </td> -->
+                        <td>
+                            {{ data?.recipientsName}}
+                        </td>
+                        <td>
+                            {{ data?.recipientsContactNumber }}
+                        </td>
+                        <td>
+                            {{ data?.awbStatus }}
+                        </td>
+                        <!-- <td>
+                            {{ data?.deliveryAddress }}
+                        </td>
+                        <td>
+                            {{ data?.destinationCountry }}
+                        </td>
+                        <td>
+                            {{ data?.destinationCity }}
+                        </td>
+                        <td>
+                            {{ data?.pickupDate}}
+                        </td>
+                        <td>
+                            {{data?.pickupTime}}
+                        </td>
+                        <td>
+                            {{ data?.productType }}
+                        </td>
+                        <td>
+                            {{ data?.serviceType }}
+                        </td>
+                        <td>
+                            {{ data?.pieces }}
+                        </td>
+                        <td>
+                            {{ data?.content }}
+                        </td>
+                        <td>
+                            {{ data?.weight}}
+                        </td>
+                        <td>
+                            {{ data?.currency }}
+                        </td>
+                        <td>
+                            {{ data?.amount }}
+                        </td>
+                        <td>
+                            {{ data?.dutyAndTaxesBillTo }}
+                        </td> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td style="text-align: start !important;" colspan="8">{{activeStatus?'No Air Waybills
+                            found.':"No Inactive
+                            Air Waybill found."}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td style="text-align: start !important;" colspan="8">Loading Air Waybills data. Please wait.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+
+    <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+            <span>Are you sure you want to delete selected ticket?</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                (click)="deleteProductsDialog = false"></button>
+            <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                (click)="confirmDeleteSelected()"></button>
+        </ng-template>
+    </p-dialog>
+
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

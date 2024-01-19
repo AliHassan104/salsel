@@ -1,0 +1,20 @@
+tr td {
+  text-align: center !important;
+}
+
+@media screen and (max-width: 576px) {
+  .addBtn {
+    margin-top: 20px;
+  }
+}
+
+.refresh {
+  cursor: pointer;
+  color: #93003c;
+  font-size: 17px;
+  transition: all 0.5s ease;
+}
+
+.refresh:hover {
+  color: #c10751;
+}

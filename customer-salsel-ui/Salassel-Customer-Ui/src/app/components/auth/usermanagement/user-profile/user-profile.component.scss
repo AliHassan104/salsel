@@ -1,0 +1,41 @@
+p.content {
+  font-size: 18px;
+  margin-left: 80px;
+  color: #787879;
+  font-weight: 600;
+}
+
+p.head {
+  font-size: 18px;
+}
+
+.employeeId {
+  font-weight: 500;
+  color: #787879;
+}
+
+input:disabled {
+  opacity: 0.9 !important;
+}
+
+.changePassBtn {
+  padding: 0.4rem 1.25rem !important;
+  width: auto !important;
+}
+
+.changePassBtn span {
+  flex: none !important;
+}
+
+.changePassBtn:focus,
+.changePassBtn:focus-visible {
+  box-shadow: none !important;
+  outline: none;
+}
+
+.submit-btn {
+  width: 120px;
+}
+.editBtn {
+  width: 120px;
+}
