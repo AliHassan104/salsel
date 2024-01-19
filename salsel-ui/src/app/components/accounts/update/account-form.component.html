@@ -114,8 +114,8 @@
                 <!-- Country -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="country"><strong>Country</strong></label>
-                    <p-dropdown [options]="countries" placeholder="Select Country" formControlName="county"
-                        (onChange)="getCountry($event)"
+                    <p-dropdown #dropdown [options]="countries" placeholder="Select Country" formControlName="county"
+                        filter="true" (onChange)="getCountry($event)"
                         [ngClass]="{'ng-dirty':accountForm.get('county')?.touched && accountForm.get('county')?.invalid}"></p-dropdown>
                     <small *ngIf="!accountForm.get('county')?.valid && accountForm.get('county')?.touched"
                         class="text-red-500">
@@ -125,7 +125,8 @@
                 <!--City -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="City"><strong>City</strong></label>
-                    <p-dropdown [options]="cities" placeholder="Select city" formControlName="city"
+                    <p-dropdown #dropdown1 [options]="cities" placeholder="Select city" formControlName="city"
+                        filter="true"
                         [ngClass]="{'ng-dirty':accountForm.get('city')?.touched && accountForm.get('city')?.invalid}"></p-dropdown>
                     <small *ngIf="!accountForm.get('city')?.valid && accountForm.get('city')?.touched"
                         class="text-red-500">

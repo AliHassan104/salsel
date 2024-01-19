@@ -65,6 +65,13 @@ public class TicketController {
         return ResponseEntity.ok(ticketDtoList);
     }
 
+    @GetMapping("/ticket/logged-in-user-and-role")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
+    public ResponseEntity<List<TicketDto>> getAllTicketsCreatedByLoggedInUserAndRole(@RequestParam(value = "status") Boolean status) {
+        List<TicketDto> ticketDtoList = ticketService.getTicketsByLoggedInUserAndRole(status);
+        return ResponseEntity.ok(ticketDtoList);
+    }
+
 
     @GetMapping("/ticket/{id}")
     @PreAuthorize("hasAuthority('READ_TICKET')")

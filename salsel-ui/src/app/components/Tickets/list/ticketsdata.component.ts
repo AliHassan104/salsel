@@ -54,18 +54,36 @@ export class TicketsdataComponent implements OnInit {
       status: this.activeStatus,
     };
 
-    this._ticktingService
-      .getTickets(queryParams)
-      .pipe(
-        finalize(() => {
-          this.refresh = false;
-        })
-      )
-      .subscribe((res: any) => {
-        if (res.status == 200) {
-          this.tickets = res.body;
-        }
-      });
+    if (
+      this.sessionStorageService.getRoleName() == "ADMIN" ||
+      this.sessionStorageService.getRoleName() == "CUSTOMER_SERVICE_AGENT"
+    ) {
+      this._ticktingService
+        .getTickets(queryParams)
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          if (res.status == 200) {
+            this.tickets = res.body;
+          }
+        });
+    } else {
+      this._ticktingService
+        .getTicketsByLoggedInUserAndRole(queryParams)
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          if (res.status == 200) {
+            this.tickets = res.body;
+          }
+        });
+    }
   }
 
   onRefresh() {

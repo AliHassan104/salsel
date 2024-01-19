@@ -164,8 +164,15 @@
 <div class="grid">
     <div class="col-12">
         <div class="card p-fluid">
-            <div class="flex align-items-center mb-4 font-bold"><span class="text-xl text-900 mr-4">Comments</span><span
-                    class="inline-flex align-items-center justify-content-center w-2rem h-2rem border-1 surface-border border-round">{{commentCount}}</span>
+            <div class="flex align-items-center justify-content-between mb-4 font-bold">
+                <div>
+                    <span class="text-xl text-900 mr-4">Comments</span><span
+                        class="inline-flex align-items-center justify-content-center w-2rem h-2rem border-1 surface-border border-round">{{commentCount}}</span>
+                </div>
+                <div>
+                    <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
+                        style="font-weight: bold;"></i>
+                </div>
             </div>
             <div class="card p-fluid comments-box" *ngIf="commentCount > 0">
                 <ul class="list-none p-0 m-0">

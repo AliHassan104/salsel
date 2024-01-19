@@ -54,5 +54,9 @@
             <p><strong>Product Type: </strong> {{singleBill?.productType}}</p>
             <p><strong>Service Type: </strong> {{singleBill?.serviceType}}</p>
         </div>
+        <div class="col-12 lg:col-6" *ngIf="singleBill?.requestType == 'Pick-up'">
+            <h4>Assignement Details</h4>
+            <p><strong>Assigned To: </strong> {{singleBill?.assignedTo}}</p>
+        </div>
     </div>
 </div>

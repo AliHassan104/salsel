@@ -1,12 +1,11 @@
 package com.salsel.service.impl;
 
 import com.salsel.criteria.SearchCriteria;
+import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.Ticket;
-import com.salsel.model.TicketAttachment;
-import com.salsel.model.User;
+import com.salsel.model.*;
 import com.salsel.repository.TicketAttachmentRepository;
 import com.salsel.repository.TicketRepository;
 import com.salsel.repository.UserRepository;
@@ -130,6 +129,32 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public List<TicketDto> getTicketsByLoggedInUserAndRole(Boolean status) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+            List<TicketDto> ticketDtoList = new ArrayList<>();
+
+
+            for (Role role : user.getRoles()) {
+                String roleName = role.getName();
+                List<Ticket> ticketList = ticketRepository.findAllInDesOrderByCreatedByOrAssignedToAndStatus(status, user.getEmail(),roleName);
+
+                for (Ticket ticket : ticketList) {
+                    TicketDto ticketDto = toDto(ticket);
+                    ticketDtoList.add(ticketDto);
+                }
+            }
+            return ticketDtoList;
+        }
+        return null;
+    }
+
+    @Override
     public TicketDto findById(Long id) {
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Ticket not found for id => %d", id)));
@@ -175,7 +200,6 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setOriginCountry(ticketDto.getOriginCountry());
         existingTicket.setDestinationCountry(ticketDto.getDestinationCountry());
         existingTicket.setDestinationCity(ticketDto.getDestinationCity());
-        existingTicket.setCreatedBy(ticketDto.getCreatedBy());
         existingTicket.setDepartment(ticketDto.getDepartment());
         existingTicket.setDepartmentCategory(ticketDto.getDepartmentCategory());
         existingTicket.setDepartment(ticketDto.getDepartment());

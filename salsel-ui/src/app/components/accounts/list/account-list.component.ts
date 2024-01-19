@@ -50,18 +50,37 @@ export class AccountListComponent implements OnInit {
   //   GET ALL ACCOUNTS
   getAllAccount() {
     const params = { status: this.activeStatus };
-    this.accountService
-      .getAllAccounts(params)
-      .pipe(
-        finalize(() => {
-          this.refresh = false;
-        })
-      )
-      .subscribe((res: any) => {
-        if (res && res.body) {
-          this.accounts = res.body;
-        }
-      });
+
+    if (
+      this.sessionStorageService.getRoleName() == "ADMIN" ||
+      this.sessionStorageService.getRoleName() == "CUSTOMER_SERVICE_AGENT"
+    ) {
+      this.accountService
+        .getAllAccounts(params)
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          if (res && res.body) {
+            this.accounts = res.body;
+          }
+        });
+    } else {
+      this.accountService
+        .getAllAccountsByUserLoggedIn(params)
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          if (res && res.body) {
+            this.accounts = res.body;
+          }
+        });
+    }
   }
 
   onRefresh() {

@@ -1,6 +1,7 @@
 package com.salsel.service;
 
 import com.salsel.criteria.SearchCriteria;
+import com.salsel.dto.AwbDto;
 import com.salsel.dto.PermissionDto;
 import com.salsel.dto.TicketDto;
 import com.salsel.model.Ticket;
@@ -16,6 +17,7 @@ public interface TicketService {
 TicketDto save(TicketDto ticketDto, List<MultipartFile> pdfFiles);
     List<TicketDto> getAll(Boolean status);
     List<TicketDto> getTicketsByLoggedInUser(Boolean status);
+    List<TicketDto> getTicketsByLoggedInUserAndRole(Boolean status);
     TicketDto findById(Long id);
     void deleteById(Long id);
     void setToActiveById(Long id);

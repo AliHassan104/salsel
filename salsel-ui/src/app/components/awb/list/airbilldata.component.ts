@@ -38,22 +38,37 @@ export class AirbilldataComponent implements OnInit {
   ngOnInit(): void {
     this.getAirbills();
     this.getAllProductFields();
-    this.userRole = this.sessionStorageService.getRoleName();
   }
 
   getAirbills() {
     const params = { status: this.activeStatus };
 
-    this._airbillService
-      .getBills(params)
-      .pipe(
-        finalize(() => {
-          this.refresh = false;
-        })
-      )
-      .subscribe((res: any) => {
-        this.bills = res;
-      });
+    if (
+      this.sessionStorageService.getRoleName() == "ADMIN" ||
+      this.sessionStorageService.getRoleName() == "CUSTOMER_SERVICE_AGENT"
+    ) {
+      this._airbillService
+        .getBills(params)
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this.bills = res;
+        });
+    } else {
+      this._airbillService
+        .getBillsByUserEmailAndRole(params)
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this.bills = res;
+        });
+    }
   }
 
   onRefresh() {

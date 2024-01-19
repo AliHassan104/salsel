@@ -1,5 +1,11 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AirbillService } from "../service/airbill.service";
@@ -15,6 +21,7 @@ import { ServiceTypeService } from "../../service-type/service/service-type.serv
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { AccountService } from "../../accounts/service/account.service";
 import { RolesService } from "../../permissions/service/roles.service";
+import { Dropdown } from "primeng/dropdown";
 
 @Component({
   selector: "app-awbcreation",
@@ -22,7 +29,7 @@ import { RolesService } from "../../permissions/service/roles.service";
   styleUrls: ["./awbcreation.component.scss"],
   providers: [MessageService],
 })
-export class AwbcreationComponent implements OnInit, OnDestroy {
+export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   //   ALL PRODUCT FIELD FOR DROPDOWNS
 
   pickupDate;
@@ -56,6 +63,11 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
   preprocessedAccountNumbers: any;
   loginUserEmail;
 
+  @ViewChild("dropdown") dropdown?: Dropdown;
+  @ViewChild("dropdown1") dropdown1?: Dropdown;
+  @ViewChild("dropdown2") dropdown2?: Dropdown;
+  @ViewChild("dropdown3") dropdown3?: Dropdown;
+
   //   CONSTRUCTOR
   constructor(
     private _airbillService: AirbillService,
@@ -87,6 +99,23 @@ export class AwbcreationComponent implements OnInit, OnDestroy {
     this.CreateAwbFromTicket();
 
     this.loginUserEmail = localStorage.getItem("loginUserEmail");
+  }
+
+  ngAfterViewInit(): void {
+    const dropdowns = [
+      this.dropdown,
+      this.dropdown1,
+      this.dropdown2,
+      this.dropdown3,
+    ];
+
+    dropdowns.forEach((dropdown, index) => {
+      if (dropdown) {
+        (dropdown.filterBy as any) = {
+          split: (_: any) => [(item: any) => item],
+        };
+      }
+    });
   }
 
   awbFormSetup() {

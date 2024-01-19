@@ -201,3 +201,14 @@ textarea:focus {
 .comments-box::-webkit-scrollbar-track {
   background-color: #ffffff43;
 }
+
+.refresh {
+  cursor: pointer;
+  color: #93003c;
+  font-size: 15px;
+  transition: all 0.5s ease;
+}
+
+.refresh:hover {
+  color: #c10751;
+}

@@ -1,5 +1,11 @@
 import { IAccountData } from "../model/accountValuesDto";
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { AccountService } from "../service/account.service";
@@ -10,6 +16,7 @@ import { CityService } from "../../City/service/city.service";
 import { CountryService } from "../../country/service/country.service";
 import { filter } from "rxjs";
 import { UserService } from "../../auth/usermanagement/service/user.service";
+import { Dropdown } from "primeng/dropdown";
 
 @Component({
   selector: "app-account-form",
@@ -17,7 +24,7 @@ import { UserService } from "../../auth/usermanagement/service/user.service";
   styleUrls: ["./account-form.component.scss"],
   providers: [MessageService],
 })
-export class AccountFormComponent implements OnInit {
+export class AccountFormComponent implements OnInit, AfterViewInit {
   accountForm!: FormGroup;
 
   productFields?;
@@ -40,6 +47,8 @@ export class AccountFormComponent implements OnInit {
   allAgreements;
 
   @ViewChild("fileInput") fileInput: ElementRef;
+  @ViewChild("dropdown") dropdown?: Dropdown;
+  @ViewChild("dropdown1") dropdown1?: Dropdown;
 
   constructor(
     private messageService: MessageService,
@@ -61,6 +70,19 @@ export class AccountFormComponent implements OnInit {
     this.queryParamsId();
 
     this.getAllProductFields();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dropdown) {
+      (this.dropdown.filterBy as any) = {
+        split: (_: any) => [(item: any) => item],
+      };
+    }
+    if (this.dropdown1) {
+      (this.dropdown1.filterBy as any) = {
+        split: (_: any) => [(item: any) => item],
+      };
+    }
   }
 
   //   Get All Cities

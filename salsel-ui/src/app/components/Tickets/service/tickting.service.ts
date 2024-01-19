@@ -33,6 +33,12 @@ export class TicktingService {
   getTickets(params?: any) {
     return this.http.get(`${this.url}ticket`, { params, observe: "response" });
   }
+  getTicketsByLoggedInUserAndRole(params?: any) {
+    return this.http.get(`${this.url}ticket/logged-in-user-and-role`, {
+      params,
+      observe: "response",
+    });
+  }
 
   //   Get Single Ticket
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { MenuItem } from "primeng/api";
 import { Product } from "../../Api/product";
-import { Subscription } from "rxjs";
+import { Subscription, finalize } from "rxjs";
 import { TicktingService } from "../Tickets/service/tickting.service";
 import { AirbillService } from "../awb/service/airbill.service";
 import { AccountService } from "../accounts/service/account.service";
@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   chartOptions: any;
 
   subscription!: Subscription;
+  refresh: boolean = true;
 
   constructor(
     private ticketService: TicktingService,
@@ -50,45 +51,116 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.pieChartSetup();
   }
 
+  onRefresh() {
+    this.getAllInfo();
+  }
+
   getAllInfo() {
     const twentyFourHoursAgo = new Date();
     twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
 
-    this.ticketService.getTickets({ status: true }).subscribe((res: any) => {
-      this.activeTicketsCount = res?.body?.length;
+    if (
+      this.sessionStorageService.getRoleName() == "ADMIN" ||
+      this.sessionStorageService.getRoleName() == "CUSTOMER_SERVICE_AGENT"
+    ) {
+      this.ticketService
+        .getTickets({ status: true })
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this.activeTicketsCount = res?.body?.length;
 
-      this.ticketService.getTickets({ status: false }).subscribe((res: any) => {
-        this.inActiveTicketsCount = res?.body?.length;
-        this.totalTickets = this.activeTicketsCount + this.inActiveTicketsCount;
+          this.ticketService
+            .getTickets({ status: false })
+            .subscribe((res: any) => {
+              this.inActiveTicketsCount = res?.body?.length;
+              this.totalTickets =
+                this.activeTicketsCount + this.inActiveTicketsCount;
 
-        this.pieChartSetup();
-      });
-    });
+              this.pieChartSetup();
+            });
+        });
 
-    this.airbillService.getBills({ status: true }).subscribe((res: any) => {
-      this.activeawb = res.length;
-      this.airbillService.getBills({ status: false }).subscribe((res: any) => {
-        this.inactiveAwb = res.length;
-        this.awbCount = this.activeawb + this.inactiveAwb;
-        this.pieChartAwbSetup();
-      });
-    });
-
-    this.accountsService
-      .getAllAccounts({ status: true })
-      .subscribe((res: any) => {
-        this.activeAccountCount = res?.body?.length;
-
-        this.accountsService
-          .getAllAccounts({ status: false })
+      this.airbillService.getBills({ status: true }).subscribe((res: any) => {
+        this.activeawb = res.length;
+        this.airbillService
+          .getBills({ status: false })
           .subscribe((res: any) => {
-            this.inactiveAccountCount = res?.body?.length;
-            this.totalAccountCount =
-              this.activeAccountCount + this.inactiveAccountCount;
-
-            this.pieChartAccountSetup();
+            this.inactiveAwb = res.length;
+            this.awbCount = this.activeawb + this.inactiveAwb;
+            this.pieChartAwbSetup();
           });
       });
+
+      this.accountsService
+        .getAllAccounts({ status: true })
+        .subscribe((res: any) => {
+          this.activeAccountCount = res?.body?.length;
+
+          this.accountsService
+            .getAllAccounts({ status: false })
+            .subscribe((res: any) => {
+              this.inactiveAccountCount = res?.body?.length;
+              this.totalAccountCount =
+                this.activeAccountCount + this.inactiveAccountCount;
+
+              this.pieChartAccountSetup();
+            });
+        });
+    } else {
+      this.ticketService
+        .getTicketsByLoggedInUserAndRole({ status: true })
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this.activeTicketsCount = res?.body?.length;
+
+          this.ticketService
+            .getTicketsByLoggedInUserAndRole({ status: false })
+            .subscribe((res: any) => {
+              this.inActiveTicketsCount = res?.body?.length;
+              this.totalTickets =
+                this.activeTicketsCount + this.inActiveTicketsCount;
+
+              this.pieChartSetup();
+            });
+        });
+
+      this.airbillService
+        .getBillsByUserEmailAndRole({ status: true })
+        .subscribe((res: any) => {
+          this.activeawb = res.length;
+          this.airbillService
+            .getBillsByUserEmailAndRole({ status: false })
+            .subscribe((res: any) => {
+              this.inactiveAwb = res.length;
+              this.awbCount = this.activeawb + this.inactiveAwb;
+              this.pieChartAwbSetup();
+            });
+        });
+
+      this.accountsService
+        .getAllAccountsByUserLoggedIn({ status: true })
+        .subscribe((res: any) => {
+          this.activeAccountCount = res?.body?.length;
+
+          this.accountsService
+            .getAllAccountsByUserLoggedIn({ status: false })
+            .subscribe((res: any) => {
+              this.inactiveAccountCount = res?.body?.length;
+              this.totalAccountCount =
+                this.activeAccountCount + this.inactiveAccountCount;
+
+              this.pieChartAccountSetup();
+            });
+        });
+    }
   }
 
   pieChartAccountSetup() {

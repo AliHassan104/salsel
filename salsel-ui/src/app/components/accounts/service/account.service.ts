@@ -23,6 +23,15 @@ export class AccountService {
     });
   }
 
+  getAllAccountsByUserLoggedIn(
+    params: any
+  ): Observable<EntityAccountFieldResponseType> {
+    return this.http.get<IAccountData[]>(`${this.url}account/logged-in-user`, {
+      params,
+      observe: "response",
+    });
+  }
+
   // ADD ACCOUNT
 
   addAccount(data: any, file: File) {

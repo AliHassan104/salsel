@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
@@ -15,6 +21,8 @@ import { DepartmentCategoryService } from "../../department-category/service/dep
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { RolesService } from "../../permissions/service/roles.service";
 import { AccountService } from "../../accounts/service/account.service";
+import { Dropdown } from "primeng/dropdown";
+import { UserService } from "../../auth/usermanagement/service/user.service";
 
 @Component({
   selector: "app-ticketform",
@@ -40,7 +48,7 @@ export class TicketformComponent implements OnInit {
   departmentCategory?;
 
   // FOR EDIT PURPOSE
-  editMode;
+  editMode: boolean = false;
   editId;
   singleTicket: Ticket;
   pickDate;
@@ -57,6 +65,10 @@ export class TicketformComponent implements OnInit {
   fileList: File[] = [];
 
   @ViewChild("fileInput") fileInput: ElementRef;
+  @ViewChild("dropdown") dropdown?: Dropdown;
+  @ViewChild("dropdown1") dropdown1?: Dropdown;
+  @ViewChild("dropdown2") dropdown2?: Dropdown;
+  @ViewChild("dropdown3") dropdown3?: Dropdown;
 
   //   CONSTRUCTOR
   constructor(
@@ -89,6 +101,35 @@ export class TicketformComponent implements OnInit {
     this.editForm();
 
     this.userRole = this.sessionStorageService.getRoleName();
+    this.patchUserDetials();
+  }
+
+  patchUserDetials() {
+    if (this.editMode == false) {
+      this.ticketForm.patchValue({
+        name: localStorage.getItem("loginUserName"),
+        email: localStorage.getItem("loginUserEmail"),
+      });
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.ticketForm.get("ticketType").value == "Pickup Request") {
+      const dropdowns = [
+        this.dropdown,
+        this.dropdown1,
+        this.dropdown2,
+        this.dropdown3,
+      ];
+
+      dropdowns.forEach((dropdown, index) => {
+        if (dropdown) {
+          (dropdown.filterBy as any) = {
+            split: (_: any) => [(item: any) => item],
+          };
+        }
+      });
+    }
   }
 
   ticketFormSetup() {

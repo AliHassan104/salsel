@@ -190,14 +190,15 @@
                     <!-- Origin Country -->
                     <div class="field col-12 md:col-3">
                         <label htmlFor="ocountry"><strong>Origin Country</strong></label>
-                        <p-dropdown [options]="countries" placeholder="Select Country" formControlName="originCountry"
+                        <p-dropdown #dropdown [options]="countries" placeholder="Select Country"
+                            formControlName="originCountry" filter="true"
                             (onChange)="getOriginCountry($event)"></p-dropdown>
                     </div>
                     <!-- Origin City -->
                     <div class="field col-12 md:col-3">
                         <label htmlFor="oCity"><strong>Origin City</strong></label>
-                        <p-dropdown [options]="originCities" placeholder="Select city"
-                            formControlName="originCity"></p-dropdown>
+                        <p-dropdown #dropdown1 [options]="originCities" placeholder="Select city"
+                            formControlName="originCity" filter="true"></p-dropdown>
                     </div>
                     <!-- Recipient Name -->
                     <div class="field col-12 md:col-6">
@@ -251,14 +252,14 @@
                     <!-- Destination Country -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="dcountry"><strong>Destination Country</strong></label>
-                        <p-dropdown [options]="countries" placeholder="Select Country"
+                        <p-dropdown #dropdown2 [options]="countries" filter="true" placeholder="Select Country"
                             formControlName="destinationCountry"
                             (onChange)="getDestinationCountry($event)"></p-dropdown>
                     </div>
                     <!-- Destination City -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="dcity"><strong>Destination City</strong></label>
-                        <p-dropdown [options]="destinationCities" placeholder="Select city"
+                        <p-dropdown #dropdown3 filter="true" [options]="destinationCities" placeholder="Select city"
                             formControlName="destinationCity"></p-dropdown>
                     </div>
 

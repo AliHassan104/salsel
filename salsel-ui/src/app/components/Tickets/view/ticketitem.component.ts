@@ -15,6 +15,7 @@ import { MessageService } from "primeng/api";
 import { FormvalidationService } from "../service/formvalidation.service";
 import { AccountService } from "../../accounts/service/account.service";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-ticketitem",
@@ -27,6 +28,7 @@ export class TicketitemComponent implements OnInit {
   @ViewChild("textArea") textArea!: ElementRef;
 
   editMode: any;
+  refresh: boolean = true;
   constructor(
     private activatedRoute: ActivatedRoute,
     private _ticketService: TicktingService,
@@ -69,6 +71,10 @@ export class TicketitemComponent implements OnInit {
     this.getAllTicketComments();
   }
 
+  onRefresh() {
+    this.getAllTicketComments();
+  }
+
   formSetup() {
     this.postCommentForm = new FormGroup({
       postComment: new FormControl(null, Validators.required),
@@ -78,6 +84,11 @@ export class TicketitemComponent implements OnInit {
   getAllTicketComments() {
     this.commentsService
       .getAllTicketCommentsByTicketId(this.id)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
       .subscribe((res: any) => {
         this.ticketComments = res;
         this.commentCount = this.ticketComments?.length;
