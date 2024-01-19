@@ -749,7 +749,7 @@ VALUES
                                                                                 ('Hamilton', true, (SELECT id FROM country WHERE name = 'Canada')),
                                                                                 ('London', true, (SELECT id FROM country WHERE name = 'Canada')),
                                                                                 ('George Town', true, (SELECT id FROM country WHERE name = 'Cayman Islands')),
-                                                                                  ('West Bay', true, (SELECT id FROM country WHERE name = 'Cayman Islands')),
+                                                                                  ('We  st Bay', true, (SELECT id FROM country WHERE name = 'Cayman Islands')),
                                                                                   ('Bodden Town', true, (SELECT id FROM country WHERE name = 'Cayman Islands')),
                                                                                   ('North Side', true, (SELECT id FROM country WHERE name = 'Cayman Islands')),
                                                                                   ('East End', true, (SELECT id FROM country WHERE name = 'Cayman Islands')),

@@ -48,7 +48,8 @@
     <div class="footer-img">
 <!--            <h1 class="unique-num" th:text="'TRK#' + ' ' + ${uniqueNumber}"></h1>-->
 <!--        <h1 class="unique-num" th:text="|TRK# ${uniqueNumber} (${pieceNumber}/${pieces})|"></h1>-->
-        <h1 class="unique-num" th:text="'TRK# ' + ${uniqueNumber} + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;' + '(' + ${pieceNumber} + '/' + ${pieces} + ')'"></h1>
+<!--        <h1 class="unique-num" th:text="'TRK# ' + ${uniqueNumber} + ${number} + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;' + '(' + ${pieceNumber} + '/' + ${pieces} + ')'"></h1>-->
+        <h1 class="unique-num" th:text="'TRK# ' + ${uniqueNumber} + (${number} != null ? ${number} : '&#160;&#160;&#160;') + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;' + '(' + ${pieceNumber} + '/' + ${pieces} + ')'"></h1>
         <img th:src="${'https://api.salassilexpress.com/api/file/Awb/awb_' + awbId + '/barcode_' + awbId + '.png'}" alt="Barcode" class="img-4"></img>
         <p class="duty-tax" th:text="${dutyAndTaxesBillTo}"></p>
     </div>

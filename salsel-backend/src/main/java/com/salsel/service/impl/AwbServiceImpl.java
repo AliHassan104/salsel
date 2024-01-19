@@ -134,6 +134,7 @@ public class AwbServiceImpl implements AwbService {
         int pieces = awb.getPieces().intValue();
         int count = pieces;
         int checkPieces = 1;
+        String number = null;
         try (ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream()) {
             Document document = new Document();
             PdfCopy copy = new PdfCopy(document, mergedOutputStream);
@@ -151,6 +152,11 @@ public class AwbServiceImpl implements AwbService {
                 }
 
                 byte[] individualPdf = pdfGenerationService.generatePdf("Awb", model, awbId);
+
+                if(checkPieces != 1){
+                    number = " / " + checkPieces;
+                    model.addAttribute("number", number);
+                }
 
                 PdfReader reader = new PdfReader(new ByteArrayInputStream(individualPdf));
                 for (int pageNum = 1; pageNum <= reader.getNumberOfPages(); pageNum++) {
