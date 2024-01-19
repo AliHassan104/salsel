@@ -40,7 +40,7 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userForm = new FormGroup({
       firstname: new FormControl(null, Validators.required),
-      lastname: new FormControl(null, Validators.required),
+      lastname: new FormControl(null),
       email: new FormControl(null, Validators.required),
       phone: new FormControl(null, Validators.required),
       employeeId: new FormControl(null, Validators.required),
