@@ -41,7 +41,7 @@ INSERT INTO permissions (name, value) VALUES
         (5,'ROLE_MANAGEMENT_USER'),
         (6,'ROLE_OPERATION_USER'),
         (7,'ROLE_CUSTOMER_USER'),
-        (8,'ROLE_ACCOUNT_HOLDER')
+        (8,'ROLE_ACCOUNT_HOLDER'),
         (9,'ROLE_SALES_AGENT');
 
 
