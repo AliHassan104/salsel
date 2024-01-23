@@ -33,6 +33,7 @@ export class AuthGuardService implements CanActivate {
       const userPermissions = decodedToken.PERMISSIONS;
       const userRoles = decodedToken.ROLES;
 
+
       const url = state.url;
       let permission: any = {};
       const permissionsObj = this.getPermissionsObj();

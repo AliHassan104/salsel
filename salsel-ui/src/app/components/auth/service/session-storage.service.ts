@@ -44,4 +44,5 @@ export class SessionStorageService {
   getRoleName() {
     return this.roleName;
   }
+
 }

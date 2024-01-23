@@ -10,7 +10,7 @@
             </div>
             <hr>
             <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-                [globalFilterFields]="['ticketStatus','ticketFlag','category','ticketType','departmentCategory']"
+                [globalFilterFields]="['ticketStatus','ticketFlag','category','ticketType','departmentCategory','assignedTo','id']"
                 styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
                 responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
@@ -41,6 +41,11 @@
                         <th style="min-width: 16rem">
                             <div class="flex justify-content-center align-items-center">
                                 Created At
+                            </div>
+                        </th>
+                        <th style="min-width: 16rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Ticket Number
                             </div>
                         </th>
                         <th style="min-width: 13rem">
@@ -100,6 +105,9 @@
                         </td>
                         <td>
                             {{ data?.createdAt }}
+                        </td>
+                        <td>
+                            {{ data?.id }}
                         </td>
                         <td>
                             {{ data?.ticketType }}

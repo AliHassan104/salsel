@@ -9,7 +9,7 @@
                 <!-- Ticket Type -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="ticketType"><strong>Ticket Type</strong></label>
-                    <p-dropdown [options]="ticketType" placeholder="Select Ticket Type" formControlName="ticketType"
+                    <p-dropdown [options]="ticketType" placeholder="Select Ticket Type" formControlName="ticketType" [style]="{'opacity': 1}"
                         [ngClass]="{'ng-dirty':ticketForm.get('ticketType')?.touched && ticketForm.get('ticketType')?.invalid}"></p-dropdown>
                     <small *ngIf="!ticketForm.get('ticketType')?.valid && ticketForm.get('ticketType')?.touched"
                         class="text-red-500">
@@ -78,8 +78,8 @@
                     </div>
                 </div>
 
-                <ng-container *ngIf="this.userRole == 'CUSTOMER_SERVICE_AGENT' && editMode">
-                    <!-- Department -->
+                <!-- <ng-container *ngIf="this.userRole == 'CUSTOMER_SERVICE_AGENT' && editMode">
+
                     <div class="field col-12 md:col-3">
                         <label htmlFor="department"><strong>Department</strong></label>
                         <p-dropdown [options]="department" placeholder="Enter department" formControlName="department"
@@ -90,7 +90,7 @@
                             Required
                         </small>
                     </div>
-                    <!-- Department Category -->
+
                     <div class="field col-12 md:col-3">
                         <label htmlFor="departmentCategory"><strong>Department Category</strong></label>
                         <p-dropdown [options]="departmentCategory" placeholder="Enter department category"
@@ -102,7 +102,7 @@
                             Required
                         </small>
                     </div>
-                    <!-- Assigned to -->
+ 
                     <div class="field col-12 md:col-6">
                         <label htmlFor="assignedTo"><strong>Assigned To</strong></label>
                         <p-dropdown [options]="assignedTo" placeholder="Assigned To" formControlName="assignedTo"
@@ -112,7 +112,7 @@
                             Required
                         </small>
                     </div>
-                    <!-- Category -->
+
                     <div class="field col-12 md:col-6">
                         <label htmlFor="category"><strong>Category</strong></label>
                         <p-dropdown [options]="categories" placeholder="Select category" formControlName="category"
@@ -122,7 +122,7 @@
                             Required
                         </small>
                     </div>
-                    <!-- Status -->
+
                     <div class="field col-12 md:col-6">
                         <label htmlFor="status"><strong>Ticket Status</strong></label>
                         <p-dropdown [options]="status" placeholder="Select Ticket Status" formControlName="ticketStatus"
@@ -141,7 +141,7 @@
                             Required
                         </small>
                     </div>
-                </ng-container>
+                </ng-container> -->
 
                 <!-- Shipment Inquiry Form -->
                 <ng-container *ngIf="ticketForm.get('ticketType')?.value == 'Shipment Inquiry'">

@@ -9,9 +9,10 @@
                 <!-- Ticket Type -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="ticketType"><strong>Ticket Type</strong></label>
-                    <p-dropdown [options]="ticketType" placeholder="Select Ticket Type" formControlName="ticketType"
+                    <p-dropdown [options]="ticketType" [style]="{'opacity': 1}" placeholder="Select Ticket Type"
+                        formControlName="ticketType"
                         [ngClass]="{'ng-dirty':ticketForm.get('ticketType')?.touched && ticketForm.get('ticketType')?.invalid}"></p-dropdown>
-                    <small *ngIf="!ticketForm.get('ticketType')?.valid && ticketForm.get('ticketType')?.touched"
+                    <small *ngIf="!ticketForm.get('ticketType')?.valid && ticketForm.get('ticketType')?.touched && editMode == false"
                         class="text-red-500">
                         Required
                     </small>
@@ -22,7 +23,7 @@
                     <input pInputText id="name" type="text" formControlName="name"
                         [ngClass]="{'ng-dirty':ticketForm.get('name')?.touched && ticketForm.get('name')?.invalid}"
                         placeholder="Enter name" [required]="true" />
-                    <small *ngIf="!ticketForm.get('name')?.valid && ticketForm.get('name')?.touched"
+                    <small *ngIf="!ticketForm.get('name')?.valid && ticketForm.get('name')?.touched && editMode == false"
                         class="text-red-500">
                         Required
                     </small>
@@ -33,7 +34,7 @@
                     <input pInputText id="email" type="email" formControlName="email"
                         [ngClass]="{'ng-dirty':ticketForm.get('email')?.touched && ticketForm.get('email')?.invalid}"
                         placeholder="Enter Email" [required]="true" />
-                    <small *ngIf="!ticketForm.get('email')?.valid && ticketForm.get('email')?.touched"
+                    <small *ngIf="!ticketForm.get('email')?.valid && ticketForm.get('email')?.touched && editMode == false"
                         class="text-red-500">
                         Required
                     </small>
@@ -232,7 +233,7 @@
                         <label htmlFor="dcity"><strong>Pickup Time</strong></label>
                         <p-calendar [hourFormat]="24" [timeOnly]="true" formControlName="pickupTime"
                             [showSeconds]="true"
-                            [ngClass]="{'ng-dirty':ticketForm.get('pickupTime')?.touched && ticketForm.get('pickupTime')?.invalid}"
+                            [ngClass]="{'ng-dirty':ticketForm.get('pickupTime')?.touched && !ticketForm.get('pickupTime')?.valid}"
                             [required]="true"></p-calendar>
                         <small *ngIf="!ticketForm.get('pickupTime')?.valid && ticketForm.get('pickupTime')?.touched"
                             class="text-red-500">
@@ -243,7 +244,7 @@
                     <div class="field col-12 md:col-6">
                         <label htmlFor="dcity"><strong>Pickup Date</strong></label>
                         <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="pickupDate"
-                            [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && ticketForm.get('pickupDate')?.invalid}"></p-calendar>
+                            [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && !ticketForm.get('pickupDate')?.valid}"></p-calendar>
                         <small *ngIf="!ticketForm.get('pickupDate')?.valid && ticketForm.get('pickupDate')?.touched"
                             class="text-red-500">
                             Required
@@ -270,26 +271,26 @@
                     <!-- Origin Country -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="ocountry"><strong>Origin Country</strong></label>
-                        <p-dropdown [options]="countries" placeholder="Select Country" formControlName="originCountry"
-                            (onChange)="getOriginCountry($event)"></p-dropdown>
+                        <p-dropdown #dropdown4 [options]="countries" filter="true" placeholder="Select Country"
+                            formControlName="originCountry" (onChange)="getOriginCountry($event)"></p-dropdown>
                     </div>
                     <!-- Origin City -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="oCity"><strong>Origin City</strong></label>
-                        <p-dropdown [options]="originCities" placeholder="Select city"
+                        <p-dropdown #dropdown5 [options]="originCities" filter="true" placeholder="Select city"
                             formControlName="originCity"></p-dropdown>
                     </div>
                     <!-- Destination Country -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="dcountry"><strong>Destination Country</strong></label>
-                        <p-dropdown [options]="countries" placeholder="Select Country"
+                        <p-dropdown #dropdown6 [options]="countries" filter="true" placeholder="Select Country"
                             formControlName="destinationCountry"
                             (onChange)="getDestinationCountry($event)"></p-dropdown>
                     </div>
                     <!-- Destination City -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="dcity"><strong>Destination City</strong></label>
-                        <p-dropdown [options]="destinationCities" placeholder="Select city"
+                        <p-dropdown #dropdown7 [options]="destinationCities" filter="true" placeholder="Select city"
                             formControlName="destinationCity"></p-dropdown>
                     </div>
                     <!-- Weight -->

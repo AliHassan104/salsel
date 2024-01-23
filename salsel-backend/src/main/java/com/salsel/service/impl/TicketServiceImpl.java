@@ -53,11 +53,16 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public TicketDto save(TicketDto ticketDto, List<MultipartFile> pdfFiles) {
+
         Ticket ticket = toEntity(ticketDto);
         ticket.setStatus(true);
         ticket.setTicketStatus("Open");
         ticket.setTicketFlag("Normal");
         ticket.setAssignedTo("ROLE_CUSTOMER_SERVICE_AGENT");
+
+
+
+
         Ticket createdTicket = ticketRepository.save(ticket);
 
         // Save PDFs to S3 bucket if provided
@@ -215,6 +220,7 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setTextarea(ticketDto.getTextarea());
         existingTicket.setAirwayNumber(ticketDto.getAirwayNumber());
         existingTicket.setTicketType(ticketDto.getTicketType());
+
 
         if (pdfFiles != null && !pdfFiles.isEmpty()) {
             // Delete existing files

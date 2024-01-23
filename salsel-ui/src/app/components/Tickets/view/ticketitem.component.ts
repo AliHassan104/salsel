@@ -100,6 +100,7 @@ export class TicketitemComponent implements OnInit {
     this.display = true;
     this._ticketService.getSingleTicket(id).subscribe((res: any) => {
       this.singleTicket = res;
+
       this.ticketAttachments = this.singleTicket?.attachments;
     });
   }

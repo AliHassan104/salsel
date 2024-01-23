@@ -30,7 +30,6 @@ public class Ticket {
 
     private String shipperName;
     private String shipperContactNumber;
-
     private String pickupAddress;
     private String shipperRefNumber;
     private String recipientName;

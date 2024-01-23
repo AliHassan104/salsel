@@ -11,7 +11,7 @@
             <hr>
             <p-table #dt1 [value]="bills" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
                 styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
-                [globalFilterFields]="['shipperName','recipientsName','uniqueNumber','awbStatus']"
+                [globalFilterFields]="['shipperName','recipientsName','uniqueNumber','awbStatus','shipperContactNumber','recipientsContactNumber']"
                 responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">

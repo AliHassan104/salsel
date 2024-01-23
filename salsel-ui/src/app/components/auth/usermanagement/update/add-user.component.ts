@@ -127,26 +127,32 @@ export class AddUserComponent implements OnInit {
 
   onSubmit() {
     if (this.editMode) {
-      let formValue = this.userForm.value;
-      let fullname = formValue.firstname + " " + formValue.lastname;
-      const data = {
-        firstname: formValue.firstname,
-        lastname: formValue.lastname,
-        name: fullname,
-        phone: formValue.phone,
-        email: formValue.email,
-        employeeId: formValue.employeeId,
-        roles: [
-          {
-            id: formValue.roles.id,
-          },
-        ],
-        status: true,
-      };
-      this.userService.updateUser(this.editId, data).subscribe((res: any) => {
-        this.userForm.reset();
-        this.router.navigate(["user/list"]);
-      });
+        if (this.userForm.get('employeeId')?.valid){
+            let formValue = this.userForm.value;
+            let fullname = formValue.firstname + " " + formValue.lastname;
+            const data = {
+              firstname: formValue.firstname,
+              lastname: formValue.lastname,
+              name: fullname,
+              phone: formValue.phone,
+              email: formValue.email,
+              employeeId: formValue.employeeId,
+              roles: [
+                {
+                  id: formValue.roles.id,
+                },
+              ],
+              status: true,
+            };
+            this.userService
+              .updateUser(this.editId, data)
+              .subscribe((res: any) => {
+                this.userForm.reset();
+                this.router.navigate(["user/list"]);
+              });
+        }else{
+            this.formService.markFormGroupTouched(this.userForm);
+        }
     } else {
       if (this.userForm.valid) {
         let formValue = this.userForm.value;

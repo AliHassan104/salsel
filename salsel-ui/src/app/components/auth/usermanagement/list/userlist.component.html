@@ -10,7 +10,7 @@
             </div>
             <hr>
             <p-table #dt1 [value]="users" dataKey="id" [rows]="5" [loading]="loading" styleClass="p-datatable-gridlines"
-                [paginator]="true" [globalFilterFields]="['name']" responsiveLayout="scroll">
+                [paginator]="true" [globalFilterFields]="['name','email','employeeId']" responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <div class="mb-2">
@@ -18,6 +18,8 @@
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
+                            <p-dropdown class="ml-3 custom-dropdown" [options]="userFilter" [(ngModel)]="selectedUsers"
+                                (ngModelChange)="onFilterUser($event)" placeholder="Select"></p-dropdown>
                             <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
                                 style="font-weight: bold;"></i>
                         </div>

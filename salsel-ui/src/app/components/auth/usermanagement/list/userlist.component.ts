@@ -6,7 +6,7 @@ import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { IUser } from "../model/userDto";
 import { Table } from "primeng/table";
 import { SessionStorageService } from "../../service/session-storage.service";
-import { finalize } from "rxjs";
+import { filter, finalize } from "rxjs";
 
 @Component({
   selector: "app-userlist",
@@ -17,7 +17,9 @@ import { finalize } from "rxjs";
 export class UserlistComponent implements OnInit {
   productField?;
   status?;
+  userFilter?;
   selectedStatus: string = "Active";
+  selectedUsers: string = "Employee";
   activeStatus: boolean = true;
   deleteId: any;
   generateId: any;
@@ -50,6 +52,19 @@ export class UserlistComponent implements OnInit {
 
   getAllUsers() {
     const params = { status: this.activeStatus };
+    const employeeRoles = [
+      "ROLE_ADMIN",
+      "ROLE_OPERATION_AGENT",
+      "ROLE_CUSTOMER_SERVICE_AGENT",
+      "ROLE_SALES_AGENT",
+      "ROLE_CUSTOMER_CARE_AGENT",
+      "ROLE_MANAGEMENT_USER",
+      "ROLE_OPERATION_USER",
+      "ROLE_COURIER",
+    ];
+    const customerRoles = [
+        "ROLE_ACCOUNT_HOLDER","ROLE_CUSTOMER_USER"
+    ]
     this.userService
       .getAllUser(params)
       .pipe(
@@ -58,13 +73,39 @@ export class UserlistComponent implements OnInit {
         })
       )
       .subscribe((res: any) => {
-        this.users = res;
+        if (this.selectedUsers == "Employee") {
+          this.users = res.filter((user) =>
+            user?.roles?.some((role) => employeeRoles.includes(role?.name))
+          );
+        }else if (this.selectedUsers == "Customer") {
+             this.users = res.filter((user) =>
+               user?.roles?.some((role) => customerRoles.includes(role?.name))
+             );
+        }else{
+           this.users = res.filter(
+             (user) => !user?.roles || user.roles.length === 0
+           );
+        }
       });
   }
 
   onRefresh() {
     this.refresh = true;
     this.getAllUsers();
+  }
+
+  onStatusChange(data) {
+    if (data == "Active") {
+      this.activeStatus = true;
+      this.getAllUsers();
+    } else {
+      this.activeStatus = false;
+      this.getAllUsers();
+    }
+  }
+
+  onFilterUser(data) {
+    this.getAllUsers()
   }
 
   copyToClipboard() {
@@ -90,22 +131,16 @@ export class UserlistComponent implements OnInit {
     // Optionally, you can display a message or perform other actions after copying
   }
 
-  onStatusChange(data) {
-    if (data == "Active") {
-      this.activeStatus = true;
-      this.getAllUsers();
-    } else {
-      this.activeStatus = false;
-      this.getAllUsers();
-    }
-  }
-
   //   Get All Product Fields
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res: any) => {
       this.productField = res;
       this.status = this.dropdownService.extractNames(
         this.productField.filter((data) => data?.name == "Status")[0]
+          .productFieldValuesList
+      );
+      this.userFilter = this.dropdownService.extractNames(
+        this.productField.filter((data) => data?.name == "User Filter")[0]
           .productFieldValuesList
       );
     });

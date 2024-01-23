@@ -13,7 +13,7 @@
 <div class="grid">
     <div class="col-12 lg:col-8">
         <div class="card p-fluid" style="padding-bottom: 10rem;">
-            <div class="grid customP">
+            <div class="grid customP" *ngIf="singleTicket?.ticketType == 'Pickup Request'">
                 <div class="col-12 md:col-6 mb-2">
                     <h4>Shipper Infomation</h4>
                     <p><strong>Shipper Name:</strong> {{singleTicket?.shipperName}}</p>
@@ -36,6 +36,21 @@
                     <p><strong>Destination City:</strong> {{singleTicket?.destinationCity}}</p>
                 </div>
                 <div class="col-12 md:col-6 mb-2">
+                    <h4>General Information</h4>
+                    <p><strong>Name:</strong> {{singleTicket?.name}}</p>
+                    <p><strong>Email:</strong> {{singleTicket?.email}}</p>
+                    <p><strong>Phone:</strong> {{singleTicket?.phone}}</p>
+                    <p style="word-break: break-all;"><strong>Details:</strong> {{singleTicket?.textarea}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Ticket Information</h4>
+                    <p><strong>Ticket Type:</strong> {{singleTicket?.ticketType}}</p>
+                    <p><strong>Category:</strong> {{singleTicket?.category}}</p>
+                    <p><strong>Created At:</strong> {{singleTicket?.createdAt}}</p>
+                    <p><strong>Created By:</strong> {{singleTicket?.createdBy}}</p>
+                </div>
+
+                <div class="col-12 md:col-6 mb-2">
                     <h4>Department Information</h4>
                     <p><strong>Department:</strong> {{singleTicket?.department}}</p>
                     <p><strong>Department Category:</strong> {{singleTicket?.departmentCategory}}</p>
@@ -45,13 +60,111 @@
                     <p><strong>Pickup Date:</strong> {{singleTicket?.pickupDate}}</p>
                     <p><strong>Pickup Time: </strong> {{singleTicket?.pickupTime}}</p>
                 </div>
+
                 <div class="col-12 md:col-6 mb-2">
-                    <h4>Inquiry Information</h4>
+                    <h4>Ticket Status</h4>
+                    <p><strong>Status:</strong> {{singleTicket?.ticketStatus}}</p>
+                    <p><strong>Flag:</strong> {{singleTicket?.ticketFlag}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Assignment Details</h4>
+                    <p><strong>Assigned To:</strong> {{singleTicket?.assignedTo}}</p>
+                </div>
+            </div>
+            <div class="grid customP" *ngIf="singleTicket?.ticketType == 'Shipment Inquiry'">
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>General Information</h4>
+                    <p><strong>Name:</strong> {{singleTicket?.name}}</p>
+                    <p><strong>Email:</strong> {{singleTicket?.email}}</p>
+                    <p><strong>Phone:</strong> {{singleTicket?.phone}}</p>
+                    <p style="word-break: break-all;"><strong>Details:</strong> {{singleTicket?.textarea}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Ticket Information</h4>
+                    <p><strong>Ticket Type:</strong> {{singleTicket?.ticketType}}</p>
                     <p><strong>Category:</strong> {{singleTicket?.category}}</p>
                     <p><strong>Created At:</strong> {{singleTicket?.createdAt}}</p>
                     <p><strong>Created By:</strong> {{singleTicket?.createdBy}}</p>
                 </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Department Information</h4>
+                    <p><strong>Department:</strong> {{singleTicket?.department}}</p>
+                    <p><strong>Department Category:</strong> {{singleTicket?.departmentCategory}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Ticket Status</h4>
+                    <p><strong>Status:</strong> {{singleTicket?.ticketStatus}}</p>
+                    <p><strong>Flag:</strong> {{singleTicket?.ticketFlag}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Inquiry Details</h4>
+                    <p><strong>Airway or Reference Number:</strong> {{singleTicket?.airwayNumber}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Assignment Details</h4>
+                    <p><strong>Assigned To:</strong> {{singleTicket?.assignedTo}}</p>
+                </div>
+            </div>
+            <div class="grid customP" *ngIf="singleTicket?.ticketType == 'Rate Inquiry'">
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>General Information</h4>
+                    <p><strong>Name:</strong> {{singleTicket?.name}}</p>
+                    <p><strong>Email:</strong> {{singleTicket?.email}}</p>
+                    <p><strong>Phone:</strong> {{singleTicket?.phone}}</p>
+                    <p style="word-break: break-all;"><strong>Details:</strong> {{singleTicket?.textarea}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Ticket Information</h4>
+                    <p><strong>Ticket Type:</strong> {{singleTicket?.ticketType}}</p>
+                    <p><strong>Category:</strong> {{singleTicket?.category}}</p>
+                    <p><strong>Created At:</strong> {{singleTicket?.createdAt}}</p>
+                    <p><strong>Created By:</strong> {{singleTicket?.createdBy}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Inquiry Details</h4>
+                    <p><strong>Origin Country:</strong> {{singleTicket?.originCountry}}</p>
+                    <p><strong>Origin City:</strong> {{singleTicket?.originCity}}</p>
+                    <p><strong>Destination Country:</strong> {{singleTicket?.destinationCountry}}</p>
+                    <p><strong>Destination City:</strong> {{singleTicket?.destinationCity}}</p>
+                    <p><strong>Weight:</strong> {{singleTicket?.weight}}</p>
+                </div>
 
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Department Information</h4>
+                    <p><strong>Department:</strong> {{singleTicket?.department}}</p>
+                    <p><strong>Department Category:</strong> {{singleTicket?.departmentCategory}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Ticket Status</h4>
+                    <p><strong>Status:</strong> {{singleTicket?.ticketStatus}}</p>
+                    <p><strong>Flag:</strong> {{singleTicket?.ticketFlag}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Assignment Details</h4>
+                    <p><strong>Assigned To:</strong> {{singleTicket?.assignedTo}}</p>
+                </div>
+            </div>
+            <div class="grid customP"
+                *ngIf="singleTicket?.ticketType == 'Pre Sales Request' || singleTicket?.ticketType == 'Account Opening Request' || singleTicket?.ticketType == 'Exclusive Partnership Program'">
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>General Information</h4>
+                    <p><strong>Name:</strong> {{singleTicket?.name}}</p>
+                    <p><strong>Email:</strong> {{singleTicket?.email}}</p>
+                    <p><strong>Phone:</strong> {{singleTicket?.phone}}</p>
+                    <p style="word-break: break-all;"><strong>Details:</strong> {{singleTicket?.textarea}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Ticket Information</h4>
+                    <p><strong>Ticket Type:</strong> {{singleTicket?.ticketType}}</p>
+                    <p><strong>Category:</strong> {{singleTicket?.category}}</p>
+                    <p><strong>Created At:</strong> {{singleTicket?.createdAt}}</p>
+                    <p><strong>Created By:</strong> {{singleTicket?.createdBy}}</p>
+                </div>
+                <div class="col-12 md:col-6 mb-2">
+                    <h4>Department Information</h4>
+                    <p><strong>Department:</strong> {{singleTicket?.department}}</p>
+                    <p><strong>Department Category:</strong> {{singleTicket?.departmentCategory}}</p>
+                </div>
                 <div class="col-12 md:col-6 mb-2">
                     <h4>Ticket Status</h4>
                     <p><strong>Status:</strong> {{singleTicket?.ticketStatus}}</p>
@@ -80,7 +193,7 @@
             </div>
             <div class="grid">
                 <p class="col-12 py-1 mb-0"><span>Created:</span> {{singleTicket?.createdAt | daysAgo}}</p>
-                <p class="col-12 py-1 mb-0"><span>Due Date:</span> {{singleTicket?.pickupDate}}</p>
+                <p class="col-12 py-1 mb-0"><span>Type:</span> {{singleTicket?.ticketType}}</p>
                 <p class="col-12 py-1 mb-0"><span>Department:</span> {{singleTicket?.department}}</p>
                 <p class="col-12 py-1 mb-0"><span>Ticket Id:</span> {{singleTicket?.id}}</p>
             </div>

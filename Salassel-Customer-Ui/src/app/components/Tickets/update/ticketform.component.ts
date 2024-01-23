@@ -184,6 +184,11 @@ export class TicketformComponent implements OnInit {
 
   editForm() {
     if (this.editId != null) {
+      this.ticketForm.get("textarea").disable();
+      this.ticketForm.get("name").disable();
+      this.ticketForm.get("email").disable();
+      this.ticketForm.get("ticketType").disable();
+
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
 
@@ -399,10 +404,13 @@ export class TicketformComponent implements OnInit {
 
   onSubmit() {
     if (
-      this.ticketForm.get("name")?.valid &&
-      this.ticketForm.get("email")?.valid &&
       this.ticketForm.get("phone")?.valid &&
-      this.ticketForm.get("ticketType")?.valid
+      (this.ticketForm.get("ticketType")?.valid ||
+        this.ticketForm.get("ticketType")?.disabled) &&
+      (this.ticketForm.get("email")?.valid ||
+        this.ticketForm.get("email")?.disabled) &&
+      (this.ticketForm.get("name")?.valid ||
+        this.ticketForm.get("name")?.disabled)
     ) {
       // Date and Time get from form
       let ticketDate: Date = this.ticketForm.value.pickupDate;
@@ -436,12 +444,12 @@ export class TicketformComponent implements OnInit {
         deliveryDistrict: formValue.deliveryDistrict,
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
-        ticketType: formValue.ticketType,
+        ticketType: this.ticketForm.get("ticketType")?.value,
         weight: formValue.weight,
-        name: formValue.name,
-        email: formValue.email,
+        name: this.ticketForm.get("name")?.value,
+        email: this.ticketForm.get("email")?.value,
         phone: formValue.phone,
-        textarea: formValue.textarea,
+        textarea: this.ticketForm.get("textarea")?.value,
         airwayNumber: formValue.airwayNumber,
         createdBy: localStorage.getItem("loginUserEmail"),
       };

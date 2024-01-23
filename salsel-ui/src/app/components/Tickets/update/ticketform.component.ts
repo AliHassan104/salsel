@@ -69,6 +69,10 @@ export class TicketformComponent implements OnInit {
   @ViewChild("dropdown1") dropdown1?: Dropdown;
   @ViewChild("dropdown2") dropdown2?: Dropdown;
   @ViewChild("dropdown3") dropdown3?: Dropdown;
+  @ViewChild("dropdown4") dropdown4?: Dropdown;
+  @ViewChild("dropdown5") dropdown5?: Dropdown;
+  @ViewChild("dropdown6") dropdown6?: Dropdown;
+  @ViewChild("dropdown7") dropdown7?: Dropdown;
 
   //   CONSTRUCTOR
   constructor(
@@ -108,7 +112,7 @@ export class TicketformComponent implements OnInit {
     if (this.editMode == false) {
       this.ticketForm.patchValue({
         name: localStorage.getItem("loginUserName"),
-        email: localStorage.getItem("loginUserEmail"),
+        email: localStorage.getItem("loginUserEmail").toLowerCase(),
       });
     }
   }
@@ -120,6 +124,21 @@ export class TicketformComponent implements OnInit {
         this.dropdown1,
         this.dropdown2,
         this.dropdown3,
+      ];
+
+      dropdowns.forEach((dropdown, index) => {
+        if (dropdown) {
+          (dropdown.filterBy as any) = {
+            split: (_: any) => [(item: any) => item],
+          };
+        }
+      });
+    } else if (this.ticketForm.get("ticketType")?.value == "Rate Inquiry") {
+      const dropdowns = [
+        this.dropdown4,
+        this.dropdown5,
+        this.dropdown6,
+        this.dropdown7,
       ];
 
       dropdowns.forEach((dropdown, index) => {
@@ -181,6 +200,11 @@ export class TicketformComponent implements OnInit {
 
   editForm() {
     if (this.editId != null) {
+      this.ticketForm.get("textarea").disable();
+      this.ticketForm.get("name").disable();
+      this.ticketForm.get("email").disable();
+      this.ticketForm.get("ticketType").disable();
+
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
 
@@ -396,10 +420,12 @@ export class TicketformComponent implements OnInit {
 
   onSubmit() {
     if (
-      this.ticketForm.get("name")?.valid &&
-      this.ticketForm.get("email")?.valid &&
       this.ticketForm.get("phone")?.valid &&
-      this.ticketForm.get("ticketType")?.valid
+      (this.ticketForm.get("ticketType")?.valid || this.ticketForm.get("ticketType")?.disabled) &&
+      (this.ticketForm.get("email")?.valid ||
+        this.ticketForm.get("email")?.disabled) &&
+      (this.ticketForm.get("name")?.valid ||
+        this.ticketForm.get("name")?.disabled)
     ) {
       // Date and Time get from form
       let ticketDate: Date = this.ticketForm.value.pickupDate;
@@ -433,12 +459,12 @@ export class TicketformComponent implements OnInit {
         deliveryDistrict: formValue.deliveryDistrict,
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
-        ticketType: formValue.ticketType,
+        ticketType: this.ticketForm.get("ticketType")?.value,
         weight: formValue.weight,
-        name: formValue.name,
-        email: formValue.email,
+        name: this.ticketForm.get("name")?.value,
+        email: this.ticketForm.get("email")?.value,
         phone: formValue.phone,
-        textarea: formValue.textarea,
+        textarea: this.ticketForm.get("textarea")?.value,
         airwayNumber: formValue.airwayNumber,
         createdBy: localStorage.getItem("loginUserEmail"),
       };
@@ -449,20 +475,31 @@ export class TicketformComponent implements OnInit {
           this.ticketForm.get("pickupTime")?.valid
         ) {
           if (this.editMode) {
-            this._ticketService
-              .editTicket(
-                this.editId,
-                ticketData,
-                this.ticketAttachment,
-                this.ticketEditParams
-              )
-              .subscribe(() => {
-                this.update();
-                this.router.navigate(["ticket/list"]);
-              });
+            if (
+              this.ticketForm.get("department")?.valid &&
+              this.ticketForm.get("assignedTo")?.valid &&
+              this.ticketForm.get("category")?.valid &&
+              this.ticketForm.get("ticketStatus")?.valid &&
+              this.ticketForm.get("ticketFlag")?.valid &&
+              (this.ticketForm.get("departmentCategory")?.valid ||
+                this.ticketForm.get("departmentCategory")?.disabled)
+            ) {
+              this._ticketService
+                .editTicket(
+                  this.editId,
+                  ticketData,
+                  this.ticketAttachment,
+                  this.ticketEditParams
+                )
+                .subscribe(() => {
+                  this.update();
+                  this.router.navigate(["ticket/list"]);
+                });
+            } else {
+              this.formService.markFormGroupTouched(this.ticketForm);
+            }
           } else {
             //   Create Ticket
-
             this._ticketService
               .createTicket(ticketData, this.ticketAttachment)
               .subscribe((res: any) => {
@@ -477,17 +514,29 @@ export class TicketformComponent implements OnInit {
         }
       } else {
         if (this.editMode) {
-          this._ticketService
-            .editTicket(
-              this.editId,
-              ticketData,
-              this.ticketAttachment,
-              this.ticketEditParams
-            )
-            .subscribe(() => {
-              this.update();
-              this.router.navigate(["ticket/list"]);
-            });
+          if (
+            this.ticketForm.get("department")?.valid &&
+            this.ticketForm.get("assignedTo")?.valid &&
+            this.ticketForm.get("category")?.valid &&
+            this.ticketForm.get("ticketStatus")?.valid &&
+            this.ticketForm.get("ticketFlag")?.valid &&
+            (this.ticketForm.get("departmentCategory")?.valid ||
+              this.ticketForm.get("departmentCategory")?.disabled)
+          ) {
+            this._ticketService
+              .editTicket(
+                this.editId,
+                ticketData,
+                this.ticketAttachment,
+                this.ticketEditParams
+              )
+              .subscribe(() => {
+                this.update();
+                this.router.navigate(["ticket/list"]);
+              });
+          } else {
+            this.formService.markFormGroupTouched(this.ticketForm);
+          }
         } else {
           //   Create Ticket
 
