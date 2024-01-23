@@ -19,8 +19,9 @@ export class LogininterceptorService implements HttpInterceptor {
   constructor(
     private LoaderService: LoaderService,
     private _authService: AuthGuardService,
-    private router:Router
+    private router: Router
   ) {}
+
 
   intercept(
     req: HttpRequest<any>,
@@ -33,7 +34,6 @@ export class LogininterceptorService implements HttpInterceptor {
     if (token) {
       const expiryTime = this._authService.getDecodedAccessToken(token).exp;
       const currentTimestamp = Math.floor(Date.now() / 1000);
-      
 
       if (expiryTime && expiryTime <= currentTimestamp) {
         // Token has expired, navigate to login page
@@ -55,7 +55,7 @@ export class LogininterceptorService implements HttpInterceptor {
         return throwError(error);
       }),
       finalize(() => {
-        this.LoaderService.hideLoader();       
+        this.LoaderService.hideLoader();
       })
     );
   }

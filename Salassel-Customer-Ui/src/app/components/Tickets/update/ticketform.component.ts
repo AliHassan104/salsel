@@ -68,6 +68,10 @@ export class TicketformComponent implements OnInit {
   @ViewChild("dropdown1") dropdown1?: Dropdown;
   @ViewChild("dropdown2") dropdown2?: Dropdown;
   @ViewChild("dropdown3") dropdown3?: Dropdown;
+  @ViewChild("dropdown4") dropdown4?: Dropdown;
+  @ViewChild("dropdown5") dropdown5?: Dropdown;
+  @ViewChild("dropdown6") dropdown6?: Dropdown;
+  @ViewChild("dropdown7") dropdown7?: Dropdown;
 
   //   CONSTRUCTOR
   constructor(
@@ -123,6 +127,21 @@ export class TicketformComponent implements OnInit {
         this.dropdown1,
         this.dropdown2,
         this.dropdown3,
+      ];
+
+      dropdowns.forEach((dropdown, index) => {
+        if (dropdown) {
+          (dropdown.filterBy as any) = {
+            split: (_: any) => [(item: any) => item],
+          };
+        }
+      });
+    } else if (this.ticketForm.get("ticketType")?.value == "Rate Inquiry") {
+      const dropdowns = [
+        this.dropdown4,
+        this.dropdown5,
+        this.dropdown6,
+        this.dropdown7,
       ];
 
       dropdowns.forEach((dropdown, index) => {
