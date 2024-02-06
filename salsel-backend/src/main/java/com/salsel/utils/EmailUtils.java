@@ -61,7 +61,7 @@ public class EmailUtils {
 
                 // Attach the PDF
                 helper.addAttachment("AWB_Details.pdf", new ByteArrayResource(pdfBytes));
-                javaMailSender.send(message);
+//                javaMailSender.send(message);
 
             } catch (MessagingException e) {
                 e.printStackTrace();
@@ -83,7 +83,7 @@ public class EmailUtils {
                 byte[] pdf = awbService.downloadAwbPdf("awb_" + awb.getId() + ".pdf", awb.getId());
 
                 // Send email
-                sendEmail(sender, "muhammadtabish05@gmail.com", awb.getId(), pdf);
+//                sendEmail(sender, "muhammadtabish05@gmail.com", awb.getId(), pdf);
 
                 // Set the flag to true after sending the email
                 awb.setEmailFlag(true);

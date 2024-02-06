@@ -5,24 +5,36 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salsel.criteria.SearchCriteria;
 import com.salsel.dto.TicketDto;
 import com.salsel.model.Ticket;
+import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.TicketService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
+import static com.salsel.constants.ExcelConstants.TICKET_TYPE;
+import static com.salsel.constants.ExcelConstants.USER_TYPE;
 
 @RestController
 @RequestMapping("/api")
 public class TicketController {
     private final TicketService ticketService;
+    private final ExcelGenerationService excelGenerationService;
 
-    public TicketController(TicketService ticketService) {
+    public TicketController(TicketService ticketService, ExcelGenerationService excelGenerationService) {
         this.ticketService = ticketService;
+        this.excelGenerationService = excelGenerationService;
     }
 
 //    @PostMapping("/ticket")
@@ -110,5 +122,22 @@ public class TicketController {
     public ResponseEntity<Void> updateTicketStatusToActive(@PathVariable Long id) {
         ticketService.setToActiveById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/download-ticket-excel")
+    public void downloadTicketsBetweenDates(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=tickets.xlsx");
+
+        List<TicketDto> tickets = ticketService.getTicketsBetweenDates(startDate, endDate);
+        List<Map<String, Object>> excelData = excelGenerationService.convertTicketsToExcelData(tickets);
+
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(excelData, outputStream, TICKET_TYPE);
+        outputStream.close();
     }
 }

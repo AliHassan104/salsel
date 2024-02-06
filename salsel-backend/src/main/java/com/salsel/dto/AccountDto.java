@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class AccountDto {
     private Long id;
+    private LocalDate createdAt;
     private String accountType;
     private String email;
     private String businessActivity;

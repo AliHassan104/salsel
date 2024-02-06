@@ -3,6 +3,8 @@ package com.salsel.service;
 import com.salsel.dto.UserDto;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,4 +23,5 @@ public interface UserService {
     UserDto update(Long id, UserDto userDto);
     void forgotPassword(String userEmail);
     void resetPassword(String userEmail, String resetCode, String newPassword);
+    List<UserDto> getUsersBetweenDates(LocalDate startDate, LocalDate endDate);
 }

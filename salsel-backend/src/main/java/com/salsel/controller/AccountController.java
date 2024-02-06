@@ -2,20 +2,32 @@ package com.salsel.controller;
 
 import com.salsel.dto.AccountDto;
 import com.salsel.service.AccountService;
+import com.salsel.service.ExcelGenerationService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
+import static com.salsel.constants.ExcelConstants.ACCOUNT_TYPE;
+import static com.salsel.constants.ExcelConstants.USER_TYPE;
 
 @RestController
 @RequestMapping("/api")
 public class AccountController {
     private final AccountService accountService;
+    private final ExcelGenerationService excelGenerationService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, ExcelGenerationService excelGenerationService) {
         this.accountService = accountService;
+        this.excelGenerationService = excelGenerationService;
     }
 
     @PostMapping("/accountt")
@@ -67,5 +79,22 @@ public class AccountController {
                                                     @RequestPart("file") MultipartFile file) {
         AccountDto updatedAccountDto = accountService.update(id, accountDto, file);
         return ResponseEntity.ok(updatedAccountDto);
+    }
+
+    @GetMapping("/download-account-excel")
+    public void downloadAccountsBetweenDates(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=accounts.xlsx");
+
+        List<AccountDto> accounts = accountService.getAccountsBetweenDates(startDate, endDate);
+        List<Map<String, Object>> excelData = excelGenerationService.convertAccountsToExcelData(accounts);
+
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(excelData, outputStream, ACCOUNT_TYPE);
+        outputStream.close();
     }
 }

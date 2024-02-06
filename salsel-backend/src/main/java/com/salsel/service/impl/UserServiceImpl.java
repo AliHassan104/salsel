@@ -18,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto registerUser(UserDto userdto) {
         User user = toEntity(userdto);
+        user.setCreatedAt(LocalDate.now());
 
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
         if(existingUser.isPresent()){
@@ -66,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto registerRoleCustomerUser(UserDto userdto) {
         User user = toEntity(userdto);
-
+        user.setCreatedAt(LocalDate.now());
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
         if(existingUser.isPresent()){
             throw new UserAlreadyExistAuthenticationException("User Already Exist");
@@ -248,9 +251,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public List<UserDto> getUsersBetweenDates(LocalDate startDate, LocalDate endDate) {
+        return userRepository.findAllByCreatedAtBetween(startDate, endDate)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     public UserDto toDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
+                .createdAt(user.getCreatedAt())
                 .employeeId(user.getEmployeeId())
                 .name(user.getName())
                 .firstname(user.getFirstname())
@@ -267,6 +279,7 @@ public class UserServiceImpl implements UserService {
     public User toEntity(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
+                .createdAt(userDto.getCreatedAt())
                 .employeeId(userDto.getEmployeeId())
                 .email(userDto.getEmail())
                 .firstname(userDto.getFirstname())

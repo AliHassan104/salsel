@@ -2,6 +2,7 @@ package com.salsel.repository;
 
 import com.salsel.model.Awb;
 import com.salsel.model.Ticket;
+import com.salsel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +39,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
     @Query("SELECT t FROM Ticket t WHERE t.status = :status And t.createdBy = :createdBy ORDER BY t.id DESC")
     List<Ticket> findAllInDesOrderByEmailAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy);
 
-
+    List<Ticket> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     @Query("SELECT t FROM Ticket t WHERE (t.status = :status AND t.createdBy = :createdBy) OR (t.status = :status AND t.assignedTo = :assignedTo) ORDER BY t.id DESC")
     List<Ticket> findAllInDesOrderByCreatedByOrAssignedToAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo);

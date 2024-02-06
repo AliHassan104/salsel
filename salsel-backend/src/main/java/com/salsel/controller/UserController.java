@@ -1,20 +1,32 @@
 package com.salsel.controller;
 
 import com.salsel.dto.UserDto;
+import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.UserService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+
+import static com.salsel.constants.ExcelConstants.USER_TYPE;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
-    private  final UserService userService;
+    private final UserService userService;
+    private final ExcelGenerationService excelGenerationService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ExcelGenerationService excelGenerationService) {
         this.userService = userService;
+        this.excelGenerationService = excelGenerationService;
     }
 
     @GetMapping("/user")
@@ -89,4 +101,22 @@ public class UserController {
         userService.setToActiveById(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/download-user-excel")
+    public void downloadUsersBetweenDates(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=users.xlsx");
+
+        List<UserDto> users = userService.getUsersBetweenDates(startDate, endDate);
+        List<Map<String, Object>> excelData = excelGenerationService.convertUsersToExcelData(users);
+
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(excelData, outputStream, USER_TYPE);
+        outputStream.close();
+    }
+
 }

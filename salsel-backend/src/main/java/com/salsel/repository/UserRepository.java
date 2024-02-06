@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +42,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String userEmail);
     Optional<User> findByEmailAndStatusIsTrue(String email);
+
+//    List<User> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<User> findAllByCreatedAtBetween(LocalDate startDate, LocalDate endDate);
     Optional<User> findByNameAndStatusIsTrue(String name);
 }

@@ -25,9 +25,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -261,6 +264,17 @@ public class TicketServiceImpl implements TicketService {
 
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return toDto(updatedTicket);
+    }
+
+    @Override
+    public List<TicketDto> getTicketsBetweenDates(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        return ticketRepository.findAllByCreatedAtBetween(startDateTime, endDateTime)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     public TicketDto toDto(Ticket ticket) {

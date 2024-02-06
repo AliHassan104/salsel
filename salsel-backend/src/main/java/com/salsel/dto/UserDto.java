@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @Data
 public class UserDto {
     private Long id;
+    private LocalDate createdAt;
     private String employeeId;
     private String name;
     private String firstname;

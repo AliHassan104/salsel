@@ -19,9 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -49,6 +51,7 @@ public class AccountServiceImpl implements AccountService {
 
         Account account = toEntity(accountDto);
         account.setStatus(true);
+        account.setCreatedAt(LocalDate.now());
 
         Long accountNumberWithCountryCode = accountRepository.findAccountNumberByLatestId();
 
@@ -182,9 +185,18 @@ public class AccountServiceImpl implements AccountService {
         return toDto(updatedAccount);
     }
 
+    @Override
+    public List<AccountDto> getAccountsBetweenDates(LocalDate startDate, LocalDate endDate) {
+        return accountRepository.findAllByCreatedAtBetween(startDate, endDate)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     public AccountDto toDto(Account account) {
         return AccountDto.builder()
                 .id(account.getId())
+                .createdAt(account.getCreatedAt())
                 .accountType(account.getAccountType())
                 .email(account.getEmail())
                 .businessActivity(account.getBusinessActivity())
@@ -209,6 +221,7 @@ public class AccountServiceImpl implements AccountService {
     public Account toEntity(AccountDto accountDto) {
         return Account.builder()
                 .id(accountDto.getId())
+                .createdAt(accountDto.getCreatedAt())
                 .email(accountDto.getEmail())
                 .accountType(accountDto.getAccountType())
                 .businessActivity(accountDto.getBusinessActivity())
