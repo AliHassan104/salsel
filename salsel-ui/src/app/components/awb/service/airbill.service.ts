@@ -39,15 +39,20 @@ export class AirbillService {
 
   //   Get Single Ticket
 
-  getSingleBill(id) {
+  getSingleBill(id:any) {
     return this.http.get(`${this.url}awb/${id}`);
   }
 
   //   Delete Ticket
 
-  deleteBill(id) {
+  deleteBill(id:any) {
     return this.http.delete(`${this.url}awb/${id}`);
   }
+
+//   update Bill AssignedTo
+updateAssignedTo(id:any,data:any){
+    return this.http.put(`${this.url}awb/${id}`, data);
+}
 
   //   Update Bill Sttaus
   updateBillStatus(id) {

@@ -104,7 +104,7 @@
                                 (click)="onActiveTicket(data.id)"></button>
                         </td>
                         <td>
-                            {{ data?.createdAt }}
+                            {{ data?.createdAt | date:'mediumDate'}}
                         </td>
                         <td>
                             {{ data?.id }}

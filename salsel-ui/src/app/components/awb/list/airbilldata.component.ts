@@ -7,6 +7,9 @@ import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { finalize } from "rxjs";
+import { RolesService } from "../../permissions/service/roles.service";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 
 @Component({
   selector: "app-airbilldata",
@@ -21,21 +24,31 @@ export class AirbilldataComponent implements OnInit {
   activeStatus: boolean = true;
 
   deleteProductsDialog: any;
+  assignDialog: boolean = false;
   refresh: boolean = true;
   userRole?;
+  assignedTo: any;
+  assignId: any;
   constructor(
     private _airbillService: AirbillService,
     private router: Router,
     private messageService: MessageService,
     private dropdownService: DropdownService,
-    public sessionStorageService: SessionStorageService
+    public sessionStorageService: SessionStorageService,
+    private roleService: RolesService,
+    private formService: FormvalidationService
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
   bills: IAwbDto;
   deleteId: any;
+  awbForm!: FormGroup;
 
   ngOnInit(): void {
+    this.awbForm = new FormGroup({
+      assignedTo: new FormControl(null, [Validators.required]),
+    });
+
     this.getAirbills();
     this.getAllProductFields();
   }
@@ -94,6 +107,12 @@ export class AirbilldataComponent implements OnInit {
           .productFieldValuesList
       );
     });
+
+    // Get All Roles
+    this.roleService.getRoles().subscribe((res: any) => {
+      this.assignedTo = res;
+      this.assignedTo = this.dropdownService.extractNames(this.assignedTo);
+    });
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -149,6 +168,39 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onViewHistory(id) {}
+
+  onAssignBill(id) {
+    this.assignDialog = true;
+    this.assignId = id;
+  }
+
+  onCloseDialog(){
+    this.awbForm.reset()
+  }
+
+  onSubmit(data: any) {
+    console.log(data);
+    if (this.awbForm.valid) {
+      this._airbillService
+        .updateAssignedTo(this.assignId, data)
+        .subscribe((res: any) => {
+          this.assignDialog = false;
+          this.awbForm.reset()
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Successfully Assigned",
+          });
+        });
+    } else {
+      this.formService.markFormGroupTouched(this.awbForm);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please ensure that required Field is filled out.",
+      });
+    }
+  }
 
   success() {
     this.messageService.add({
