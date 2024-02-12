@@ -18,6 +18,7 @@ public interface TicketService {
     Page<Ticket> findAll(SearchCriteria searchCriteria, Pageable pageable);
 TicketDto save(TicketDto ticketDto, List<MultipartFile> pdfFiles);
     List<TicketDto> getAll(Boolean status);
+    List<TicketDto> getAllByTicketStatus(String status);
     List<TicketDto> getTicketsByLoggedInUser(Boolean status);
     List<TicketDto> getTicketsByLoggedInUserAndRole(Boolean status);
     TicketDto findById(Long id);

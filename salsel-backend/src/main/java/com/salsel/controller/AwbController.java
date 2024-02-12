@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class AwbController {
     private final AwbService awbService;
-
     public AwbController(AwbService awbService) {
         this.awbService = awbService;
     }
@@ -92,6 +91,13 @@ public class AwbController {
     @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
     public ResponseEntity<AwbDto> updateAwb(@PathVariable Long id, @RequestBody AwbDto awbDto) {
         AwbDto updatedAwbDto = awbService.update(id, awbDto);
+        return ResponseEntity.ok(updatedAwbDto);
+    }
+
+    @PutMapping("/awb/awb-status/{uniqueNumber}")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
+    public ResponseEntity<AwbDto> updateAwbStatusOnScan(@PathVariable Long uniqueNumber) {
+        AwbDto updatedAwbDto = awbService.updateAwbStatusOnScan(uniqueNumber);
         return ResponseEntity.ok(updatedAwbDto);
     }
 }

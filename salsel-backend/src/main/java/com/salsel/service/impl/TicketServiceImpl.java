@@ -117,6 +117,18 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public List<TicketDto> getAllByTicketStatus(String status) {
+        List<Ticket> ticketList = ticketRepository.findAllInDesOrderByIdAndTicketStatus(status);
+        List<TicketDto> ticketDtoList = new ArrayList<>();
+
+        for (Ticket ticket : ticketList) {
+            TicketDto ticketDto = toDto(ticket);
+            ticketDtoList.add(ticketDto);
+        }
+        return ticketDtoList;
+    }
+
+    @Override
     public List<TicketDto> getTicketsByLoggedInUser(Boolean status) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

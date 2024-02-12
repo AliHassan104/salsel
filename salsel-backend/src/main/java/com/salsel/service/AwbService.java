@@ -16,4 +16,5 @@ public interface AwbService {
     void deleteById(Long id);
     void setToActiveById(Long id);
     AwbDto update(Long id, AwbDto awbDto);
+    AwbDto updateAwbStatusOnScan(Long uniqueNumber);
 }

@@ -28,6 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.salsel.constants.AwbStatusConstants.*;
+
 @Service
 public class AwbServiceImpl implements AwbService {
 
@@ -304,6 +306,46 @@ public class AwbServiceImpl implements AwbService {
         existingAwb.setPickupStreetName(awbDto.getPickupStreetName());
         existingAwb.setPickupDistrict(awbDto.getPickupDistrict());
         existingAwb.setAssignedTo(awbDto.getAssignedTo());
+
+        Awb updatedAwb = awbRepository.save(existingAwb);
+        return toDto(updatedAwb);
+    }
+
+    @Override
+    @Transactional
+    public AwbDto updateAwbStatusOnScan(Long uniqueNumber) {
+        Awb existingAwb = awbRepository.findByUniqueNumber(uniqueNumber)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for UniqueNumber => %d", uniqueNumber)));
+
+        switch (existingAwb.getAwbStatus()) {
+            case AWB_CREATED:
+                existingAwb.setAwbStatus(PICKED_UP);
+                break;
+            case PICKED_UP:
+                existingAwb.setAwbStatus(ARRIVED_IN_STATION);
+                break;
+            case ARRIVED_IN_STATION:
+                existingAwb.setAwbStatus(HELD_IN_STATION);
+                break;
+            case HELD_IN_STATION:
+                existingAwb.setAwbStatus(DEPART_FROM_STATION);
+                break;
+            case DEPART_FROM_STATION:
+                existingAwb.setAwbStatus(ARRIVED_IN_HUB);
+                break;
+            case ARRIVED_IN_HUB:
+                existingAwb.setAwbStatus(DEPART_FROM_HUB);
+                break;
+            case DEPART_FROM_HUB:
+                existingAwb.setAwbStatus(OUT_FOR_DELIVERY);
+                break;
+            case OUT_FOR_DELIVERY:
+            case DELIVERED:
+                existingAwb.setAwbStatus(DELIVERED);
+                break;
+            default:
+                throw new RecordNotFoundException("Awb Status not valid");
+        }
 
         Awb updatedAwb = awbRepository.save(existingAwb);
         return toDto(updatedAwb);

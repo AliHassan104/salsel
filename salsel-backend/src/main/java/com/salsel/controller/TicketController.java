@@ -70,6 +70,13 @@ public class TicketController {
         return ResponseEntity.ok(ticketDtoList);
     }
 
+    @GetMapping("/ticket/ticket-status/{status}")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
+    public ResponseEntity<List<TicketDto>> getAllTicketsByTicketStatus(@PathVariable String status) {
+        List<TicketDto> ticketDtoList = ticketService.getAllByTicketStatus(status);
+        return ResponseEntity.ok(ticketDtoList);
+    }
+
     @GetMapping("/ticket/logged-in-user")
     @PreAuthorize("hasAuthority('READ_TICKET')")
     public ResponseEntity<List<TicketDto>> getAllTicketsCreatedByLoggedInUser(@RequestParam(value = "status") Boolean status) {

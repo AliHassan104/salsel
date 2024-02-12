@@ -30,6 +30,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
 
     @Query("SELECT t FROM Ticket t WHERE t.status = :status ORDER BY t.id DESC")
     List<Ticket> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
+
+    @Query("SELECT t FROM Ticket t WHERE t.ticketStatus = :status ORDER BY t.id DESC")
+    List<Ticket> findAllInDesOrderByIdAndTicketStatus(@Param("status") String status);
+
     @Query("SELECT t FROM Ticket t WHERE t.id = :id AND t.status = true")
     Ticket findByIdWhereStatusIsTrue(@Param("id") Long id);
 
