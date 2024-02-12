@@ -1,6 +1,7 @@
 package com.salsel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class AwbDto {
     private String serviceTypeCode;
     private String createdBy;
     private String assignedTo;
+
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;

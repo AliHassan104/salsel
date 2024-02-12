@@ -8,22 +8,29 @@ import { IAccountData } from "src/app/components/accounts/model/accountValuesDto
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { UploadEvent } from "primeng/fileupload";
 import { finalize } from "rxjs";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { DatePipe } from "@angular/common";
+import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 
 @Component({
   selector: "app-account-list",
   templateUrl: "./account-list.component.html",
   styleUrls: ["./account-list.component.scss"],
-  providers: [MessageService],
+  providers: [MessageService, DatePipe],
 })
 export class AccountListComponent implements OnInit {
   @ViewChild("filter") filter!: ElementRef;
   //   Activity Work
+  excelDataForm!: FormGroup;
+  visible: boolean = false;
   productField?;
   status?;
   selectedStatus: string = "Active";
   activeStatus: boolean = true;
 
   file;
+  minDate
+  maxDate
 
   deleteId: any;
   refresh: boolean = true;
@@ -35,7 +42,9 @@ export class AccountListComponent implements OnInit {
     private router: Router,
     private dropdownService: DropdownService,
     private messageService: MessageService,
-    public sessionStorageService: SessionStorageService
+    public sessionStorageService: SessionStorageService,
+    private datePipe: DatePipe,
+    private formService: FormvalidationService
   ) {}
 
   accounts?: IAccountData[];
@@ -43,8 +52,21 @@ export class AccountListComponent implements OnInit {
   loading;
 
   ngOnInit(): void {
+    this.excelDataForm = new FormGroup({
+      toDate: new FormControl(null, Validators.required),
+      fromDate: new FormControl(null, Validators.required),
+    });
+
     this.getAllAccount();
     this.getAllProductFields();
+    this.getMinMax()
+  }
+
+  getMinMax(){
+    this.accountService.getMinMax().subscribe((res:any)=>{
+        this.minDate = new Date(res.minDate)
+        this.maxDate = new Date(res.maxDate);
+    })
   }
 
   //   GET ALL ACCOUNTS
@@ -162,6 +184,46 @@ export class AccountListComponent implements OnInit {
         this.downloadError();
       }
     );
+  }
+
+  onDownloadExcel(data: any) {
+    if (this.excelDataForm.valid) {
+      const formattedDates = {
+        startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
+        endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
+      };
+      console.log(formattedDates);
+
+      this.accountService
+        .downloadAccountDataInExcel(formattedDates)
+        .pipe(
+          finalize(() => {
+            this.messageService.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Download Successfull",
+            }),
+              this.excelDataForm.reset();
+            this.visible = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this.accountService.downloadExcelFile(
+            res,
+            `Account_${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+          ),
+            (error) => {
+              this.downloadError();
+            };
+        });
+    } else {
+      this.formService.markFormGroupTouched(this.excelDataForm);
+      this.downloadError();
+    }
+  }
+
+  onCancel() {
+    this.visible = false;
   }
 
   downloadError() {

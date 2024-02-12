@@ -20,6 +20,7 @@
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
+                                <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download" (click)="visible = true"></button>
                             <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
                                 style="font-weight: bold;"></i>
                         </div>
@@ -104,7 +105,7 @@
                                 (click)="onActiveTicket(data.id)"></button>
                         </td>
                         <td>
-                            {{ data?.createdAt }}
+                            {{ data?.createdAt | date:'d MMM, Y'}}
                         </td>
                         <td>
                             {{ data?.id }}
@@ -120,7 +121,7 @@
                             {{data?.ticketFlag}}
                         </td>
                         <td>
-                            {{ data?.category }}
+                            {{ data?.ticketCategory }}
                         </td>
                         <td>
                             {{ data?.assignedTo }}
@@ -160,6 +161,39 @@
             <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                 (click)="confirmDeleteSelected()"></button>
         </ng-template>
+    </p-dialog>
+
+    <p-dialog header="Download Ticket Report" [(visible)]="visible" [modal]="true" [style]="{ width: '70vw' }" class="customDialogExcel"
+        [draggable]="false" [resizable]="false">
+        <form action="" [formGroup]="excelDataForm" (ngSubmit)="onDownloadExcel(excelDataForm.value)" class="mt-6">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-6">
+                    <label>From Date</label>
+                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
+                        [maxDate]="maxDate" formControlName="fromDate" appendTo="body"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('fromDate')?.touched && excelDataForm.get('fromDate')?.invalid}"></p-calendar>
+                    <small *ngIf="!excelDataForm.get('fromDate')?.valid && excelDataForm.get('fromDate')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
+                <div class="field col-6">
+                    <label>To Date</label>
+                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
+                        [maxDate]="maxDate" formControlName="toDate" appendTo="body"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('toDate')?.touched && excelDataForm.get('toDate')?.invalid}"></p-calendar>
+                    <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+            </div>
+            <div class="flex justify-content-center w-full mt-5">
+                <button pButton label="Download" type="Submit" class="mx-3 submit-btn add-btn"></button>
+                <button pButton label="Cancel" (click)="onCancel()" type="button" class="mx-3 p-button-outlined"></button>
+            </div>
+        </form>
     </p-dialog>
 
     <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

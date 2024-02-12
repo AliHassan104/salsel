@@ -23,6 +23,7 @@ import { PasswordModule } from "primeng/password";
 import { TooltipModule } from "primeng/tooltip";
 import { AvatarModule } from "primeng/avatar";
 import { UserProfileModule } from "./user-profile/user-profile.module";
+import { CalendarModule } from "primeng/calendar";
 
 @NgModule({
   declarations: [UserlistComponent, UserComponent],
@@ -50,6 +51,7 @@ import { UserProfileModule } from "./user-profile/user-profile.module";
     TooltipModule,
     AvatarModule,
     UserProfileModule,
+    CalendarModule
   ],
 })
 export class UsermanagementModule {}

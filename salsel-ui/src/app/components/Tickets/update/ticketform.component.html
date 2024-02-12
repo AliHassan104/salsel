@@ -12,7 +12,8 @@
                     <p-dropdown [options]="ticketType" [style]="{'opacity': 1}" placeholder="Select Ticket Type"
                         formControlName="ticketType"
                         [ngClass]="{'ng-dirty':ticketForm.get('ticketType')?.touched && ticketForm.get('ticketType')?.invalid}"></p-dropdown>
-                    <small *ngIf="!ticketForm.get('ticketType')?.valid && ticketForm.get('ticketType')?.touched && editMode == false"
+                    <small
+                        *ngIf="!ticketForm.get('ticketType')?.valid && ticketForm.get('ticketType')?.touched && editMode == false"
                         class="text-red-500">
                         Required
                     </small>
@@ -23,7 +24,8 @@
                     <input pInputText id="name" type="text" formControlName="name"
                         [ngClass]="{'ng-dirty':ticketForm.get('name')?.touched && ticketForm.get('name')?.invalid}"
                         placeholder="Enter name" [required]="true" />
-                    <small *ngIf="!ticketForm.get('name')?.valid && ticketForm.get('name')?.touched && editMode == false"
+                    <small
+                        *ngIf="!ticketForm.get('name')?.valid && ticketForm.get('name')?.touched && editMode == false"
                         class="text-red-500">
                         Required
                     </small>
@@ -34,7 +36,8 @@
                     <input pInputText id="email" type="email" formControlName="email"
                         [ngClass]="{'ng-dirty':ticketForm.get('email')?.touched && ticketForm.get('email')?.invalid}"
                         placeholder="Enter Email" [required]="true" />
-                    <small *ngIf="!ticketForm.get('email')?.valid && ticketForm.get('email')?.touched && editMode == false"
+                    <small
+                        *ngIf="!ticketForm.get('email')?.valid && ticketForm.get('email')?.touched && editMode == false"
                         class="text-red-500">
                         Required
                     </small>
@@ -95,10 +98,33 @@
                     <div class="field col-12 md:col-3">
                         <label htmlFor="departmentCategory"><strong>Department Category</strong></label>
                         <p-dropdown [options]="departmentCategory" placeholder="Enter department category"
-                            formControlName="departmentCategory"
+                            formControlName="departmentCategory" (onChange)="getDepartmentCategory($event.value)"
                             [ngClass]="{'ng-dirty':ticketForm.get('departmentCategory')?.touched && ticketForm.get('departmentCategory')?.invalid}"></p-dropdown>
                         <small
                             *ngIf="!ticketForm.get('departmentCategory')?.valid && ticketForm.get('departmentCategory')?.touched && !ticketForm.get('departmentCategory')?.disabled"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+                    <!-- Ticket Category -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="category"><strong>Category</strong></label>
+                        <p-dropdown [options]="categories" placeholder="Select category" formControlName="category"
+                            (onChange)="getTicketCategory($event.value)"
+                            [ngClass]="{'ng-dirty':ticketForm.get('category')?.touched && ticketForm.get('category')?.invalid}"></p-dropdown>
+                        <small *ngIf="!ticketForm.get('category')?.valid && ticketForm.get('category')?.touched && !ticketForm.get('category')?.disabled"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+
+                    <!-- Ticket Sub Category -->
+                    <div class="field col-12 md:col-3">
+                        <label htmlFor="category"><strong>Sub Category</strong></label>
+                        <p-dropdown [options]="subCategories" placeholder="Select Sub category"
+                            formControlName="subCategory"
+                            [ngClass]="{'ng-dirty':ticketForm.get('subCategory')?.touched && ticketForm.get('subCategory')?.invalid}"></p-dropdown>
+                        <small *ngIf="!ticketForm.get('subCategory')?.valid && ticketForm.get('subCategory')?.touched && !ticketForm.get('subCategory')?.disabled" 
                             class="text-red-500">
                             Required
                         </small>
@@ -113,16 +139,7 @@
                             Required
                         </small>
                     </div>
-                    <!-- Category -->
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="category"><strong>Category</strong></label>
-                        <p-dropdown [options]="categories" placeholder="Select category" formControlName="category"
-                            [ngClass]="{'ng-dirty':ticketForm.get('category')?.touched && ticketForm.get('category')?.invalid}"></p-dropdown>
-                        <small *ngIf="!ticketForm.get('category')?.valid && ticketForm.get('category')?.touched"
-                            class="text-red-500">
-                            Required
-                        </small>
-                    </div>
+
                     <!-- Status -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="status"><strong>Ticket Status</strong></label>

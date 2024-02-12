@@ -3,6 +3,7 @@ package com.salsel.service.impl;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfReader;
+import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
@@ -17,6 +18,8 @@ import com.salsel.service.PdfGenerationService;
 import com.salsel.utils.AssignmentEmailsUtils;
 import com.salsel.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ExtendedModelMap;
@@ -25,12 +28,18 @@ import org.springframework.ui.Model;
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.salsel.constants.AwbStatusConstants.*;
 
 @Service
+@EnableAsync
 public class AwbServiceImpl implements AwbService {
 
     @Value("${spring.mail.username}")
@@ -68,14 +77,7 @@ public class AwbServiceImpl implements AwbService {
             codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
             codeGenerationService.generateQRCode(awb.getUniqueNumber().toString(), awbId);
 
-            String roleName = createdAwb.getAssignedTo();
-            if(roleName != null){
-                List<User> userList = userRepository.findAllByRoleName(roleName);
-
-                for(User user : userList){
-                    assignmentEmailsUtils.sendAssignedAwb(user,createdAwb.getUniqueNumber(),createdAwb.getId());
-                }
-            }
+            sendEmailAsync(createdAwb);
 
             return toDto(createdAwb);
         } catch (Exception e) {
@@ -276,35 +278,6 @@ public class AwbServiceImpl implements AwbService {
         Awb existingAwb = awbRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", id)));
 
-        existingAwb.setShipperName(awbDto.getShipperName());
-        existingAwb.setShipperContactNumber(awbDto.getShipperContactNumber());
-        existingAwb.setOriginCountry(awbDto.getOriginCountry());
-        existingAwb.setOriginCity(awbDto.getOriginCity());
-        existingAwb.setPickupAddress(awbDto.getPickupAddress());
-        existingAwb.setShipperRefNumber(awbDto.getShipperRefNumber());
-        existingAwb.setRecipientsName(awbDto.getRecipientsName());
-        existingAwb.setRecipientsContactNumber(awbDto.getRecipientsContactNumber());
-        existingAwb.setDestinationCountry(awbDto.getDestinationCountry());
-        existingAwb.setDestinationCity(awbDto.getDestinationCity());
-        existingAwb.setDeliveryAddress(awbDto.getDeliveryAddress());
-        existingAwb.setPickupDate(awbDto.getPickupDate());
-        existingAwb.setPickupTime(awbDto.getPickupTime());
-        existingAwb.setProductType(awbDto.getProductType());
-        existingAwb.setServiceType(awbDto.getServiceType());
-        existingAwb.setPieces(awbDto.getPieces());
-        existingAwb.setContent(awbDto.getContent());
-        existingAwb.setWeight(awbDto.getWeight());
-        existingAwb.setAmount(awbDto.getAmount());
-        existingAwb.setCurrency(awbDto.getCurrency());
-        existingAwb.setRequestType(awbDto.getRequestType());
-        existingAwb.setDutyAndTaxesBillTo(awbDto.getDutyAndTaxesBillTo());
-        existingAwb.setAwbStatus(awbDto.getAwbStatus());
-        existingAwb.setAccountNumber(awbDto.getAccountNumber());
-        existingAwb.setServiceTypeCode(awbDto.getServiceTypeCode());
-        existingAwb.setDeliveryDistrict(awbDto.getDeliveryDistrict());
-        existingAwb.setDeliveryStreetName(awbDto.getDeliveryStreetName());
-        existingAwb.setPickupStreetName(awbDto.getPickupStreetName());
-        existingAwb.setPickupDistrict(awbDto.getPickupDistrict());
         existingAwb.setAssignedTo(awbDto.getAssignedTo());
 
         Awb updatedAwb = awbRepository.save(existingAwb);
@@ -348,7 +321,132 @@ public class AwbServiceImpl implements AwbService {
         }
 
         Awb updatedAwb = awbRepository.save(existingAwb);
+
+        sendEmailAsync(updatedAwb);
         return toDto(updatedAwb);
+    }
+
+    @Async
+    public void sendEmailAsync(Awb createdAwb) {
+        try {
+            String roleName = createdAwb.getAssignedTo();
+            if (roleName != null) {
+                List<User> userList = userRepository.findAllByRoleName(roleName);
+
+                for (User user : userList) {
+                    assignmentEmailsUtils.sendAssignedAwb(user, createdAwb.getUniqueNumber(), createdAwb.getId());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RecordNotFoundException("Error occurred while Sending Email");
+        }
+    }
+
+    @Override
+    public List<AwbDto> getAwbBetweenDates(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        return awbRepository.findAllByCreatedAtBetween(startDateTime, endDateTime)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Long> getAwbStatusCounts() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Add logic to get counts based on different AWB statuses
+        statusCounts.put("awbCreated", awbRepository.countByStatusAndAwbStatus(true,"AWB Created"));
+        statusCounts.put("pickup", awbRepository.countByStatusAndAwbStatus(true,"Pickup"));
+        statusCounts.put("inTransit", awbRepository.countByStatusAndAwbStatus(true,"In-Transit"));
+        statusCounts.put("delivered", awbRepository.countByStatusAndAwbStatus(true,"Delivered"));
+        statusCounts.put("returned", awbRepository.countByStatusAndAwbStatus(true,"Returned"));
+        statusCounts.put("exception", awbRepository.countByStatusAndAwbStatus(true,"Exception"));
+
+        return statusCounts;
+    }
+
+    @Override
+    public Map<String, Long> getStatusCounts() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Add logic to get counts for true status
+        statusCounts.put("active", awbRepository.countByStatus(true));
+
+        // Add logic to get counts for false status
+        statusCounts.put("inactive", awbRepository.countByStatus(false));
+
+        return statusCounts;
+    }
+
+    @Override
+    public Map<String, Long> getAwbStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Get the logged-in user's email
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        // Add logic to get counts based on different AWB statuses for the logged-in user
+        statusCounts.put("awbCreated", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "AWB Created", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("pickup", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Pickup", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("inTransit", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "In-Transit", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("delivered", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Delivered", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("returned", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Returned", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("exception", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Exception", loggedInUserEmail,loggedInUserRole));
+
+        return statusCounts;
+    }
+
+    @Override
+    public Map<String, Long> getStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Get the logged-in user's email
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        // Add logic to get counts based on different AWB statuses for the logged-in user
+        statusCounts.put("active", awbRepository.countByStatusAndCreatedByOrAssignedTo(true,  loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("inactive", awbRepository.countByStatusAndCreatedByOrAssignedTo(false,  loggedInUserEmail,loggedInUserRole));
+
+        return statusCounts;
+    }
+
+    private String getLoggedInUserEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetail) {
+            return ((CustomUserDetail) principal).getEmail();
+        }
+        return null;
+    }
+
+    private String getLoggedInUserRole() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            CustomUserDetail userDetails = (CustomUserDetail) principal;
+
+            if (userDetails != null && userDetails.getAuthorities() != null && userDetails.getAuthorities().size() > 0) {
+
+                return userDetails.getAuthorities().iterator().next().getAuthority();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public LocalDate getMinCreatedAt() {
+        return awbRepository.findMinCreatedAt();
+    }
+
+    @Override
+    public LocalDate getMaxCreatedAt() {
+        return awbRepository.findMaxCreatedAt();
     }
 
     public AwbDto toDto(Awb awb) {

@@ -46,4 +46,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //    List<User> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<User> findAllByCreatedAtBetween(LocalDate startDate, LocalDate endDate);
     Optional<User> findByNameAndStatusIsTrue(String name);
+
+    @Query("SELECT MIN(u.createdAt) FROM User u")
+    LocalDate findMinCreatedAt();
+
+    @Query("SELECT MAX(u.createdAt) FROM User u")
+    LocalDate findMaxCreatedAt();
 }

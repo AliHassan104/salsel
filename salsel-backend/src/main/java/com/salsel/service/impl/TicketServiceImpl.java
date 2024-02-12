@@ -27,9 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -198,6 +196,68 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public LocalDate getMinCreatedAt() {
+        return ticketRepository.findMinCreatedAt();
+    }
+
+    @Override
+    public LocalDate getMaxCreatedAt() {
+        return ticketRepository.findMaxCreatedAt();
+    }
+
+    @Override
+    public Map<String, Long> getStatusCounts() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Add logic to get counts for true status
+        statusCounts.put("active", ticketRepository.countByStatus(true));
+
+        // Add logic to get counts for false status
+        statusCounts.put("inactive", ticketRepository.countByStatus(false));
+
+        return statusCounts;
+    }
+
+
+    @Override
+    public Map<String, Long> getStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Get the logged-in user's email
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        // Add logic to get counts based on different AWB statuses for the logged-in user
+        statusCounts.put("active", ticketRepository.countByStatusAndCreatedByOrAssignedTo(true,  loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("inactive", ticketRepository.countByStatusAndCreatedByOrAssignedTo(false,  loggedInUserEmail,loggedInUserRole));
+
+        return statusCounts;
+    }
+
+    private String getLoggedInUserEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetail) {
+            return ((CustomUserDetail) principal).getEmail();
+        }
+        return null;
+    }
+
+    private String getLoggedInUserRole() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            CustomUserDetail userDetails = (CustomUserDetail) principal;
+
+            if (userDetails != null && userDetails.getAuthorities() != null && userDetails.getAuthorities().size() > 0) {
+
+                return userDetails.getAuthorities().iterator().next().getAuthority();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     @Transactional
     public TicketDto update(Long id, TicketDto ticketDto, List<MultipartFile> pdfFiles, List<String> fileNames) {
         Ticket existingTicket = ticketRepository.findById(id)
@@ -213,7 +273,8 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setPickupDate(ticketDto.getPickupDate());
         existingTicket.setPickupTime(ticketDto.getPickupTime());
         existingTicket.setTicketStatus(ticketDto.getTicketStatus());
-        existingTicket.setCategory(ticketDto.getCategory());
+        existingTicket.setTicketCategory(ticketDto.getTicketCategory());
+        existingTicket.setTicketSubCategory(ticketDto.getTicketSubCategory());
         existingTicket.setTicketFlag(ticketDto.getTicketFlag());
         existingTicket.setAssignedTo(ticketDto.getAssignedTo());
         existingTicket.setOriginCity(ticketDto.getOriginCity());
@@ -304,7 +365,8 @@ public class TicketServiceImpl implements TicketService {
                 .pickupTime(ticket.getPickupTime())
                 .ticketStatus(ticket.getTicketStatus())
                 .status(ticket.getStatus())
-                .category(ticket.getCategory())
+                .ticketCategory(ticket.getTicketCategory())
+                .ticketSubCategory(ticket.getTicketSubCategory())
                 .ticketFlag(ticket.getTicketFlag())
                 .originCity(ticket.getOriginCity())
                 .originCountry(ticket.getOriginCountry())
@@ -346,7 +408,8 @@ public class TicketServiceImpl implements TicketService {
                 .ticketStatus(ticketDto.getTicketStatus())
                 .status(ticketDto.getStatus())
                 .ticketUrl(ticketDto.getTicketUrl())
-                .category(ticketDto.getCategory())
+                .ticketCategory(ticketDto.getTicketCategory())
+                .ticketSubCategory(ticketDto.getTicketSubCategory())
                 .ticketFlag(ticketDto.getTicketFlag())
                 .originCity(ticketDto.getOriginCity())
                 .originCountry(ticketDto.getOriginCountry())

@@ -188,6 +188,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public LocalDate getMinCreatedAt() {
+        return userRepository.findMinCreatedAt();
+    }
+
+    @Override
+    public LocalDate getMaxCreatedAt() {
+        return userRepository.findMaxCreatedAt();
+    }
+
+    @Override
     @Transactional
     public UserDto update(Long id, UserDto userDto) {
         User existingUser = userRepository.findById(id)

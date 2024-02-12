@@ -23,6 +23,17 @@ export class AccountService {
     });
   }
 
+  getMinMax() {
+    return this.http.get(`${this.url}account/created-at-range`);
+  }
+
+  downloadAccountDataInExcel(params: any) {
+    return this.http.get(`${this.url}download-account-excel`, {
+      params,
+      responseType: "blob" as "json", // Set the response type to 'blob'
+    });
+  }
+
   getAllAccountsByUserLoggedIn(
     params: any
   ): Observable<EntityAccountFieldResponseType> {
@@ -83,8 +94,24 @@ export class AccountService {
     return this.http.put(`${this.url}account/status/${id}`, {});
   }
 
+  getStatusCount() {
+    return this.http.get(`${this.url}account/status-counts`);
+  }
+
+  getStatusCountByLoggedInUser() {
+    return this.http.get(`${this.url}account/logged-in-user-status-counts`);
+  }
+
   downloadFile(data: any, filename: string) {
     const blob = new Blob([data], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  downloadExcelFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/xlsx" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     link.download = filename;

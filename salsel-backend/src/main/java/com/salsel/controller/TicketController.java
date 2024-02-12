@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,5 +147,31 @@ public class TicketController {
         OutputStream outputStream = response.getOutputStream();
         excelGenerationService.createExcelFile(excelData, outputStream, TICKET_TYPE);
         outputStream.close();
+    }
+
+    @GetMapping("/ticket/created-at-range")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
+    public ResponseEntity<Map<String, LocalDate>> getTicketCreatedAtRange() {
+        Map<String, LocalDate> dateRange = new HashMap<>();
+
+        LocalDate minDate = ticketService.getMinCreatedAt();
+        LocalDate maxDate = ticketService.getMaxCreatedAt();
+
+        dateRange.put("minDate", minDate);
+        dateRange.put("maxDate", maxDate);
+
+        return ResponseEntity.ok(dateRange);
+    }
+
+    @GetMapping("/ticket/logged-in-user-status-counts")
+    public ResponseEntity<Map<String, Long>> getStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = ticketService.getStatusCountsBasedOnLoggedInUser();
+        return ResponseEntity.ok(statusCounts);
+    }
+
+    @GetMapping("/ticket/status-counts")
+    public ResponseEntity<Map<String, Long>> getStatusCounts() {
+        Map<String, Long> statusCounts = ticketService.getStatusCounts();
+        return ResponseEntity.ok(statusCounts);
     }
 }

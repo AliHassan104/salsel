@@ -18,3 +18,24 @@ tr td {
 .refresh:hover {
   color: #c10751;
 }
+
+.submit-btn {
+  background-color: #93003c;
+  outline: none;
+  border: none;
+  //   padding: 10px 20px;
+  color: #fff;
+  font-size: 14px;
+  width: 120px;
+}
+.submit-btn:hover {
+  background-color: #c10751;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask{
+    align-items: self-start !important;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask .p-dialog{
+    margin-top: 6% !important;
+}

@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface TicketService {
 
@@ -26,5 +27,11 @@ TicketDto save(TicketDto ticketDto, List<MultipartFile> pdfFiles);
     void setToActiveById(Long id);
     TicketDto update(Long id, TicketDto ticketDto, List<MultipartFile> pdfFiles, List<String> fileNames);
     List<TicketDto> getTicketsBetweenDates(LocalDate startDate, LocalDate endDate);
+
+    LocalDate getMinCreatedAt();
+    LocalDate getMaxCreatedAt();
+
+    Map<String, Long> getStatusCounts();
+    Map<String, Long> getStatusCountsBasedOnLoggedInUser();
 
 }

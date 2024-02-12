@@ -228,7 +228,7 @@ export class AccountFormComponent implements OnInit, AfterViewInit {
             this.messageService.add({
               severity: "error",
               summary: "Warning",
-              detail: error.error.error,
+              detail: error?.error?.error,
             });
           }
         );

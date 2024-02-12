@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.model.Account;
 import com.salsel.model.Awb;
 import com.salsel.model.Ticket;
 import com.salsel.model.User;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +51,30 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
 
     Optional<Awb> findByUniqueNumber(Long uniqueNumber);
 
+    @Query("SELECT COUNT(a) FROM Awb a WHERE a.status = :status AND a.awbStatus = :awbStatus")
+    Long countByStatusAndAwbStatus(@Param("status") boolean status, @Param("awbStatus") String awbStatus);
+
+    @Query("SELECT COUNT(a) FROM Awb a WHERE a.status = :status")
+    Long countByStatus(@Param("status") Boolean status);
+
+    List<Awb> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query("SELECT COUNT(*) FROM Awb a\n" +
+            "WHERE a.status = :status\n" +
+            "  AND a.awbStatus = :awbStatus\n" +
+            "  AND (a.createdBy = :createdBy OR a.assignedTo = :assignedTo)")
+    Long countByStatusAndAwbStatusAndCreatedByOrAssignedTo(boolean status, String awbStatus, String createdBy, String assignedTo);
+
+    @Query("SELECT COUNT(*) FROM Awb a\n" +
+            "WHERE a.status = :status\n" +
+            "  AND (a.createdBy = :createdBy OR a.assignedTo = :assignedTo)")
+    Long countByStatusAndCreatedByOrAssignedTo(boolean status, String createdBy, String assignedTo);
+
+    @Query("SELECT MIN(a.createdAt) FROM Awb a")
+    LocalDate findMinCreatedAt();
+
+    @Query("SELECT MAX(a.createdAt) FROM Awb a")
+    LocalDate findMaxCreatedAt();
 
 //    @Query("SELECT MAX(a.uniqueNumber) FROM Awb a")
 //    Long findMaxUniqueNumber();

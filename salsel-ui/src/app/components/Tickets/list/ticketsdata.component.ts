@@ -8,15 +8,22 @@ import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { AccountService } from "../../accounts/service/account.service";
 import { finalize } from "rxjs";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { DatePipe } from "@angular/common";
+import { FormvalidationService } from "../service/formvalidation.service";
 
 @Component({
   selector: "app-ticketsdata",
   templateUrl: "./ticketsdata.component.html",
   styleUrls: ["./ticketsdata.component.scss"],
-  providers: [MessageService],
+  providers: [MessageService,DatePipe],
 })
 export class TicketsdataComponent implements OnInit {
   //   Activity Work
+  excelDataForm!: FormGroup;
+  minDate;
+  maxDate;
+  visible
   productField?;
   status?;
   selectedStatus: string = "Active";
@@ -32,7 +39,9 @@ export class TicketsdataComponent implements OnInit {
     private messageService: MessageService,
     private dropdownService: DropdownService,
     public sessionStorageService: SessionStorageService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private datePipe : DatePipe,
+    private formService : FormvalidationService
   ) {}
 
   loading: any;
@@ -44,8 +53,21 @@ export class TicketsdataComponent implements OnInit {
   totalRecords?: number;
 
   ngOnInit(): void {
+    this.excelDataForm = new FormGroup({
+      toDate: new FormControl(null, Validators.required),
+      fromDate: new FormControl(null, Validators.required),
+    });
+
     this.getTickets();
     this.getAllProductFields();
+    this.getMinMax();
+  }
+
+  getMinMax() {
+    this._ticktingService.getMinMax().subscribe((res: any) => {
+      this.minDate = new Date(res.minDate);
+      this.maxDate = new Date(res.maxDate);
+    });
   }
 
   //   Get all tickets
@@ -133,6 +155,53 @@ export class TicketsdataComponent implements OnInit {
       this.getTickets();
       this.deleteProductsDialog = false;
     });
+  }
+
+  onDownloadExcel(data: any) {
+    if (this.excelDataForm.valid) {
+      const formattedDates = {
+        startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
+        endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
+      };
+      console.log(formattedDates);
+
+      this._ticktingService
+        .downloadTicketDataInExcel(formattedDates)
+        .pipe(
+          finalize(() => {
+          this.excelDataForm.reset()
+          this.visible = false
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Download Successfull",
+          })
+          }))
+        .subscribe((res: any) => {
+          this._ticktingService.downloadExcelFile(
+            res,
+            `Ticket${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+          );
+            (error) => {
+              this.messageService.add({
+                severity: "error",
+                summary: "Error",
+                detail: "Try Again After Few Mins",
+              });
+            };
+        });
+    } else {
+      this.formService.markFormGroupTouched(this.excelDataForm);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Fill All The Fields.",
+      });
+    }
+  }
+
+  onCancel() {
+    this.visible = false;
   }
 
   //   Delete Ticket

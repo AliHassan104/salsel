@@ -196,6 +196,38 @@ import { UserProfileComponent } from "./components/auth/usermanagement/user-prof
               canActivate: [AuthGuardService],
             },
             {
+              path: "ticket-category/list",
+              loadChildren: () =>
+                import(
+                  "./components/ticketCategory/ticket-category.module"
+                ).then((m) => m.TicketCategoryModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-ticket-category",
+              loadChildren: () =>
+                import(
+                  "./components/ticketCategory/update/ticket-category-form.module"
+                ).then((m) => m.TicketCategoryFormModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "ticket-sub-category/list",
+              loadChildren: () =>
+                import(
+                  "./components/ticketSubCategory/ticket-sub-category.module"
+                ).then((m) => m.TicketSubCategoryModule),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-ticket-sub-category",
+              loadChildren: () =>
+                import(
+                  "./components/ticketSubCategory/update/ticket-sub-category-update.module"
+                ).then((m) => m.TicketSubCategoryUpdateModule),
+              canActivate: [AuthGuardService],
+            },
+            {
               path: "awb-history/:id",
               loadChildren: () =>
                 import("./components/awb/history/history.module").then(

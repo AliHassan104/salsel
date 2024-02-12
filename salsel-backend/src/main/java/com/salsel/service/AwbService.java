@@ -3,7 +3,9 @@ package com.salsel.service;
 import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface AwbService {
     AwbDto save(AwbDto awbDto);
@@ -17,4 +19,11 @@ public interface AwbService {
     void setToActiveById(Long id);
     AwbDto update(Long id, AwbDto awbDto);
     AwbDto updateAwbStatusOnScan(Long uniqueNumber);
+    List<AwbDto> getAwbBetweenDates(LocalDate startDate, LocalDate endDate);
+    Map<String, Long> getAwbStatusCounts();
+    Map<String, Long> getStatusCounts();
+    Map<String, Long> getAwbStatusCountsBasedOnLoggedInUser();
+    Map<String, Long> getStatusCountsBasedOnLoggedInUser();
+    LocalDate getMinCreatedAt();
+    LocalDate getMaxCreatedAt();
 }

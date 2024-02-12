@@ -50,6 +50,7 @@ public class Awb {
     private String serviceTypeCode;
     private String assignedTo;
 
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
 

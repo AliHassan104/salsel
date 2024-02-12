@@ -36,5 +36,18 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     @Query("SELECT a FROM Account a WHERE a.status = :status And a.email = :email ORDER BY a.id DESC")
     List<Account> findAllInDesOrderByEmailAndStatus(@Param("status") boolean status, @Param("email") String email);
 
+    @Query("SELECT MIN(a.createdAt) FROM Account a")
+    LocalDate findMinCreatedAt();
+
+    @Query("SELECT MAX(a.createdAt) FROM Account a")
+    LocalDate findMaxCreatedAt();
+
+    @Query("SELECT COUNT(a) FROM Account a WHERE a.status = :status")
+    Long countByStatus(@Param("status") Boolean status);
+
+    @Query("SELECT COUNT(*) FROM Account a\n" +
+            "WHERE a.status = :status\n" +
+            "  AND (a.email = :email)")
+    Long countByStatusAndEmail(boolean status, String email);
 
 }

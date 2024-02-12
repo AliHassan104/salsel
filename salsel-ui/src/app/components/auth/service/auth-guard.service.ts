@@ -161,6 +161,22 @@ export class AuthGuardService implements CanActivate {
       url: ["/profile"],
       permissions: "READ_USER",
     };
+    const ticketCategoryObj = {
+      url: ["/ticket-category/list"],
+      permissions: "READ_TICKET_CATEGORY",
+    };
+    const createTicketCategoryObj = {
+      url: ["/create-ticket-category"],
+      permissions: "CREATE_TICKET_CATEGORY",
+    };
+    const ticketSubCategoryObj = {
+      url: ["/ticket-sub-category/list"],
+      permissions: "READ_TICKET_SUB_CATEGORY",
+    };
+    const createTicketSubCategoryObj = {
+      url: ["/create-ticket-sub-category"],
+      permissions: "CREATE_TICKET_SUB_CATEGORY",
+    };
 
     return [
       dashboardObj,
@@ -187,6 +203,10 @@ export class AuthGuardService implements CanActivate {
       readUserObj,
       accountHistoryrObj,
       profileObj,
+      ticketCategoryObj,
+      createTicketCategoryObj,
+      ticketSubCategoryObj,
+      createTicketSubCategoryObj
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

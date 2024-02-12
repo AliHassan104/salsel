@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,4 +98,31 @@ public class AccountController {
         excelGenerationService.createExcelFile(excelData, outputStream, ACCOUNT_TYPE);
         outputStream.close();
     }
+
+    @GetMapping("/account/created-at-range")
+    @PreAuthorize("hasAuthority('READ_ACCOUNT')")
+    public ResponseEntity<Map<String, LocalDate>> getAccountCreatedAtRange() {
+        Map<String, LocalDate> dateRange = new HashMap<>();
+
+        LocalDate minDate = accountService.getMinCreatedAt();
+        LocalDate maxDate = accountService.getMaxCreatedAt();
+
+        dateRange.put("minDate", minDate);
+        dateRange.put("maxDate", maxDate);
+
+        return ResponseEntity.ok(dateRange);
+    }
+
+    @GetMapping("/account/status-counts")
+    public ResponseEntity<Map<String, Long>> getStatusCounts() {
+        Map<String, Long> statusCounts = accountService.getStatusCounts();
+        return ResponseEntity.ok(statusCounts);
+    }
+
+    @GetMapping("/account/logged-in-user-status-counts")
+    public ResponseEntity<Map<String, Long>> getStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = accountService.getStatusCountsBasedOnLoggedInUser();
+        return ResponseEntity.ok(statusCounts);
+    }
+
 }
