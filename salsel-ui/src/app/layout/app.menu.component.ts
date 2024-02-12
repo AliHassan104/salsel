@@ -59,9 +59,21 @@ export class AppMenuComponent implements OnInit {
           },
           {
             label: "Department Category",
-            icon: "pi pi-user",
+            icon: "pi pi-server",
             routerLink: "department-category/list",
             permission: "READ_DEPARTMENT_CATEGORY",
+          },
+          {
+            label: "Ticket Category",
+            icon: "pi pi-map",
+            routerLink: "ticket-category/list",
+            permission: "READ_TICKET_CATEGORY",
+          },
+          {
+            label: "Ticket Sub Category",
+            icon: "pi pi-server",
+            routerLink: "ticket-sub-category/list",
+            permission: "READ_TICKET_SUB_CATEGORY",
           },
           {
             label: "Country",

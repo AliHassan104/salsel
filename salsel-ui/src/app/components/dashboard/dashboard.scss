@@ -1,3 +1,8 @@
+th,
+tr td {
+  text-align: center !important;
+}
+
 .text-custom {
   font-size: 24px !important;
 }
@@ -42,4 +47,56 @@
 
 .refresh:hover {
   color: #c10751;
+}
+
+.input-table {
+  width: -webkit-fill-available;
+  padding: 0 20px 0 0;
+}
+
+.p-inputtext:enabled:focus {
+  box-shadow: none !important;
+  border-color: #ced4da !important;
+}
+
+.Created,.Delivered {
+  display: inline-block;
+  border-radius: 10px;
+  text-align: center;
+  padding: 0 0.5rem;
+  background: rgba(0, 186, 52, 0.1);
+  color: rgba(0, 186, 52, 1);
+  font-size: 13px;
+  font-weight: 400;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+}
+
+.Pickup,.In-Transit {
+  display: inline-block;
+  border-radius: 10px;
+  text-align: center;
+  padding: 0 0.5rem;
+  background: rgba(69, 140, 246, 0.1);
+  color: rgba(69, 140, 246, 1);
+  font-size: 13px;
+  font-weight: 400;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+}
+
+.Returned,.Exceptions {
+  display: inline-block;
+  border-radius: 10px;
+  text-align: center;
+  padding: 0 0.5rem;
+  background: rgba(255, 0, 0, 0.1);
+  color: rgba(255, 0, 0, 1);
+  font-size: 13px;
+  font-weight: 400;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
 }

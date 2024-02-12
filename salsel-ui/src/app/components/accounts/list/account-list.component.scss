@@ -14,3 +14,11 @@
 .refresh:hover {
   color: #c10751;
 }
+
+.customDialogExcel::ng-deep .p-dialog-mask{
+    align-items: self-start !important;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask .p-dialog{
+    margin-top: 6% !important;
+}

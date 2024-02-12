@@ -2,6 +2,8 @@ package com.salsel.controller;
 
 import com.salsel.dto.AwbDto;
 import com.salsel.service.AwbService;
+import com.salsel.service.ExcelGenerationService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,15 +11,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.salsel.constants.ExcelConstants.ACCOUNT_TYPE;
+import static com.salsel.constants.ExcelConstants.AWB_TYPE;
 
 @RestController
 @RequestMapping("/api")
 public class AwbController {
     private final AwbService awbService;
+    private final ExcelGenerationService excelGenerationService;
 
-    public AwbController(AwbService awbService) {
+    public AwbController(AwbService awbService, ExcelGenerationService excelGenerationService) {
         this.awbService = awbService;
+        this.excelGenerationService = excelGenerationService;
     }
 
     @PostMapping("/awb")
@@ -94,4 +107,62 @@ public class AwbController {
         AwbDto updatedAwbDto = awbService.update(id, awbDto);
         return ResponseEntity.ok(updatedAwbDto);
     }
+
+    @GetMapping("/download-awb-excel")
+    public void downloadAwbBetweenDates(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=airbills.xlsx");
+
+        List<AwbDto> awbDtoList = awbService.getAwbBetweenDates(startDate, endDate);
+        List<Map<String, Object>> excelData = excelGenerationService.convertAirBillsToExcelData(awbDtoList);
+
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(excelData, outputStream, AWB_TYPE);
+        outputStream.close();
+    }
+
+    @GetMapping("/awb/awb-status-counts")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity<Map<String, Long>> getAwbStatusCounts() {
+        Map<String, Long> statusCounts = awbService.getAwbStatusCounts();
+        return ResponseEntity.ok(statusCounts);
+    }
+
+    @GetMapping("/awb/status-counts")
+    public ResponseEntity<Map<String, Long>> getStatusCounts() {
+        Map<String, Long> statusCounts = awbService.getStatusCounts();
+        return ResponseEntity.ok(statusCounts);
+    }
+
+    @GetMapping("/awb/logged-in-user-awb-status-counts")
+    public ResponseEntity<Map<String, Long>> getAwbStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = awbService.getAwbStatusCountsBasedOnLoggedInUser();
+        return ResponseEntity.ok(statusCounts);
+    }
+
+
+    @GetMapping("/awb/logged-in-user-status-counts")
+    public ResponseEntity<Map<String, Long>> getStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = awbService.getStatusCountsBasedOnLoggedInUser();
+        return ResponseEntity.ok(statusCounts);
+    }
+
+    @GetMapping("/awb/created-at-range")
+    @PreAuthorize("hasAuthority('READ_TICKET')")
+    public ResponseEntity<Map<String, LocalDate>> getTicketCreatedAtRange() {
+        Map<String, LocalDate> dateRange = new HashMap<>();
+
+        LocalDate minDate = awbService.getMinCreatedAt();
+        LocalDate maxDate = awbService.getMaxCreatedAt();
+
+        dateRange.put("minDate", minDate);
+        dateRange.put("maxDate", maxDate);
+
+        return ResponseEntity.ok(dateRange);
+    }
+
 }

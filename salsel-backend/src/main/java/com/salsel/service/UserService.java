@@ -24,4 +24,7 @@ public interface UserService {
     void forgotPassword(String userEmail);
     void resetPassword(String userEmail, String resetCode, String newPassword);
     List<UserDto> getUsersBetweenDates(LocalDate startDate, LocalDate endDate);
+
+    LocalDate getMinCreatedAt();
+    LocalDate getMaxCreatedAt();
 }

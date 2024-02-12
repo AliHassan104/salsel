@@ -18,13 +18,10 @@ export class AirbillService {
   jwtToken = localStorage.getItem("token");
   url = environment.URL;
 
-  // Create Ticket
-
   createBill(data: any): Observable<any> {
     return this.http.post<any>(`${this.url}awb`, data);
   }
 
-  //  Get All Tickets
   getBills(params: any) {
     return this.http.get(`${this.url}awb`, { params });
   }
@@ -37,37 +34,65 @@ export class AirbillService {
     return this.http.get(`${this.url}awb/logged-in-user-and-role`, { params });
   }
 
-  //   Get Single Ticket
-
-  getSingleBill(id:any) {
+  getSingleBill(id: any) {
     return this.http.get(`${this.url}awb/${id}`);
   }
 
-  //   Delete Ticket
-
-  deleteBill(id:any) {
+  deleteBill(id: any) {
     return this.http.delete(`${this.url}awb/${id}`);
   }
 
-//   update Bill AssignedTo
-updateAssignedTo(id:any,data:any){
+  updateAssignedTo(id: any, data: any) {
     return this.http.put(`${this.url}awb/${id}`, data);
-}
+  }
 
-  //   Update Bill Sttaus
   updateBillStatus(id) {
     return this.http.put(`${this.url}awb/status/${id}`, {});
   }
 
   downloadBill(id: any) {
     return this.http.get(`${this.url}awb/pdf/awb_${id}/${id}`, {
+      responseType: "blob" as "json",
+    });
+  }
+
+  getStatusCount() {
+    return this.http.get(`${this.url}awb/status-counts`);
+  }
+
+  getAwbStatusCount() {
+    return this.http.get(`${this.url}awb/awb-status-counts`);
+  }
+
+  getAwbStatusByLoggedInUser() {
+    return this.http.get(`${this.url}awb/logged-in-user-awb-status-counts`);
+  }
+
+  getStatusCountByLoggedInUser() {
+    return this.http.get(`${this.url}awb/logged-in-user-status-counts`);
+  }
+
+  downloadAwbDataInExcel(params: any) {
+    return this.http.get(`${this.url}download-awb-excel`, {
+      params,
       responseType: "blob" as "json", // Set the response type to 'blob'
     });
   }
 
-  //   Get formated Date
+  getMinMax() {
+    return this.http.get(`${this.url}awb/created-at-range`);
+  }
+
+  downloadExcelFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/xlsx" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
   formatDate(date: Date): string {
-    const year = date.getFullYear().toString(); // Get the last two digits of the year
+    const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;

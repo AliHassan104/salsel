@@ -50,6 +50,13 @@ export class DepartmentCategoryService {
     return this.http.get<DepartmentCategory>(url, { observe: "response" });
   }
 
+  getDepartmentCategoryByDepartment(
+    id?: any
+  ): Observable<EntityDepartmentCategoryResponseType> {
+    let url = `${this.url}department-category/department/${id}`;
+    return this.http.get<DepartmentCategory[]>(url, { observe: "response" });
+  }
+
   removeDepartmentCategory(id: any) {
     let url = `${this.url}department-category/${id}`;
     return this.http.delete<DepartmentCategory>(url, { observe: "response" });

@@ -41,6 +41,7 @@ public class TicketDto {
     private String airwayNumber;
     private String ticketType;
     private String ticketUrl;
+    private String ticketSubCategory;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
@@ -48,7 +49,7 @@ public class TicketDto {
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime pickupTime;
 
-    private String category;
+    private String ticketCategory;
     private String ticketFlag;
     private String assignedTo;
     private String originCountry;

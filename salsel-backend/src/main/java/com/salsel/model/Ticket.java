@@ -46,6 +46,7 @@ public class Ticket {
     private String airwayNumber;
     private String ticketType;
     private String ticketUrl;
+    private String ticketSubCategory;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
@@ -57,7 +58,7 @@ public class Ticket {
     private String textarea;
 
 
-    private String category;
+    private String ticketCategory;
     private String ticketFlag;
     private String assignedTo;
     private String originCountry;

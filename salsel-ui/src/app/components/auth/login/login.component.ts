@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     localStorage.clear();
 
     this.loginForm = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.email]),
+      email: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required]),
     });
   }

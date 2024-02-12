@@ -2,15 +2,14 @@ package com.salsel.service.impl;
 
 import com.salsel.constants.ExcelConstants;
 import com.salsel.dto.AccountDto;
+import com.salsel.dto.AwbDto;
 import com.salsel.dto.TicketDto;
 import com.salsel.dto.UserDto;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Awb;
 import com.salsel.model.Role;
 import com.salsel.service.ExcelGenerationService;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -80,9 +79,10 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             ticketData.put("AirwayNumber", ticket.getAirwayNumber());
             ticketData.put("TicketType", ticket.getTicketType());
             ticketData.put("TicketUrl", ticket.getTicketUrl());
-            ticketData.put("PickupDate", ticket.getPickupDate().format(formatter));
-            ticketData.put("PickupTime", ticket.getPickupTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-            ticketData.put("Category", ticket.getCategory());
+            ticketData.put("PickupDate", ticket.getPickupDate() != null ? ticket.getPickupDate().format(formatter) : null);
+            ticketData.put("PickupTime", ticket.getPickupTime() != null ? ticket.getPickupTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) : null);
+            ticketData.put("Ticket Category", ticket.getTicketCategory());
+            ticketData.put("Ticket Sub Category", ticket.getTicketSubCategory());
             ticketData.put("TicketFlag", ticket.getTicketFlag());
             ticketData.put("AssignedTo", ticket.getAssignedTo());
             ticketData.put("OriginCountry", ticket.getOriginCountry());
@@ -134,6 +134,55 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     }
 
     @Override
+    public List<Map<String, Object>> convertAirBillsToExcelData(List<AwbDto> airbills) {
+        List<Map<String, Object>> excelData = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (AwbDto awb : airbills) {
+            Map<String, Object> awbData = new LinkedHashMap<>();
+            awbData.put("Id", awb.getId());
+            awbData.put("CreatedAt", awb.getCreatedAt().format(formatter));
+            awbData.put("Awb Number", awb.getUniqueNumber());
+            awbData.put("CreatedBy", awb.getCreatedBy());
+            awbData.put("ShipperName", awb.getShipperName());
+            awbData.put("ShipperContactNumber", awb.getShipperContactNumber());
+            awbData.put("OriginCountry", awb.getOriginCountry());
+            awbData.put("OriginCity", awb.getOriginCity());
+            awbData.put("PickupAddress", awb.getPickupAddress());
+            awbData.put("PickupStreetName", awb.getPickupStreetName());
+            awbData.put("PickupDistrict", awb.getPickupDistrict());
+            awbData.put("ShipperRefNumber", awb.getShipperRefNumber());
+            awbData.put("RecipientsName", awb.getRecipientsName());
+            awbData.put("RecipientsContactNumber", awb.getRecipientsContactNumber());
+            awbData.put("DestinationCountry", awb.getDestinationCountry());
+            awbData.put("DestinationCity", awb.getDestinationCity());
+            awbData.put("DeliveryAddress", awb.getDeliveryAddress());
+            awbData.put("DeliveryStreetName", awb.getDeliveryStreetName());
+            awbData.put("DeliveryDistrict", awb.getDeliveryDistrict());
+            awbData.put("AccountNumber", awb.getAccountNumber());
+            awbData.put("AssignedTo", awb.getAssignedTo());
+            awbData.put("PickupDate", awb.getPickupDate() != null ? awb.getPickupDate().format(formatter) : null);
+            awbData.put("PickupTime", awb.getPickupTime() != null ? awb.getPickupTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) : null);
+            awbData.put("ProductType", awb.getProductType());
+            awbData.put("ServiceType", awb.getServiceType());
+            awbData.put("RequestType", awb.getRequestType());
+            awbData.put("Pieces", awb.getPieces());
+            awbData.put("Content", awb.getContent());
+            awbData.put("Weight", awb.getWeight());
+            awbData.put("Amount", awb.getAmount());
+            awbData.put("Currency", awb.getCurrency());
+            awbData.put("DutyAndTaxesBillTo", awb.getDutyAndTaxesBillTo());
+            awbData.put("Status", awb.getStatus().toString());
+            awbData.put("AwbStatus", awb.getAwbStatus());
+
+            excelData.add(awbData);
+        }
+        return excelData;
+    }
+
+
+
+    @Override
     public void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
         if (excelData == null || excelData.isEmpty()) {
             throw new IllegalArgumentException("Excel data is empty");
@@ -141,22 +190,33 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = null;
-        if(type.equalsIgnoreCase(USER_TYPE)){
+        if (type.equalsIgnoreCase(USER_TYPE)) {
             sheet = workbook.createSheet("User");
         } else if (type.equalsIgnoreCase(TICKET_TYPE)) {
             sheet = workbook.createSheet("Ticket");
-        } else if (type.equalsIgnoreCase(ACCOUNT_TYPE)){
+        } else if (type.equalsIgnoreCase(ACCOUNT_TYPE)) {
             sheet = workbook.createSheet("Account");
-        } else{
+        }else if(type.equalsIgnoreCase(AWB_TYPE)){
+            sheet = workbook.createSheet("Awb");
+        }else {
             throw new RecordNotFoundException("Type not valid");
         }
 
         // Create header row
         Row headerRow = sheet.createRow(0);
         int colIndex = 0;
+
+        // Set bold font style
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 12);
+        headerStyle.setFont(font);
+
         for (String key : excelData.get(0).keySet()) {
             Cell cell = headerRow.createCell(colIndex++);
             cell.setCellValue(key);
+            cell.setCellStyle(headerStyle);
         }
 
         // Populate data rows
@@ -179,8 +239,10 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         for (int i = 0; i < excelData.get(0).size(); i++) {
             sheet.autoSizeColumn(i);
         }
+
         workbook.write(outputStream);
         workbook.close();
     }
+
 
 }

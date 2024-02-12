@@ -20,9 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,6 +75,7 @@ public class AccountServiceImpl implements AccountService {
             String password = helperUtils.generateResetPassword();
             User user = new User();
             user.setEmail(account.getEmail());
+            user.setCreatedAt(LocalDate.now());
             user.setPassword(password);
             user.setStatus(true);
             User createdUser = userRepository.save(user);
@@ -183,6 +182,51 @@ public class AccountServiceImpl implements AccountService {
 
         Account updatedAccount = accountRepository.save(existingAccount);
         return toDto(updatedAccount);
+    }
+
+    @Override
+    public LocalDate getMinCreatedAt() {
+        return accountRepository.findMinCreatedAt();
+    }
+
+    @Override
+    public LocalDate getMaxCreatedAt() {
+        return accountRepository.findMaxCreatedAt();
+    }
+
+    @Override
+    public Map<String, Long> getStatusCounts() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Add logic to get counts for true status
+        statusCounts.put("active", accountRepository.countByStatus(true));
+
+        // Add logic to get counts for false status
+        statusCounts.put("inactive", accountRepository.countByStatus(false));
+
+        return statusCounts;
+    }
+
+    @Override
+    public Map<String, Long> getStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Get the logged-in user's email
+        String loggedInUserEmail = getLoggedInUserEmail();
+
+        // Add logic to get counts based on different AWB statuses for the logged-in user
+        statusCounts.put("active", accountRepository.countByStatusAndEmail(true,  loggedInUserEmail));
+        statusCounts.put("inactive", accountRepository.countByStatusAndEmail(false,  loggedInUserEmail));
+
+        return statusCounts;
+    }
+
+    private String getLoggedInUserEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetail) {
+            return ((CustomUserDetail) principal).getEmail();
+        }
+        return null;
     }
 
     @Override

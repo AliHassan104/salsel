@@ -7,14 +7,21 @@ import { IUser } from "../model/userDto";
 import { Table } from "primeng/table";
 import { SessionStorageService } from "../../service/session-storage.service";
 import { filter, finalize } from "rxjs";
+import { DatePipe } from "@angular/common";
+import { FormvalidationService } from "src/app/components/Tickets/service/formvalidation.service";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-userlist",
   templateUrl: "./userlist.component.html",
   styleUrls: ["./userlist.component.scss"],
-  providers: [MessageService],
+  providers: [MessageService, DatePipe],
 })
 export class UserlistComponent implements OnInit {
+  excelDataForm!: FormGroup;
+  minDate;
+  maxDate;
+  visible;
   productField?;
   status?;
   userFilter?;
@@ -32,7 +39,9 @@ export class UserlistComponent implements OnInit {
     private router: Router,
     private dropdownService: DropdownService,
     private messageService: MessageService,
-    public sessionStorageService: SessionStorageService
+    public sessionStorageService: SessionStorageService,
+    private formService: FormvalidationService,
+    private datePipe: DatePipe
   ) {}
 
   @ViewChild("filter") filter!: ElementRef;
@@ -46,8 +55,20 @@ export class UserlistComponent implements OnInit {
   generatedPassword?;
 
   ngOnInit(): void {
+    this.excelDataForm = new FormGroup({
+      toDate: new FormControl(null, Validators.required),
+      fromDate: new FormControl(null, Validators.required),
+    });
     this.getAllUsers();
     this.getAllProductFields();
+    this.getMinMax();
+  }
+
+  getMinMax() {
+    this.userService.getMinMax().subscribe((res: any) => {
+      this.minDate = new Date(res.minDate);
+      this.maxDate = new Date(res.maxDate);
+    });
   }
 
   getAllUsers() {
@@ -62,9 +83,7 @@ export class UserlistComponent implements OnInit {
       "ROLE_OPERATION_USER",
       "ROLE_COURIER",
     ];
-    const customerRoles = [
-        "ROLE_ACCOUNT_HOLDER","ROLE_CUSTOMER_USER"
-    ]
+    const customerRoles = ["ROLE_ACCOUNT_HOLDER", "ROLE_CUSTOMER_USER"];
     this.userService
       .getAllUser(params)
       .pipe(
@@ -77,14 +96,14 @@ export class UserlistComponent implements OnInit {
           this.users = res.filter((user) =>
             user?.roles?.some((role) => employeeRoles.includes(role?.name))
           );
-        }else if (this.selectedUsers == "Customer") {
-             this.users = res.filter((user) =>
-               user?.roles?.some((role) => customerRoles.includes(role?.name))
-             );
-        }else{
-           this.users = res.filter(
-             (user) => !user?.roles || user.roles.length === 0
-           );
+        } else if (this.selectedUsers == "Customer") {
+          this.users = res.filter((user) =>
+            user?.roles?.some((role) => customerRoles.includes(role?.name))
+          );
+        } else {
+          this.users = res.filter(
+            (user) => !user?.roles || user.roles.length === 0
+          );
         }
       });
   }
@@ -105,7 +124,55 @@ export class UserlistComponent implements OnInit {
   }
 
   onFilterUser(data) {
-    this.getAllUsers()
+    this.getAllUsers();
+  }
+
+  onDownloadExcel(data: any) {
+    if (this.excelDataForm.valid) {
+      const formattedDates = {
+        startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
+        endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
+      };
+      console.log(formattedDates);
+
+      this.userService
+        .downloadUserDataInExcel(formattedDates)
+        .pipe(
+          finalize(() => {
+            this.messageService.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Download Successfull",
+            }),
+              this.excelDataForm.reset();
+            this.visible = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this.userService.downloadExcelFile(
+            res,
+            `Ticket${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+          );
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Try Again After Few Mins",
+            });
+          };
+        });
+    } else {
+      this.formService.markFormGroupTouched(this.excelDataForm);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Fill All The Fields.",
+      });
+    }
+  }
+
+  onCancel() {
+    this.visible = false;
   }
 
   copyToClipboard() {
@@ -221,4 +288,6 @@ export class UserlistComponent implements OnInit {
       detail: "Deactivation Successfull",
     });
   }
+
+
 }

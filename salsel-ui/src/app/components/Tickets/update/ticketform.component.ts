@@ -1,3 +1,4 @@
+import { TicketCategory } from './../../ticketCategory/model/ticketCategoryDto';
 import {
   AfterViewInit,
   Component,
@@ -23,6 +24,9 @@ import { RolesService } from "../../permissions/service/roles.service";
 import { AccountService } from "../../accounts/service/account.service";
 import { Dropdown } from "primeng/dropdown";
 import { UserService } from "../../auth/usermanagement/service/user.service";
+import { TicketCategoryService } from "../../ticketCategory/service/ticket-category.service";
+import { TicketSubCategoryService } from "../../ticketSubCategory/service/ticket-sub-category.service";
+import { ITicketSubCategory } from '../../ticketSubCategory/model/ticketSubCategoryDeto';
 
 @Component({
   selector: "app-ticketform",
@@ -63,6 +67,7 @@ export class TicketformComponent implements OnInit {
   ticketForm!: FormGroup;
   ticketType?: string[];
   fileList: File[] = [];
+  subCategories
 
   @ViewChild("fileInput") fileInput: ElementRef;
   @ViewChild("dropdown") dropdown?: Dropdown;
@@ -89,7 +94,9 @@ export class TicketformComponent implements OnInit {
     private departmentCategoryService: DepartmentCategoryService,
     private roleService: RolesService,
     private sessionStorageService: SessionStorageService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private ticketCategoryService: TicketCategoryService,
+    private ticketSubCategoryService: TicketSubCategoryService
   ) {}
 
   ngOnInit(): void {
@@ -170,6 +177,7 @@ export class TicketformComponent implements OnInit {
       departmentCategory: new FormControl(null, Validators.required),
       assignedTo: new FormControl(null, Validators.required),
       category: new FormControl(null, Validators.required),
+      subCategory: new FormControl(null, Validators.required),
       ticketStatus: new FormControl(null, Validators.required),
       ticketFlag: new FormControl(null, Validators.required),
       deliveryStreetName: new FormControl(null),
@@ -231,6 +239,9 @@ export class TicketformComponent implements OnInit {
           this.singleTicket.department
         );
 
+        this.getDepartmentCategory(this.singleTicket?.departmentCategory)
+        this.getTicketCategory(this.singleTicket?.ticketCategory)
+
         if (
           this.singleTicket.pickupTime != null &&
           this.singleTicket.pickupDate != null
@@ -260,7 +271,8 @@ export class TicketformComponent implements OnInit {
           department: this.singleTicket.department,
           departmentCategory: this.singleTicket.departmentCategory,
           assignedTo: this.singleTicket.assignedTo,
-          category: this.singleTicket.category,
+          category: this.singleTicket.ticketCategory,
+          subCategory: this.singleTicket.ticketSubCategory,
           ticketStatus: this.singleTicket.ticketStatus,
           ticketFlag: this.singleTicket.ticketFlag,
           deliveryStreetName: this.singleTicket.deliveryStreetName,
@@ -284,12 +296,6 @@ export class TicketformComponent implements OnInit {
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
-
-      //   Categories From Product Field
-      this.categories = this.dropdownService.extractNames(
-        this.productFields.filter((data) => data.name == "Category")[0]
-          .productFieldValuesList
-      );
 
       this.ticketFlag = this.dropdownService.extractNames(
         this.productFields.filter((data) => data.name == "Ticket Flag")[0]
@@ -393,6 +399,49 @@ export class TicketformComponent implements OnInit {
           this.dropdownService.extractNames(filterDepartments);
       });
   }
+  //   GET DEPARTMENT Category
+  getDepartmentCategory(departmentCategory) {
+    
+    this.ticketCategoryService
+      .getTicketCategories(this.params)
+      .subscribe((res) => {
+        this.categories = res.body;
+        let filterCategories = this.categories.filter(
+          (ticketCategory) =>
+            ticketCategory?.departmentCategory?.name == departmentCategory
+        );
+
+        // Disable
+        if (filterCategories.length == 0) {
+          this.ticketForm.get("category")?.disable();
+        } else {
+          this.ticketForm.get("category")?.enable();
+        }
+
+        this.categories =
+          this.dropdownService.extractNames(filterCategories);
+      });
+  }
+
+  getTicketCategory(TicketCategory){
+
+this.ticketSubCategoryService.getTicketSubCategories(this.params).subscribe((res) => {
+  this.subCategories = res.body;
+  let filterSubCategories = this.subCategories.filter(
+    (ticketSubCategory:ITicketSubCategory) =>
+      ticketSubCategory?.ticketCategory?.name == TicketCategory
+  );
+
+  // Disable
+  if (filterSubCategories.length == 0) {
+    this.ticketForm.get("subCategory")?.disable();
+  } else {
+    this.ticketForm.get("subCategory")?.enable();
+  }
+
+  this.subCategories = this.dropdownService.extractNames(filterSubCategories);
+});
+  }
 
   //   GET DESTINATION COUNTRY FROM DROPDOWN
   getDestinationCountry(country) {
@@ -421,7 +470,8 @@ export class TicketformComponent implements OnInit {
   onSubmit() {
     if (
       this.ticketForm.get("phone")?.valid &&
-      (this.ticketForm.get("ticketType")?.valid || this.ticketForm.get("ticketType")?.disabled) &&
+      (this.ticketForm.get("ticketType")?.valid ||
+        this.ticketForm.get("ticketType")?.disabled) &&
       (this.ticketForm.get("email")?.valid ||
         this.ticketForm.get("email")?.disabled) &&
       (this.ticketForm.get("name")?.valid ||
@@ -450,7 +500,8 @@ export class TicketformComponent implements OnInit {
         deliveryAddress: formValue.deliveryAddress,
         pickupDate: formattedDate,
         pickupTime: ticketTime,
-        category: formValue.category,
+        ticketCategory: formValue.category,
+        ticketSubCategory: formValue.subCategory,
         ticketStatus: formValue.ticketStatus,
         ticketFlag: formValue.ticketFlag,
         department: formValue.department,
@@ -482,7 +533,11 @@ export class TicketformComponent implements OnInit {
               this.ticketForm.get("ticketStatus")?.valid &&
               this.ticketForm.get("ticketFlag")?.valid &&
               (this.ticketForm.get("departmentCategory")?.valid ||
-                this.ticketForm.get("departmentCategory")?.disabled)
+                this.ticketForm.get("departmentCategory")?.disabled) &&
+              (this.ticketForm.get("category")?.valid ||
+                this.ticketForm.get("category")?.disabled) &&
+              (this.ticketForm.get("subCategory")?.valid ||
+                this.ticketForm.get("subCategory")?.disabled)
             ) {
               this._ticketService
                 .editTicket(
@@ -521,7 +576,11 @@ export class TicketformComponent implements OnInit {
             this.ticketForm.get("ticketStatus")?.valid &&
             this.ticketForm.get("ticketFlag")?.valid &&
             (this.ticketForm.get("departmentCategory")?.valid ||
-              this.ticketForm.get("departmentCategory")?.disabled)
+              this.ticketForm.get("departmentCategory")?.disabled) &&
+            (this.ticketForm.get("category")?.valid ||
+              this.ticketForm.get("category")?.disabled) &&
+            (this.ticketForm.get("subCategory")?.valid ||
+              this.ticketForm.get("subCategory")?.disabled)
           ) {
             this._ticketService
               .editTicket(

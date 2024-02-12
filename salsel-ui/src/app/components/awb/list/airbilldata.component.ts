@@ -10,14 +10,19 @@ import { finalize } from "rxjs";
 import { RolesService } from "../../permissions/service/roles.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-airbilldata",
   templateUrl: "./airbilldata.component.html",
   styleUrls: ["./airbilldata.component.scss"],
-  providers: [MessageService],
+  providers: [MessageService, DatePipe],
 })
 export class AirbilldataComponent implements OnInit {
+  excelDataForm!: FormGroup;
+  minDate;
+  maxDate;
+  visible;
   productField?;
   status?;
   selectedStatus: string = "Active";
@@ -36,7 +41,8 @@ export class AirbilldataComponent implements OnInit {
     private dropdownService: DropdownService,
     public sessionStorageService: SessionStorageService,
     private roleService: RolesService,
-    private formService: FormvalidationService
+    private formService: FormvalidationService,
+    private datePipe: DatePipe
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
@@ -45,12 +51,24 @@ export class AirbilldataComponent implements OnInit {
   awbForm!: FormGroup;
 
   ngOnInit(): void {
+    this.excelDataForm = new FormGroup({
+      toDate: new FormControl(null, Validators.required),
+      fromDate: new FormControl(null, Validators.required),
+    });
     this.awbForm = new FormGroup({
       assignedTo: new FormControl(null, [Validators.required]),
     });
 
     this.getAirbills();
     this.getAllProductFields();
+    this.getMinMax()
+  }
+
+  getMinMax() {
+    this._airbillService.getMinMax().subscribe((res: any) => {
+      this.minDate = new Date(res.minDate);
+      this.maxDate = new Date(res.maxDate);
+    });
   }
 
   getAirbills() {
@@ -82,6 +100,54 @@ export class AirbilldataComponent implements OnInit {
           this.bills = res;
         });
     }
+  }
+
+  onDownloadExcel(data: any) {
+    if (this.excelDataForm.valid) {
+      const formattedDates = {
+        startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
+        endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
+      };
+      console.log(formattedDates);
+
+      this._airbillService
+        .downloadAwbDataInExcel(formattedDates)
+        .pipe(
+          finalize(() => {
+            this.messageService.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Download Successfull",
+            }),
+              this.excelDataForm.reset();
+            this.visible = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this._airbillService.downloadExcelFile(
+            res,
+            `Ticket${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+          );
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Try Again After Few Mins",
+            });
+          };
+        });
+    } else {
+      this.formService.markFormGroupTouched(this.excelDataForm);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Fill All The Fields.",
+      });
+    }
+  }
+
+  onCancel() {
+    this.visible = false;
   }
 
   onRefresh() {
@@ -174,8 +240,8 @@ export class AirbilldataComponent implements OnInit {
     this.assignId = id;
   }
 
-  onCloseDialog(){
-    this.awbForm.reset()
+  onCloseDialog() {
+    this.awbForm.reset();
   }
 
   onSubmit(data: any) {
@@ -185,7 +251,7 @@ export class AirbilldataComponent implements OnInit {
         .updateAssignedTo(this.assignId, data)
         .subscribe((res: any) => {
           this.assignDialog = false;
-          this.awbForm.reset()
+          this.awbForm.reset();
           this.messageService.add({
             severity: "success",
             summary: "Success",

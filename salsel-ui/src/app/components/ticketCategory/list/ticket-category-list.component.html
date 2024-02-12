@@ -1,0 +1,133 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h1 class="m-0"
+                style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+                Ticket Categories</h1>
+            <div class="flex justify-content-end">
+                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_DEPARTMENT_CATEGORY')" pButton
+                    label="Add Ticket Category" class="mb-2 addBtn"
+                    routerLink="/create-ticket-category"></button>
+            </div>
+            <hr>
+            <p-table #dt1 [value]="ticketCategories" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+                styleClass="p-datatable-gridlines" [paginator]="true" [globalFilterFields]="['name','departmentCategory.name']"
+                responsiveLayout="scroll">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="mb-2">
+                            <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                                (click)="clear(dt1)"></button>
+                            <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
+                                (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
+                        </div>
+
+                        <span class="p-input-icon-left mb-2">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+                                placeholder="Search Keyword" class="w-full" />
+                        </span>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 5rem">
+                            <div class="flex justify-content-center align-items-center">
+                                #
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Department
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Department Category
+                            </div>
+                        </th>
+
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Ticket Category
+                            </div>
+                        </th>
+
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-ticketCategory>
+                    <tr>
+                        <td>
+                            {{ticketCategory?.id}}
+                        </td>
+                        <td>
+                            {{ticketCategory?.departmentCategory?.department?.name}}
+                        </td>
+                        <td>
+                            {{ticketCategory?.departmentCategory?.name}}
+                        </td>
+                        <td>
+                            {{ticketCategory?.name}}
+                        </td>
+
+                        <td>
+                            <button pTooltip="Edit" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_TICKET_CATEGORY')"
+                                pButton pRipple type="button" icon="pi pi-file-edit"
+                                class="p-button-rounded p-button-outlined mx-2"
+                                (click)="editTicketCategory(ticketCategory.id)"></button>
+
+                            <button pTooltip="Deactivate" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_TICKET_CATEGORY')"
+                                pButton pRipple type="button" icon="pi pi-times"
+                                class="p-button-rounded p-button-danger p-button-outlined mx-2"
+                                (click)="deleteTicketCategory(ticketCategory.id)"></button>
+
+                            <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
+                                type="button" icon="pi pi-check"
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_TICKET_CATEGORY')"
+                                class="p-button-rounded p-button-success p-button-outlined mx-2"
+                                (click)="onActiveTicketCategory(ticketCategory.id)"></button>
+
+                        </td>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td style="text-align: start !important;" colspan="8">{{activeStatus?'No ticket category
+                            found.':'No Inactive ticket category
+                            found.'}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td style="text-align: start !important;" colspan="8">Loading Ticket categories data. Please
+                            wait.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+
+    <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+            <span>Are you sure you want to deactivate selected ticket category?</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                (click)="deleteDialog = false"></button>
+            <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                (click)="confirmDeleteSelected()"></button>
+        </ng-template>
+    </p-dialog>
+
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

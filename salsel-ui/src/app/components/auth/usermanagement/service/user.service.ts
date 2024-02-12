@@ -58,4 +58,23 @@ export class UserService {
   updateUserStatus(id: any) {
     return this.http.put(`${this.url}user/status/${id}`, {});
   }
+
+  getMinMax() {
+    return this.http.get(`${this.url}user/created-at-range`);
+  }
+
+  downloadUserDataInExcel(params: any) {
+    return this.http.get(`${this.url}download-user-excel`, {
+      params,
+      responseType: "blob" as "json", // Set the response type to 'blob'
+    });
+  }
+
+  downloadExcelFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/xlsx" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
 }

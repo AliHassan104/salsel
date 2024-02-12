@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface AccountService {
     AccountDto save(AccountDto accountDto, MultipartFile pdf);
@@ -17,5 +18,12 @@ public interface AccountService {
     void setToActiveById(Long id);
     AccountDto update(Long id, AccountDto accountDto,  MultipartFile pdf);
     List<AccountDto> getAccountsBetweenDates(LocalDate startDate, LocalDate endDate);
+
+    LocalDate getMinCreatedAt();
+    LocalDate getMaxCreatedAt();
+
+    Map<String, Long> getStatusCounts();
+
+    Map<String, Long> getStatusCountsBasedOnLoggedInUser();
 
 }

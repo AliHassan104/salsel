@@ -1,0 +1,9 @@
+tr td {
+  text-align: center;
+}
+
+@media screen and (max-width: 576px) {
+  .addBtn {
+    margin-top: 20px;
+  }
+}

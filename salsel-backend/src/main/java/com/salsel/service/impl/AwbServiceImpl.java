@@ -3,6 +3,7 @@ package com.salsel.service.impl;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfReader;
+import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
@@ -27,8 +28,13 @@ import org.springframework.ui.Model;
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @EnableAsync
@@ -293,6 +299,112 @@ public class AwbServiceImpl implements AwbService {
             e.printStackTrace();
             throw new RecordNotFoundException("Error occurred while Sending Email");
         }
+    }
+
+    @Override
+    public List<AwbDto> getAwbBetweenDates(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        return awbRepository.findAllByCreatedAtBetween(startDateTime, endDateTime)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Long> getAwbStatusCounts() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Add logic to get counts based on different AWB statuses
+        statusCounts.put("awbCreated", awbRepository.countByStatusAndAwbStatus(true,"AWB Created"));
+        statusCounts.put("pickup", awbRepository.countByStatusAndAwbStatus(true,"Pickup"));
+        statusCounts.put("inTransit", awbRepository.countByStatusAndAwbStatus(true,"In-Transit"));
+        statusCounts.put("delivered", awbRepository.countByStatusAndAwbStatus(true,"Delivered"));
+        statusCounts.put("returned", awbRepository.countByStatusAndAwbStatus(true,"Returned"));
+        statusCounts.put("exception", awbRepository.countByStatusAndAwbStatus(true,"Exception"));
+
+        return statusCounts;
+    }
+
+    @Override
+    public Map<String, Long> getStatusCounts() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Add logic to get counts for true status
+        statusCounts.put("active", awbRepository.countByStatus(true));
+
+        // Add logic to get counts for false status
+        statusCounts.put("inactive", awbRepository.countByStatus(false));
+
+        return statusCounts;
+    }
+
+    @Override
+    public Map<String, Long> getAwbStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Get the logged-in user's email
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        // Add logic to get counts based on different AWB statuses for the logged-in user
+        statusCounts.put("awbCreated", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "AWB Created", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("pickup", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Pickup", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("inTransit", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "In-Transit", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("delivered", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Delivered", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("returned", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Returned", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("exception", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Exception", loggedInUserEmail,loggedInUserRole));
+
+        return statusCounts;
+    }
+
+    @Override
+    public Map<String, Long> getStatusCountsBasedOnLoggedInUser() {
+        Map<String, Long> statusCounts = new HashMap<>();
+
+        // Get the logged-in user's email
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        // Add logic to get counts based on different AWB statuses for the logged-in user
+        statusCounts.put("active", awbRepository.countByStatusAndCreatedByOrAssignedTo(true,  loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("inactive", awbRepository.countByStatusAndCreatedByOrAssignedTo(false,  loggedInUserEmail,loggedInUserRole));
+
+        return statusCounts;
+    }
+
+    private String getLoggedInUserEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetail) {
+            return ((CustomUserDetail) principal).getEmail();
+        }
+        return null;
+    }
+
+    private String getLoggedInUserRole() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            CustomUserDetail userDetails = (CustomUserDetail) principal;
+
+            if (userDetails != null && userDetails.getAuthorities() != null && userDetails.getAuthorities().size() > 0) {
+
+                return userDetails.getAuthorities().iterator().next().getAuthority();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public LocalDate getMinCreatedAt() {
+        return awbRepository.findMinCreatedAt();
+    }
+
+    @Override
+    public LocalDate getMaxCreatedAt() {
+        return awbRepository.findMaxCreatedAt();
     }
 
     public AwbDto toDto(Awb awb) {

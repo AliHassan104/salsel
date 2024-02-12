@@ -43,4 +43,18 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
 
     @Query("SELECT t FROM Ticket t WHERE (t.status = :status AND t.createdBy = :createdBy) OR (t.status = :status AND t.assignedTo = :assignedTo) ORDER BY t.id DESC")
     List<Ticket> findAllInDesOrderByCreatedByOrAssignedToAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo);
+
+    @Query("SELECT MIN(t.createdAt) FROM Ticket t")
+    LocalDate findMinCreatedAt();
+
+    @Query("SELECT MAX(t.createdAt) FROM Ticket t")
+    LocalDate findMaxCreatedAt();
+
+    @Query("SELECT COUNT(t) FROM Ticket t WHERE t.status = :status")
+    Long countByStatus(@Param("status") Boolean status);
+
+    @Query("SELECT COUNT(*) FROM Ticket t\n" +
+            "WHERE t.status = :status\n" +
+            "  AND (t.createdBy = :createdBy OR t.assignedTo = :assignedTo)")
+    Long countByStatusAndCreatedByOrAssignedTo(boolean status, String createdBy, String assignedTo);
 }

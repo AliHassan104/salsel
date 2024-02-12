@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +118,20 @@ public class UserController {
         OutputStream outputStream = response.getOutputStream();
         excelGenerationService.createExcelFile(excelData, outputStream, USER_TYPE);
         outputStream.close();
+    }
+
+    @GetMapping("/user/created-at-range")
+    @PreAuthorize("hasAuthority('READ_USER')")
+    public ResponseEntity<Map<String, LocalDate>> getUserCreatedAtRange() {
+        Map<String, LocalDate> dateRange = new HashMap<>();
+
+        LocalDate minDate = userService.getMinCreatedAt();
+        LocalDate maxDate = userService.getMaxCreatedAt();
+
+        dateRange.put("minDate", minDate);
+        dateRange.put("maxDate", maxDate);
+
+        return ResponseEntity.ok(dateRange);
     }
 
 }
