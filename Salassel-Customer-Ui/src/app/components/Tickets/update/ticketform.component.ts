@@ -11,7 +11,6 @@ import { TicktingService } from "src/app/components/Tickets/service/tickting.ser
 import { HttpClient } from "@angular/common/http";
 import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { MessageService } from "primeng/api";
-import { environment } from "src/environments/environment";
 import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { FormvalidationService } from "../service/formvalidation.service";
 import { AccountService } from "../../accounts/service/account.service";
@@ -24,7 +23,7 @@ import { SessionStorageService } from "../../auth/service/session-storage.servic
 import { Dropdown } from "primeng/dropdown";
 import { TicketCategoryService } from "../service/ticket-category.service";
 import { TicketSubCategoryService } from "../service/ticket-sub-category.service";
-import { ITicketSubCategory } from "c:/Users/dell/Desktop/New Salsel/salsel/Salassel-Customer-Ui/src/app/components/Tickets/model/ticketSubCategoryDto";
+import { ITicketSubCategory } from "../model/ticketSubCategoryDto";
 
 @Component({
   selector: "app-ticketform",
