@@ -200,6 +200,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto update(Long id, UserDto userDto) {
+        boolean rolesAssignedForFirstTime = false;
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", id)));
 
@@ -210,8 +211,11 @@ public class UserServiceImpl implements UserService {
             existingUser.setFirstname(userDto.getFirstname());
             existingUser.setLastname(userDto.getLastname());
             existingUser.setEmployeeId(userDto.getEmployeeId());
+
+            rolesAssignedForFirstTime = existingUser.getRoles().isEmpty() && !userDto.getRoles().isEmpty();
             existingUser.getRoles().removeIf(role -> !userDto.getRoles().contains(role));
         }
+
 
         // Check if the password is provided before attempting to encode it
         if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
@@ -225,6 +229,14 @@ public class UserServiceImpl implements UserService {
 
         existingUser.setRoles(roleList);
         User updatedUser = userRepository.save(existingUser);
+
+        // If roles are assigned for the first time, generate a password and send email
+        if (rolesAssignedForFirstTime) {
+            String password = helperUtils.generateResetPassword();
+            existingUser.setPassword(bCryptPasswordEncoder.encode(password));
+            userRepository.save(existingUser);
+            emailUtils.sendWelcomeEmail(existingUser, password);
+        }
         return toDto(updatedUser);
     }
 

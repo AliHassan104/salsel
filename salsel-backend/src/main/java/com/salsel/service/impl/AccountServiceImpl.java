@@ -72,14 +72,11 @@ public class AccountServiceImpl implements AccountService {
         Account createdAccount;
         Optional<User> existingUser = userRepository.findByEmail(account.getEmail());
         if (!existingUser.isPresent()) {
-            String password = helperUtils.generateResetPassword();
             User user = new User();
             user.setEmail(account.getEmail());
             user.setCreatedAt(LocalDate.now());
-            user.setPassword(password);
             user.setStatus(true);
             User createdUser = userRepository.save(user);
-            emailUtils.sendWelcomeEmail(createdUser, password);
         }
         createdAccount = accountRepository.save(account);
 
