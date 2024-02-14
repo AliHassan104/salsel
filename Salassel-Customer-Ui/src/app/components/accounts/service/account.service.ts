@@ -23,6 +23,10 @@ export class AccountService {
     });
   }
 
+  getMinMax() {
+    return this.http.get(`${this.url}account/created-at-range`);
+  }
+
   getAllAccountsByUserLoggedIn(
     params: any
   ): Observable<EntityAccountFieldResponseType> {
@@ -81,6 +85,14 @@ export class AccountService {
   //   Update Account Status
   updateAccountStatus(id) {
     return this.http.put(`${this.url}account/status/${id}`, {});
+  }
+
+  getStatusCount() {
+    return this.http.get(`${this.url}account/status-counts`);
+  }
+
+  getStatusCountByLoggedInUser() {
+    return this.http.get(`${this.url}account/logged-in-user-status-counts`);
   }
 
   downloadFile(data: any, filename: string) {

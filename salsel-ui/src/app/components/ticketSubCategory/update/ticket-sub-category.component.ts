@@ -97,7 +97,6 @@ export class TicketSubCategoryComponent {
               ?.department?.id,
             this.ticketSubCategory?.ticketCategory?.departmentCategory?.id
           );
-          console.log(this.ticketSubCategory.ticketCategory);
 
           this.patchFormWithDto();
         }
@@ -181,7 +180,6 @@ export class TicketSubCategoryComponent {
       .subscribe((res) => {
         if (res && res.body) {
           this.ticketCategories = res.body;
-          console.log(this.ticketCategories);
         }
       });
   }

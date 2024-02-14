@@ -1,0 +1,70 @@
+span.tracking {
+  font-weight: 500;
+  font-size: 15px;
+  /* margin-bottom: 1rem; */
+}
+
+.tracking-heading {
+  color: #000000;
+  font-size: 22px;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.order {
+  font-weight: 500;
+  font-size: 22px;
+}
+
+.order-heading {
+  color: #000000;
+  font-size: 35px;
+  margin-top: 9px;
+  font-weight: bolder;
+  margin-bottom: 6px;
+}
+
+p-divider::ng-deep .p-divider.p-divider-vertical {
+  margin: 0px;
+}
+
+p.heading {
+  font-size: 15px;
+  font-weight: 700;
+  color: #343a40;
+  margin-bottom: 3px;
+}
+
+p.info {
+  font-size: 20px;
+  font-weight: 400;
+  color: #616161;
+}
+
+
+h1.delivery-heading {
+    color: white;
+    font-size: 30px;
+    background: black;
+    padding: 6px 32px;
+    margin-bottom: 0px;
+}
+
+p.order-content {
+    font-size: 15px;
+    font-weight: bolder;
+}
+
+p-timeline::ng-deep .p-timeline{
+    margin-top: 30px;
+}
+
+p.timeline-opposite-content {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.timeline-content{
+    font-size: 16px;
+    font-weight: bolder;
+}

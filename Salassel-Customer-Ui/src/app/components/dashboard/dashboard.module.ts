@@ -11,6 +11,23 @@ import { DashboardsRoutingModule } from "./dashboard-routing.module";
 import { DashboardComponent } from "./dashboard.component";
 import { SkeletonModule } from "primeng/skeleton";
 import { AvatarModule } from "primeng/avatar";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { CalendarModule } from "primeng/calendar";
+import { CascadeSelectModule } from "primeng/cascadeselect";
+import { ChipsModule } from "primeng/chips";
+import { DialogModule } from "primeng/dialog";
+import { DropdownModule } from "primeng/dropdown";
+import { InputMaskModule } from "primeng/inputmask";
+import { InputNumberModule } from "primeng/inputnumber";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { MultiSelectModule } from "primeng/multiselect";
+import { ProgressBarModule } from "primeng/progressbar";
+import { RippleModule } from "primeng/ripple";
+import { SliderModule } from "primeng/slider";
+import { ToastModule } from "primeng/toast";
+import { ToggleButtonModule } from "primeng/togglebutton";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   imports: [
@@ -24,7 +41,24 @@ import { AvatarModule } from "primeng/avatar";
     ButtonModule,
     DashboardsRoutingModule,
     SkeletonModule,
-    AvatarModule,
+    ButtonModule,
+    SliderModule,
+    InputTextModule,
+    ToggleButtonModule,
+    RippleModule,
+    MultiSelectModule,
+    DropdownModule,
+    ProgressBarModule,
+    ToastModule,
+    DialogModule,
+    AutoCompleteModule,
+    CalendarModule,
+    ChipsModule,
+    InputMaskModule,
+    InputNumberModule,
+    CascadeSelectModule,
+    InputTextareaModule,
+    TooltipModule,
   ],
   declarations: [DashboardComponent],
 })

@@ -1,6 +1,7 @@
 export interface Ticket {
   assignedTo?: string;
-  category?: string;
+  ticketCategory?: string;
+  ticketSubCategory?: string;
   createdAt?: string;
   deliveryAddress?: string;
   department?: string;

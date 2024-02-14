@@ -41,8 +41,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
 
     List<Ticket> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    @Query("SELECT t FROM Ticket t WHERE (t.status = :status AND t.createdBy = :createdBy) OR (t.status = :status AND t.assignedTo = :assignedTo) ORDER BY t.id DESC")
-    List<Ticket> findAllInDesOrderByCreatedByOrAssignedToAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo);
+    @Query("SELECT t FROM Ticket t WHERE (t.assignedTo = :assignedTo OR t.createdBy = :createdBy OR t.email = :email) AND (t.createdAt BETWEEN :startDate AND :endDate) ORDER BY t.id DESC")
+    List<Ticket> findAllByCreatedAtBetweenAndLoggedInUser(@Param("startDate") LocalDateTime startDate,
+                                                          @Param("endDate") LocalDateTime endDate, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo, @Param("email") String email);
+
+    @Query("SELECT t FROM Ticket t WHERE (t.status = :status AND t.createdBy = :createdBy) OR (t.status = :status AND t.assignedTo = :assignedTo) OR (t.status = :status AND t.email = :email) ORDER BY t.id DESC")
+    List<Ticket> findAllInDesOrderByCreatedByOrAssignedToAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo, @Param("email") String email);
 
     @Query("SELECT MIN(t.createdAt) FROM Ticket t")
     LocalDate findMinCreatedAt();

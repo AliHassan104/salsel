@@ -24,12 +24,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate createdAt;
+
+    @Column(unique = true)
     private String employeeId;
+
     private String name;
     private String firstname;
     private String lastname;
     private String phone;
+
+    @Column(unique = true)
     private String email;
+
+
     private String password;
     private Boolean status;
 

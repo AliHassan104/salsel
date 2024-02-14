@@ -108,7 +108,6 @@ export class AirbilldataComponent implements OnInit {
         startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
         endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
       };
-      console.log(formattedDates);
 
       this._airbillService
         .downloadAwbDataInExcel(formattedDates)
@@ -245,7 +244,6 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onSubmit(data: any) {
-    console.log(data);
     if (this.awbForm.valid) {
       this._airbillService
         .updateAssignedTo(this.assignId, data)

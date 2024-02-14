@@ -7,14 +7,22 @@ import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { IAwbDto } from "src/app/components/awb/model/awbValuesDto";
 import { SessionStorageService } from "../../auth/service/session-storage.service";
 import { finalize } from "rxjs";
+import { DatePipe } from "@angular/common";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { RolesService } from "src/app/service/roles.service";
+import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 
 @Component({
   selector: "app-airbilldata",
   templateUrl: "./airbilldata.component.html",
   styleUrls: ["./airbilldata.component.scss"],
-  providers: [MessageService],
+  providers: [MessageService, DatePipe],
 })
 export class AirbilldataComponent implements OnInit {
+  excelDataForm!: FormGroup;
+  minDate;
+  maxDate;
+  visible;
   productField?;
   status?;
   selectedStatus: string = "Active";
@@ -27,7 +35,10 @@ export class AirbilldataComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private dropdownService: DropdownService,
-    public sessionStorageService: SessionStorageService
+    public sessionStorageService: SessionStorageService,
+    private roleService: RolesService,
+    private formService: FormvalidationService,
+    private datePipe: DatePipe
   ) {}
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
@@ -35,8 +46,21 @@ export class AirbilldataComponent implements OnInit {
   deleteId: any;
 
   ngOnInit(): void {
+    this.excelDataForm = new FormGroup({
+      toDate: new FormControl(null, Validators.required),
+      fromDate: new FormControl(null, Validators.required),
+    });
+
     this.getAirbills();
     this.getAllProductFields();
+    this.getMinMax();
+  }
+
+  getMinMax() {
+    this._airbillService.getMinMax().subscribe((res: any) => {
+      this.minDate = new Date(res.minDate);
+      this.maxDate = new Date(res.maxDate);
+    });
   }
 
   getAirbills() {
@@ -68,6 +92,53 @@ export class AirbilldataComponent implements OnInit {
           this.bills = res;
         });
     }
+  }
+
+  onDownloadExcel(data: any) {
+    if (this.excelDataForm.valid) {
+      const formattedDates = {
+        startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
+        endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
+      };
+
+      this._airbillService
+        .downloadAwbDataInExcel(formattedDates)
+        .pipe(
+          finalize(() => {
+            this.messageService.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Download Successfull",
+            }),
+              this.excelDataForm.reset();
+            this.visible = false;
+          })
+        )
+        .subscribe((res: any) => {
+          this._airbillService.downloadExcelFile(
+            res,
+            `Ticket${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+          );
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Try Again After Few Mins",
+            });
+          };
+        });
+    } else {
+      this.formService.markFormGroupTouched(this.excelDataForm);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Fill All The Fields.",
+      });
+    }
+  }
+
+  onCancel() {
+    this.visible = false;
   }
 
   onRefresh() {
