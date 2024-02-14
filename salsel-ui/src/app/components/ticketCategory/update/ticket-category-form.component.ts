@@ -82,7 +82,6 @@ export class TicketCategoryFormComponent {
         this.ticketCategory = res.body;
         this.ticketCategoryName = this.ticketCategory.departmentCategory.name;
         this.patchDepartmentCategory(this.ticketCategory.departmentCategory.department.id)
-        console.log(this.ticketCategory);
 
         this.patchFormWithDto();
       }

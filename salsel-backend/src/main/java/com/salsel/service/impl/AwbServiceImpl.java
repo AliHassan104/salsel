@@ -348,10 +348,22 @@ public class AwbServiceImpl implements AwbService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        return awbRepository.findAllByCreatedAtBetween(startDateTime, endDateTime)
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        boolean isAdminOrCustomerServiceAgent = "ROLE_ADMIN".equals(loggedInUserRole) || "ROLE_CUSTOMER_SERVICE_AGENT".equals(loggedInUserRole);
+
+        if(isAdminOrCustomerServiceAgent){
+            return awbRepository.findAllByCreatedAtBetween(startDateTime, endDateTime)
+                    .stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }else{
+            return awbRepository.findAllByCreatedAtBetweenAndLoggedInUser(startDateTime,endDateTime,loggedInUserEmail,loggedInUserRole)
+                    .stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override

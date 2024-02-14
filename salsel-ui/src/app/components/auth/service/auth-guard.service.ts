@@ -44,12 +44,18 @@ export class AuthGuardService implements CanActivate {
         permission = matchingPermission;
       }
 
-      if (userPermissions.includes(permission.permissions)) {
-        return true;
-      } else {
-        this.router.navigate(["/access"]); // Redirect to an unauthorized page or handle it as needed
-        return false;
-      }
+     if (
+       userPermissions.includes(permission.permissions) &&
+       !(
+         userRoles.includes("ACCOUNT_HOLDER") ||
+         userRoles.includes("CUSTOMER_USER")
+       )
+     ) {
+       return true;
+     } else {
+       this.router.navigate(["/access"]); // Redirect to the unauthorized page
+       return false;
+     }
     } else {
       this.router.navigate(["/login"]);
       return false;

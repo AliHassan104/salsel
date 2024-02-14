@@ -31,6 +31,17 @@ export class TicktingService {
     return this.http.post<any>(`${this.url}ticket`, formData);
   }
 
+  getMinMax() {
+    return this.http.get(`${this.url}ticket/created-at-range`);
+  }
+
+  downloadTicketDataInExcel(params: any) {
+    return this.http.get(`${this.url}download-ticket-excel`, {
+      params,
+      responseType: "blob" as "json", // Set the response type to 'blob'
+    });
+  }
+
   //  Get All Tickets
   getTickets(params?: any) {
     return this.http.get(`${this.url}ticket`, { params, observe: "response" });
@@ -86,6 +97,14 @@ export class TicktingService {
     });
   }
 
+  getStatusCount() {
+    return this.http.get(`${this.url}ticket/status-counts`);
+  }
+
+  getStatusCountByLoggedInUser() {
+    return this.http.get(`${this.url}ticket/logged-in-user-status-counts`);
+  }
+
   //   Get formated Date
   formatDate(date: Date): string {
     if (date != null) {
@@ -122,5 +141,13 @@ export class TicktingService {
     } else {
       return null;
     }
+  }
+
+  downloadExcelFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/xlsx" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
   }
 }

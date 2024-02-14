@@ -6,7 +6,7 @@ import { HistoryRoutingModule } from "./history-routing.module";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { CalendarModule } from "primeng/calendar";
-
+import { DividerModule } from "primeng/divider";
 @NgModule({
   declarations: [HistoryComponent],
   imports: [
@@ -16,6 +16,7 @@ import { CalendarModule } from "primeng/calendar";
     ButtonModule,
     CardModule,
     CalendarModule,
+    DividerModule,
   ],
 })
 export class HistoryModule {}

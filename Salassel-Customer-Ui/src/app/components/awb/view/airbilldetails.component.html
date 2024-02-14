@@ -33,12 +33,12 @@
             <h4>General Infomation</h4>
             <p><strong>Account Number: </strong> {{singleBill?.accountNumber | extractNumeric}}</p>
             <p><strong>Status: </strong>{{singleBill?.awbStatus}}
-            <p><strong>Created At: </strong> {{singleBill?.createdAt}}</p>
+            <p><strong>Created At: </strong> {{singleBill?.createdAt | date:'d MMM, Y'}}</p>
             <p><strong>Awb Number: </strong> {{singleBill?.uniqueNumber}}</p>
         </div>
         <div class="col-12 lg:col-6">
             <h4>Schedule Information</h4>
-            <p><strong>Pickup Date: </strong> {{singleBill?.pickupDate}}</p>
+            <p><strong>Pickup Date: </strong> {{singleBill?.pickupDate | date:'d MMM, Y'}}</p>
             <p><strong>Pickup Time: </strong> {{singleBill?.pickupTime}}</p>
         </div>
         <div class="col-12 lg:col-6">

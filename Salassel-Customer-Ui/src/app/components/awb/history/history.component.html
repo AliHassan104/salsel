@@ -1,19 +1,58 @@
 <div class="card">
-    <h5>Customized</h5>
-    <p-timeline [value]="events1" align="alternate" styleClass="customized-timeline">
-        <ng-container>
-            <ng-template pTemplate="marker" let-event>
-                <span
-                    class="flex z-1 w-2rem h-2rem align-items-center justify-content-center text-white border-circle shadow-2"
-                    [style.backgroundColor]="event.color">
-                    <i [ngClass]="event.icon"></i>
-                </span>
-            </ng-template>
-            <ng-template pTemplate="content" let-event>
-                <p-card [header]="event.status" [subheader]="event.date">
-                    <img *ngIf="event.image" [src]="'assets/TIME/' + event.image" [alt]="event.name" width="100%" />
-                </p-card>
-            </ng-template>
-        </ng-container>
-    </p-timeline>
+    <div class="grid">
+        <div class="col-4">
+            <div class="flex justify-content-center align-items-center" style="min-height: 69px;">
+                <h1 class="delivery-heading">DELIVERY DETAILS</h1>
+            </div>
+            <p-divider></p-divider>
+            <div class="mb-3">
+                <p class="heading">Recipient Name</p>
+                <p class="info">{{singleBill?.recipientsName}}</p>
+            </div>
+            <div class="mb-3">
+                <p class="heading">Contact Number</p>
+                <p class="info">{{singleBill?.recipientsContactNumber}}</p>
+            </div>
+            <div class="mb-3">
+                <p class="heading">Delivery Address</p>
+                <p class="info">{{singleBill?.deliveryAddress}}</p>
+            </div>
+            <div class="mb-3">
+                <p class="heading">Street Name</p>
+                <p class="info">{{singleBill?.deliveryStreetName}}</p>
+            </div>
+            <div>
+                <p class="heading">District</p>
+                <p class="info">{{singleBill?.deliveryDistrict}}</p>
+            </div>
+        </div>
+        <p-divider layout="vertical"></p-divider>
+        <div class="col-8">
+            <div class="flex justify-content-between align-items-center" style="min-height: 69px;">
+                <div>
+                    <span class="tracking">Tracking No.</span>
+                    <h1 class="tracking-heading">{{ '#' + singleBill?.uniqueNumber}}</h1>
+                </div>
+                <button pButton label="Back" class="p-button-outlined" routerLink="/awb/list"></button>
+            </div>
+            <p-divider></p-divider>
+            <div>
+                <span class="order">Current Status</span>
+                <h1 class="order-heading">{{singleBill?.awbStatus}}</h1>
+                <p class="order-content">as on {{singleBill?.createdAt | date:'d MMMM, y, EEEE'}}</p>
+            </div>
+            <p-divider></p-divider>
+            <div>
+                <span class="order">Tracking History</span>
+                <p-timeline [value]="events1" class="w-full md:w-20rem">
+                    <ng-template pTemplate="content" let-event>
+                        <p class="timeline-content">{{ event.status }}</p>
+                    </ng-template>
+                    <ng-template pTemplate="opposite" let-event>
+                        <p class="timeline-opposite-content">{{singleBill?.createdAt | date:'MMMM d, y, h:mm a'}}</p>
+                    </ng-template>
+                </p-timeline>
+            </div>
+        </div>
+    </div>
 </div>

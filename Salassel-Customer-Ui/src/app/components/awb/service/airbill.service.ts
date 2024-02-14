@@ -57,6 +57,33 @@ export class AirbillService {
     });
   }
 
+  getStatusCount() {
+    return this.http.get(`${this.url}awb/status-counts`);
+  }
+
+  getAwbStatusCount() {
+    return this.http.get(`${this.url}awb/awb-status-counts`);
+  }
+
+  getAwbStatusByLoggedInUser() {
+    return this.http.get(`${this.url}awb/logged-in-user-awb-status-counts`);
+  }
+
+  getStatusCountByLoggedInUser() {
+    return this.http.get(`${this.url}awb/logged-in-user-status-counts`);
+  }
+
+  downloadAwbDataInExcel(params: any) {
+    return this.http.get(`${this.url}download-awb-excel`, {
+      params,
+      responseType: "blob" as "json", // Set the response type to 'blob'
+    });
+  }
+
+  getMinMax() {
+    return this.http.get(`${this.url}awb/created-at-range`);
+  }
+
   //   Get formated Date
   formatDate(date: Date): string {
     const year = date.getFullYear().toString(); // Get the last two digits of the year
@@ -86,6 +113,14 @@ export class AirbillService {
 
   downloadFile(data: any, filename: string) {
     const blob = new Blob([data], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  downloadExcelFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/xlsx" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     link.download = filename;

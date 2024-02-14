@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from "@angular/core";
 import { MenuItem } from "primeng/api";
 import { Product } from "../../Api/product";
 import { Subscription, finalize } from "rxjs";
@@ -7,6 +7,7 @@ import { AirbillService } from "../awb/service/airbill.service";
 import { AccountService } from "../accounts/service/account.service";
 import { SessionStorageService } from "../auth/service/session-storage.service";
 import { UserService } from "../auth/usermanagement/service/user.service";
+import { Table } from "primeng/table";
 
 @Component({
   templateUrl: "./dashboard.component.html",
@@ -22,8 +23,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   activeAccountCount?;
   inactiveAccountCount?;
   totalAccountCount?;
-
-  newTicketsSinceLast24Hours;
+  awbData;
 
   pieData;
   pieOptions;
@@ -36,152 +36,137 @@ export class DashboardComponent implements OnInit, OnDestroy {
   chartData: any;
 
   chartOptions: any;
-  refresh: boolean = true;
 
   subscription!: Subscription;
+  refresh: boolean = true;
 
-  loginUserName;
-  loginUserEmail;
-  loginUser;
+  @ViewChild("filter") filter!: ElementRef;
 
   constructor(
     private ticketService: TicktingService,
     private airbillService: AirbillService,
     private accountsService: AccountService,
-    public sessionStorageService: SessionStorageService,
-    private userService: UserService
-  ) {
-    this.userService.loginUserName.subscribe((res) => {
-      this.loginUserName = res;
-    });
-
-    this.userService.loginUserEmail.subscribe((res) => {
-      this.loginUserEmail = res;
-    });
-
-    this.userService.loginUserEmail.subscribe((res) => {
-      this.loginUser = res;
-    });
-  }
+    public sessionStorageService: SessionStorageService
+  ) {}
 
   ngOnInit() {
-    this.getAllInfo();
-    this.pieChartSetup();
+    this.getDataForPieCharts();
   }
 
-  onRefresh() {
-    this.getAllInfo();
-  }
-
-  getAllInfo() {
-    const twentyFourHoursAgo = new Date();
-    twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
-
+  getDataForPieCharts() {
+    const params = { status: true };
     if (
       this.sessionStorageService.getRoleName() == "ADMIN" ||
       this.sessionStorageService.getRoleName() == "CUSTOMER_SERVICE_AGENT"
     ) {
-      this.ticketService
-        .getTickets({ status: true })
+      // Air Bill
+      this.airbillService
+        .getAwbStatusCount()
         .pipe(
           finalize(() => {
             this.refresh = false;
           })
         )
-        .subscribe((res: any) => {
-          this.activeTicketsCount = res?.body?.length;
-
-          this.ticketService
-            .getTickets({ status: false })
-            .subscribe((res: any) => {
-              this.inActiveTicketsCount = res?.body?.length;
-              this.totalTickets =
-                this.activeTicketsCount + this.inActiveTicketsCount;
-
-              this.pieChartSetup();
-            });
+        .subscribe((awb: any) => {
+          this.pieChartAwbSetup(
+            awb?.awbCreated,
+            awb?.pickup,
+            awb?.inTransit,
+            awb?.delivered,
+            awb?.returned,
+            awb?.exception
+          );
         });
 
-      this.airbillService.getBills({ status: true }).subscribe((res: any) => {
-        this.activeawb = res.length;
-        this.airbillService
-          .getBills({ status: false })
-          .subscribe((res: any) => {
-            this.inactiveAwb = res.length;
-            this.awbCount = this.activeawb + this.inactiveAwb;
-            this.pieChartAwbSetup();
-          });
+      this.airbillService.getStatusCount().subscribe((awb: any) => {
+        this.activeawb = awb?.active;
+        this.inactiveAwb = awb?.inactive;
+        this.awbCount = this.activeawb + this.inactiveAwb;
       });
 
-      this.accountsService
-        .getAllAccounts({ status: true })
-        .subscribe((res: any) => {
-          this.activeAccountCount = res?.body?.length;
+      this.airbillService.getBills(params).subscribe((res: any) => {
+        this.awbData = res;
+      });
 
-          this.accountsService
-            .getAllAccounts({ status: false })
-            .subscribe((res: any) => {
-              this.inactiveAccountCount = res?.body?.length;
-              this.totalAccountCount =
-                this.activeAccountCount + this.inactiveAccountCount;
+      // Ticket
+      this.ticketService.getStatusCount().subscribe((ticket: any) => {
+        this.pieChartTicketSetup(ticket?.active, ticket?.inactive);
+        this.activeTicketsCount = ticket?.active;
+        this.inActiveTicketsCount = ticket?.inactive;
+        this.totalTickets = this.activeTicketsCount + this.inActiveTicketsCount;
+      });
 
-              this.pieChartAccountSetup();
-            });
-        });
+      //   Account
+      this.accountsService.getStatusCount().subscribe((account: any) => {
+        this.pieChartAccountSetup(account?.active, account?.inactive);
+        this.activeAccountCount = account?.active;
+        this.inactiveAccountCount = account?.inactive;
+        this.totalAccountCount =
+          this.activeAccountCount + this.inactiveAccountCount;
+      });
     } else {
-      this.ticketService
-        .getTicketsByLoggedInUserAndRole({ status: true })
+      // Air Bill Details
+      this.airbillService
+        .getAwbStatusByLoggedInUser()
         .pipe(
           finalize(() => {
             this.refresh = false;
           })
         )
-        .subscribe((res: any) => {
-          this.activeTicketsCount = res?.body?.length;
-
-          this.ticketService
-            .getTicketsByLoggedInUserAndRole({ status: false })
-            .subscribe((res: any) => {
-              this.inActiveTicketsCount = res?.body?.length;
-              this.totalTickets =
-                this.activeTicketsCount + this.inActiveTicketsCount;
-
-              this.pieChartSetup();
-            });
+        .subscribe((awb: any) => {
+          this.pieChartAwbSetup(
+            awb?.awbCreated,
+            awb?.pickup,
+            awb?.inTransit,
+            awb?.delivered,
+            awb?.returned,
+            awb?.exception
+          );
         });
 
       this.airbillService
-        .getBillsByUserEmailAndRole({ status: true })
-        .subscribe((res: any) => {
-          this.activeawb = res.length;
-          this.airbillService
-            .getBillsByUserEmailAndRole({ status: false })
-            .subscribe((res: any) => {
-              this.inactiveAwb = res.length;
-              this.awbCount = this.activeawb + this.inactiveAwb;
-              this.pieChartAwbSetup();
-            });
+        .getStatusCountByLoggedInUser()
+        .subscribe((awb: any) => {
+          this.activeawb = awb?.active;
+          this.inactiveAwb = awb?.inactive;
+          this.awbCount = this.activeawb + this.inactiveAwb;
         });
 
-      this.accountsService
-        .getAllAccountsByUserLoggedIn({ status: true })
+      this.airbillService
+        .getBillsByUserEmailAndRole(params)
         .subscribe((res: any) => {
-          this.activeAccountCount = res?.body?.length;
+          this.awbData = res;
+        });
 
-          this.accountsService
-            .getAllAccountsByUserLoggedIn({ status: false })
-            .subscribe((res: any) => {
-              this.inactiveAccountCount = res?.body?.length;
-              this.totalAccountCount =
-                this.activeAccountCount + this.inactiveAccountCount;
+      // Ticket
+      this.ticketService
+        .getStatusCountByLoggedInUser()
+        .subscribe((ticket: any) => {
+          this.pieChartTicketSetup(ticket?.active, ticket?.inactive);
+          this.activeTicketsCount = ticket.active;
+          this.inActiveTicketsCount = ticket.inactive;
+          this.totalTickets =
+            this.activeTicketsCount + this.inActiveTicketsCount;
+        });
 
-              this.pieChartAccountSetup();
-            });
+      //   Account
+      this.accountsService
+        .getStatusCountByLoggedInUser()
+        .subscribe((account: any) => {
+          this.pieChartAccountSetup(account?.active, account?.inactive);
+          this.activeAccountCount = account?.active;
+          this.inactiveAccountCount = account?.inactive;
+          this.totalAccountCount =
+            this.activeAccountCount + this.inactiveAccountCount;
         });
     }
   }
 
-  pieChartAccountSetup() {
+  onRefresh() {
+    this.getDataForPieCharts();
+  }
+
+  pieChartAccountSetup(active, inactive) {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue("--text-color");
 
@@ -189,9 +174,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       labels: ["Active", "InActive"],
       datasets: [
         {
-          data: [this.activeAccountCount, this.inactiveAccountCount],
-          backgroundColor: ["#8e44ad", "#d35400"],
-          hoverBackgroundColor: ["#9b59b6", "#e74c3c"],
+          data: [active, inactive],
+          backgroundColor: ["#d35400", "#8e44ad"],
+          hoverBackgroundColor: ["#e74c3c", "#9b59b6"],
         },
       ],
     };
@@ -208,17 +193,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
   }
 
-  pieChartAwbSetup() {
+  pieChartAwbSetup(
+    awbCreated,
+    pickup,
+    inTransit,
+    delivered,
+    returned,
+    exception
+  ) {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue("--text-color");
 
     this.pieDataAwb = {
-      labels: ["Active", "InActive"],
+      labels: [
+        "Awb Created",
+        "Pickup",
+        "In-Transit",
+        "Delivered",
+        "Returned",
+        "Exception",
+      ],
       datasets: [
         {
-          data: [this.activeawb, this.inactiveAwb],
-          backgroundColor: ["#2ecc71", "#e67e22"],
-          hoverBackgroundColor: ["#27ae60", "#d35400"],
+          data: [awbCreated, pickup, inTransit, delivered, returned, exception],
+          backgroundColor: [
+            "rgba(10, 148, 255, 1)",
+            "rgba(220, 96, 239, 1)",
+            "rgba(137, 91, 241, 1)",
+            "rgba(153, 178, 198, 1)",
+            "rgba(243, 101, 74, 1)",
+            "rgba(0, 186, 52, 1)",
+          ],
+          hoverBackgroundColor: [
+            "rgba(10, 148, 255, 0.9)",
+            "rgba(220, 96, 239, 0.9)",
+            "rgba(137, 91, 241, 0.9)",
+            "rgba(153, 178, 198, 0.9)",
+            "rgba(243, 101, 74, 0.9)",
+            "rgba(0, 186, 52, 0.9)",
+          ],
         },
       ],
     };
@@ -235,7 +248,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
   }
 
-  pieChartSetup() {
+  pieChartTicketSetup(active, inactive) {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue("--text-color");
 
@@ -243,7 +256,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       labels: ["Active", "InActive"],
       datasets: [
         {
-          data: [this.activeTicketsCount, this.inActiveTicketsCount],
+          data: [active, inactive],
           backgroundColor: ["#9b59b6", "#f39c12"],
           hoverBackgroundColor: ["#8e44ad", "#d35400"],
         },
@@ -260,6 +273,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         },
       },
     };
+  }
+
+  onGlobalFilter(table: Table, event: Event) {
+    table.filterGlobal((event.target as HTMLInputElement).value, "contains");
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.filter.nativeElement.value = "";
   }
 
   ngOnDestroy() {

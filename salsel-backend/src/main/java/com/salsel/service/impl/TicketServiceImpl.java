@@ -160,7 +160,7 @@ public class TicketServiceImpl implements TicketService {
 
             for (Role role : user.getRoles()) {
                 String roleName = role.getName();
-                List<Ticket> ticketList = ticketRepository.findAllInDesOrderByCreatedByOrAssignedToAndStatus(status, user.getEmail(),roleName);
+                List<Ticket> ticketList = ticketRepository.findAllInDesOrderByCreatedByOrAssignedToAndStatus(status, user.getEmail(),roleName,user.getEmail());
 
                 for (Ticket ticket : ticketList) {
                     TicketDto ticketDto = toDto(ticket);
@@ -344,11 +344,26 @@ public class TicketServiceImpl implements TicketService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        return ticketRepository.findAllByCreatedAtBetween(startDateTime, endDateTime)
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        // Get logged-in user's email and role
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        boolean isAdminOrCustomerServiceAgent = "ROLE_ADMIN".equals(loggedInUserRole) || "ROLE_CUSTOMER_SERVICE_AGENT".equals(loggedInUserRole);
+
+        if(isAdminOrCustomerServiceAgent){
+            return ticketRepository.findAllByCreatedAtBetween(startDateTime, endDateTime)
+                    .stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }else{
+            return ticketRepository.findAllByCreatedAtBetweenAndLoggedInUser(startDateTime,endDateTime,loggedInUserEmail,loggedInUserRole,loggedInUserEmail)
+                    .stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }
     }
+
+
 
     public TicketDto toDto(Ticket ticket) {
         return TicketDto.builder()

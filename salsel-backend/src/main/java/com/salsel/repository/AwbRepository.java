@@ -59,6 +59,11 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
 
     List<Awb> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
+    @Query("SELECT a FROM Awb a WHERE (a.assignedTo = :assignedTo OR a.createdBy = :createdBy) AND (a.createdAt BETWEEN :startDate AND :endDate) ORDER BY a.id DESC")
+    List<Awb> findAllByCreatedAtBetweenAndLoggedInUser(@Param("startDate") LocalDateTime startDate,
+                                                          @Param("endDate") LocalDateTime endDate, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo);
+
+
     @Query("SELECT COUNT(*) FROM Awb a\n" +
             "WHERE a.status = :status\n" +
             "  AND a.awbStatus = :awbStatus\n" +
