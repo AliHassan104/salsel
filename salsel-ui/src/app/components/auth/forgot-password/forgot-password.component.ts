@@ -4,6 +4,7 @@ import { LoginService } from "../service/login.service";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { MessageService } from "primeng/api";
 import { Router } from "@angular/router";
+import { ResetPasswordService } from "../new-password/service/reset-password.service";
 
 @Component({
   selector: "app-forgot-password",
@@ -16,7 +17,8 @@ export class ForgotPasswordComponent implements OnInit {
     private loginService: LoginService,
     public router: Router,
     private formService: FormvalidationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private resetPassService: ResetPasswordService
   ) {}
 
   forgotPasswordForm!: FormGroup;
@@ -29,17 +31,27 @@ export class ForgotPasswordComponent implements OnInit {
   formSetup() {}
 
   onForgotPassword(data: any) {
+    console.log(data,data.email,typeof data.email);
+
+    const params={email:data.email}
     if (this.forgotPasswordForm.valid) {
-      this.loginService.forgotPassword(data).subscribe(
+      this.resetPassService.forgotPassword(params).subscribe(
         (res) => {
           this.success(res);
+          this.forgotPasswordForm.reset()
         },
         (error: any) => {
-          this.showError();
+          this.showError(error);
+          console.log(error);
         }
       );
     } else {
       this.formService.markFormGroupTouched(this.forgotPasswordForm);
+       this.messageService.add({
+         severity: "error",
+         summary: "Error",
+         detail: "Please Enter a Valid Email",
+       });
     }
   }
 
@@ -55,11 +67,11 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  showError() {
+  showError(error:any) {
     this.messageService.add({
       severity: "error",
       summary: "Error",
-      detail: "User Not Found",
+      detail: error?.error?.error,
     });
   }
 }

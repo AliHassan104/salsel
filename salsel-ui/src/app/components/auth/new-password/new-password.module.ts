@@ -6,6 +6,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { ToastModule } from "primeng/toast";
 import { NewPasswordComponent } from "./new-password.component";
 import { PasswordModule } from "primeng/password";
+import { DialogModule } from "primeng/dialog";
 
 @NgModule({
   declarations: [NewPasswordComponent],
@@ -16,6 +17,7 @@ import { PasswordModule } from "primeng/password";
     ReactiveFormsModule,
     FormsModule,
     ToastModule,
+    DialogModule,
     PasswordModule,
   ],
 })

@@ -10,7 +10,8 @@ import {
 import { MessageService } from "primeng/api";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { LoginService } from "../service/login.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ResetPasswordService } from "./service/reset-password.service";
 
 @Component({
   selector: "app-new-password",
@@ -19,16 +20,29 @@ import { Router } from "@angular/router";
   providers: [MessageService],
 })
 export class NewPasswordComponent {
+  userMail;
+  resetCode;
   constructor(
     private loginService: LoginService,
     public router: Router,
     private formService: FormvalidationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private resetPassService: ResetPasswordService,
+    private route: ActivatedRoute
   ) {}
 
   newPasswordForm!: FormGroup;
   ngOnInit(): void {
     this.formSetup();
+    this.queryParamSetup();
+  }
+
+  queryParamSetup() {
+    this.route.queryParams.subscribe((params: any) => {
+      console.log(params);
+      this.userMail = params?.email;
+      this.resetCode = params?.code;
+    });
   }
 
   formSetup() {
@@ -60,7 +74,24 @@ export class NewPasswordComponent {
     console.log(this.newPasswordForm);
 
     if (this.newPasswordForm.valid) {
-      console.log(data);
+      const params = {
+        email: this.userMail,
+        code: this.resetCode,
+        newPassword: data.password,
+      };
+      this.resetPassService.resetPassword(params).subscribe(
+        (res: any) => {
+          this.success(res);
+          this.newPasswordForm.reset();
+        },
+        (error: any) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "Invalid or expired reset code",
+          });
+        }
+      );
     } else {
       this.formService.markFormGroupTouched(this.newPasswordForm);
       this.showError();
@@ -83,7 +114,7 @@ export class NewPasswordComponent {
     this.messageService.add({
       severity: "error",
       summary: "Error",
-      detail: "Password Not Matched",
+      detail: "Fill all the required fields.",
     });
   }
 }

@@ -101,16 +101,17 @@ public class EmailUtils {
             helper.setTo(user.getEmail());
             helper.setSubject("Password Reset Request");
 
-            String resetLink = "http://localhost:8080/api/reset-password?email=" + user.getEmail() + "&code=" + resetCode;
+            String resetLink = "http://localhost:4200/#/reset-password?email=" + user.getEmail() + "&code=" + resetCode;
 
-            String emailContent = "Dear " + user.getName() + ",\n\n"
-                    + "You have requested to reset your password. Please click on the following link to proceed with the password reset:\n\n"
-                    + resetLink + "\n\n"
-                    + "If you did not request a password reset, please ignore this email.\n\n"
-                    + "Best regards,\n"
-                    + "Salsel Team";
+            String emailContent = "<html><body>"
+                    + "<p>Dear <strong>" + user.getName() + "</strong>,</p>"
+                    + "<p>You have requested to reset your password. Please click on the following link to proceed with the password reset:</p>"
+                    + "<p><a href=\"" + resetLink + "\" style=\"color: blue;\">" + resetLink + "</a></p>"
+                    + "<p>If you did not request a password reset, please ignore this email.</p>"
+                    + "<p>Best regards,<br/>Salsel Team</p>"
+                    + "</body></html>";
 
-            helper.setText(emailContent);
+            helper.setText(emailContent, true);
             javaMailSender.send(message);
 
         } catch (MessagingException e) {

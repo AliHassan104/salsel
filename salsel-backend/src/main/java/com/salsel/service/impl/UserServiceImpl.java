@@ -266,8 +266,8 @@ public class UserServiceImpl implements UserService {
 
         // Check if reset code is valid and not expired
         if (helperUtils.isValidResetCode(otp, resetCode)) {
-            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
-            userRepository.save(user);
+            String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
+            userRepository.updatePassword(user.getId(), encodedNewPassword);
         } else {
             throw new InvalidResetCodeException("Invalid or expired reset code");
         }

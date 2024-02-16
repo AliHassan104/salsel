@@ -63,7 +63,7 @@ public class LoginController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody String newPassword,
+    public ResponseEntity<String> resetPassword(@RequestParam String newPassword,
             @RequestParam String email,
             @RequestParam String code) {
         userService.resetPassword(email, code, newPassword);
