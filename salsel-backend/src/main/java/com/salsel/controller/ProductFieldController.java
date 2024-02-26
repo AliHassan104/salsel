@@ -1,6 +1,7 @@
 package com.salsel.controller;
 
 import com.salsel.dto.ProductFieldDto;
+import com.salsel.dto.ProductFieldValuesDto;
 import com.salsel.model.ProductField;
 import com.salsel.service.ProductFieldService;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,12 @@ public class ProductFieldController {
     public ResponseEntity<List<ProductFieldDto>> getAllProductField() {
         List<ProductFieldDto> productFieldDtoList = productFieldService.getAll();
         return ResponseEntity.ok(productFieldDtoList);
+    }
+
+    @GetMapping("/productFieldValues")
+    public ResponseEntity<List<ProductFieldValuesDto>> getAllProductFieldValuesByProductField(@RequestParam(value = "productField") String productField) {
+        List<ProductFieldValuesDto> productFieldValuesDtoList = productFieldService.getAllProductFieldValuesByProductFieldName(productField);
+        return ResponseEntity.ok(productFieldValuesDtoList);
     }
 
     @GetMapping("/{id}")

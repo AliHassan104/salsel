@@ -1,8 +1,11 @@
 package com.salsel.utils;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.salsel.dto.CustomUserDetail;
+import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Otp;
+import com.salsel.model.User;
+import com.salsel.repository.UserRepository;
 import com.salsel.service.BucketService;
 import com.salsel.service.impl.bucketServiceImpl;
 import org.apache.commons.io.FilenameUtils;
@@ -10,10 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -24,13 +27,20 @@ import java.util.UUID;
 
 @Component
 public class HelperUtils {
-    @Autowired
     private AmazonS3 s3Client;
-    @Autowired
     private BucketService bucketService;
+
     @Value("${application.bucket.name}")
     String bucketName;
+
+    private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
+
+    public HelperUtils(AmazonS3 s3Client, BucketService bucketService, UserRepository userRepository) {
+        this.s3Client = s3Client;
+        this.bucketService = bucketService;
+        this.userRepository = userRepository;
+    }
 
     public boolean isValidResetCode(Otp otp, String resetCode) {
         if (otp.getResetCode() == null || !otp.getResetCode().equals(resetCode)) {
@@ -119,5 +129,14 @@ public class HelperUtils {
         }
     }
 
-
+    public User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            return userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
+        } else {
+            throw new RecordNotFoundException("User not Found");
+        }
+    }
 }

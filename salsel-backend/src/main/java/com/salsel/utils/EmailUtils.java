@@ -73,24 +73,24 @@ public class EmailUtils {
         }
     }
 
-    @Transactional
-    @Scheduled(fixedRate = 300000) // 5 minutes in milliseconds
-    public void sendScheduledEmail() {
-        List<Awb> awbList = awbRepository.findAllWhereStatusIsTrueAndEmailFlagIsFalse();
-
-        for (Awb awb : awbList) {
-            if (!awb.getEmailFlag()) {
-                byte[] pdf = awbService.downloadAwbPdf("awb_" + awb.getId() + ".pdf", awb.getId());
-
-                // Send email
-//                sendEmail(sender, "muhammadtabish05@gmail.com", awb.getId(), pdf);
-
-                // Set the flag to true after sending the email
-                awb.setEmailFlag(true);
-                awbRepository.save(awb);
-            }
-        }
-    }
+//    @Transactional
+//    @Scheduled(fixedRate = 300000) // 5 minutes in milliseconds
+//    public void sendScheduledEmail() {
+//        List<Awb> awbList = awbRepository.findAllWhereStatusIsTrueAndEmailFlagIsFalse();
+//
+//        for (Awb awb : awbList) {
+//            if (!awb.getEmailFlag()) {
+//                byte[] pdf = awbService.downloadAwbPdf("awb_" + awb.getId() + ".pdf", awb.getId());
+//
+//                // Send email
+////                sendEmail(sender, "muhammadtabish05@gmail.com", awb.getId(), pdf);
+//
+//                // Set the flag to true after sending the email
+//                awb.setEmailFlag(true);
+//                awbRepository.save(awb);
+//            }
+//        }
+//    }
 
     @Async
     public void sendPasswordResetEmail(User user, String resetCode) {

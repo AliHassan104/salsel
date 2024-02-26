@@ -39,6 +39,7 @@ public class AwbDto {
     private String serviceTypeCode;
     private String createdBy;
     private String assignedTo;
+    private String assignedToUser;
 
 
     @JsonFormat(pattern = "yyyy-MM-dd")

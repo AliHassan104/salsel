@@ -3,7 +3,6 @@ package com.salsel.service.impl;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfReader;
-import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
@@ -16,7 +15,7 @@ import com.salsel.service.AwbService;
 import com.salsel.service.CodeGenerationService;
 import com.salsel.service.PdfGenerationService;
 import com.salsel.utils.AssignmentEmailsUtils;
-import com.salsel.utils.EmailUtils;
+import com.salsel.utils.HelperUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -45,14 +44,16 @@ public class AwbServiceImpl implements AwbService {
     @Value("${spring.mail.username}")
     private String sender;
     private final AwbRepository awbRepository;
+    private final HelperUtils helperUtils;
     private final UserRepository userRepository;
     private final CodeGenerationService codeGenerationService;
     private final AssignmentEmailsUtils assignmentEmailsUtils;
 
     private final PdfGenerationService pdfGenerationService;
 
-    public AwbServiceImpl(AwbRepository awbRepository, UserRepository userRepository, CodeGenerationService codeGenerationService, AssignmentEmailsUtils assignmentEmailsUtils, PdfGenerationService pdfGenerationService) {
+    public AwbServiceImpl(AwbRepository awbRepository, HelperUtils helperUtils, UserRepository userRepository, CodeGenerationService codeGenerationService, AssignmentEmailsUtils assignmentEmailsUtils, PdfGenerationService pdfGenerationService) {
         this.awbRepository = awbRepository;
+        this.helperUtils = helperUtils;
         this.userRepository = userRepository;
         this.codeGenerationService = codeGenerationService;
         this.assignmentEmailsUtils = assignmentEmailsUtils;
@@ -197,6 +198,18 @@ public class AwbServiceImpl implements AwbService {
         return null;
     }
 
+    @Override
+    public List<AwbDto> getAwbByAssignedUser(String user, Boolean status) {
+        List<Awb> awbList = awbRepository.findAllAwbByAssignedUserAndStatus(status, user);
+        List<AwbDto> awbDtoList = new ArrayList<>();
+
+        for (Awb awb : awbList) {
+            AwbDto awbDto = toDto(awb);
+            awbDtoList.add(awbDto);
+        }
+        return awbDtoList;
+    }
+
 
     @Override
     public List<AwbDto> getAwbByLoggedInUserRole(Boolean status) {
@@ -257,6 +270,13 @@ public class AwbServiceImpl implements AwbService {
     }
 
     @Override
+    public AwbDto findByUniqueNumber(Long uniqueNumber) {
+        Awb awb = awbRepository.findByUniqueNumber(uniqueNumber)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for UniqueNumber => %d", uniqueNumber)));
+        return toDto(awb);
+    }
+
+    @Override
     @Transactional
     public void deleteById(Long id) {
         Awb awb = awbRepository.findById(id)
@@ -286,33 +306,39 @@ public class AwbServiceImpl implements AwbService {
 
     @Override
     @Transactional
-    public AwbDto updateAwbStatusOnScan(Long uniqueNumber) {
+    public AwbDto updateAwbStatusOnScan(Long uniqueNumber, String awbStatus) {
         Awb existingAwb = awbRepository.findByUniqueNumber(uniqueNumber)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for UniqueNumber => %d", uniqueNumber)));
 
-        switch (existingAwb.getAwbStatus()) {
+        User currentUser = helperUtils.getCurrentUser();
+        existingAwb.setAssignedToUser(currentUser.getName());
+        existingAwb.setCreatedBy(currentUser.getEmail());
+
+        switch (awbStatus) {
             case AWB_CREATED:
-                existingAwb.setAwbStatus(PICKED_UP);
+                existingAwb.setAwbStatus(AWB_CREATED);
                 break;
             case PICKED_UP:
-                existingAwb.setAwbStatus(ARRIVED_IN_STATION);
+                existingAwb.setAwbStatus(PICKED_UP);
                 break;
             case ARRIVED_IN_STATION:
-                existingAwb.setAwbStatus(HELD_IN_STATION);
+                existingAwb.setAwbStatus(ARRIVED_IN_STATION);
                 break;
             case HELD_IN_STATION:
-                existingAwb.setAwbStatus(DEPART_FROM_STATION);
+                existingAwb.setAwbStatus(HELD_IN_STATION);
                 break;
             case DEPART_FROM_STATION:
-                existingAwb.setAwbStatus(ARRIVED_IN_HUB);
+                existingAwb.setAwbStatus(DEPART_FROM_STATION);
                 break;
             case ARRIVED_IN_HUB:
-                existingAwb.setAwbStatus(DEPART_FROM_HUB);
+                existingAwb.setAwbStatus(ARRIVED_IN_HUB);
                 break;
             case DEPART_FROM_HUB:
-                existingAwb.setAwbStatus(OUT_FOR_DELIVERY);
+                existingAwb.setAwbStatus(DEPART_FROM_HUB);
                 break;
             case OUT_FOR_DELIVERY:
+                existingAwb.setAwbStatus(OUT_FOR_DELIVERY);
+                break;
             case DELIVERED:
                 existingAwb.setAwbStatus(DELIVERED);
                 break;
@@ -500,6 +526,7 @@ public class AwbServiceImpl implements AwbService {
                 .deliveryStreetName(awb.getDeliveryStreetName())
                 .createdBy(awb.getCreatedBy())
                 .assignedTo(awb.getAssignedTo())
+                .assignedToUser(awb.getAssignedToUser())
                 .build();
     }
 
@@ -542,6 +569,7 @@ public class AwbServiceImpl implements AwbService {
                 .deliveryStreetName(awbDto.getDeliveryStreetName())
                 .createdBy(awbDto.getCreatedBy())
                 .assignedTo(awbDto.getAssignedTo())
+                .assignedToUser(awbDto.getAssignedToUser())
                 .build();
     }
 }

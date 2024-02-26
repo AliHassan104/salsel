@@ -27,4 +27,6 @@ public interface ProductFieldRepository extends JpaRepository<ProductField, Long
     @Modifying
     @Query("UPDATE ProductField pf SET pf.status = 'Active' WHERE pf.id = :id")
     void setStatusActive(@Param("id") Long id);
+
+
 }

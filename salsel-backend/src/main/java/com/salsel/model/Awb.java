@@ -49,7 +49,7 @@ public class Awb {
     private String accountNumber;
     private String serviceTypeCode;
     private String assignedTo;
-
+    private String assignedToUser;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;

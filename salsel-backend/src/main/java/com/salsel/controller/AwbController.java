@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.salsel.constants.ExcelConstants.ACCOUNT_TYPE;
 import static com.salsel.constants.ExcelConstants.AWB_TYPE;
 
 @RestController
@@ -50,6 +49,14 @@ public class AwbController {
     @PreAuthorize("hasAuthority('READ_AWB')")
     public ResponseEntity<List<AwbDto>> getAllAwbByLoggedInUser(@RequestParam(value = "status") Boolean status) {
         List<AwbDto> awbDtoList = awbService.getAwbByLoggedInUser(status);
+        return ResponseEntity.ok(awbDtoList);
+    }
+
+    @GetMapping("/awb/assigned-user")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity<List<AwbDto>> getAllAwbByAssignedUser(@RequestParam(value = "status") Boolean status,
+                                                                @RequestParam(value = "user") String user) {
+        List<AwbDto> awbDtoList = awbService.getAwbByAssignedUser(user,status);
         return ResponseEntity.ok(awbDtoList);
     }
 
@@ -87,6 +94,13 @@ public class AwbController {
         return ResponseEntity.ok(awbDto);
     }
 
+    @GetMapping("/awb/unique-number/{uniqueNumber}")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity<AwbDto> getAwbByUniqueNumber(@PathVariable Long uniqueNumber) {
+        AwbDto awbDto = awbService.findByUniqueNumber(uniqueNumber);
+        return ResponseEntity.ok(awbDto);
+    }
+
     @DeleteMapping("/awb/{id}")
     @PreAuthorize("hasAuthority('DELETE_AWB') and hasAuthority('READ_AWB')")
     public ResponseEntity<Void> deleteAwb(@PathVariable Long id) {
@@ -108,10 +122,10 @@ public class AwbController {
         return ResponseEntity.ok(updatedAwbDto);
     }
 
-    @PutMapping("/awb/awb-status/{uniqueNumber}")
+    @PutMapping("/awb/awb-status/{status}/unique-number/{uniqueNumber}")
     @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
-    public ResponseEntity<AwbDto> updateAwbStatusOnScan(@PathVariable Long uniqueNumber) {
-        AwbDto updatedAwbDto = awbService.updateAwbStatusOnScan(uniqueNumber);
+    public ResponseEntity<AwbDto> updateAwbStatusOnScan(@PathVariable String status, @PathVariable Long uniqueNumber) {
+        AwbDto updatedAwbDto = awbService.updateAwbStatusOnScan(uniqueNumber,status);
         return ResponseEntity.ok(updatedAwbDto);
     }
 

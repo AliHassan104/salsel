@@ -46,6 +46,13 @@ public class AccountController {
         return ResponseEntity.ok(accountDtoList);
     }
 
+    @GetMapping("/account/customer-name")
+    @PreAuthorize("hasAuthority('READ_ACCOUNT')")
+    public ResponseEntity<List<Map<String,String>>> getAccountNumberWithCustomerName(@RequestParam(value = "status") Boolean status) {
+        List<Map<String,String>> accounts = accountService.getAccountNumberWithCustomerName(status);
+        return ResponseEntity.ok(accounts);
+    }
+
     @GetMapping("/account/logged-in-user")
     @PreAuthorize("hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<List<AccountDto>> getAllAccountsByLoggedInUser(@RequestParam(value = "status") Boolean status) {

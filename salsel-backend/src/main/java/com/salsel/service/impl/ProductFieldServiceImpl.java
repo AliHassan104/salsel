@@ -2,10 +2,12 @@ package com.salsel.service.impl;
 
 import com.salsel.dto.ProductFieldDto;
 import com.salsel.dto.ProductFieldValuesDto;
+import com.salsel.dto.RoleDto;
 import com.salsel.dto.projectEnums.Type;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.ProductField;
 import com.salsel.model.ProductFieldValues;
+import com.salsel.model.Role;
 import com.salsel.repository.ProductFieldRepository;
 import com.salsel.repository.ProductFieldValuesRepository;
 import com.salsel.service.ProductFieldService;
@@ -223,6 +225,18 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         }
     }
 
+    @Override
+    public List<ProductFieldValuesDto> getAllProductFieldValuesByProductFieldName(String productField) {
+        List<ProductFieldValues> productFieldValuesList = productFieldValuesRepository.findByProductFieldName(productField);
+        List<ProductFieldValuesDto> productFieldValuesDtoList = new ArrayList<>();
+
+        for (ProductFieldValues productFieldValues : productFieldValuesList) {
+            ProductFieldValuesDto productFieldValueDto = ProductFieldValueToDto(productFieldValues);
+            productFieldValuesDtoList.add(productFieldValueDto);
+        }
+        return productFieldValuesDtoList;
+    }
+
 
     public ProductFieldDto toDto(ProductField productField) {
         List<ProductFieldValuesDto> productFieldValuesDtoList = new ArrayList<>();
@@ -269,6 +283,22 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
         productField.setProductFieldValuesList(productFieldValuesList);
         return productField;
+    }
+
+    public ProductFieldValuesDto ProductFieldValueToDto(ProductFieldValues productFieldValues) {
+        return ProductFieldValuesDto.builder()
+                .id(productFieldValues.getId())
+                .name(productFieldValues.getName())
+                .status(productFieldValues.getStatus())
+                .build();
+    }
+
+    public ProductFieldValues ProductFieldValueToEntity(ProductFieldValuesDto productFieldValuesDto) {
+        return ProductFieldValues.builder()
+                .id(productFieldValuesDto.getId())
+                .name(productFieldValuesDto.getName())
+                .status(productFieldValuesDto.getStatus())
+                .build();
     }
 
 }

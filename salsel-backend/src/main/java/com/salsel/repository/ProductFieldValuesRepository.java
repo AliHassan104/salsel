@@ -17,4 +17,7 @@ public interface ProductFieldValuesRepository extends JpaRepository<ProductField
     List<ProductFieldValues> findByStatus(String status);
     @Query("SELECT pf FROM ProductFieldValues pf WHERE pf.id = :id AND pf.status = Active")
     ProductFieldValues findByIdWhereStatusIsTrue(@Param("id") Long id);
+
+    @Query("SELECT pfv FROM ProductFieldValues pfv WHERE pfv.productField.name = :fieldName")
+    List<ProductFieldValues> findByProductFieldName(@Param("fieldName") String fieldName);
 }

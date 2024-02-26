@@ -23,7 +23,7 @@ public class ProductFieldValues {
     private String status;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "product_field_id")
     private ProductField productField;
 }

@@ -1,6 +1,7 @@
 package com.salsel.service;
 
 import com.salsel.dto.UserDto;
+import com.salsel.model.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,4 +27,5 @@ public interface UserService {
     List<UserDto> getUsersBetweenDates(LocalDate startDate, LocalDate endDate);
     LocalDate getMinCreatedAt();
     LocalDate getMaxCreatedAt();
+    User getLoggedInUser();
 }

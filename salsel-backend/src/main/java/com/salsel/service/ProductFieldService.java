@@ -1,7 +1,9 @@
 package com.salsel.service;
 
 import com.salsel.dto.ProductFieldDto;
+import com.salsel.dto.ProductFieldValuesDto;
 import com.salsel.model.ProductField;
+import com.salsel.model.ProductFieldValues;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,4 +20,5 @@ public interface ProductFieldService {
     void setToActiveById(Long id);
     ProductFieldDto updatedProductField(Long id, ProductField productField);
     void deleteProductFieldValuesById(Long id, Long pfvId);
+    List<ProductFieldValuesDto> getAllProductFieldValuesByProductFieldName(String productField);
 }

@@ -6,12 +6,14 @@ import com.salsel.dto.UserDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface AccountService {
     AccountDto save(AccountDto accountDto, MultipartFile pdf);
     List<AccountDto> getAll(Boolean status);
+    List<Map<String,String>> getAccountNumberWithCustomerName(Boolean status);
     List<AccountDto> getAccountsByLoggedInUser(Boolean status);
     AccountDto findById(Long id);
     void deleteById(Long id);

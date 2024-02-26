@@ -11,6 +11,7 @@ public interface AwbService {
     AwbDto save(AwbDto awbDto);
     byte[] downloadAwbPdf(String fileName, Long awbId);
     List<AwbDto> getAwbByLoggedInUser(Boolean status);
+    List<AwbDto> getAwbByAssignedUser(String user, Boolean status);
     List<AwbDto> getAwbByLoggedInUserRole(Boolean status);
     List<AwbDto> getAwbByLoggedInUserAndRole(Boolean status);
     List<AwbDto> getAll(Boolean status);
@@ -18,8 +19,9 @@ public interface AwbService {
     void deleteById(Long id);
     void setToActiveById(Long id);
     AwbDto update(Long id, AwbDto awbDto);
-    AwbDto updateAwbStatusOnScan(Long uniqueNumber);
+    AwbDto updateAwbStatusOnScan(Long uniqueNumber, String awbStatus);
     List<AwbDto> getAwbBetweenDates(LocalDate startDate, LocalDate endDate);
+    AwbDto findByUniqueNumber(Long id);
     Map<String, Long> getAwbStatusCounts();
     Map<String, Long> getStatusCounts();
     Map<String, Long> getAwbStatusCountsBasedOnLoggedInUser();

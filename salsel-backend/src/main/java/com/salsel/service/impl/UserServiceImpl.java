@@ -198,6 +198,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getLoggedInUser() {
+        return helperUtils.getCurrentUser();
+    }
+
+    @Override
     @Transactional
     public UserDto update(Long id, UserDto userDto) {
         boolean rolesAssignedForFirstTime = false;

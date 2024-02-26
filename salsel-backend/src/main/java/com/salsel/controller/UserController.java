@@ -1,6 +1,7 @@
 package com.salsel.controller;
 
 import com.salsel.dto.UserDto;
+import com.salsel.model.User;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.UserService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,6 +44,12 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
+    @GetMapping("/user/current-user")
+    @PreAuthorize("hasAuthority('READ_USER')")
+    public ResponseEntity<User> getCurrentUser() {
+        User user = userService.getLoggedInUser();
+        return ResponseEntity.ok(user);
+    }
 
     @GetMapping("/user/role/{roleName}")
     @PreAuthorize("hasAuthority('READ_USER')")

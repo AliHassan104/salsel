@@ -104,6 +104,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public List<Map<String,String>> getAccountNumberWithCustomerName(Boolean status) {
+        List<Account> accounts = accountRepository.findAllInDesOrderByIdAndStatus(status);
+        List<Map<String, String>> accountNumberCustomerNameList = accounts.stream()
+                .map(account -> {
+                    Map<String, String> accountInfo = new HashMap<>();
+                    accountInfo.put("accountNumber", String.valueOf(account.getAccountNumber()));
+                    accountInfo.put("customerName", account.getCustomerName());
+                    return accountInfo;
+                })
+                .collect(Collectors.toList());
+        return accountNumberCustomerNameList;
+    }
+    @Override
     public List<AccountDto> getAccountsByLoggedInUser(Boolean status) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
