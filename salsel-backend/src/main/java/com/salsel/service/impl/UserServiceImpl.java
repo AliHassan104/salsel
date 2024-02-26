@@ -4,7 +4,6 @@ import com.salsel.dto.UserDto;
 import com.salsel.exception.InvalidResetCodeException;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.exception.UserAlreadyExistAuthenticationException;
-import com.salsel.model.Account;
 import com.salsel.model.Otp;
 import com.salsel.model.Role;
 import com.salsel.model.User;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,7 +46,9 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDate.now());
 
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-        if(existingUser.isPresent()){
+        Optional<User> userExist = userRepository.findByEmployeeId(user.getEmployeeId());
+
+        if(existingUser.isPresent() || userExist.isPresent()){
             throw new UserAlreadyExistAuthenticationException("User Already Exist");
         }
 
@@ -128,6 +128,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+
     @Override
     public List<UserDto> getAll(Boolean status) {
         List<User> userList = userRepository.findAllInDesOrderByIdAndStatus(status);
@@ -163,6 +165,20 @@ public class UserServiceImpl implements UserService {
             throw new RecordNotFoundException(String.format("User not found for email => %s", email));
         }
     }
+
+    @Override
+    public UserDto findByEmployeeId(String employeeId) {
+        Optional<User> optionalUser = userRepository.findByEmployeeId(employeeId);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return toDto(user);
+        } else {
+            throw new RecordNotFoundException(String.format("Incorrect Username => %s", employeeId));
+        }
+    }
+
+
 
     @Override
     public UserDto findByName(String name) {
@@ -203,6 +219,22 @@ public class UserServiceImpl implements UserService {
         boolean rolesAssignedForFirstTime = false;
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", id)));
+
+        // Check if the provided Email matches with any other user's email (excluding the current user)
+        if (!existingUser.getEmail().equalsIgnoreCase(userDto.getEmail())) {
+            Optional<User> alreadyExistUser = userRepository.findByEmail(userDto.getEmail());
+            if(alreadyExistUser.isPresent()){
+                throw new UserAlreadyExistAuthenticationException("Email Already Exist");
+            }
+        }
+
+        // Check if the provided employeeId matches with any other user's employeeId (excluding the current user)
+        if (!existingUser.getEmployeeId().equalsIgnoreCase(userDto.getEmployeeId())) {
+            Optional<User> alreadyExistUserEmployeeId = userRepository.findByEmployeeId(userDto.getEmployeeId());
+            if (alreadyExistUserEmployeeId.isPresent()) {
+                throw new UserAlreadyExistAuthenticationException("Employee ID Already Exist");
+            }
+        }
 
         if (userDto.getEmail() != null) {
             existingUser.setName(userDto.getName());
@@ -270,6 +302,17 @@ public class UserServiceImpl implements UserService {
             userRepository.updatePassword(user.getId(), encodedNewPassword);
         } else {
             throw new InvalidResetCodeException("Invalid or expired reset code");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void isValidOtp(String resetCode) {
+        Otp otp = otpRepository.findByResetCode(resetCode)
+                .orElseThrow(() -> new RecordNotFoundException("Invalid Otp"));
+
+        if (!helperUtils.isValidResetCode(otp, resetCode)) {
+            throw new InvalidResetCodeException("Invalid or expired Otp");
         }
     }
 

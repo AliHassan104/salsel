@@ -17,6 +17,7 @@ import { AppFooterComponent } from "./app.footer.component";
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { AvatarModule } from "primeng/avatar";
+import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 
 @NgModule({
   declarations: [

@@ -1,0 +1,137 @@
+.form h2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29.05px;
+}
+
+.form p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19.36px;
+  color: rgba(51, 51, 51, 1);
+}
+
+.label {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 19.36px !important;
+  margin-bottom: 8px !important;
+  color: rgba(51, 51, 51, 1);
+}
+
+.loginBtn {
+  border-radius: 100px !important;
+  height: 40px;
+  width: 210px !important;
+  margin-left: 10px;
+}
+
+.cancelBtn {
+  border-radius: 100px !important;
+  height: 40px;
+  background: transparent;
+  color: #93003c;
+  width: 210px !important;
+  margin-right: 10px;
+}
+
+.cancelBtn:hover{
+    background: #93003b08;
+    color: #93003c;
+}
+
+.otp-btn {
+    border: none;
+    background: none;
+    color: #93003c;
+    padding: 0px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.otp-btn:hover{
+    border: none;
+    background: none;
+    color: #93003bb5;
+    padding: 0px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.otp-btn:focus{
+    box-shadow: none;
+}
+
+.otp-btn:disabled{
+    opacity: 1;
+}
+
+.forgotPass {
+  margin-top: 13px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19.36px;
+  color: rgba(153, 153, 153, 1) !important;
+}
+
+.forgotPass span {
+  color: rgba(78, 20, 191, 1);
+  font-weight: 700 !important;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: right;
+
+  background: linear-gradient(180deg, #a076f1 0%, #6436bd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+
+  transition: all 0.5s ease;
+}
+
+.forgotPass span:hover {
+  text-decoration: underline !important;
+  color: rgba(78, 20, 191, 1) !important;
+  background: linear-gradient(180deg, #330098 0%, #6436bd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.check {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 17px;
+  /* identical to box height */
+  display: flex;
+  align-items: center;
+
+  color: #333333;
+  margin-bottom: 5px;
+  margin-left: 8px;
+}
+
+.otp{
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19.36px;
+    color: #93003c;
+}
+
+
+input{
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 1);
+    line-height: 19.36px;
+}

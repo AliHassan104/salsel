@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,18 +32,33 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginCredentials loginCredentials) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginCredentials.getEmail(), loginCredentials.getPassword())
-            );
-        } catch (Exception e) {
-            throw new BadCredentialsException("Incorrect Username or Password! ", e);
+
+        if(loginCredentials.getEmail().contains("@")){
+            try {
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(loginCredentials.getEmail(), loginCredentials.getPassword())
+                );
+            } catch (Exception e) {
+                throw new BadCredentialsException("Incorrect Username or Password! ", e);
+            }
+
+            UserDetails userDetails = myUserDetailService.loadUserByUsername(loginCredentials.getEmail());
+            String jwtToken = jwtUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new AuthenticationResponse(jwtToken,loginCredentials.getEmail()));
+
+        }else{
+            UserDto user = userService.findByEmployeeId(loginCredentials.getEmail());
+            try {
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(user.getEmail(), loginCredentials.getPassword())
+                );
+            } catch (Exception e) {
+                throw new BadCredentialsException("Incorrect Username or Password! ", e);
+            }
+            UserDetails userDetails = myUserDetailService.loadUserByUsername(user.getEmail());
+            String jwtToken = jwtUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new AuthenticationResponse(jwtToken,user.getEmail()));
         }
-
-        UserDetails userDetails = myUserDetailService.loadUserByUsername(loginCredentials.getEmail());
-        String jwtToken = jwtUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
     }
 
     @PostMapping("/signup")
@@ -68,5 +84,11 @@ public class LoginController {
             @RequestParam String code) {
         userService.resetPassword(email, code, newPassword);
         return ResponseEntity.ok("Password reset successfully");
+    }
+
+    @PostMapping("/reset-code-check")
+    public ResponseEntity<String> resetCodeCheck(@RequestParam String code) {
+        userService.isValidOtp(code);
+        return ResponseEntity.ok("Valid Otp");
     }
 }

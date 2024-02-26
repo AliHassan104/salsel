@@ -9,6 +9,7 @@ import { AuthGuardService } from "./components/auth/service/auth-guard.service";
 import { ForgotPasswordComponent } from "./components/auth/forgot-password/forgot-password.component";
 import { NewPasswordComponent } from "./components/auth/new-password/new-password.component";
 import { UserProfileComponent } from "./components/auth/usermanagement/user-profile/user-profile.component";
+import { VerificationComponent } from "./components/auth/verification/verification.component";
 
 @NgModule({
   imports: [
@@ -248,6 +249,7 @@ import { UserProfileComponent } from "./components/auth/usermanagement/user-prof
           ],
         },
         { path: "login", component: LoginComponent },
+        { path: "verification", component: VerificationComponent },
         { path: "forgot-password", component: ForgotPasswordComponent },
         { path: "reset-password", component: NewPasswordComponent },
         { path: "access", component: AccessdeniedComponent },

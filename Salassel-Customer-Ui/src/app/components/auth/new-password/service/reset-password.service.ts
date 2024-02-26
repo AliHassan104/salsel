@@ -25,4 +25,12 @@ export class ResetPasswordService {
       { params, responseType: "text" as "json" }
     );
   }
+
+  isValidOtp(params:any){
+     return this.http.post(
+       `${this.url}reset-code-check`,
+       {},
+       { params, responseType: "text" as "json" }
+     );
+  }
 }

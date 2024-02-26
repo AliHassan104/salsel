@@ -1,4 +1,4 @@
-import { TicketCategory } from './../../ticketCategory/model/ticketCategoryDto';
+import { TicketCategory } from "./../../ticketCategory/model/ticketCategoryDto";
 import {
   AfterViewInit,
   Component,
@@ -26,7 +26,7 @@ import { Dropdown } from "primeng/dropdown";
 import { UserService } from "../../auth/usermanagement/service/user.service";
 import { TicketCategoryService } from "../../ticketCategory/service/ticket-category.service";
 import { TicketSubCategoryService } from "../../ticketSubCategory/service/ticket-sub-category.service";
-import { ITicketSubCategory } from '../../ticketSubCategory/model/ticketSubCategoryDeto';
+import { ITicketSubCategory } from "../../ticketSubCategory/model/ticketSubCategoryDeto";
 
 @Component({
   selector: "app-ticketform",
@@ -67,7 +67,7 @@ export class TicketformComponent implements OnInit {
   ticketForm!: FormGroup;
   ticketType?: string[];
   fileList: File[] = [];
-  subCategories
+  subCategories;
 
   @ViewChild("fileInput") fileInput: ElementRef;
   @ViewChild("dropdown") dropdown?: Dropdown;
@@ -239,8 +239,8 @@ export class TicketformComponent implements OnInit {
           this.singleTicket.department
         );
 
-        this.getDepartmentCategory(this.singleTicket?.departmentCategory)
-        this.getTicketCategory(this.singleTicket?.ticketCategory)
+        this.getDepartmentCategory(this.singleTicket?.departmentCategory);
+        this.getTicketCategory(this.singleTicket?.ticketCategory);
 
         if (
           this.singleTicket.pickupTime != null &&
@@ -401,7 +401,6 @@ export class TicketformComponent implements OnInit {
   }
   //   GET DEPARTMENT Category
   getDepartmentCategory(departmentCategory) {
-    
     this.ticketCategoryService
       .getTicketCategories(this.params)
       .subscribe((res) => {
@@ -414,33 +413,36 @@ export class TicketformComponent implements OnInit {
         // Disable
         if (filterCategories.length == 0) {
           this.ticketForm.get("category")?.disable();
+          this.ticketForm.get("subCategory")?.disable();
         } else {
           this.ticketForm.get("category")?.enable();
+          this.ticketForm.get("subCategory")?.disable();
         }
 
-        this.categories =
-          this.dropdownService.extractNames(filterCategories);
+        this.categories = this.dropdownService.extractNames(filterCategories);
       });
   }
 
-  getTicketCategory(TicketCategory){
+  getTicketCategory(TicketCategory) {
+    this.ticketSubCategoryService
+      .getTicketSubCategories(this.params)
+      .subscribe((res) => {
+        this.subCategories = res.body;
+        let filterSubCategories = this.subCategories.filter(
+          (ticketSubCategory: ITicketSubCategory) =>
+            ticketSubCategory?.ticketCategory?.name == TicketCategory
+        );
 
-this.ticketSubCategoryService.getTicketSubCategories(this.params).subscribe((res) => {
-  this.subCategories = res.body;
-  let filterSubCategories = this.subCategories.filter(
-    (ticketSubCategory:ITicketSubCategory) =>
-      ticketSubCategory?.ticketCategory?.name == TicketCategory
-  );
+        // Disable
+        if (filterSubCategories.length == 0) {
+          this.ticketForm.get("subCategory")?.disable();
+        } else {
+          this.ticketForm.get("subCategory")?.enable();
+        }
 
-  // Disable
-  if (filterSubCategories.length == 0) {
-    this.ticketForm.get("subCategory")?.disable();
-  } else {
-    this.ticketForm.get("subCategory")?.enable();
-  }
-
-  this.subCategories = this.dropdownService.extractNames(filterSubCategories);
-});
+        this.subCategories =
+          this.dropdownService.extractNames(filterSubCategories);
+      });
   }
 
   //   GET DESTINATION COUNTRY FROM DROPDOWN
@@ -529,7 +531,6 @@ this.ticketSubCategoryService.getTicketSubCategories(this.params).subscribe((res
             if (
               this.ticketForm.get("department")?.valid &&
               this.ticketForm.get("assignedTo")?.valid &&
-              this.ticketForm.get("category")?.valid &&
               this.ticketForm.get("ticketStatus")?.valid &&
               this.ticketForm.get("ticketFlag")?.valid &&
               (this.ticketForm.get("departmentCategory")?.valid ||
@@ -552,6 +553,7 @@ this.ticketSubCategoryService.getTicketSubCategories(this.params).subscribe((res
                 });
             } else {
               this.formService.markFormGroupTouched(this.ticketForm);
+              console.log("hello");
             }
           } else {
             //   Create Ticket
@@ -572,7 +574,6 @@ this.ticketSubCategoryService.getTicketSubCategories(this.params).subscribe((res
           if (
             this.ticketForm.get("department")?.valid &&
             this.ticketForm.get("assignedTo")?.valid &&
-            this.ticketForm.get("category")?.valid &&
             this.ticketForm.get("ticketStatus")?.valid &&
             this.ticketForm.get("ticketFlag")?.valid &&
             (this.ticketForm.get("departmentCategory")?.valid ||
@@ -595,6 +596,7 @@ this.ticketSubCategoryService.getTicketSubCategories(this.params).subscribe((res
               });
           } else {
             this.formService.markFormGroupTouched(this.ticketForm);
+            console.log("hello");
           }
         } else {
           //   Create Ticket

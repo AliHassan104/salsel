@@ -83,6 +83,9 @@ export class NewPasswordComponent {
         (res: any) => {
           this.success(res);
           this.newPasswordForm.reset();
+          setTimeout(() => {
+            this.router.navigate(["login"]);
+          }, 1000);
         },
         (error: any) => {
           this.messageService.add({

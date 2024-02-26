@@ -10,18 +10,25 @@ export class ResetPasswordService {
 
   constructor(private http: HttpClient) {}
 
-
-  resetPassword(params:any){
+  resetPassword(params: any) {
     return this.http.post(
       `${this.url}reset-password`,
       {},
-      { params,responseType: "text" as "json" }
+      { params, responseType: "text" as "json" }
     );
   }
 
-  forgotPassword(params:any){
+  forgotPassword(params: any) {
     return this.http.post(
       `${this.url}forgot-password`,
+      {},
+      { params, responseType: "text" as "json" }
+    );
+  }
+
+  isValidOtp(params: any) {
+    return this.http.post(
+      `${this.url}reset-code-check`,
       {},
       { params, responseType: "text" as "json" }
     );

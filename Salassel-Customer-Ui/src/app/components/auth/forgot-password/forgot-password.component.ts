@@ -13,6 +13,8 @@ import { ResetPasswordService } from "../new-password/service/reset-password.ser
   providers: [MessageService],
 })
 export class ForgotPasswordComponent implements OnInit {
+  visible: boolean = false;
+  resetEmail;
   constructor(
     private loginService: LoginService,
     public router: Router,
@@ -38,7 +40,16 @@ export class ForgotPasswordComponent implements OnInit {
       this.resetPassService.forgotPassword(params).subscribe(
         (res) => {
           this.success(res);
+          this.visible = true;
+          this.resetEmail = data.email;
           this.forgotPasswordForm.reset();
+          setTimeout(() => {
+            this.visible = false;
+            const queryParams = { email: data.email};
+            this.router.navigate(["verification"], {
+              queryParams: queryParams,
+            });
+          }, 1000);
         },
         (error: any) => {
           this.showError(error);

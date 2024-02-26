@@ -34,6 +34,8 @@ public class EmailUtils {
 
     @Value("${spring.mail.username}")
     private String sender;
+
+
     @Async
     public void sendEmail(String sender, String userEmail, Long awbId, byte[] pdfBytes) {
 
@@ -101,14 +103,14 @@ public class EmailUtils {
             helper.setTo(user.getEmail());
             helper.setSubject("Password Reset Request");
 
-            String resetLink = "http://localhost:4200/#/reset-password?email=" + user.getEmail() + "&code=" + resetCode;
+            String resetLink =  user.getEmail() + "&code=" + resetCode;
 
             String emailContent = "<html><body>"
-                    + "<p>Dear <strong>" + user.getName() + "</strong>,</p>"
-                    + "<p>You have requested to reset your password. Please click on the following link to proceed with the password reset:</p>"
-                    + "<p><a href=\"" + resetLink + "\" style=\"color: blue;\">" + resetLink + "</a></p>"
+                    + "<p>Dear <strong style='color: blue;'>" + user.getName() + "</strong>,</p>"
+                    + "<p>You have requested to reset your password. Please use the following code:</p>"
+                    + "<p style='text-align:center ; font-size: 24px; padding: 20px; background-color: black; color: white;'>" + resetCode + "</p>"
                     + "<p>If you did not request a password reset, please ignore this email.</p>"
-                    + "<p>Best regards,<br/>Salsel Team</p>"
+                    + "<p>Best regards,<br/>Salassil Team</p>"
                     + "</body></html>";
 
             helper.setText(emailContent, true);

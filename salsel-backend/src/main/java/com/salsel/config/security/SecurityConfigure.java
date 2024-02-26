@@ -39,7 +39,8 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/reset-password",
             "/api/download-user-excel",
             "/api/download-ticket-excel",
-            "/api/download-account-excel"
+            "/api/download-account-excel",
+            "/api/reset-code-check"
     };
 
     @Autowired

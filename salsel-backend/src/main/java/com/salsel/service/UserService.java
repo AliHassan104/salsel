@@ -4,7 +4,6 @@ import com.salsel.dto.UserDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,6 +17,11 @@ public interface UserService {
     UserDto findById(Long id);
     UserDto findByName(String name);
     UserDto findByEmail(String email);
+
+    UserDto findByEmployeeId(String employeeId);
+
+    void isValidOtp(String resetCode);
+
     void deleteById(Long id);
     void setToActiveById(Long id);
     UserDto update(Long id, UserDto userDto);

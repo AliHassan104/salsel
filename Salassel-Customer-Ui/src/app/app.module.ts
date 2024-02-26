@@ -15,6 +15,7 @@ import { AccessdeniedComponent } from "./components/auth/accessdenied/accessdeni
 import { ButtonModule } from "primeng/button";
 import { ForgotPasswordModule } from "./components/auth/forgot-password/forgot-password.module";
 import { NewPasswordModule } from "./components/auth/new-password/new-password.module";
+import { VerificationModule } from "./components/auth/verification/verification.module";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { NewPasswordModule } from "./components/auth/new-password/new-password.m
     ButtonModule,
     ForgotPasswordModule,
     NewPasswordModule,
+    VerificationModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

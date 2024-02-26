@@ -16,6 +16,8 @@ import { ButtonModule } from "primeng/button";
 import { PermissionsModule } from "./components/permissions/permissions.module";
 import { ForgotPasswordModule } from "./components/auth/forgot-password/forgot-password.module";
 import { NewPasswordModule } from "./components/auth/new-password/new-password.module";
+import { VerificationModule } from "./components/auth/verification/verification.module";
+
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { NewPasswordModule } from "./components/auth/new-password/new-password.m
     AppRoutingModule,
     AppLayoutModule,
     LoginModule,
+    VerificationModule,
     ButtonModule,
     PermissionsModule,
     ForgotPasswordModule,

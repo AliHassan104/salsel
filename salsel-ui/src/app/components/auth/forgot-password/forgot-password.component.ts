@@ -13,6 +13,8 @@ import { ResetPasswordService } from "../new-password/service/reset-password.ser
   providers: [MessageService],
 })
 export class ForgotPasswordComponent implements OnInit {
+  visible: boolean = false;
+  resetEmail;
   constructor(
     private loginService: LoginService,
     public router: Router,
@@ -31,27 +33,33 @@ export class ForgotPasswordComponent implements OnInit {
   formSetup() {}
 
   onForgotPassword(data: any) {
-    console.log(data,data.email,typeof data.email);
-
-    const params={email:data.email}
+    const params = { email: data.email };
     if (this.forgotPasswordForm.valid) {
       this.resetPassService.forgotPassword(params).subscribe(
         (res) => {
           this.success(res);
-          this.forgotPasswordForm.reset()
+          this.visible = true;
+          this.resetEmail = data.email;
+          this.forgotPasswordForm.reset();
+          setTimeout(() => {
+            this.visible = false;
+            const queryParams = { email: data.email };
+            this.router.navigate(["verification"], {
+              queryParams: queryParams,
+            });
+          }, 1000);
         },
         (error: any) => {
           this.showError(error);
-          console.log(error);
         }
       );
     } else {
       this.formService.markFormGroupTouched(this.forgotPasswordForm);
-       this.messageService.add({
-         severity: "error",
-         summary: "Error",
-         detail: "Please Enter a Valid Email",
-       });
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Enter a Valid Email",
+      });
     }
   }
 
@@ -67,7 +75,7 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  showError(error:any) {
+  showError(error: any) {
     this.messageService.add({
       severity: "error",
       summary: "Error",
