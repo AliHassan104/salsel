@@ -7,9 +7,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ToastModule } from "primeng/toast";
 import { DialogModule } from "primeng/dialog";
 import { PasswordModule } from "primeng/password";
+import { HideEmailPipe } from './hide-email.pipe';
 
 @NgModule({
-  declarations: [ForgotPasswordComponent],
+  declarations: [ForgotPasswordComponent, HideEmailPipe],
   imports: [
     CommonModule,
     InputTextModule,

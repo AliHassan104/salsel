@@ -137,30 +137,28 @@ export class UserlistComponent implements OnInit {
 
       this.userService
         .downloadUserDataInExcel(formattedDates)
-        .pipe(
-          finalize(() => {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Download Successfull",
-            }),
-              this.excelDataForm.reset();
-            this.visible = false;
-          })
-        )
-        .subscribe((res: any) => {
-          this.userService.downloadExcelFile(
-            res,
-            `Ticket${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
-          );
+        .subscribe(
+          (res: any) => {
+            this.userService.downloadExcelFile(
+              res,
+              `User${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+            );
+             this.messageService.add({
+               severity: "success",
+               summary: "Success",
+               detail: "Download Successfull",
+             }),
+               this.excelDataForm.reset();
+             this.visible = false;
+          },
           (error) => {
             this.messageService.add({
               severity: "error",
               summary: "Error",
-              detail: "Try Again After Few Mins",
+              detail: "No Data Found",
             });
-          };
-        });
+          }
+        );
     } else {
       this.formService.markFormGroupTouched(this.excelDataForm);
       this.messageService.add({

@@ -127,32 +127,39 @@ export class AddUserComponent implements OnInit {
 
   onSubmit() {
     if (this.editMode) {
-        if (this.userForm.get('employeeId')?.valid){
-            let formValue = this.userForm.value;
-            let fullname = formValue.firstname + " " + formValue.lastname;
-            const data = {
-              firstname: formValue.firstname,
-              lastname: formValue.lastname,
-              name: fullname,
-              phone: formValue.phone,
-              email: formValue.email,
-              employeeId: formValue.employeeId,
-              roles: [
-                {
-                  id: formValue.roles.id,
-                },
-              ],
-              status: true,
-            };
-            this.userService
-              .updateUser(this.editId, data)
-              .subscribe((res: any) => {
-                this.userForm.reset();
-                this.router.navigate(["user/list"]);
-              });
-        }else{
-            this.formService.markFormGroupTouched(this.userForm);
-        }
+      if (this.userForm.get("employeeId")?.valid) {
+        let formValue = this.userForm.value;
+        let fullname = formValue.firstname + " " + formValue.lastname;
+        const data = {
+          firstname: formValue.firstname,
+          lastname: formValue.lastname,
+          name: fullname,
+          phone: formValue.phone,
+          email: formValue.email,
+          employeeId: formValue.employeeId,
+          roles: [
+            {
+              id: formValue.roles.id,
+            },
+          ],
+          status: true,
+        };
+        this.userService.updateUser(this.editId, data).subscribe(
+          (res: any) => {
+            this.userForm.reset();
+            this.router.navigate(["user/list"]);
+          },
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: error?.error?.error,
+            });
+          }
+        );
+      } else {
+        this.formService.markFormGroupTouched(this.userForm);
+      }
     } else {
       if (this.userForm.valid) {
         let formValue = this.userForm.value;
@@ -172,10 +179,19 @@ export class AddUserComponent implements OnInit {
           ],
           status: true,
         };
-        this.loginService.signUp(data).subscribe((res: any) => {
-          this.userForm.reset();
-          this.router.navigate(["user/list"]);
-        });
+        this.loginService.signUp(data).subscribe(
+          (res: any) => {
+            this.userForm.reset();
+            this.router.navigate(["user/list"]);
+          },
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: error?.error?.error,
+            });
+          }
+        );
       } else {
         this.alert();
         this.formService.markFormGroupTouched(this.userForm);

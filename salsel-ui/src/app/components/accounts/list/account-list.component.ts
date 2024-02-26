@@ -29,8 +29,8 @@ export class AccountListComponent implements OnInit {
   activeStatus: boolean = true;
 
   file;
-  minDate
-  maxDate
+  minDate;
+  maxDate;
 
   deleteId: any;
   refresh: boolean = true;
@@ -59,14 +59,14 @@ export class AccountListComponent implements OnInit {
 
     this.getAllAccount();
     this.getAllProductFields();
-    this.getMinMax()
+    this.getMinMax();
   }
 
-  getMinMax(){
-    this.accountService.getMinMax().subscribe((res:any)=>{
-        this.minDate = new Date(res.minDate)
-        this.maxDate = new Date(res.maxDate);
-    })
+  getMinMax() {
+    this.accountService.getMinMax().subscribe((res: any) => {
+      this.minDate = new Date(res.minDate);
+      this.maxDate = new Date(res.maxDate);
+    });
   }
 
   //   GET ALL ACCOUNTS
@@ -196,8 +196,12 @@ export class AccountListComponent implements OnInit {
 
       this.accountService
         .downloadAccountDataInExcel(formattedDates)
-        .pipe(
-          finalize(() => {
+        .subscribe(
+          (res: any) => {
+            this.accountService.downloadExcelFile(
+              res,
+              `Account_${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+            );
             this.messageService.add({
               severity: "success",
               summary: "Success",
@@ -205,20 +209,22 @@ export class AccountListComponent implements OnInit {
             }),
               this.excelDataForm.reset();
             this.visible = false;
-          })
-        )
-        .subscribe((res: any) => {
-          this.accountService.downloadExcelFile(
-            res,
-            `Account_${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
-          ),
-            (error) => {
-              this.downloadError();
-            };
-        });
+          },
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: "No Data Found",
+            });
+          }
+        );
     } else {
       this.formService.markFormGroupTouched(this.excelDataForm);
-      this.downloadError();
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please Fill All The Fields.",
+      });
     }
   }
 

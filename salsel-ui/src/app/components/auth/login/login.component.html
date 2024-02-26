@@ -16,7 +16,7 @@
                         <i class="pi pi-envelope"></i>
                         <input type="text" class="w-20rem"
                             [ngClass]="{'ng-dirty':loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
-                            pInputText formControlName="email" placeholder="Email or Username" />
+                            pInputText formControlName="email" placeholder="Email or Username" autocomplete="username"/>
                     </span>
                     <div class="text-left">
                         <small *ngIf="!loginForm.get('email')?.valid && loginForm.get('email')?.touched"
@@ -32,8 +32,7 @@
                         <p-password [toggleMask]="true" class="w-20rem"
                             [inputStyle]="{'width':'20rem','padding-left':'35px'}"
                             [ngClass]="{'ng-dirty':loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
-                            placeholder="Password" [strongRegex]="true" [strongLabel]="true" formControlName="password"
-                            [feedback]="false">
+                            placeholder="Password" [strongRegex]="true" [strongLabel]="true" formControlName="password" autoComplete="current-password" [feedback]="false">
                         </p-password>
                     </span>
                     <div class="text-left">

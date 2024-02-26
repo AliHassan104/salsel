@@ -16,14 +16,14 @@ import { FormvalidationService } from "../service/formvalidation.service";
   selector: "app-ticketsdata",
   templateUrl: "./ticketsdata.component.html",
   styleUrls: ["./ticketsdata.component.scss"],
-  providers: [MessageService,DatePipe],
+  providers: [MessageService, DatePipe],
 })
 export class TicketsdataComponent implements OnInit {
   //   Activity Work
   excelDataForm!: FormGroup;
   minDate;
   maxDate;
-  visible
+  visible;
   productField?;
   status?;
   selectedStatus: string = "Active";
@@ -40,8 +40,8 @@ export class TicketsdataComponent implements OnInit {
     private dropdownService: DropdownService,
     public sessionStorageService: SessionStorageService,
     private accountService: AccountService,
-    private datePipe : DatePipe,
-    private formService : FormvalidationService
+    private datePipe: DatePipe,
+    private formService: FormvalidationService
   ) {}
 
   loading: any;
@@ -165,31 +165,28 @@ export class TicketsdataComponent implements OnInit {
       };
       console.log(formattedDates);
 
-      this._ticktingService
-        .downloadTicketDataInExcel(formattedDates)
-        .pipe(
-          finalize(() => {
-          this.excelDataForm.reset()
-          this.visible = false
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Download Successfull",
-          })
-          }))
-        .subscribe((res: any) => {
+      this._ticktingService.downloadTicketDataInExcel(formattedDates).subscribe(
+        (res: any) => {
           this._ticktingService.downloadExcelFile(
             res,
             `Ticket${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
           );
-            (error) => {
-              this.messageService.add({
-                severity: "error",
-                summary: "Error",
-                detail: "Try Again After Few Mins",
-              });
-            };
-        });
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Download Successfull",
+          });
+          this.excelDataForm.reset();
+          this.visible = false;
+        },
+        (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "No Data Found",
+          });
+        }
+      );
     } else {
       this.formService.markFormGroupTouched(this.excelDataForm);
       this.messageService.add({

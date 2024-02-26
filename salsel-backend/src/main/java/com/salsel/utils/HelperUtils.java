@@ -49,7 +49,7 @@ public class HelperUtils {
         LocalDateTime resetCodeTimestamp = otp.getResetCodeTimestamp();
         LocalDateTime currentTimestamp = LocalDateTime.now();
         Duration duration = Duration.between(resetCodeTimestamp, currentTimestamp);
-        long expirationTimeInMinutes = 02;
+        long expirationTimeInMinutes = 05;
         return duration.toMinutes() <= expirationTimeInMinutes;
     }
 

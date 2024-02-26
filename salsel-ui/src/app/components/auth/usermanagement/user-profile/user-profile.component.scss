@@ -39,3 +39,9 @@ input:disabled {
 .editBtn {
   width: 120px;
 }
+
+@media screen and (max-width: 767px) {
+    .email-btn{
+        margin-top: 20px;
+    }
+}

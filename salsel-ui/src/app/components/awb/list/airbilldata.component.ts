@@ -61,7 +61,7 @@ export class AirbilldataComponent implements OnInit {
 
     this.getAirbills();
     this.getAllProductFields();
-    this.getMinMax()
+    this.getMinMax();
   }
 
   getMinMax() {
@@ -108,40 +108,37 @@ export class AirbilldataComponent implements OnInit {
         startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
         endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
       };
+      console.log(formattedDates);
 
-      this._airbillService
-        .downloadAwbDataInExcel(formattedDates)
-        .pipe(
-          finalize(() => {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Download Successfull",
-            }),
-              this.excelDataForm.reset();
-            this.visible = false;
-          })
-        )
-        .subscribe((res: any) => {
+      this._airbillService.downloadAwbDataInExcel(formattedDates).subscribe(
+        (res: any) => {
           this._airbillService.downloadExcelFile(
             res,
-            `Ticket${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+            `Awb_${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
           );
-          (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error",
-              detail: "Try Again After Few Mins",
-            });
-          };
-        });
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Download Successfull",
+          }),
+            this.excelDataForm.reset();
+          this.visible = false;
+        },
+        (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "No Data Found",
+          });
+        }
+      );
     } else {
       this.formService.markFormGroupTouched(this.excelDataForm);
-      this.messageService.add({
-        severity: "error",
-        summary: "Error",
-        detail: "Please Fill All The Fields.",
-      });
+     this.messageService.add({
+       severity: "error",
+       summary: "Error",
+       detail: "Please Fill All The Fields.",
+     });
     }
   }
 

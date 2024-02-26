@@ -40,9 +40,10 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this._loginService.login(value).subscribe(
         (res: any) => {
+
           this.token = res;
           localStorage.setItem("token", this.token.jwt);
-          localStorage.setItem("loginUserEmail", value.email);
+          localStorage.setItem("loginUserEmail", this.token.email);
           this.router.navigate([""]);
           this.loginForm.reset();
         },
@@ -64,7 +65,7 @@ export class LoginComponent implements OnInit {
     this.messageService.add({
       severity: "error",
       summary: "Error",
-      detail: error.error.error,
+      detail: error?.error?.error,
     });
   }
 }
