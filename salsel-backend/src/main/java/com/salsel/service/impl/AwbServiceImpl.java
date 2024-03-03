@@ -487,6 +487,12 @@ public class AwbServiceImpl implements AwbService {
         return awbRepository.findMaxCreatedAt();
     }
 
+    @Override
+    public Long getAllAwbByAssignedUser() {
+        User user = helperUtils.getCurrentUser();
+        return awbRepository.countByLoggedInUser(user.getName());
+    }
+
     public AwbDto toDto(Awb awb) {
         return AwbDto.builder()
                 .id(awb.getId())

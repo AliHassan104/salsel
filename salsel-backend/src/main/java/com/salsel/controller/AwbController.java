@@ -172,6 +172,12 @@ public class AwbController {
         return ResponseEntity.ok(statusCounts);
     }
 
+    @GetMapping("/awb/count/assigned-user")
+    public ResponseEntity<Long> getAwbCountsBasedOnAssignedUser() {
+        Long counts = awbService.getAllAwbByAssignedUser();
+        return ResponseEntity.ok(counts);
+    }
+
     @GetMapping("/awb/created-at-range")
     @PreAuthorize("hasAuthority('READ_TICKET')")
     public ResponseEntity<Map<String, LocalDate>> getTicketCreatedAtRange() {

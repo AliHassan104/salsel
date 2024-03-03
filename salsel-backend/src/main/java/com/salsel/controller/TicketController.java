@@ -71,6 +71,11 @@ public class TicketController {
         return ResponseEntity.ok(ticketDtoList);
     }
 
+    @GetMapping("/ticket/count")
+    public ResponseEntity<Long> getTicketCounts() {
+        Long counts = ticketService.getTicketCount();
+        return ResponseEntity.ok(counts);
+    }
     @GetMapping("/ticket/ticket-status/{status}")
     @PreAuthorize("hasAuthority('READ_TICKET')")
     public ResponseEntity<List<TicketDto>> getAllTicketsByTicketStatus(@PathVariable String status) {

@@ -28,4 +28,5 @@ public interface AwbService {
     Map<String, Long> getStatusCountsBasedOnLoggedInUser();
     LocalDate getMinCreatedAt();
     LocalDate getMaxCreatedAt();
+    Long getAllAwbByAssignedUser();
 }

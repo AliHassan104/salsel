@@ -60,6 +60,9 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
     @Query("SELECT COUNT(a) FROM Awb a WHERE a.status = :status")
     Long countByStatus(@Param("status") Boolean status);
 
+    @Query("SELECT COUNT(a) FROM Awb a WHERE a.assignedToUser = :name")
+    Long countByLoggedInUser(String name);
+
     List<Awb> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     @Query("SELECT a FROM Awb a WHERE (a.assignedTo = :assignedTo OR a.createdBy = :createdBy) AND (a.createdAt BETWEEN :startDate AND :endDate) ORDER BY a.id DESC")

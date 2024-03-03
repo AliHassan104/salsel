@@ -61,9 +61,6 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketFlag("Normal");
         ticket.setAssignedTo("ROLE_CUSTOMER_SERVICE_AGENT");
 
-
-
-
         Ticket createdTicket = ticketRepository.save(ticket);
 
         // Save PDFs to S3 bucket if provided
@@ -232,6 +229,11 @@ public class TicketServiceImpl implements TicketService {
         statusCounts.put("inactive", ticketRepository.countByStatusAndCreatedByOrAssignedTo(false,  loggedInUserEmail,loggedInUserRole));
 
         return statusCounts;
+    }
+
+    @Override
+    public Long getTicketCount() {
+        return ticketRepository.countByLoggedInUser();
     }
 
     private String getLoggedInUserEmail() {
