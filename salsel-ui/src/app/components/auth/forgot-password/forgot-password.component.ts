@@ -50,7 +50,7 @@ export class ForgotPasswordComponent implements OnInit {
           }, 1000);
         },
         (error: any) => {
-          this.showError(error);
+          this.showError();
         }
       );
     } else {
@@ -75,11 +75,11 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  showError(error: any) {
+  showError() {
     this.messageService.add({
       severity: "error",
       summary: "Error",
-      detail: error?.error?.error,
+      detail: "User Not Found",
     });
   }
 }

@@ -92,7 +92,7 @@
 
     <div class="col-12 xl:col-6">
         <div class="card flex flex-column align-items-center">
-            <h5 class="text-left w-full">Air WayBill Status Overview</h5>
+            <h5 class="text-left w-full" style="font-weight: 700; font-size:18px;">Air WayBill Status Overview</h5>
             <p-chart *ngIf="this.sessionStorageService.hasPermission('READ_AWB')" type="doughnut" [data]="pieDataAwb"
                 [options]="pieOptions"></p-chart>
             <p-skeleton *ngIf="!this.sessionStorageService.hasPermission('READ_AWB')" shape="circle" width="300px"
@@ -154,7 +154,7 @@
 
     <div class="col-12 xl:col-6">
         <div class="card flex flex-column align-items-center">
-            <h5 class="text-left w-full">Ticket Status Breakdown</h5>
+            <h5 class="text-left w-full" style="font-weight: 700; font-size:18px;">Ticket Status Breakdown</h5>
             <p-chart *ngIf="this.sessionStorageService.hasPermission('READ_TICKET')" type="doughnut" [data]="pieData"
                 [options]="pieOptions"></p-chart>
             <p-skeleton *ngIf="!this.sessionStorageService.hasPermission('READ_TICKET')" shape="circle" width="300px"
@@ -164,7 +164,7 @@
 
     <div class="lg:col-6 col-12">
         <div class="card flex flex-column align-items-center">
-            <h5 class="text-left w-full">Account Status Overview</h5>
+            <h5 class="text-left w-full" style="font-weight: 700; font-size:18px;">Account Status Overview</h5>
             <p-chart *ngIf="this.sessionStorageService.hasPermission('READ_ACCOUNT')" type="doughnut"
                 [data]="pieDataAccount" [options]="pieOptions"></p-chart>
             <p-skeleton *ngIf="!this.sessionStorageService.hasPermission('READ_ACCOUNT')" shape="circle" width="300px"

@@ -100,3 +100,22 @@ tr td {
   height: 1.5rem;
   line-height: 1.5rem;
 }
+
+
+
+.card::-webkit-scrollbar {
+  width: 0px;
+}
+
+.card:hover::-webkit-scrollbar {
+  width: 2px;
+}
+
+.card::-webkit-scrollbar-thumb {
+  background-color: #c0c0c054;
+  height: 5px;
+}
+
+.card::-webkit-scrollbar-track {
+  background-color: #ffffff43;
+}
