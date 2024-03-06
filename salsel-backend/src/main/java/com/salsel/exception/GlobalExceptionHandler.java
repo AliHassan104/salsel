@@ -25,6 +25,16 @@ public class GlobalExceptionHandler
         return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = AddressBookDetailsAlreadyExist.class)
+    public ResponseEntity<ErrorMessage<Object>> resourceAlreadyExistException(AddressBookDetailsAlreadyExist ex)
+    {
+        ErrorMessage<Object> errorMessage = ErrorMessage.builder()
+                .error(ex.getMessage())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorMessage,HttpStatus.ALREADY_REPORTED);
+    }
+
     @ExceptionHandler(value = UserAlreadyExistAuthenticationException.class)
     public ResponseEntity<ErrorMessage<Object>> UserAlreadyExistException(UserAlreadyExistAuthenticationException ex)
     {
