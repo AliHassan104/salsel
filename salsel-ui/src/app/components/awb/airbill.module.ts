@@ -26,8 +26,8 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { AirbillroutingModule } from "./airbillrouting.module";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { TooltipModule } from "primeng/tooltip";
-import { HistoryModule } from "./history/history.module";
 import { ExtractNumericPipe } from "./pipe/extract-numeric.pipe";
+import { NgxScannerQrcodeModule } from "ngx-scanner-qrcode";
 
 @NgModule({
   declarations: [
@@ -61,6 +61,7 @@ import { ExtractNumericPipe } from "./pipe/extract-numeric.pipe";
     AirbillroutingModule,
     RadioButtonModule,
     TooltipModule,
+    NgxScannerQrcodeModule,
   ],
 })
 export class AirbillModule {}

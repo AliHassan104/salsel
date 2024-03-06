@@ -72,6 +72,13 @@ export class AirbillService {
     return this.http.get(`${this.url}awb/logged-in-user-status-counts`);
   }
 
+  updateAwbTrackingStatus(status: any, uniqueNumber: any) {
+    return this.http.put(
+      `${this.url}awb/awb-status/${status}/unique-number/${uniqueNumber}`,
+      {}
+    );
+  }
+
   downloadAwbDataInExcel(params: any) {
     return this.http.get(`${this.url}download-awb-excel`, {
       params,

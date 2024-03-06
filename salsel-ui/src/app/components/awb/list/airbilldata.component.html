@@ -5,8 +5,10 @@
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
                 Air Waybills</h1>
             <div class="flex justify-content-end addBtn">
+                <button pButton label="Update Status" class="mb-2 mr-2"
+                    (click)="handle(action)"></button>
                 <button *ngIf="this.sessionStorageService.hasPermission('CREATE_AWB')" pButton label="Create AWB"
-                    class="mb-2" routerLink="/create-awb"></button>
+                    class="mb-2 ml-2" routerLink="/create-awb"></button>
             </div>
             <hr>
             <p-table #dt1 [value]="bills" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
@@ -20,7 +22,8 @@
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
-                                <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download" (click)="visible = true"></button>
+                            <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download"
+                                (click)="visible = true"></button>
                             <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
                                 style="font-weight: bold;"></i>
                         </div>
@@ -39,7 +42,7 @@
                                 Actions
                             </div>
                         </th>
-                        <th style="min-width: 16rem">
+                        <th style="min-width: 18rem">
                             <div class="flex justify-content-center align-items-center">
                                 Created At
                             </div>
@@ -300,7 +303,8 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog header="header" [modal]="true" (onHide)="onCloseDialog()" [draggable]="false" [(visible)]="assignDialog" [style]="{ width: '60vw' }">
+    <p-dialog header="header" [modal]="true" (onHide)="onCloseDialog()" [draggable]="false" [(visible)]="assignDialog"
+        [style]="{ width: '60vw' }">
         <ng-template pTemplate="header">
             <div class="inline-flex align-items-center justify-content-center gap-2">
                 <span style="font-size: 20px;" class="font-bold white-space-nowrap">Assign Airway Bill</span>
@@ -310,7 +314,8 @@
             <div class="p-fluid p-formgrid grid">
                 <div class="field col-12 md:col-6">
                     <label htmlFor="status"><strong>Assigned To</strong></label>
-                    <p-dropdown appendTo="body" [options]="assignedTo" placeholder="Assigned To" formControlName="assignedTo"
+                    <p-dropdown appendTo="body" [options]="assignedTo" placeholder="Assigned To"
+                        formControlName="assignedTo"
                         [ngClass]="{'ng-dirty':awbForm.get('assignedTo')?.touched && awbForm.get('assignedTo')?.invalid}"></p-dropdown>
                     <small *ngIf="!awbForm.get('assignedTo')?.valid && awbForm.get('assignedTo')?.touched"
                         class="text-red-500">
@@ -318,7 +323,7 @@
                     </small>
                 </div>
                 <div class="flex justify-content-end w-full">
-                        <button pButton label="Assign" type="Submit" class="mx-3 submit-btn"></button>
+                    <button pButton label="Assign" type="Submit" class="mx-3 submit-btn"></button>
                 </div>
             </div>
         </form>
@@ -352,9 +357,34 @@
             </div>
             <div class="flex justify-content-center w-full mt-5">
                 <button pButton label="Download" type="Submit" class="mx-3 submit-btn add-btn"></button>
-                <button pButton label="Cancel" (click)="onCancel()" type="button" class="mx-3 p-button-outlined"></button>
+                <button pButton label="Cancel" (click)="onCancel()" type="button"
+                    class="mx-3 p-button-outlined"></button>
             </div>
         </form>
     </p-dialog>
 
     <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+
+
+    <p-dialog [modal]="true" (onHide)="onCloseScan()" header="{{scanning ? 'Scan QR CODE' : 'Update Status'}}" [(visible)]="codeScan" [style]="{ width: '70vw'}">
+        <ngx-scanner-qrcode *ngIf="scanning" #action="scanner" [config]="config" (event)="onEvent($event, action)"></ngx-scanner-qrcode>
+        <div *ngIf="!scanning">
+            <span class="tracking">Tracking Number</span>
+            <h1 class="tracking-heading">#{{uniqueScanNum}}</h1>
+            <form [formGroup]="scanForm" (ngSubmit)="onUpdateStatus(scanForm.value)">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="status"><strong>Update Status</strong></label>
+                        <p-dropdown appendTo="body" [options]="scanOptions" placeholder="Select Status" formControlName="updatedStatus"
+                            [ngClass]="{'ng-dirty':scanForm.get('assignedTo')?.touched && scanForm.get('assignedTo')?.invalid}"></p-dropdown>
+                        <small *ngIf="!scanForm.get('updatedStatus')?.valid && scanForm.get('updatedStatus')?.touched" class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+                    <div class="flex justify-content-end w-full">
+                        <button pButton label="Update Status" type="Submit" class="mx-3 submit-btn"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p-dialog>
