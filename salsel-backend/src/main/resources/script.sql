@@ -30,7 +30,10 @@ INSERT INTO permissions (name, value) VALUES
     ('PERMISSION', true),
     ('CREATE_USER', true),
     ('READ_USER', true),
-    ('DELETE_USER', true);
+    ('DELETE_USER', true),
+    ('DELETE_ADDRESS_BOOK', true),
+    ('READ_ADDRESS_BOOK', true),
+    ('CREATE_ADDRESS_BOOK', true);
 
     INSERT INTO roles
     VALUES
