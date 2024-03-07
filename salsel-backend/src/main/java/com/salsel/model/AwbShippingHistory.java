@@ -22,40 +22,15 @@ public class AwbShippingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String status;
 
     @CreationTimestamp
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
-    private Long awbId;
-    private Long uniqueNumber;
-    private String shipperName;
-    private String shipperContactNumber;
-    private String originCountry;
-    private String originCity;
-    private String pickupAddress;
-    private String shipperRefNumber;
-    private String recipientsName;
-    private String recipientsContactNumber;
-    private String destinationCountry;
-    private String destinationCity;
-    private String deliveryAddress;
+    private String awbStatus;
+    private Boolean status;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate pickupDate;
-
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime pickupTime;
-
-    private String productType;
-    private String serviceType;
-    private Double pieces;
-    private String content;
-    private Double weight;
-    private Double amount;
-    private String currency;
-    private String dutyAndTaxesBillTo;
-    private Boolean emailFlag;
-    private String awbUrl;
+    @ManyToOne
+    @JoinColumn(name = "awb_id")
+    private Awb awb;
 }

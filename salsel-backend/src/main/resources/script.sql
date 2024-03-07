@@ -34,6 +34,7 @@ INSERT INTO permissions (name, value) VALUES
     ('DELETE_ADDRESS_BOOK', true),
     ('READ_ADDRESS_BOOK', true),
     ('CREATE_ADDRESS_BOOK', true);
+    ('READ_AWB_SHIPPING_HISTORY', true);
 
     INSERT INTO roles
     VALUES

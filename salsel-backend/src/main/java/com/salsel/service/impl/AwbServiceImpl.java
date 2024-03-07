@@ -7,9 +7,11 @@ import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
+import com.salsel.model.AwbShippingHistory;
 import com.salsel.model.Role;
 import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
+import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.AwbService;
 import com.salsel.service.CodeGenerationService;
@@ -48,15 +50,16 @@ public class AwbServiceImpl implements AwbService {
     private final UserRepository userRepository;
     private final CodeGenerationService codeGenerationService;
     private final AssignmentEmailsUtils assignmentEmailsUtils;
-
+    private final AwbShippingHistoryRepository awbShippingHistoryRepository;
     private final PdfGenerationService pdfGenerationService;
 
-    public AwbServiceImpl(AwbRepository awbRepository, HelperUtils helperUtils, UserRepository userRepository, CodeGenerationService codeGenerationService, AssignmentEmailsUtils assignmentEmailsUtils, PdfGenerationService pdfGenerationService) {
+    public AwbServiceImpl(AwbRepository awbRepository, HelperUtils helperUtils, UserRepository userRepository, CodeGenerationService codeGenerationService, AssignmentEmailsUtils assignmentEmailsUtils, AwbShippingHistoryRepository awbShippingHistoryRepository, PdfGenerationService pdfGenerationService) {
         this.awbRepository = awbRepository;
         this.helperUtils = helperUtils;
         this.userRepository = userRepository;
         this.codeGenerationService = codeGenerationService;
         this.assignmentEmailsUtils = assignmentEmailsUtils;
+        this.awbShippingHistoryRepository = awbShippingHistoryRepository;
         this.pdfGenerationService = pdfGenerationService;
     }
 
@@ -73,6 +76,12 @@ public class AwbServiceImpl implements AwbService {
             awb.setEmailFlag(false);
             Awb createdAwb = awbRepository.save(awb);
             Long awbId = createdAwb.getId();
+
+            AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
+            awbShippingHistory.setStatus(true);
+            awbShippingHistory.setAwbStatus(AWB_CREATED);
+            awbShippingHistory.setAwb(createdAwb);
+            awbShippingHistoryRepository.save(awbShippingHistory);
 
             codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
             codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
@@ -347,6 +356,12 @@ public class AwbServiceImpl implements AwbService {
         }
 
         Awb updatedAwb = awbRepository.save(existingAwb);
+
+        AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
+        awbShippingHistory.setStatus(true);
+        awbShippingHistory.setAwbStatus(existingAwb.getAwbStatus());
+        awbShippingHistory.setAwb(updatedAwb);
+        awbShippingHistoryRepository.save(awbShippingHistory);
 
         sendEmailAsync(updatedAwb);
         return toDto(updatedAwb);
