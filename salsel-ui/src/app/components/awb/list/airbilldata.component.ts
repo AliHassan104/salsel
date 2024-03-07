@@ -130,7 +130,7 @@ export class AirbilldataComponent implements OnInit {
 
   onCloseScan() {
     this.scanning = true;
-    this.action.stop();
+    this.action?.stop();
   }
 
   getMinMax() {
