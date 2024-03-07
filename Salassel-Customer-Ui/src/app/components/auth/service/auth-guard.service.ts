@@ -109,6 +109,14 @@ export class AuthGuardService implements CanActivate {
       url: ["/profile"],
       permissions: "READ_USER",
     };
+    const readAddressBookObj = {
+      url: ["/address-book/list", "/address-book/list/:id"],
+      permissions: "READ_ADDRESS_BOOK",
+    };
+    const createAddressBookObj = {
+      url: ["/create-address-book"],
+      permissions: "CREATE_ADDRESS_BOOK",
+    };
 
     return [
       dashboardObj,
@@ -121,6 +129,8 @@ export class AuthGuardService implements CanActivate {
       permissionsObj,
       accountHistoryrObj,
       profileObj,
+      readAddressBookObj,
+      createAddressBookObj
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

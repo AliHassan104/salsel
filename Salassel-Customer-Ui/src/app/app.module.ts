@@ -23,6 +23,7 @@ import { VerificationModule } from "./components/auth/verification/verification.
     NotfoundComponent,
     LoaderComponent,
     AccessdeniedComponent,
+
   ],
   imports: [
     CommonModule,

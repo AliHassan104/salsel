@@ -1,0 +1,58 @@
+tr td {
+  text-align: center !important;
+}
+
+@media screen and (max-width: 576px) {
+  .addBtn {
+    margin-top: 20px;
+  }
+}
+
+.refresh {
+  cursor: pointer;
+  color: #93003c;
+  font-size: 17px;
+  transition: all 0.5s ease;
+}
+
+.refresh:hover {
+  color: #c10751;
+}
+
+.submit-btn {
+  background-color: #93003c;
+  outline: none;
+  border: none;
+  //   padding: 10px 20px;
+  color: #fff;
+  font-size: 14px;
+  width: 140px;
+}
+.submit-btn:hover {
+  background-color: #c10751;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask{
+    align-items: self-start !important;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask .p-dialog{
+    margin-top: 6% !important;
+}
+
+p-dialog::ng-deep .p-dialog .p-dialog-header .p-dialog-title{
+    font-size: 2rem;
+}
+
+span.tracking {
+  font-weight: 500;
+  font-size: 20px;
+  /* margin-bottom: 1rem; */
+}
+
+.tracking-heading {
+  color: #000000;
+  font-size: 22px;
+  margin-top: 8px;
+  font-weight: 700;
+}

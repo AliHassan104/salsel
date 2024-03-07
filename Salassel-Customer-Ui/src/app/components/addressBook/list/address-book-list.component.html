@@ -1,0 +1,171 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h1 class="m-0"
+                style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+                Address Book</h1>
+            <div class="flex justify-content-end">
+                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_ADDRESS_BOOK')" pButton
+                    label="Add Address" class="mb-2 addBtn" routerLink="/create-address-book"></button>
+            </div>
+            <hr>
+            <p-table #dt1 [value]="addressBooks" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+                styleClass="p-datatable-gridlines" [paginator]="true"
+                [globalFilterFields]="['name','departmentCategory.name']" responsiveLayout="scroll">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="mb-2">
+                            <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                                (click)="clear(dt1)"></button>
+                            <!-- <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
+                                (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown> -->
+                        </div>
+
+                        <span class="p-input-icon-left mb-2">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+                                placeholder="Search Keyword" class="w-full" />
+                        </span>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Actions
+                            </div>
+                        </th>
+
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Name
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Contact Number
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Ref Number
+                            </div>
+                        </th>
+
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Address
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Street Name
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                District
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                City
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Country
+                            </div>
+                        </th>
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-addressBook>
+                    <tr>
+                        <td>
+                            <button pTooltip="View" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
+                                type="button" icon="pi pi-eye"
+                                class="p-button-rounded p-button-secondary p-button-outlined mx-2"
+                                routerLink="{{data.id}}"></button>
+                            <button pTooltip="Edit" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_ADDRESS_BOOK')"
+                                pButton pRipple type="button" icon="pi pi-file-edit"
+                                class="p-button-rounded p-button-outlined mx-2"
+                                (click)="editAddressBook(addressBook.id)"></button>
+
+                            <button pTooltip="Deactivate" tooltipPosition="bottom"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_ADDRESS_BOOK')"
+                                pButton pRipple type="button" icon="pi pi-times"
+                                class="p-button-rounded p-button-danger p-button-outlined mx-2"
+                                (click)="deleteAddressBook(addressBook.id)"></button>
+
+                            <!-- <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
+                                                        type="button" icon="pi pi-check"
+                                                        [disabled]="!this.sessionStorageService.hasPermission('DELETE_ADDRESS_BOOK')"
+                                                        class="p-button-rounded p-button-success p-button-outlined mx-2"
+                                                        (click)="onActiveAddressBook(addressBook.id)"></button> -->
+
+                        </td>
+                        <td>
+                            {{addressBook?.name}}
+                        </td>
+                        <td>
+                            {{addressBook?.contactNumber}}
+                        </td>
+                        <td>
+                            {{addressBook?.refNumber}}
+                        </td>
+                        <td>
+                            {{addressBook?.address}}
+                        </td>
+                        <td>
+                            {{addressBook?.streetName}}
+                        </td>
+                        <td>
+                            {{addressBook?.district}}
+                        </td>
+                        <td>
+                            {{addressBook?.country}}
+                        </td>
+                        <td>
+                            {{addressBook?.city}}
+                        </td>
+
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td style="text-align: start !important;" colspan="8">{{activeStatus?'No ticket category
+                            found.':'No Inactive ticket category
+                            found.'}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td style="text-align: start !important;" colspan="8">Loading Ticket categories data. Please
+                            wait.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+
+    <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+            <span>Are you sure you want to deactivate selected ticket category?</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                (click)="deleteDialog = false"></button>
+            <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                (click)="confirmDeleteSelected()"></button>
+        </ng-template>
+    </p-dialog>
+
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

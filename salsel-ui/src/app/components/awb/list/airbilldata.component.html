@@ -5,10 +5,8 @@
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
                 Air Waybills</h1>
             <div class="flex justify-content-end addBtn">
-                <button pButton label="Update Status" class="mb-2 mr-2"
-                    (click)="handle(action)"></button>
                 <button *ngIf="this.sessionStorageService.hasPermission('CREATE_AWB')" pButton label="Create AWB"
-                    class="mb-2 ml-2" routerLink="/create-awb"></button>
+                    class="mb-2" routerLink="/create-awb"></button>
             </div>
             <hr>
             <p-table #dt1 [value]="bills" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
@@ -366,25 +364,4 @@
     <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
 
 
-    <p-dialog [modal]="true" (onHide)="onCloseScan()" header="{{scanning ? 'Scan QR CODE' : 'Update Status'}}" [(visible)]="codeScan" [style]="{ width: '70vw'}">
-        <ngx-scanner-qrcode *ngIf="scanning" #action="scanner" [config]="config" (event)="onEvent($event, action)"></ngx-scanner-qrcode>
-        <div *ngIf="!scanning">
-            <span class="tracking">Tracking Number</span>
-            <h1 class="tracking-heading">#{{uniqueScanNum}}</h1>
-            <form [formGroup]="scanForm" (ngSubmit)="onUpdateStatus(scanForm.value)">
-                <div class="p-fluid p-formgrid grid">
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="status"><strong>Update Status</strong></label>
-                        <p-dropdown appendTo="body" [options]="scanOptions" placeholder="Select Status" formControlName="updatedStatus"
-                            [ngClass]="{'ng-dirty':scanForm.get('assignedTo')?.touched && scanForm.get('assignedTo')?.invalid}"></p-dropdown>
-                        <small *ngIf="!scanForm.get('updatedStatus')?.valid && scanForm.get('updatedStatus')?.touched" class="text-red-500">
-                            Required
-                        </small>
-                    </div>
-                    <div class="flex justify-content-end w-full">
-                        <button pButton label="Update Status" type="Submit" class="mx-3 submit-btn"></button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </p-dialog>
+

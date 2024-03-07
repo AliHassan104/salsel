@@ -51,6 +51,12 @@ export class AppMenuComponent implements OnInit {
             routerLink: "awb/list",
             permission: "READ_AWB",
           },
+          {
+            label: "Address Book",
+            icon: "pi pi-book",
+            routerLink: "address-book/list",
+            permission: "READ_ADDRESS_BOOK",
+          },
         ],
       },
     ];

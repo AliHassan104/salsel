@@ -52,6 +52,22 @@ import { VerificationComponent } from "./components/auth/verification/verificati
               canActivate: [AuthGuardService],
             },
             {
+              path: "address-book/list",
+              loadChildren: () =>
+                import("./components/addressBook/address-book.module").then(
+                  (m) => m.AddressBookModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-address-book",
+              loadChildren: () =>
+                import("./components/addressBook/update/modules/address-book-update.module").then(
+                  (m) => m.AddressBookUpdateModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
               path: "awb/list",
               loadChildren: () =>
                 import("./components/awb/airbill.module").then(

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { Table } from "primeng/table";
 import { AirbillService } from "../service/airbill.service";
@@ -11,13 +11,6 @@ import { RolesService } from "../../permissions/service/roles.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { DatePipe } from "@angular/common";
-import {
-  NgxScannerQrcodeComponent,
-  NgxScannerQrcodeService,
-  ScannerQRCodeConfig,
-  ScannerQRCodeResult,
-  ScannerQRCodeSelectedFiles,
-} from "ngx-scanner-qrcode";
 
 @Component({
   selector: "app-airbilldata",
@@ -26,20 +19,6 @@ import {
   providers: [MessageService, DatePipe],
 })
 export class AirbilldataComponent implements OnInit {
-  public config: ScannerQRCodeConfig = {
-    constraints: {
-      video: {
-        width: window.innerWidth,
-      },
-    },
-  };
-
-  @ViewChild("action") action!: NgxScannerQrcodeComponent;
-
-  codeScan: boolean = false;
-  scanning: boolean = true;
-  uniqueScanNum;
-  scanOptions;
 
   excelDataForm!: FormGroup;
   minDate;
@@ -65,8 +44,8 @@ export class AirbilldataComponent implements OnInit {
     private roleService: RolesService,
     private formService: FormvalidationService,
     private datePipe: DatePipe,
-    private qrcode: NgxScannerQrcodeService
   ) {}
+
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
   bills: IAwbDto;
@@ -82,55 +61,10 @@ export class AirbilldataComponent implements OnInit {
     this.awbForm = new FormGroup({
       assignedTo: new FormControl(null, [Validators.required]),
     });
-    this.scanForm = new FormGroup({
-      updatedStatus: new FormControl(null, [Validators.required]),
-    });
 
     this.getAirbills();
     this.getAllProductFields();
     this.getMinMax();
-  }
-
-  onUpdateStatus(data: any) {
-    if (this.scanForm.valid) {
-      this._airbillService
-        .updateAwbTrackingStatus(data?.updatedStatus, this.uniqueScanNum)
-        .subscribe((res) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Status Updated",
-          });
-          this.scanForm.reset();
-          this.codeScan = false;
-          this.scanning = true;
-          this.getAirbills();
-        });
-    } else {
-      this.formService.markFormGroupTouched(this.scanForm);
-      this.messageService.add({
-        severity: "error",
-        summary: "Error",
-        detail: "Please ensure that required Field is filled out.",
-      });
-    }
-  }
-
-  public onEvent(e: ScannerQRCodeResult[], action?: any): void {
-    e && action && action.stop();
-    this.scanning = false;
-    this.uniqueScanNum = e[0]?.value;
-    console.log(e[0]?.value);
-  }
-
-  handle(action: any): void {
-    this.codeScan = true;
-    action.start();
-  }
-
-  onCloseScan() {
-    this.scanning = true;
-    this.action?.stop();
   }
 
   getMinMax() {
@@ -235,10 +169,6 @@ export class AirbilldataComponent implements OnInit {
       this.productField = res;
       this.status = this.dropdownService.extractNames(
         this.productField.filter((data) => data?.name == "Status")[0]
-          .productFieldValuesList
-      );
-      this.scanOptions = this.dropdownService.extractNames(
-        this.productField.filter((data) => data?.name == "Awb Status")[0]
           .productFieldValuesList
       );
     });

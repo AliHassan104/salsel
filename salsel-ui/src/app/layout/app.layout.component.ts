@@ -1,15 +1,35 @@
-import { Component, OnDestroy, Renderer2, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnDestroy,
+  Renderer2,
+  ViewChild,
+  OnInit,
+  HostListener,
+} from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { filter, Subscription } from "rxjs";
 import { LayoutService } from "./service/app.layout.service";
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppTopBarComponent } from "./app.topbar.component";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { MessageService } from "primeng/api";
+import { FormvalidationService } from "../components/Tickets/service/formvalidation.service";
+import { AirbillService } from "../components/awb/service/airbill.service";
+import { DropdownService } from "./service/dropdown.service";
 
 @Component({
   selector: "app-layout",
   templateUrl: "./app.layout.component.html",
+  styleUrls: ["./app.layout.scss"],
+  providers: [MessageService],
 })
-export class AppLayoutComponent implements OnDestroy {
+export class AppLayoutComponent implements OnDestroy, OnInit {
+  codeScan: boolean = false;
+  uniqueScanNum;
+  scanOptions;
+  productField;
+  scanForm!: FormGroup;
+
   overlayMenuOpenSubscription: Subscription;
 
   menuOutsideClickListener: any;
@@ -23,7 +43,11 @@ export class AppLayoutComponent implements OnDestroy {
   constructor(
     public layoutService: LayoutService,
     public renderer: Renderer2,
-    public router: Router
+    public router: Router,
+    private messageService: MessageService,
+    private dropdownService: DropdownService,
+    private _airbillService: AirbillService,
+    private formService: FormvalidationService
   ) {
     this.overlayMenuOpenSubscription =
       this.layoutService.overlayOpen$.subscribe(() => {
@@ -82,6 +106,77 @@ export class AppLayoutComponent implements OnDestroy {
         this.hideMenu();
         this.hideProfileMenu();
       });
+  }
+
+  ngOnInit(): void {
+    this.scanForm = new FormGroup({
+      updatedStatus: new FormControl(null, [Validators.required]),
+    });
+
+    this.getAllProductFields();
+  }
+
+  getAllProductFields() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productField = res;
+
+      this.scanOptions = this.dropdownService.extractNames(
+        this.productField.filter((data) => data?.name == "Awb Status")[0]
+          .productFieldValuesList
+      );
+    });
+  }
+
+  onCloseScan() {
+    this.uniqueScanNum = null;
+    this.scannedData = "";
+  }
+
+  onUpdateStatus(data: any) {
+    if (this.scanForm.valid) {
+      this._airbillService
+        .updateAwbTrackingStatus(data?.updatedStatus, this.uniqueScanNum)
+        .subscribe((res) => {
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Status Updated",
+          });
+          this.scanForm.reset();
+          this.scannedData = "";
+          this.codeScan = false;
+        });
+    } else {
+      this.formService.markFormGroupTouched(this.scanForm);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Please ensure that required Field is filled out.",
+      });
+    }
+  }
+
+  scannedData: string = "";
+  codeLength: number = 9;
+
+  @HostListener("document:keydown", ["$event"])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (
+      event.key.length === 1 &&
+      !event.ctrlKey &&
+      !event.altKey &&
+      !event.metaKey
+    ) {
+      // Append the scanned character to the scanned data
+      this.scannedData += event.key;
+      this.uniqueScanNum = this.scannedData;
+      this.codeScan = true;
+
+      // Reset scannedData if it reaches the specified length
+      if (this.scannedData.length >= this.codeLength) {
+        this.scannedData = "";
+      }
+    }
   }
 
   hideMenu() {
