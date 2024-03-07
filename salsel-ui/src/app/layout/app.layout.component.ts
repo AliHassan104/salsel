@@ -5,6 +5,7 @@ import {
   ViewChild,
   OnInit,
   HostListener,
+  ElementRef,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { filter, Subscription } from "rxjs";
@@ -29,6 +30,7 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
   scanOptions;
   productField;
   scanForm!: FormGroup;
+  @ViewChild("beepSound") beepSound: ElementRef<HTMLAudioElement>;
 
   overlayMenuOpenSubscription: Subscription;
 
@@ -172,6 +174,9 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
       this.uniqueScanNum = this.scannedData;
       this.codeScan = true;
 
+      if(this.scannedData.length == 8){
+         this.beepSound.nativeElement.play();
+      }
       // Reset scannedData if it reaches the specified length
       if (this.scannedData.length >= this.codeLength) {
         this.scannedData = "";
