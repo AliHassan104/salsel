@@ -45,6 +45,7 @@ export class AddressBookListComponent {
     this.adddressBookService.getAddressBooks(params).subscribe((res) => {
       if (res && res.body) {
         this.addressBooks = res.body;
+        
       }
     });
   }

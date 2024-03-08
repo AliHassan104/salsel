@@ -161,28 +161,29 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
   scannedData: string = "";
   codeLength: number = 9;
 
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (
-      event.key.length === 1 &&
-      !event.ctrlKey &&
-      !event.altKey &&
-      !event.metaKey
-    ) {
-      // Append the scanned character to the scanned data
-      this.scannedData += event.key;
-      this.uniqueScanNum = this.scannedData;
-      this.codeScan = true;
+//   @HostListener("document:keydown", ["$event"])
+//   handleKeyboardEvent(event: KeyboardEvent) {
+//     if (
+//       event.key.length === 1 &&
+//       !event.ctrlKey &&
+//       !event.altKey &&
+//       !event.metaKey
+//     ) {
 
-      if(this.scannedData.length == 8){
-         this.beepSound.nativeElement.play();
-      }
-      // Reset scannedData if it reaches the specified length
-      if (this.scannedData.length >= this.codeLength) {
-        this.scannedData = "";
-      }
-    }
-  }
+//       // Append the scanned character to the scanned data
+//       this.scannedData += event.key;
+//       this.uniqueScanNum = this.scannedData;
+//       this.codeScan = true;
+
+//       if (this.scannedData.length == 8) {
+//         this.beepSound.nativeElement.play();
+//       }
+//       // Reset scannedData if it reaches the specified length
+//       if (this.scannedData.length >= this.codeLength) {
+//         this.scannedData = "";
+//       }
+//     }
+//   }
 
   hideMenu() {
     this.layoutService.state.overlayMenuActive = false;

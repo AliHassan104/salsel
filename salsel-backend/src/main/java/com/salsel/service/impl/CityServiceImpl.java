@@ -63,6 +63,18 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public List<CityDto> getAllByCountryName(String name) {
+        List<City> cityList = cityRepository.findAllByCountryNameWhereStatusIsTrue(name);
+        List<CityDto> cityDtoList = new ArrayList<>();
+
+        for (City city : cityList) {
+            CityDto cityDto = toDto(city);
+            cityDtoList.add(cityDto);
+        }
+        return cityDtoList;
+    }
+
+    @Override
     public CityDto findById(Long id) {
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("City not found for id => %d", id)));

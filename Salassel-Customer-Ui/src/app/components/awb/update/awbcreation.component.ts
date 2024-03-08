@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -21,6 +22,9 @@ import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { AccountService } from "../../accounts/service/account.service";
 import { ServiceTypeService } from "src/app/service/service-type.service";
 import { Dropdown } from "primeng/dropdown";
+import { Table } from "primeng/table";
+import { AddressBookService } from "../../addressBook/service/address-book.service";
+import { IAddressBook } from "../../addressBook/model/addressBookDto";
 
 @Component({
   selector: "app-awbcreation",
@@ -29,6 +33,12 @@ import { Dropdown } from "primeng/dropdown";
   providers: [MessageService],
 })
 export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
+  visible: boolean = false;
+  addressBooks: IAddressBook[];
+  selectedAddress: IAddressBook;
+  tooltipVisible: boolean = true;
+  addressType:boolean = true
+
   //   ALL PRODUCT FIELD FOR DROPDOWNS
   productFields?;
 
@@ -78,8 +88,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     private cityService: CityService,
     private productTypeService: ProductTypeService,
     private serviceTypeService: ServiceTypeService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private addressBookService: AddressBookService
   ) {}
+
+  loading: any;
+  @ViewChild("filter") filter!: ElementRef;
 
   params = { status: true };
   awbForm!: FormGroup;
@@ -153,24 +167,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  //   queryParamsSetup() {
-  //     this.route.queryParams.subscribe((params) => {
-  //       // Retrieve editMode and id from the query parameters
-  //       if (params["id"] != null && this.updateAWB == true) {
-  //         this.editMode = params["updateMode"] === "true"; // Convert to boolean
-  //         this.editId = +params["id"]; // Convert to number
-  //       }
-  //       //   To create AWB form ticket view page
-  //       else if (params["id"] != null && this.createAWB == true) {
-  //         this.ticketMode = true;
-  //         this.TicketId = +params["id"];
-  //       } else {
-  //         this.ticketMode = false;
-  //         this.editMode = false;
-  //       }
-  //     });
-  //   }
-
   queryParamsSetup() {
     this.route.queryParams.subscribe((params) => {
       if (params["id"] != null) {
@@ -180,6 +176,15 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         this.ticketMode = false;
       }
     });
+  }
+
+  onGlobalFilter(table: Table, event: Event) {
+    table.filterGlobal((event.target as HTMLInputElement).value, "contains");
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.filter.nativeElement.value = "";
   }
 
   getAllProductField() {
@@ -253,47 +258,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
           this.dropdownService.extractCode(filterServiceType)[0];
       });
   }
-
-  //   UpdateBill() {
-  //     if (this.editMode) {
-  //       this._airbillService.getSingleBill(this.editId).subscribe((res) => {
-  //         this.singleBill = res;
-  //         this.getAllServiceTypes(this.singleBill.productType);
-  //         this.getAllCities(
-  //           this.singleBill.destinationCountry,
-  //           this.singleBill.originCountry
-  //         );
-  //         let pickDate = new Date(this.singleBill.pickupDate);
-  //         let pickTimeArray = this.singleBill.pickupTime;
-  //         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
-
-  //         this.awbForm.setValue({
-  //           shipperName: this.singleBill.shipperName,
-  //           shipperContactNumber: this.singleBill.shipperContactNumber,
-  //           pickupAddress: this.singleBill.pickupAddress,
-  //           shipperRefNumber: this.singleBill.shipperRefNumber,
-  //           originCountry: this.singleBill.originCountry,
-  //           originCity: this.singleBill.originCity,
-  //           recipientsName: this.singleBill.recipientsName,
-  //           recipientsContactNumber: this.singleBill.recipientsContactNumber,
-  //           destinationCountry: this.singleBill.destinationCountry,
-  //           destinationCity: this.singleBill.destinationCity,
-  //           deliveryAddress: this.singleBill.deliveryAddress,
-  //           pickupDate: pickDate,
-  //           pickupTime: pickTime,
-  //           dutyAndTaxesBillTo: this.singleBill.dutyAndTaxesBillTo,
-  //           weight: this.singleBill.weight,
-  //           amount: this.singleBill.amount,
-  //           content: this.singleBill.content,
-  //           currency: this.singleBill.currency,
-  //           pieces: this.singleBill.pieces,
-  //           serviceType: this.singleBill.serviceType,
-  //           productType: this.singleBill.productType,
-  //           requestType: this.singleBill.requestType,
-  //         });
-  //       });
-  //     }
-  //   }
 
   CreateAwbFromTicket() {
     if (this.ticketMode) {
@@ -445,6 +409,89 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       this.alert();
       this.formService.markFormGroupTouched(this.awbForm);
     }
+  }
+
+  onAutoFillShipperDetails() {
+    this.addressType = true
+    this.tooltipVisible = true;
+    this.addressBookService
+      .getAddressBooksByUserType("Shipper")
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.addressBooks = res.body;
+        }
+      });
+    this.visible = true;
+  }
+
+  onAutoFillRecipientsDetails() {
+    this.addressType = false;
+    this.tooltipVisible = true;
+    this.addressBookService
+      .getAddressBooksByUserType("Recipient")
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.addressBooks = res.body;
+        }
+      });
+    this.visible = true;
+  }
+
+  onSelectShipperAddress(id: any) {
+    this.tooltipVisible = false;
+    this.addressBookService.getAddressBookById(id).subscribe((res: any) => {
+      this.selectedAddress = res.body;
+      if (this.selectedAddress.userType == "Shipper") {
+        this.originCityUsingShipperAddress(this.selectedAddress?.country);
+        this.awbForm.patchValue({
+          shipperName: this.selectedAddress?.name,
+          shipperContactNumber: this.selectedAddress?.contactNumber,
+          pickupAddress: this.selectedAddress?.address,
+          pickupStreetName: this.selectedAddress?.streetName,
+          pickupDistrict: this.selectedAddress?.district,
+          shipperRefNumber: this.selectedAddress?.refNumber,
+          originCity: this.selectedAddress?.city,
+          originCountry: this.selectedAddress?.country,
+        });
+
+        this.visible = false;
+      } else {
+        this.destinationCityUsingShipperAddress(this.selectedAddress?.country);
+        this.awbForm.patchValue({
+          recipientsName: this.selectedAddress?.name,
+          recipientsContactNumber: this.selectedAddress?.contactNumber,
+          deliveryAddress: this.selectedAddress?.address,
+          deliveryStreetName: this.selectedAddress?.streetName,
+          deliveryDistrict: this.selectedAddress?.district,
+          destinationCity: this.selectedAddress?.city,
+          destinationCountry: this.selectedAddress?.country,
+        });
+
+        this.visible = false;
+      }
+    });
+  }
+
+  originCityUsingShipperAddress(country: any) {
+    this.cityService
+      .getAllCitiesByCountryName(country)
+      .subscribe((res: any) => {
+        this.originCities = res;
+        this.originCities = this.dropdownService.extractNames(
+          this.originCities
+        );
+      });
+  }
+
+  destinationCityUsingShipperAddress(country: any) {
+    this.cityService
+      .getAllCitiesByCountryName(country)
+      .subscribe((res: any) => {
+        this.destinationCities = res;
+        this.destinationCities = this.dropdownService.extractNames(
+          this.destinationCities
+        );
+      });
   }
 
   onCancel() {

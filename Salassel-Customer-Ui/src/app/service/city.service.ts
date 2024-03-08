@@ -25,4 +25,9 @@ export class CityService {
   getAllCitiesByCountries(id: any) {
     return this.http.get(`${this.url}city/country/${id}`);
   }
+
+  getAllCitiesByCountryName(name: any) {
+    return this.http.get(`${this.url}city/country/name/${name}`);
+  }
+
 }

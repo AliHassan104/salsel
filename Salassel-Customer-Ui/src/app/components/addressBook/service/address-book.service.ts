@@ -34,6 +34,13 @@ export class AddressBookService {
     });
   }
 
+  getAddressBooksByUserType(userType: any): Observable<EntityAddressBookResponseType> {
+    let url = `${this.url}address-book/user-type/${userType}`;
+    return this.http.get<AddressBook[]>(url, {
+      observe: "response",
+    });
+  }
+
   getAddressBookById(id?: any): Observable<EntityAddressBookType> {
     let url = `${this.url}address-book/${id}`;
     return this.http.get<AddressBook>(url, { observe: "response" });

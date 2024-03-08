@@ -30,6 +30,13 @@ public class AddressBookController {
         return ResponseEntity.ok(addressBookDtoList);
     }
 
+    @GetMapping("/address-book/user-type/{userType}")
+    @PreAuthorize("hasAuthority('READ_ADDRESS_BOOK')")
+    public ResponseEntity<List<AddressBookDto>> getAllAddressBookByUserType(@PathVariable String userType) {
+        List<AddressBookDto> addressBookDtoList = addressBookService.getAllByUserType(userType);
+        return ResponseEntity.ok(addressBookDtoList);
+    }
+
     @GetMapping("/address-book/{id}")
     @PreAuthorize("hasAuthority('READ_ADDRESS_BOOK')")
     public ResponseEntity<AddressBookDto> getAddressBookById(@PathVariable Long id) {

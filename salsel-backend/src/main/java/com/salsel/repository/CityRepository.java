@@ -31,6 +31,9 @@ public interface CityRepository extends JpaRepository<City,Long> {
     @Query("SELECT c FROM City c WHERE c.country.id = :cityId AND c.status = true")
     List<City> findAllByCountryWhereStatusIsTrue(Long cityId);
 
+    @Query("SELECT c FROM City c WHERE c.country.name = :name AND c.status = true")
+    List<City> findAllByCountryNameWhereStatusIsTrue(String name);
+
     @Query("SELECT c FROM City c WHERE c.status = true ORDER BY c.id DESC")
     Page<City> findAllInDesOrderByIdAndStatus(Pageable page);
 

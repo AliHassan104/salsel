@@ -8,6 +8,8 @@ public interface CityService {
     CityDto save(CityDto cityDto);
     List<CityDto> getAll(Boolean status);
     List<CityDto> getAllByCountry(Long countryId);
+
+    List<CityDto> getAllByCountryName(String name);
     CityDto findById(Long id);
     CityDto findByName(String name);
     void deleteById(Long id);

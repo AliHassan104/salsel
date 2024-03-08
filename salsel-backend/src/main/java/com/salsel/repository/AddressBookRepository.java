@@ -30,6 +30,9 @@ public interface AddressBookRepository extends JpaRepository<AddressBook, Long> 
     @Query("SELECT ab FROM AddressBook ab WHERE ab.status = :status ORDER BY ab.id DESC")
     List<AddressBook> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
 
+    @Query("SELECT ab FROM AddressBook ab WHERE ab.userType = :userType AND ab.status = true")
+    List<AddressBook> findAllInDesOrderByUserTypeAndStatus(String userType);
+
     @Query("SELECT ab FROM AddressBook ab WHERE ab.id = :id AND ab.status = true")
     AddressBook findByIdWhereStatusIsTrue(@Param("id") Long id);
 

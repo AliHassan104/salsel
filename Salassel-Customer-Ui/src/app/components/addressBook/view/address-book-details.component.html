@@ -1,1 +1,63 @@
-<p>address-book-details works!</p>
+<div class="card">
+    <div class="flex justify-content-between ">
+        <h1 class=""
+            style="color: #93003c; font-size: 19px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
+            Address Details</h1>
+    </div>
+    <hr>
+
+    <div class="p-fluid p-formgrid grid">
+        <!-- Name -->
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>Name</strong></label>
+            <input pInputTextarea id="name" rows="4"  [ngModel]="singleAddress?.name" readonly/>
+        </div>
+    
+        <!-- Contact Number -->
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>Contact Number</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.contactNumber" readonly/>
+        </div>
+    
+        <!-- Ref Number -->
+        <div class="field col-12 md:col-6" *ngIf="singleAddress?.refNumber != null">
+            <label htmlFor="name"><strong>Ref Number</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.refNumber" readonly/>
+        </div>
+    
+        <!-- Address -->
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>Address</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.address" readonly />
+        </div>
+    
+        <!-- Street Name -->
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>Street Name</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.streetName" readonly/>
+        </div>
+    
+        <!-- District -->
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>District</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.district" readonly/>
+        </div>
+    
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>Country</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.country" readonly />
+        </div>
+    
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>City</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.city" readonly />
+        </div>
+    
+        <div class="field col-12 md:col-6">
+            <label htmlFor="name"><strong>User Type</strong></label>
+            <input pInputTextarea id="name" rows="4" [ngModel]="singleAddress?.userType" readonly />
+        </div>
+    </div>
+</div>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
