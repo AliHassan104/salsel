@@ -18,6 +18,8 @@ import { FormvalidationService } from "../components/Tickets/service/formvalidat
 import { AirbillService } from "../components/awb/service/airbill.service";
 import { DropdownService } from "./service/dropdown.service";
 
+declare var onScan: any;
+
 @Component({
   selector: "app-layout",
   templateUrl: "./app.layout.component.html",
@@ -108,6 +110,14 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
         this.hideMenu();
         this.hideProfileMenu();
       });
+
+    onScan.attachTo(document, {
+      onScan: (sScanned, iQty) => {
+        console.log("Scanned:", iQty + "x " + sScanned);
+        this.uniqueScanNum = sScanned;
+        this.onDetectionOfScan();
+      },
+    });
   }
 
   ngOnInit(): void {
@@ -116,6 +126,12 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
     });
 
     this.getAllProductFields();
+  }
+
+  onDetectionOfScan() {
+    this.codeScan = true;
+    this.beepSound?.nativeElement?.play();
+    console.log(this.uniqueScanNum);
   }
 
   getAllProductFields() {
@@ -131,7 +147,6 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
 
   onCloseScan() {
     this.uniqueScanNum = null;
-    this.scannedData = "";
   }
 
   onUpdateStatus(data: any) {
@@ -145,7 +160,6 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
             detail: "Status Updated",
           });
           this.scanForm.reset();
-          this.scannedData = "";
           this.codeScan = false;
         });
     } else {
@@ -157,33 +171,6 @@ export class AppLayoutComponent implements OnDestroy, OnInit {
       });
     }
   }
-
-  scannedData: string = "";
-  codeLength: number = 9;
-
-//   @HostListener("document:keydown", ["$event"])
-//   handleKeyboardEvent(event: KeyboardEvent) {
-//     if (
-//       event.key.length === 1 &&
-//       !event.ctrlKey &&
-//       !event.altKey &&
-//       !event.metaKey
-//     ) {
-
-//       // Append the scanned character to the scanned data
-//       this.scannedData += event.key;
-//       this.uniqueScanNum = this.scannedData;
-//       this.codeScan = true;
-
-//       if (this.scannedData.length == 8) {
-//         this.beepSound.nativeElement.play();
-//       }
-//       // Reset scannedData if it reaches the specified length
-//       if (this.scannedData.length >= this.codeLength) {
-//         this.scannedData = "";
-//       }
-//     }
-//   }
 
   hideMenu() {
     this.layoutService.state.overlayMenuActive = false;

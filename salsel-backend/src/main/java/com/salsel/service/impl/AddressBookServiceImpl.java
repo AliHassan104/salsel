@@ -51,8 +51,8 @@ public class AddressBookServiceImpl implements AddressBookService {
     }
 
     @Override
-    public List<AddressBookDto> getAllByUserType(String userType) {
-        List<AddressBook> addressBooks = addressBookRepository.findAllInDesOrderByUserTypeAndStatus(userType);
+    public List<AddressBookDto> getAllByUserType(String userType,Boolean status) {
+        List<AddressBook> addressBooks = addressBookRepository.findAllInDesOrderByUserTypeAndStatus(userType,status);
         return addressBooks.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
@@ -81,6 +81,7 @@ public class AddressBookServiceImpl implements AddressBookService {
     }
 
     @Override
+    @Transactional
     public void setToActiveById(Long id) {
         AddressBook addressBook = addressBookRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Record not found for id => %d", id)));

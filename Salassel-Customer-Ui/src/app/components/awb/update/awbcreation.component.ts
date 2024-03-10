@@ -412,10 +412,14 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onAutoFillShipperDetails() {
+    const params = {
+      userType: "Shipper",
+      status: true,
+    };
     this.addressType = true
     this.tooltipVisible = true;
     this.addressBookService
-      .getAddressBooksByUserType("Shipper")
+      .getAddressBooksByUserType(params)
       .subscribe((res) => {
         if (res && res.body) {
           this.addressBooks = res.body;
@@ -425,10 +429,14 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onAutoFillRecipientsDetails() {
+    const params = {
+        userType:"Recipient",
+        status:true
+    }
     this.addressType = false;
     this.tooltipVisible = true;
     this.addressBookService
-      .getAddressBooksByUserType("Recipient")
+      .getAddressBooksByUserType(params)
       .subscribe((res) => {
         if (res && res.body) {
           this.addressBooks = res.body;

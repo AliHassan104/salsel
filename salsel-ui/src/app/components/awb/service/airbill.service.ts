@@ -79,6 +79,10 @@ export class AirbillService {
     );
   }
 
+  getBillTrackingHistory(params: any) {
+    return this.http.get(`${this.url}awb-shipping-history`, { params });
+  }
+
   downloadAwbDataInExcel(params: any) {
     return this.http.get(`${this.url}download-awb-excel`, {
       params,

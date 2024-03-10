@@ -42,6 +42,11 @@ export class AirbillService {
     return this.http.get(`${this.url}awb/${id}`);
   }
 
+
+  getBillTrackingHistory(params:any) {
+    return this.http.get(`${this.url}awb-shipping-history`,{params});
+  }
+
   deleteBill(id) {
     return this.http.delete(`${this.url}awb/${id}`);
   }

@@ -1,12 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { IAddressBook } from '../model/addressBookDto';
-import { CountryService } from 'src/app/service/country.service';
 import { AddressBookService } from '../service/address-book.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DropdownService } from 'src/app/layout/service/dropdown.service';
 import { SessionStorageService } from '../../auth/service/session-storage.service';
+import { CountryService } from '../../country/service/country.service';
 
 @Component({
   selector: "app-address-book-list",
@@ -52,29 +52,25 @@ export class AddressBookListComponent {
   }
 
   getAddressBookByUserType() {
-    const params = {
-      userType: this.selectedUserType,
-      status: this.activeStatus,
-    };
-    this.adddressBookService
-      .getAddressBooksByUserType(params)
-      .subscribe((res) => {
-        if (res && res.body) {
-          this.addressBooks = res.body;
-        }
-      });
+    const params = { userType:this.selectedUserType,
+        status: this.activeStatus };
+    this.adddressBookService.getAddressBooksByUserType(params).subscribe((res) => {
+      if (res && res.body) {
+        this.addressBooks = res.body;
+      }
+    });
   }
 
-  onUserTypeChange(data) {
+  onUserTypeChange(data){
     if (data == "Both") {
       this.activeStatus = true;
       this.getAddressBooks();
-    } else if (data == "Shipper") {
+    } else if(data == "Shipper") {
       this.activeStatus = true;
       this.getAddressBookByUserType();
-    } else {
-      this.activeStatus = true;
-      this.getAddressBookByUserType();
+    } else{
+        this.activeStatus = true;
+        this.getAddressBookByUserType();
     }
   }
 
@@ -109,10 +105,10 @@ export class AddressBookListComponent {
           .productFieldValuesList
       );
 
-       this.userType = this.dropdownService.extractNames(
-         this.productField.filter((data) => data.name == "User Type")[0]
-           .productFieldValuesList
-       );
+      this.userType = this.dropdownService.extractNames(
+        this.productField.filter((data) => data.name == "User Type")[0]
+          .productFieldValuesList
+      );
     });
   }
 
@@ -147,13 +143,15 @@ export class AddressBookListComponent {
     });
   }
 
-  onActiveAddressBook(id) {
-    this.adddressBookService.updateAddressBookStatus(id).subscribe((res) => {
-      this.success();
-      this.selectedStatus = "Active";
-      this.onStatusChange(this.selectedStatus);
-    });
-  }
+    onActiveAddressBook(id) {
+      this.adddressBookService
+        .updateAddressBookStatus(id)
+        .subscribe((res) => {
+          this.success();
+          this.selectedStatus = "Active";
+          this.onStatusChange(this.selectedStatus);
+        });
+    }
 
   success() {
     this.messageService.add({

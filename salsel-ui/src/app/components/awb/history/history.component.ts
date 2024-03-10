@@ -9,13 +9,11 @@ import { AirbillService } from "../service/airbill.service";
   providers: [MessageService],
 })
 export class HistoryComponent {
-  events1: any[] = [];
+  history: any[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private _airbillService: AirbillService,
-    private router: Router,
-    private messageService: MessageService
+    private _airbillService: AirbillService
   ) {}
 
   display: any;
@@ -26,59 +24,97 @@ export class HistoryComponent {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
       console.log(res);
-      
+
       this.id = a;
       this.onView(a);
     });
 
-    this.events1 = [
-      {
-        status: "AWB Created",
-        date: "15/10/2020 10:30",
-        color: "#9C27B0",
-      },
-      {
-        status: "Picked Up",
-        date: "15/10/2020 14:00",
-        color: "#673AB7",
-      },
-      {
-        status: "Arrived in Station",
-        date: "16/10/2020 10:00",
-        color: "#607D8B",
-      },
-      {
-        status: "Held in Station",
-        date: "15/10/2020 10:30",
-        color: "#9C27B0",
-      },
-      {
-        status: "Depart from Station",
-        date: "15/10/2020 16:15",
-        color: "#FF9800",
-      },
-      {
-        status: "Arrived in Hub",
-        date: "15/10/2020 16:15",
-        color: "#FF9800",
-      },
-      {
-        status: "Depart from Hub",
-        date: "15/10/2020 14:00",
-        color: "#673AB7",
-      },
+    this.getTrackingHistory();
+  }
 
-      {
-        status: "Out for Delivery",
-        date: "16/10/2020 10:00",
-        color: "#607D8B",
-      },
-      {
-        status: "Delivered",
-        date: "16/10/2020 10:00",
-        color: "#607D8B",
-      },
-    ];
+  getTrackingHistory() {
+    this._airbillService
+      .getBillTrackingHistory({ awbId: this.id })
+      .subscribe((res: any) => {
+        console.log(res);
+        this.history = res;
+        this.history = this.history.reverse();
+      });
+  }
+
+  getIcon(status: any): string {
+    switch (status) {
+      case "AWB Created":
+        return "pi pi-credit-card";
+      case "Picked Up":
+        return "pi pi-shopping-bag";
+      case "Arrived in Station":
+        return "pi pi-car";
+      case "Held in Station":
+        return "pi pi-building";
+      case "Depart from Station":
+        return "pi pi-car";
+      case "Arrived in Hub":
+        return "pi pi-building";
+      case "Depart from Hub":
+        return "pi pi-car";
+      case "Out for Delivery":
+        return "pi pi-truck";
+      case "Delivered":
+        return "pi pi-check";
+      default:
+        return "";
+    }
+  }
+
+  getColor(status: any): string {
+    switch (status) {
+      case "AWB Created":
+        return "#9C27B0";
+      case "Picked Up":
+        return "#673AB7";
+      case "Arrived in Station":
+        return "#FF9800";
+      case "Held in Station":
+        return "#607D8B";
+      case "Depart from Station":
+        return "#9C27B0";
+      case "Arrived in Hub":
+        return "#673AB7";
+      case "Depart from Hub":
+        return "#FF9800";
+      case "Out for Delivery":
+        return "#607D8B";
+      case "Delivered":
+        return "#9C27B0";
+      default:
+        return "";
+    }
+  }
+
+  getImage(status: any): string {
+    switch (status) {
+      case "AWB Created":
+        return "paper_2.png";
+      case "Picked Up":
+        return "3697568.png";
+      case "Arrived in Station":
+        return "6333.png";
+      case "Held in Station":
+        return "8085.png";
+      case "Depart from Station":
+        return "3697568.png";
+      case "Arrived in Hub":
+        return "8085.png";
+      case "Depart from Hub":
+        return "3697568.png";
+      case "Out for Delivery":
+        return "Loading workman carrying boxes.png";
+      case "Delivered":
+        return "6233230.png";
+      default:
+        return "";
+    }
   }
 
   onView(id) {

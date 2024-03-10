@@ -30,10 +30,10 @@ public class AddressBookController {
         return ResponseEntity.ok(addressBookDtoList);
     }
 
-    @GetMapping("/address-book/user-type/{userType}")
+    @GetMapping("/address-book/user-type")
     @PreAuthorize("hasAuthority('READ_ADDRESS_BOOK')")
-    public ResponseEntity<List<AddressBookDto>> getAllAddressBookByUserType(@PathVariable String userType) {
-        List<AddressBookDto> addressBookDtoList = addressBookService.getAllByUserType(userType);
+    public ResponseEntity<List<AddressBookDto>> getAllAddressBookByUserType(@RequestParam(value = "userType") String userType,@RequestParam(value = "status") Boolean status) {
+        List<AddressBookDto> addressBookDtoList = addressBookService.getAllByUserType(userType,status);
         return ResponseEntity.ok(addressBookDtoList);
     }
 
@@ -49,6 +49,13 @@ public class AddressBookController {
     public ResponseEntity<AddressBookDto> getAddressBookByUniqueId(@PathVariable String id) {
         AddressBookDto addressBookDto = addressBookService.findByUniqueId(id);
         return ResponseEntity.ok(addressBookDto);
+    }
+
+    @PutMapping("/address-book/status/{id}")
+    @PreAuthorize("hasAuthority('DELETE_ADDRESS_BOOK')")
+    public ResponseEntity<Void> updateAddressStatusToActive(@PathVariable Long id) {
+        addressBookService.setToActiveById(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/address-book/{id}")

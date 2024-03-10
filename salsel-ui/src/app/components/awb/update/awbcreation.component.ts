@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -22,6 +23,9 @@ import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
 import { AccountService } from "../../accounts/service/account.service";
 import { RolesService } from "../../permissions/service/roles.service";
 import { Dropdown } from "primeng/dropdown";
+import { IAddressBook } from "../../addressBook/model/addressBookDto";
+import { AddressBookService } from "../../addressBook/service/address-book.service";
+import { Table } from "primeng/table";
 
 @Component({
   selector: "app-awbcreation",
@@ -31,6 +35,12 @@ import { Dropdown } from "primeng/dropdown";
 })
 export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   //   ALL PRODUCT FIELD FOR DROPDOWNS
+
+  visible: boolean = false;
+  addressBooks: IAddressBook[];
+  selectedAddress: IAddressBook;
+  tooltipVisible: boolean = true;
+  addressType: boolean = true;
 
   pickupDate;
   pickupTime;
@@ -83,8 +93,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     private productTypeService: ProductTypeService,
     private serviceTypeService: ServiceTypeService,
     private accountService: AccountService,
-    private roleService: RolesService
+    private roleService: RolesService,
+    private addressBookService: AddressBookService
   ) {}
+
+  loading: any;
+  @ViewChild("filter") filter!: ElementRef;
 
   params = { status: true };
   awbForm!: FormGroup;
@@ -150,24 +164,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       assignedTo: new FormControl(null),
     });
   }
-
-  //   queryParamsSetup() {
-  //     this.route.queryParams.subscribe((params) => {
-  //       // Retrieve editMode and id from the query parameters
-  //       if (params["id"] != null && this.updateAWB == true) {
-  //         this.editMode = params["updateMode"] === "true"; // Convert to boolean
-  //         this.editId = +params["id"]; // Convert to number
-  //       }
-  //       //   To create AWB form ticket view page
-  //       else if (params["id"] != null && this.createAWB == true) {
-  //         this.ticketMode = true;
-  //         this.TicketId = +params["id"];
-  //       } else {
-  //         this.ticketMode = false;
-  //         this.editMode = false;
-  //       }
-  //     });
-  //   }
 
   queryParamsSetup() {
     this.route.queryParams.subscribe((params: any) => {
@@ -235,6 +231,15 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
           })
         );
       });
+  }
+
+  onGlobalFilter(table: Table, event: Event) {
+    table.filterGlobal((event.target as HTMLInputElement).value, "contains");
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.filter.nativeElement.value = "";
   }
 
   getProductType(data) {
@@ -457,6 +462,97 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       this.alert();
       this.formService.markFormGroupTouched(this.awbForm);
     }
+  }
+
+  onAutoFillShipperDetails() {
+    const params = {
+      userType: "Shipper",
+      status: true,
+    };
+    this.addressType = true;
+    this.tooltipVisible = true;
+    this.addressBookService
+      .getAddressBooksByUserType(params)
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.addressBooks = res.body;
+        }
+      });
+    this.visible = true;
+  }
+
+  onAutoFillRecipientsDetails() {
+    const params = {
+      userType: "Recipient",
+      status: true,
+    };
+    this.addressType = false;
+    this.tooltipVisible = true;
+    this.addressBookService
+      .getAddressBooksByUserType(params)
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.addressBooks = res.body;
+        }
+      });
+    this.visible = true;
+  }
+
+  onSelectShipperAddress(id: any) {
+    this.tooltipVisible = false;
+    this.addressBookService.getAddressBookById(id).subscribe((res: any) => {
+      this.selectedAddress = res.body;
+      if (this.selectedAddress.userType == "Shipper") {
+        this.originCityUsingShipperAddress(this.selectedAddress?.country);
+        this.awbForm.patchValue({
+          shipperName: this.selectedAddress?.name,
+          shipperContactNumber: this.selectedAddress?.contactNumber,
+          pickupAddress: this.selectedAddress?.address,
+          pickupStreetName: this.selectedAddress?.streetName,
+          pickupDistrict: this.selectedAddress?.district,
+          shipperRefNumber: this.selectedAddress?.refNumber,
+          originCity: this.selectedAddress?.city,
+          originCountry: this.selectedAddress?.country,
+        });
+
+        this.visible = false;
+      } else {
+        this.destinationCityUsingShipperAddress(this.selectedAddress?.country);
+        this.awbForm.patchValue({
+          recipientsName: this.selectedAddress?.name,
+          recipientsContactNumber: this.selectedAddress?.contactNumber,
+          deliveryAddress: this.selectedAddress?.address,
+          deliveryStreetName: this.selectedAddress?.streetName,
+          deliveryDistrict: this.selectedAddress?.district,
+          destinationCity: this.selectedAddress?.city,
+          destinationCountry: this.selectedAddress?.country,
+        });
+
+        this.visible = false;
+      }
+    });
+  }
+
+  originCityUsingShipperAddress(country: any) {
+    this.cityService
+      .getAllCitiesByCountryName(country)
+      .subscribe((res: any) => {
+        this.originCities = res;
+        this.originCities = this.dropdownService.extractNames(
+          this.originCities
+        );
+      });
+  }
+
+  destinationCityUsingShipperAddress(country: any) {
+    this.cityService
+      .getAllCitiesByCountryName(country)
+      .subscribe((res: any) => {
+        this.destinationCities = res;
+        this.destinationCities = this.dropdownService.extractNames(
+          this.destinationCities
+        );
+      });
   }
 
   onCancel() {

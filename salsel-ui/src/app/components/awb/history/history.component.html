@@ -1,39 +1,12 @@
 <div class="card">
     <div class="grid">
-        <div class="col-4">
-            <div class="flex justify-content-center align-items-center" style="min-height: 69px;">
-                    <h1 class="delivery-heading">DELIVERY DETAILS</h1>
-            </div>
-            <p-divider></p-divider>
-            <div class="mb-3">
-                <p class="heading">Recipient Name</p>
-                <p class="info">{{singleBill?.recipientsName}}</p>
-            </div>
-            <div class="mb-3">
-                <p class="heading">Contact Number</p>
-                <p class="info">{{singleBill?.recipientsContactNumber}}</p>
-            </div>
-            <div class="mb-3">
-                <p class="heading">Delivery Address</p>
-                <p class="info">{{singleBill?.deliveryAddress}}</p>
-            </div>
-            <div class="mb-3">
-                <p class="heading">Street Name</p>
-                <p class="info">{{singleBill?.deliveryStreetName}}</p>
-            </div>
-            <div>
-                <p class="heading">District</p>
-                <p class="info">{{singleBill?.deliveryDistrict}}</p>
-            </div>
-        </div>
-        <p-divider layout="vertical"></p-divider>
-        <div class="col-8">
+        <div class="col-12 lg:col-4">
             <div class="flex justify-content-between align-items-center" style="min-height: 69px;">
                 <div>
                     <span class="tracking">Tracking No.</span>
                     <h1 class="tracking-heading">{{ '#' + singleBill?.uniqueNumber}}</h1>
                 </div>
-                <button pButton label="Back" class="p-button-outlined" routerLink="/awb/list"></button>
+                <button pButton label="Back" class="p-button-outlined mobile-btn" routerLink="/awb/list"></button>
             </div>
             <p-divider></p-divider>
             <div>
@@ -41,15 +14,48 @@
                 <h1 class="order-heading">{{singleBill?.awbStatus}}</h1>
                 <p class="order-content">as on {{singleBill?.createdAt | date:'d MMMM, y, EEEE'}}</p>
             </div>
+        </div>
+        <p-divider layout="vertical"></p-divider>
+        <div class="col-12 lg:col-8">
+            <div class="flex justify-content-between align-items-center" style="min-height: 69px;">
+                <span class="order history">Tracking History</span>
+                <button pButton label="Back" class="p-button-outlined desktop-btn" routerLink="/awb/list"></button>
+            </div>
             <p-divider></p-divider>
             <div>
-                <span class="order">Tracking History</span>
-                <p-timeline [value]="events1" class="w-full md:w-20rem">
-                    <ng-template pTemplate="content" let-event>
-                        <p class="timeline-content">{{ event.status }}</p>
+                <p-timeline [value]="history" align="alternate" styleClass="customized-timeline"
+                    class="desktop-timeline">
+                    <ng-template pTemplate="marker" let-history>
+                        <span
+                            class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1"
+                            [style.backgroundColor]="getColor(history?.awbStatus)">
+                            <i [ngClass]="getIcon(history?.awbStatus)"></i>
+                        </span>
                     </ng-template>
-                    <ng-template pTemplate="opposite" let-event>
-                        <p class="timeline-opposite-content">{{singleBill?.createdAt | date:'MMMM d, y, h:mm a'}}</p>
+                    <ng-template pTemplate="content" let-history>
+                        <p-card class="custom-card" [header]="history?.awbStatus"
+                            [subheader]="history?.timestamp | date:'MMM d, y, h:mm a'">
+                            <img *ngIf="history?.awbStatus"
+                                [src]="'../../../../assets/TIME/' + getImage(history?.awbStatus)"
+                                [alt]="history?.awbStatus" width="200" />
+                        </p-card>
+                    </ng-template>
+                </p-timeline>
+                <p-timeline [value]="history" align="left" styleClass="customized-timeline" class="mobile-timeline">
+                    <ng-template pTemplate="marker" let-history>
+                        <span
+                            class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1"
+                            [style.backgroundColor]="getColor(history?.awbStatus)">
+                            <i [ngClass]="getIcon(history?.awbStatus)"></i>
+                        </span>
+                    </ng-template>
+                    <ng-template pTemplate="content" let-history>
+                        <p-card class="mobile-card" [header]="history?.awbStatus"
+                            [subheader]="history?.timestamp | date:'MMM d, y, h:mm a'">
+                            <img *ngIf="history?.awbStatus"
+                                [src]="'../../../../assets/TIME/' + getImage(history?.awbStatus)"
+                                [alt]="history?.awbStatus" width="200" />
+                        </p-card>
                     </ng-template>
                 </p-timeline>
             </div>

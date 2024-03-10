@@ -16,9 +16,15 @@ span.tracking {
   font-size: 22px;
 }
 
-.order-heading {
+.order.history {
+  font-weight: 500;
+  font-size: 25px;
   color: #000000;
-  font-size: 35px;
+}
+
+.order-heading {
+  color: #93003c;
+  font-size: 38px;
   margin-top: 9px;
   font-weight: bolder;
   margin-bottom: 6px;
@@ -41,30 +47,100 @@ p.info {
   color: #616161;
 }
 
-
 h1.delivery-heading {
-    color: white;
-    font-size: 30px;
-    background: black;
-    padding: 6px 32px;
-    margin-bottom: 0px;
+  color: white;
+  font-size: 30px;
+  background: black;
+  padding: 6px 32px;
+  margin-bottom: 0px;
 }
 
 p.order-content {
-    font-size: 15px;
-    font-weight: bolder;
+  font-size: 18px;
+  font-weight: bolder;
 }
 
-p-timeline::ng-deep .p-timeline{
-    margin-top: 30px;
+p-timeline::ng-deep .p-timeline {
+  margin-top: 30px;
 }
 
 p.timeline-opposite-content {
-    font-size: 16px;
-    font-weight: 500;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.timeline-content{
-    font-size: 16px;
+.timeline-content {
+  font-size: 16px;
+  font-weight: bolder;
+}
+
+.custom-card::ng-deep .p-card .p-card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-weight: bolder;
+  color: #93003c;
+}
+
+.custom-card::ng-deep .p-card .p-card-subtitle {
     font-weight: bolder;
+    margin-bottom: 0.2rem;
+    color: #495057;
+}
+
+.custom-card::ng-deep .p-card .p-card-body {
+  text-align: center;
+//   max-height: 300px;
+//   min-height: 300px;
+//       min-width: 347px;
+//     max-width: 414px;
+}
+
+.mobile-card::ng-deep .p-card .p-card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-weight: bolder;
+  color: #93003c;
+}
+
+.mobile-card::ng-deep .p-card .p-card-subtitle {
+    font-weight: bolder;
+    margin-bottom: 0.2rem;
+    color: #495057;
+}
+
+.mobile-card::ng-deep .p-card .p-card-body {
+  text-align: center;
+  margin-bottom: 20px;
+//   max-height: 300px;
+//   min-height: 300px;
+//       min-width: 347px;
+//     max-width: 414px;
+}
+
+.mobile-btn,.mobile-timeline{
+    display: none;
+}
+
+@media only screen and (max-width: 991px) {
+
+    .mobile-btn{
+        display: block;
+    }
+
+    .desktop-btn{
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 667px) {
+
+    .mobile-timeline{
+        display: block;
+    }
+
+    .desktop-timeline{
+        display: none;
+    }
 }

@@ -183,6 +183,14 @@ export class AuthGuardService implements CanActivate {
       url: ["/create-ticket-sub-category"],
       permissions: "CREATE_TICKET_SUB_CATEGORY",
     };
+    const readAddressBookObj = {
+      url: ["/address-book/list", "/address-book/list/:id"],
+      permissions: "READ_ADDRESS_BOOK",
+    };
+    const createAddressBookObj = {
+      url: ["/create-address-book"],
+      permissions: "CREATE_ADDRESS_BOOK",
+    };
 
     return [
       dashboardObj,
@@ -212,7 +220,9 @@ export class AuthGuardService implements CanActivate {
       ticketCategoryObj,
       createTicketCategoryObj,
       ticketSubCategoryObj,
-      createTicketSubCategoryObj
+      createTicketSubCategoryObj,
+      readAddressBookObj,
+      createAddressBookObj,
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

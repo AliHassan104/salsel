@@ -73,7 +73,7 @@ tr td {
   line-height: 1.5rem;
 }
 
-.Pickup,.In-Transit,.Depart,.Out {
+.Picked,.In-Transit,.Depart,.Out {
   display: inline-block;
   border-radius: 10px;
   text-align: center;
@@ -118,4 +118,9 @@ tr td {
 
 .card::-webkit-scrollbar-track {
   background-color: #ffffff43;
+}
+
+p-chart::ng-deep canvas{
+    height: 450px !important;
+    width: 450px !important;
 }

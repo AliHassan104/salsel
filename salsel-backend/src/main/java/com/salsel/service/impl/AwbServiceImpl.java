@@ -413,11 +413,14 @@ public class AwbServiceImpl implements AwbService {
 
         // Add logic to get counts based on different AWB statuses
         statusCounts.put("awbCreated", awbRepository.countByStatusAndAwbStatus(true,"AWB Created"));
-        statusCounts.put("pickup", awbRepository.countByStatusAndAwbStatus(true,"Pickup"));
-        statusCounts.put("inTransit", awbRepository.countByStatusAndAwbStatus(true,"In-Transit"));
+        statusCounts.put("picked", awbRepository.countByStatusAndAwbStatus(true,"Picked Up"));
+        statusCounts.put("arrivedInStation", awbRepository.countByStatusAndAwbStatus(true,"Arrived in Station"));
+        statusCounts.put("heldInStation", awbRepository.countByStatusAndAwbStatus(true,"Held in Station"));
+        statusCounts.put("departFromStation", awbRepository.countByStatusAndAwbStatus(true,"Depart from Station"));
+        statusCounts.put("arrivedInHub", awbRepository.countByStatusAndAwbStatus(true,"Arrived in Hub"));
+        statusCounts.put("departFromHub", awbRepository.countByStatusAndAwbStatus(true,"Depart from Hub"));
+        statusCounts.put("outForDelivery", awbRepository.countByStatusAndAwbStatus(true,"Out for Delivery"));
         statusCounts.put("delivered", awbRepository.countByStatusAndAwbStatus(true,"Delivered"));
-        statusCounts.put("returned", awbRepository.countByStatusAndAwbStatus(true,"Returned"));
-        statusCounts.put("exception", awbRepository.countByStatusAndAwbStatus(true,"Exception"));
 
         return statusCounts;
     }
@@ -445,11 +448,15 @@ public class AwbServiceImpl implements AwbService {
 
         // Add logic to get counts based on different AWB statuses for the logged-in user
         statusCounts.put("awbCreated", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "AWB Created", loggedInUserEmail,loggedInUserRole));
-        statusCounts.put("pickup", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Pickup", loggedInUserEmail,loggedInUserRole));
-        statusCounts.put("inTransit", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "In-Transit", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("picked", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Picked Up", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("arrivedInStation", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Arrived in Station", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("heldInStation", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Held in Station", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("departFromStation", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Depart from Station", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("arrivedInHub", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Arrived in Hub", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("departFromHub", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Depart from Hub", loggedInUserEmail,loggedInUserRole));
+        statusCounts.put("outForDelivery", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Out for Delivery", loggedInUserEmail,loggedInUserRole));
         statusCounts.put("delivered", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Delivered", loggedInUserEmail,loggedInUserRole));
-        statusCounts.put("returned", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Returned", loggedInUserEmail,loggedInUserRole));
-        statusCounts.put("exception", awbRepository.countByStatusAndAwbStatusAndCreatedByOrAssignedTo(true, "Exception", loggedInUserEmail,loggedInUserRole));
+
 
         return statusCounts;
     }

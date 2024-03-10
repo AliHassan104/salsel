@@ -42,4 +42,8 @@ export class CityService {
   updateCityStatus(id: any) {
     return this.http.put(`${this.url}city/status/${id}`, {});
   }
+
+  getAllCitiesByCountryName(name: any) {
+    return this.http.get(`${this.url}city/country/name/${name}`);
+  }
 }
