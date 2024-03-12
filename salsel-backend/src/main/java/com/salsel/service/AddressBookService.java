@@ -1,12 +1,17 @@
 package com.salsel.service;
 
 import com.salsel.dto.AddressBookDto;
+import com.salsel.dto.AwbDto;
 
 import java.util.List;
 
 public interface AddressBookService {
     AddressBookDto save(AddressBookDto addressBookDto);
     List<AddressBookDto> getAll(Boolean status);
+
+    List<AddressBookDto> getAddressBookByLoggedInUser(Boolean status,String userType);
+
+    String checkUniqueIdExistsShipperOrRecipient(String uniqueId,String shipperUniqueId);
 
     List<AddressBookDto> getAllByUserType(String userType,Boolean status);
     AddressBookDto findById(Long id);

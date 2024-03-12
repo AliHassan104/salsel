@@ -66,6 +66,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   serviceTypeId;
   serviceTypeCode?;
   accountNumbers?;
+  addressBookStatus;
+  addressDialog: boolean = false;
 
   // SINGLE BILL AND TICKET STORE IN IT
   singleBill?: IAwbDto;
@@ -268,47 +270,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  //   UpdateBill() {
-  //     if (this.editMode) {
-  //       this._airbillService.getSingleBill(this.editId).subscribe((res) => {
-  //         this.singleBill = res;
-  //         this.getAllServiceTypes(this.singleBill.productType);
-  //         this.getAllCities(
-  //           this.singleBill.destinationCountry,
-  //           this.singleBill.originCountry
-  //         );
-  //         let pickDate = new Date(this.singleBill.pickupDate);
-  //         let pickTimeArray = this.singleBill.pickupTime;
-  //         let pickTime = new Date(`2023-11-12 ${pickTimeArray}`);
-
-  //         this.awbForm.setValue({
-  //           shipperName: this.singleBill.shipperName,
-  //           shipperContactNumber: this.singleBill.shipperContactNumber,
-  //           pickupAddress: this.singleBill.pickupAddress,
-  //           shipperRefNumber: this.singleBill.shipperRefNumber,
-  //           originCountry: this.singleBill.originCountry,
-  //           originCity: this.singleBill.originCity,
-  //           recipientsName: this.singleBill.recipientsName,
-  //           recipientsContactNumber: this.singleBill.recipientsContactNumber,
-  //           destinationCountry: this.singleBill.destinationCountry,
-  //           destinationCity: this.singleBill.destinationCity,
-  //           deliveryAddress: this.singleBill.deliveryAddress,
-  //           pickupDate: pickDate,
-  //           pickupTime: pickTime,
-  //           dutyAndTaxesBillTo: this.singleBill.dutyAndTaxesBillTo,
-  //           weight: this.singleBill.weight,
-  //           amount: this.singleBill.amount,
-  //           content: this.singleBill.content,
-  //           currency: this.singleBill.currency,
-  //           pieces: this.singleBill.pieces,
-  //           serviceType: this.singleBill.serviceType,
-  //           productType: this.singleBill.productType,
-  //           requestType: this.singleBill.requestType,
-  //         });
-  //       });
-  //     }
-  //   }
-
   CreateAwbFromTicket() {
     if (this.ticketMode) {
       this._ticketService
@@ -448,20 +409,97 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
         createdBy: this.loginUserEmail,
-        accountNumber: formValue.accountNumber?.label,
-        assignedTo: formValue.assignedTo,
       };
 
       //   Create Ticket
       this._airbillService.createBill(billData).subscribe((res) => {
-        this.success();
-        this.router.navigate(["awb/list"]);
-        this.awbForm.reset();
+        this.checkAddressStatus();
       });
     } else {
       this.alert();
       this.formService.markFormGroupTouched(this.awbForm);
     }
+  }
+
+  billPopup() {
+    this.success();
+    this.router.navigate(["awb/list"]);
+    this.awbForm.reset();
+  }
+
+  confirmCreateAddress() {
+    if (this.addressBookStatus == "Not Exist") {
+      this.createRecipientAddress();
+      this.createShipperAddress();
+      this.billPopup();
+    } else if (this.addressBookStatus == "shipper") {
+      this.createRecipientAddress();
+      this.billPopup();
+    } else {
+      this.createShipperAddress();
+      this.billPopup();
+    }
+  }
+
+  onCancelAddressRequest() {
+    this.addressDialog = false;
+    this.billPopup();
+  }
+
+  checkAddressStatus() {
+    const formValue = this.awbForm.value;
+    const shipperUniqueId = `${formValue.shipperName}-${formValue.shipperContactNumber}-Shipper`;
+    const recipientUniqueId = `${formValue.recipientsName}-${formValue.recipientsContactNumber}-Recipient`;
+    this.addressBookService
+      .isUniqueIdExists({
+        uniqueId: recipientUniqueId,
+        shipperUniqueId: shipperUniqueId,
+      })
+      .subscribe((res: any) => {
+        this.addressBookStatus = res.body;
+        if (res?.body == "both") {
+          this.success();
+          this.router.navigate(["awb/list"]);
+          this.awbForm.reset();
+        } else {
+          this.addressDialog = true;
+        }
+      });
+  }
+
+  createShipperAddress() {
+    const formValue = this.awbForm.value;
+    const shipperData: IAddressBook = {
+      name: formValue.shipperName,
+      contactNumber: formValue.shipperContactNumber,
+      address: formValue.pickupAddress,
+      streetName: formValue.pickupStreetName,
+      district: formValue.pickupDistrict,
+      refNumber: formValue.shipperRefNumber,
+      country: formValue.originCountry,
+      city: formValue.originCity,
+      userType: "Shipper",
+      createdBy: this.loginUserEmail,
+    };
+
+    this.addressBookService.create(shipperData).subscribe((res: any) => {});
+  }
+
+  createRecipientAddress() {
+    const formValue = this.awbForm.value;
+    const recipientData: IAddressBook = {
+      name: formValue.recipientsName,
+      contactNumber: formValue.recipientsContactNumber,
+      address: formValue.deliveryAddress,
+      streetName: formValue.deliveryStreetName,
+      district: formValue.deliveryDistrict,
+      country: formValue.destinationCountry,
+      city: formValue.destinationCity,
+      userType: "Recipient",
+      createdBy: this.loginUserEmail,
+    };
+
+    this.addressBookService.create(recipientData).subscribe((res: any) => {});
   }
 
   onAutoFillShipperDetails() {

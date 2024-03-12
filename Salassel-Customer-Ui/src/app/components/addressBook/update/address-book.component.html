@@ -5,12 +5,24 @@
             {{mode == 'Add'? "Add Ticket Category" :"Update Ticket Category" }}</h1>
         <form action="" [formGroup]="addressBookForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
+                <!-- User Type -->
+                <div class="field col-12 md:col-6">
+                    <label><strong>User Type</strong></label>
+                    <p-dropdown [options]="userTypes" formControlName="userType" placeholder="Select User Type"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('userType')?.touched && addressBookForm.get('userType')?.invalid}" [readonly]="mode == 'Update'"></p-dropdown>
+                    <small *ngIf="!addressBookForm.get('userType')?.valid && addressBookForm.get('userType')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
                 <!-- Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Name</strong></label>
                     <input pInputTextarea id="name" rows="4" formControlName="name" placeholder="Enter Name"
                         [ngClass]="{'ng-dirty':addressBookForm.get('name')?.touched && addressBookForm.get('name')?.invalid}" />
-                    <small *ngIf="!addressBookForm.get('name')?.valid && addressBookForm.get('name')?.touched" class="text-red-500">
+                    <small *ngIf="!addressBookForm.get('name')?.valid && addressBookForm.get('name')?.touched"
+                        class="text-red-500">
                         Required
                     </small>
                 </div>
@@ -18,15 +30,18 @@
                 <!-- Contact Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Contact Number</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="contactNumber" placeholder="Enter Contact Number"
+                    <input pInputTextarea id="name" rows="4" formControlName="contactNumber"
+                        placeholder="Enter Contact Number"
                         [ngClass]="{'ng-dirty':addressBookForm.get('contactNumber')?.touched && addressBookForm.get('contactNumber')?.invalid}" />
-                    <small *ngIf="!addressBookForm.get('contactNumber')?.valid && addressBookForm.get('contactNumber')?.touched" class="text-red-500">
+                    <small
+                        *ngIf="!addressBookForm.get('contactNumber')?.valid && addressBookForm.get('contactNumber')?.touched"
+                        class="text-red-500">
                         Required
                     </small>
                 </div>
 
                 <!-- Ref Number -->
-                <div class="field col-12 md:col-6">
+                <div class="field col-12 md:col-6" *ngIf="addressBookForm.get('userType')?.value == 'Shipper'">
                     <label htmlFor="name"><strong>Ref Number</strong></label>
                     <input pInputTextarea id="name" rows="4" formControlName="refNumber" placeholder="Enter Ref Number"
                         [ngClass]="{'ng-dirty':addressBookForm.get('refNumber')?.touched && addressBookForm.get('refNumber')?.invalid}" />
@@ -50,9 +65,11 @@
                 <!-- Street Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Street Name</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="streetName" placeholder="Enter Street Name"
+                    <input pInputTextarea id="name" rows="4" formControlName="streetName"
+                        placeholder="Enter Street Name"
                         [ngClass]="{'ng-dirty':addressBookForm.get('streetName')?.touched && addressBookForm.get('streetName')?.invalid}" />
-                    <small *ngIf="!addressBookForm.get('streetName')?.valid && addressBookForm.get('streetName')?.touched"
+                    <small
+                        *ngIf="!addressBookForm.get('streetName')?.valid && addressBookForm.get('streetName')?.touched"
                         class="text-red-500">
                         Required
                     </small>
@@ -71,11 +88,10 @@
 
                 <div class="field col-12 md:col-6">
                     <label><strong>Country</strong></label>
-                    <p-dropdown #dropdown1 [options]="countries" formControlName="country"
-                        placeholder="Select Country" [filter]="true" (onChange)="onSelectCountry($event)"
+                    <p-dropdown #dropdown1 [options]="countries" formControlName="country" placeholder="Select Country"
+                        [filter]="true" (onChange)="onSelectCountry($event)"
                         [ngClass]="{'ng-dirty':addressBookForm.get('country')?.touched && addressBookForm.get('country')?.invalid}"></p-dropdown>
-                    <small
-                        *ngIf="!addressBookForm.get('country')?.valid && addressBookForm.get('country')?.touched"
+                    <small *ngIf="!addressBookForm.get('country')?.valid && addressBookForm.get('country')?.touched"
                         class="text-red-500">
                         Required
                     </small>
@@ -83,21 +99,10 @@
 
                 <div class="field col-12 md:col-6">
                     <label><strong>City</strong></label>
-                    <p-dropdown #dropdown2 [options]="cities" formControlName="city"
-                        placeholder="Select City" [filter]="true"
+                    <p-dropdown #dropdown2 [options]="cities" formControlName="city" placeholder="Select City"
+                        [filter]="true"
                         [ngClass]="{'ng-dirty':addressBookForm.get('city')?.touched && addressBookForm.get('city')?.invalid}"></p-dropdown>
                     <small *ngIf="!addressBookForm.get('city')?.valid && addressBookForm.get('city')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <div class="field col-12 md:col-6">
-                    <label><strong>User Type</strong></label>
-                    <p-dropdown [options]="userTypes" formControlName="userType"
-                        placeholder="Select User Type"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('userType')?.touched && addressBookForm.get('userType')?.invalid}"></p-dropdown>
-                    <small *ngIf="!addressBookForm.get('userType')?.valid && addressBookForm.get('userType')?.touched"
                         class="text-red-500">
                         Required
                     </small>

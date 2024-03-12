@@ -375,3 +375,24 @@
             </p-table>
         </p-dialog>
 
+            <p-dialog [(visible)]="addressDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+                <div class="flex align-items-center justify-content-center">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                    <span *ngIf="addressBookStatus === 'Not Exist'">
+                    Would you like to save recipient and shipper details to the address book?
+                    </span>
+                    <span *ngIf="addressBookStatus === 'recipient'">
+                        Would you like to save shipper details to the address book?
+                    </span>
+                    <span *ngIf="addressBookStatus === 'shipper'">
+                        Would you like to save recipient details to the address book?
+                    </span>
+                </div>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                        (click)="onCancelAddressRequest()"></button>
+                    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                        (click)="confirmCreateAddress()"></button>
+                </ng-template>
+            </p-dialog>
+

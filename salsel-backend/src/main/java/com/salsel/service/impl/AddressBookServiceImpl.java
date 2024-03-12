@@ -1,14 +1,21 @@
 package com.salsel.service.impl;
 
 import com.salsel.dto.AddressBookDto;
+import com.salsel.dto.AwbDto;
+import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.AddressBookDetailsAlreadyExist;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.AddressBook;
+import com.salsel.model.Awb;
+import com.salsel.model.User;
 import com.salsel.repository.AddressBookRepository;
+import com.salsel.repository.UserRepository;
 import com.salsel.service.AddressBookService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,9 +23,11 @@ import java.util.stream.Collectors;
 public class AddressBookServiceImpl implements AddressBookService {
 
     private final AddressBookRepository addressBookRepository;
+    private final UserRepository userRepository;
 
-    public AddressBookServiceImpl(AddressBookRepository addressBookRepository) {
+    public AddressBookServiceImpl(AddressBookRepository addressBookRepository, UserRepository userRepository) {
         this.addressBookRepository = addressBookRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,7 +43,7 @@ public class AddressBookServiceImpl implements AddressBookService {
         }
 
         if(addressBookRepository.existsByUniqueId(addressBook.getUniqueId())){
-            throw new AddressBookDetailsAlreadyExist(String.format("This uniqueId already exist => %s", addressBook.getUniqueId()));
+            throw new AddressBookDetailsAlreadyExist("Address with that details already exist");
         }
         else{
             AddressBook savedAddressBook = addressBookRepository.save(addressBook);
@@ -48,6 +57,43 @@ public class AddressBookServiceImpl implements AddressBookService {
         return addressBooks.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AddressBookDto> getAddressBookByLoggedInUser(Boolean status, String userType) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email)
+                    .orElseThrow(() -> new RecordNotFoundException("User not found"));
+
+            List<AddressBook> addressBookList = addressBookRepository.findAllInDesOrderByCreatedByAndStatus(status, userType, user.getEmail());
+            List<AddressBookDto> addressBookDtoList = new ArrayList<>();
+
+            for (AddressBook addressBook : addressBookList) {
+                AddressBookDto addressBookDto = toDto(addressBook);
+                addressBookDtoList.add(addressBookDto);
+            }
+            return addressBookDtoList;
+        }
+        return null;
+    }
+
+    @Override
+    public String checkUniqueIdExistsShipperOrRecipient(String uniqueId,String shipperUniqueId) {
+        boolean existsForShipper = addressBookRepository.existsByUniqueIdShipperOrRecipient(shipperUniqueId, "Shipper");
+        boolean existsForRecipient = addressBookRepository.existsByUniqueIdShipperOrRecipient(uniqueId, "Recipient");
+
+        if (existsForShipper && existsForRecipient) {
+            return "both";
+        } else if (existsForShipper) {
+            return "shipper";
+        } else if (existsForRecipient) {
+            return "recipient";
+        } else {
+            return "Not Exist";
+        }
     }
 
     @Override
@@ -101,7 +147,7 @@ public class AddressBookServiceImpl implements AddressBookService {
         if (shouldUpdateUniqueId) {
             String uniqueKey = addressBookDto.getName() + "-" + addressBookDto.getContactNumber() + "-" + addressBookDto.getUserType();
             if (addressBookRepository.existsByUniqueId(uniqueKey)) {
-                throw new AddressBookDetailsAlreadyExist(String.format("This uniqueId already exists => %s", uniqueKey));
+                throw new AddressBookDetailsAlreadyExist("Address with that details already exists");
             }
             existingAddressBook.setUniqueId(uniqueKey);
         }
@@ -136,6 +182,7 @@ public class AddressBookServiceImpl implements AddressBookService {
                 .userType(addressBook.getUserType())
                 .district(addressBook.getDistrict())
                 .status(addressBook.getStatus())
+                .createdBy(addressBook.getCreatedBy())
                 .build();
     }
 
@@ -154,6 +201,7 @@ public class AddressBookServiceImpl implements AddressBookService {
                 .userType(addressBookDto.getUserType())
                 .district(addressBookDto.getDistrict())
                 .status(addressBookDto.getStatus())
+                .createdBy(addressBookDto.getCreatedBy())
                 .build();
     }
 }

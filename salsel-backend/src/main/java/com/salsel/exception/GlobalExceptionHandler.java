@@ -32,7 +32,7 @@ public class GlobalExceptionHandler
                 .error(ex.getMessage())
                 .time(LocalDateTime.now())
                 .build();
-        return new ResponseEntity<>(errorMessage,HttpStatus.ALREADY_REPORTED);
+        return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = UserAlreadyExistAuthenticationException.class)

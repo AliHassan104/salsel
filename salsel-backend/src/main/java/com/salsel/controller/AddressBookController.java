@@ -1,6 +1,7 @@
 package com.salsel.controller;
 
 import com.salsel.dto.AddressBookDto;
+import com.salsel.dto.AwbDto;
 import com.salsel.service.AddressBookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +36,21 @@ public class AddressBookController {
     public ResponseEntity<List<AddressBookDto>> getAllAddressBookByUserType(@RequestParam(value = "userType") String userType,@RequestParam(value = "status") Boolean status) {
         List<AddressBookDto> addressBookDtoList = addressBookService.getAllByUserType(userType,status);
         return ResponseEntity.ok(addressBookDtoList);
+    }
+
+    @GetMapping("/address-book/logged-in-user")
+    @PreAuthorize("hasAuthority('READ_ADDRESS_BOOK')")
+    public ResponseEntity<List<AddressBookDto>> getAllAwbByLoggedInUser(@RequestParam(value = "status") Boolean status,@RequestParam(value = "userType", required = false) String userType) {
+        List<AddressBookDto> addressBookDtoList = addressBookService.getAddressBookByLoggedInUser(status,userType);
+        return ResponseEntity.ok(addressBookDtoList);
+    }
+
+    @GetMapping("/address-book/check-unique-id")
+    @PreAuthorize("hasAuthority('READ_ADDRESS_BOOK')")
+    public ResponseEntity<String> checkUniqueIdExists(@RequestParam("uniqueId") String uniqueId,@RequestParam("shipperUniqueId") String shipperUniqueId) {
+        String res = addressBookService.checkUniqueIdExistsShipperOrRecipient(uniqueId,shipperUniqueId);
+        System.out.println(res);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/address-book/{id}")

@@ -34,6 +34,7 @@ public class AddressBook {
     private String streetName;
     private String district;
     private String refNumber;
+    private String createdBy;
     private String userType;
     private Boolean status;
 }

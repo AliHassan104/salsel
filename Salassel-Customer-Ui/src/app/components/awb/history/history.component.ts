@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService, PrimeIcons } from "primeng/api";
 import { AirbillService } from "../service/airbill.service";
+import { finalize } from "rxjs";
 @Component({
   selector: "app-history",
   templateUrl: "./history.component.html",
@@ -9,6 +10,7 @@ import { AirbillService } from "../service/airbill.service";
 })
 export class HistoryComponent {
   history: any[] = [];
+  refresh: boolean = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -22,7 +24,6 @@ export class HistoryComponent {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((res) => {
       var a = res.get("id");
-      console.log(res);
 
       this.id = a;
       this.onView(a);
@@ -31,13 +32,23 @@ export class HistoryComponent {
     this.getTrackingHistory();
   }
 
+    onRefresh(){
+    this.refresh = true
+    this.onView(this.id);
+    this.getTrackingHistory()
+  }
+
   getTrackingHistory() {
     this._airbillService
       .getBillTrackingHistory({ awbId: this.id })
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
       .subscribe((res: any) => {
-        console.log(res);
         this.history = res;
-        this.history = this.history.reverse()
+        this.history = this.history.reverse();
       });
   }
 
@@ -118,7 +129,13 @@ export class HistoryComponent {
 
   onView(id) {
     this.display = true;
-    this._airbillService.getSingleBill(id).subscribe((res) => {
+    this._airbillService.getSingleBill(id)
+    .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
+    .subscribe((res) => {
       this.singleBill = res;
     });
   }

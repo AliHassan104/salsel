@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
         (res) => {
           this.token = res;
           localStorage.setItem("token", this.token.jwt);
-          localStorage.setItem("loginUserEmail", this.token.email);
+          localStorage.setItem("loginUserEmail", this.token.email.toLowerCase());
           this.router.navigate([""]);
           this.loginForm.reset();
         },

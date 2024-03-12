@@ -107,15 +107,29 @@ export class AddressBookComponent {
       if (this.mode == "Update") {
         this.addressBookService
           .update(this.addressBook, this.addressBookId)
-          .subscribe((res: any) => {
-            this.router.navigate(["address-book/list"]);
-          });
+          .subscribe(
+            (res: any) => {
+              this.router.navigate(["address-book/list"]);
+            },
+            (error) => {
+              this.error(error);
+            }
+          );
       } else {
-        this.addressBookService.create(this.addressBook).subscribe((res) => {
-          if (res && res.body) {
-            this.router.navigate(["address-book/list"]);
+        this.addressBookService.create(this.addressBook).subscribe(
+          (res) => {
+            if (res && res.body) {
+              this.router.navigate(["address-book/list"]);
+              console.log(res,res.body);
+              
+            }
+          },
+          (error) => {
+            this.error(error)
+            console.log(error);
+            
           }
-        });
+        );
       }
     } else {
       this.alert();
@@ -174,6 +188,7 @@ export class AddressBookComponent {
       country: formValue.country,
       city: formValue.city,
       userType: formValue.userType,
+      createdBy: localStorage.getItem("loginUserEmail"),
     };
 
     return addressBook;
@@ -195,6 +210,14 @@ export class AddressBookComponent {
       severity: "error",
       summary: "Warning",
       detail: "Please ensure that all required details are filled out.",
+    });
+  }
+
+  error(error) {
+    this.messageService.add({
+      severity: "error",
+      summary: "Warning",
+      detail: error.error.error,
     });
   }
 

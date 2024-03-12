@@ -37,7 +37,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   addressBooks: IAddressBook[];
   selectedAddress: IAddressBook;
   tooltipVisible: boolean = true;
-  addressType:boolean = true
+  addressType: boolean = true;
 
   //   ALL PRODUCT FIELD FOR DROPDOWNS
   productFields?;
@@ -61,6 +61,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   serviceTypeId;
   serviceTypeCode?;
   accountNumbers?;
+  addressBookStatus;
+  addressDialog: boolean = false;
 
   // SINGLE BILL AND TICKET STORE IN IT
   singleBill?: IAwbDto;
@@ -401,9 +403,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
 
       //   Create Ticket
       this._airbillService.createBill(billData).subscribe((res) => {
-        this.success();
-        this.router.navigate(["awb/list"]);
-        this.awbForm.reset();
+        this.checkAddressStatus()
       });
     } else {
       this.alert();
@@ -411,12 +411,94 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  billPopup(){
+    this.success();
+    this.router.navigate(["awb/list"]);
+    this.awbForm.reset();
+  }
+
+  confirmCreateAddress() {
+    if (this.addressBookStatus == "Not Exist") {
+      this.createRecipientAddress();
+      this.createShipperAddress();
+      this.billPopup()
+    } else if (this.addressBookStatus == "shipper") {
+      this.createRecipientAddress();
+      this.billPopup();
+    } else {
+      this.createShipperAddress();
+      this.billPopup();
+    }
+  }
+
+  onCancelAddressRequest(){
+    this.addressDialog = false
+    this.billPopup();
+  }
+
+  checkAddressStatus() {
+    const formValue = this.awbForm.value;
+    const shipperUniqueId = `${formValue.shipperName}-${formValue.shipperContactNumber}-Shipper`;
+    const recipientUniqueId = `${formValue.recipientsName}-${formValue.recipientsContactNumber}-Recipient`;
+    this.addressBookService
+      .isUniqueIdExists({
+        uniqueId: recipientUniqueId,
+        shipperUniqueId: shipperUniqueId,
+      })
+      .subscribe((res: any) => {
+        this.addressBookStatus = res.body;
+        
+        if (res?.body == "both") {
+          this.success();
+          this.router.navigate(["awb/list"]);
+          this.awbForm.reset();
+        } else {
+          this.addressDialog = true;
+        }
+      });
+  }
+
+  createShipperAddress() {
+    const formValue = this.awbForm.value;
+    const shipperData: IAddressBook = {
+      name: formValue.shipperName,
+      contactNumber: formValue.shipperContactNumber,
+      address: formValue.pickupAddress,
+      streetName: formValue.pickupStreetName,
+      district: formValue.pickupDistrict,
+      refNumber: formValue.shipperRefNumber,
+      country: formValue.originCountry,
+      city: formValue.originCity,
+      userType: "Shipper",
+      createdBy: this.loginUserEmail,
+    };
+
+    this.addressBookService.create(shipperData).subscribe((res: any) => {});
+  }
+
+  createRecipientAddress() {
+    const formValue = this.awbForm.value;
+    const recipientData: IAddressBook = {
+      name: formValue.recipientsName,
+      contactNumber: formValue.recipientsContactNumber,
+      address: formValue.deliveryAddress,
+      streetName: formValue.deliveryStreetName,
+      district: formValue.deliveryDistrict,
+      country: formValue.destinationCountry,
+      city: formValue.destinationCity,
+      userType: "Recipient",
+      createdBy: this.loginUserEmail,
+    };
+
+    this.addressBookService.create(recipientData).subscribe((res: any) => {});
+  }
+
   onAutoFillShipperDetails() {
     const params = {
       userType: "Shipper",
       status: true,
     };
-    this.addressType = true
+    this.addressType = true;
     this.tooltipVisible = true;
     this.addressBookService
       .getAddressBooksByUserType(params)
@@ -430,9 +512,9 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onAutoFillRecipientsDetails() {
     const params = {
-        userType:"Recipient",
-        status:true
-    }
+      userType: "Recipient",
+      status: true,
+    };
     this.addressType = false;
     this.tooltipVisible = true;
     this.addressBookService

@@ -34,11 +34,28 @@ export class AddressBookService {
     });
   }
 
+  getAddressBooksByLoggedInUser(params: any): Observable<EntityAddressBookResponseType> {
+    let url = `${this.url}address-book/logged-in-user`;
+    return this.http.get<AddressBook[]>(url, {
+      params,
+      observe: "response",
+    });
+  }
+
   getAddressBooksByUserType(params: any): Observable<EntityAddressBookResponseType> {
     let url = `${this.url}address-book/user-type`;
     return this.http.get<AddressBook[]>(url, {
         params,
       observe: "response",
+    });
+  }
+
+  isUniqueIdExists(params: any): Observable<EntityAddressBookResponseType> {
+    let url = `${this.url}address-book/check-unique-id`;
+    return this.http.get<AddressBook[]>(url, {
+      params,
+      observe: "response",
+      responseType: "text" as "json",
     });
   }
 

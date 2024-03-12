@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DropdownService } from 'src/app/layout/service/dropdown.service';
 import { SessionStorageService } from '../../auth/service/session-storage.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: "app-address-book-list",
@@ -21,6 +22,7 @@ export class AddressBookListComponent {
   selectedStatus: string = "Active";
   selectedUserType: string = "Both";
   activeStatus: boolean = true;
+  refresh: boolean = false;
 
   deleteDialog: any;
   addressBooks?: IAddressBook[];
@@ -44,11 +46,31 @@ export class AddressBookListComponent {
 
   getAddressBooks() {
     const params = { status: this.activeStatus };
-    this.adddressBookService.getAddressBooks(params).subscribe((res) => {
-      if (res && res.body) {
-        this.addressBooks = res.body;
-      }
-    });
+    // this.adddressBookService
+    //   .getAddressBooks(params)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.refresh = false;
+    //     })
+    //   )
+    //   .subscribe((res) => {
+    //     if (res && res.body) {
+    //       this.addressBooks = res.body;
+    //     }
+    //   });
+
+      this.adddressBookService
+        .getAddressBooksByLoggedInUser(params)
+        .pipe(
+          finalize(() => {
+            this.refresh = false;
+          })
+        )
+        .subscribe((res) => {
+          if (res && res.body) {
+            this.addressBooks = res.body;
+          }
+        });
   }
 
   getAddressBookByUserType() {
@@ -56,13 +78,40 @@ export class AddressBookListComponent {
       userType: this.selectedUserType,
       status: this.activeStatus,
     };
+    // this.adddressBookService
+    //   .getAddressBooksByUserType(params)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.refresh = false;
+    //     })
+    //   )
+    //   .subscribe((res) => {
+    //     if (res && res.body) {
+    //       this.addressBooks = res.body;
+    //     }
+    //   });
     this.adddressBookService
-      .getAddressBooksByUserType(params)
+      .getAddressBooksByLoggedInUser(params)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
       .subscribe((res) => {
         if (res && res.body) {
           this.addressBooks = res.body;
         }
       });
+  }
+
+  onRefresh() {
+    if (this.selectedUserType == "Both") {
+      this.refresh = true;
+      this.getAddressBooks();
+    } else {
+      this.refresh = true;
+      this.getAddressBookByUserType();
+    }
   }
 
   onUserTypeChange(data) {
@@ -109,10 +158,10 @@ export class AddressBookListComponent {
           .productFieldValuesList
       );
 
-       this.userType = this.dropdownService.extractNames(
-         this.productField.filter((data) => data.name == "User Type")[0]
-           .productFieldValuesList
-       );
+      this.userType = this.dropdownService.extractNames(
+        this.productField.filter((data) => data.name == "User Type List")[0]
+          .productFieldValuesList
+      );
     });
   }
 
@@ -129,8 +178,13 @@ export class AddressBookListComponent {
       .removeAddressBook(this.deleteId)
       .subscribe((res) => {
         if (res.status == 200) {
-          this.getAddressBooks();
-          this.deleteDialog = false;
+          if (this.selectedUserType == "Both") {
+            this.getAddressBooks();
+            this.deleteDialog = false;
+          } else {
+            this.getAddressBookByUserType();
+            this.deleteDialog = false;
+          }
         }
       });
   }

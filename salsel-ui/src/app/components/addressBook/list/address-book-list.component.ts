@@ -1,12 +1,13 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { IAddressBook } from '../model/addressBookDto';
-import { AddressBookService } from '../service/address-book.service';
-import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { DropdownService } from 'src/app/layout/service/dropdown.service';
-import { SessionStorageService } from '../../auth/service/session-storage.service';
-import { CountryService } from '../../country/service/country.service';
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { IAddressBook } from "../model/addressBookDto";
+import { AddressBookService } from "../service/address-book.service";
+import { Router } from "@angular/router";
+import { MessageService } from "primeng/api";
+import { Table } from "primeng/table";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
+import { CountryService } from "../../country/service/country.service";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-address-book-list",
@@ -21,6 +22,7 @@ export class AddressBookListComponent {
   selectedStatus: string = "Active";
   selectedUserType: string = "Both";
   activeStatus: boolean = true;
+  refresh: boolean = false;
 
   deleteDialog: any;
   addressBooks?: IAddressBook[];
@@ -44,33 +46,59 @@ export class AddressBookListComponent {
 
   getAddressBooks() {
     const params = { status: this.activeStatus };
-    this.adddressBookService.getAddressBooks(params).subscribe((res) => {
-      if (res && res.body) {
-        this.addressBooks = res.body;
-      }
-    });
+    this.adddressBookService
+      .getAddressBooks(params)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.addressBooks = res.body;
+        }
+      });
   }
 
   getAddressBookByUserType() {
-    const params = { userType:this.selectedUserType,
-        status: this.activeStatus };
-    this.adddressBookService.getAddressBooksByUserType(params).subscribe((res) => {
-      if (res && res.body) {
-        this.addressBooks = res.body;
-      }
-    });
+    const params = {
+      userType: this.selectedUserType,
+      status: this.activeStatus,
+    };
+    this.adddressBookService
+      .getAddressBooksByUserType(params)
+      .pipe(
+        finalize(() => {
+          this.refresh = false;
+        })
+      )
+      .subscribe((res) => {
+        if (res && res.body) {
+          this.addressBooks = res.body;
+        }
+      });
   }
 
-  onUserTypeChange(data){
+  onRefresh() {
+    if (this.selectedUserType == "Both") {
+      this.refresh = true;
+      this.getAddressBooks();
+    } else {
+      this.refresh = true;
+      this.getAddressBookByUserType();
+    }
+  }
+
+  onUserTypeChange(data) {
     if (data == "Both") {
       this.activeStatus = true;
       this.getAddressBooks();
-    } else if(data == "Shipper") {
+    } else if (data == "Shipper") {
       this.activeStatus = true;
       this.getAddressBookByUserType();
-    } else{
-        this.activeStatus = true;
-        this.getAddressBookByUserType();
+    } else {
+      this.activeStatus = true;
+      this.getAddressBookByUserType();
     }
   }
 
@@ -106,7 +134,7 @@ export class AddressBookListComponent {
       );
 
       this.userType = this.dropdownService.extractNames(
-        this.productField.filter((data) => data.name == "User Type")[0]
+        this.productField.filter((data) => data.name == "User Type List")[0]
           .productFieldValuesList
       );
     });
@@ -125,8 +153,13 @@ export class AddressBookListComponent {
       .removeAddressBook(this.deleteId)
       .subscribe((res) => {
         if (res.status == 200) {
-          this.getAddressBooks();
-          this.deleteDialog = false;
+          if (this.selectedUserType == "Both") {
+            this.getAddressBooks();
+            this.deleteDialog = false;
+          } else {
+            this.getAddressBookByUserType();
+            this.deleteDialog = false;
+          }
         }
       });
   }
@@ -143,15 +176,13 @@ export class AddressBookListComponent {
     });
   }
 
-    onActiveAddressBook(id) {
-      this.adddressBookService
-        .updateAddressBookStatus(id)
-        .subscribe((res) => {
-          this.success();
-          this.selectedStatus = "Active";
-          this.onStatusChange(this.selectedStatus);
-        });
-    }
+  onActiveAddressBook(id) {
+    this.adddressBookService.updateAddressBookStatus(id).subscribe((res) => {
+      this.success();
+      this.selectedStatus = "Active";
+      this.onStatusChange(this.selectedStatus);
+    });
+  }
 
   success() {
     this.messageService.add({
