@@ -103,7 +103,7 @@
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
             "styles": ["src/styles.scss"],
-            "scripts": ["./node_modules/onscan.js/onscan.min.js"],
+            "scripts": ["node_modules/onscan.js/onscan.min.js"],
             "assets": ["src/favicon.ico", "src/upload.php", "src/assets"]
           }
         },
