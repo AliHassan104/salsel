@@ -20,6 +20,7 @@ public interface AwbService {
     void setToActiveById(Long id);
     AwbDto update(Long id, AwbDto awbDto);
     AwbDto updateAwbStatusOnScan(Long uniqueNumber, String awbStatus);
+    List<AwbDto> updateMultipleAwbStatusOnScan(Map<Long,String> statusMap);
     List<AwbDto> getAwbBetweenDates(LocalDate startDate, LocalDate endDate);
     AwbDto findByUniqueNumber(Long id);
     Map<String, Long> getAwbStatusCounts();
