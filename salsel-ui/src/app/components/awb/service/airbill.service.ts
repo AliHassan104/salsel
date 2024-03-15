@@ -83,6 +83,13 @@ export class AirbillService {
     );
   }
 
+  updateMultipleAwbTrackingStatus(data:any) {
+    return this.http.put(
+      `${this.url}awb/awb-status/scan`,
+      data
+    );
+  }
+
   getBillTrackingHistory(params: any) {
     return this.http.get(`${this.url}awb-shipping-history`, { params });
   }

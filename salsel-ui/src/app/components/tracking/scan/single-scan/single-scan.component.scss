@@ -35,6 +35,13 @@
     opacity: 0.8;
 //   width: -webkit-fill-available;
 }
+.track-search{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+//   width: -webkit-fill-available;
+}
 
 tr td {
   text-align: center !important;
@@ -93,4 +100,8 @@ span.tracking {
   font-size: 22px;
   margin-top: 8px;
   font-weight: 700;
+}
+
+p-divider::ng-deep .p-divider .p-divider-content{
+    background-color: #eff3f8;
 }

@@ -13,7 +13,8 @@ declare var onScan: any;
   styleUrls: ["./single-scan.component.scss"],
   providers: [MessageService],
 })
-export class SingleScanComponent implements OnInit,OnDestroy {
+export class SingleScanComponent implements OnInit, OnDestroy {
+  trackingNumber;
   codeScan: boolean = false;
   uniqueScanNum;
   scanOptions;
@@ -49,6 +50,8 @@ export class SingleScanComponent implements OnInit,OnDestroy {
     this.beepSound?.nativeElement?.play();
     console.log(this.uniqueScanNum);
   }
+
+  onTrackTrackingNumber(){}
 
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {

@@ -1,14 +1,20 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { finalize } from 'rxjs';
-import { IAddressBook } from 'src/app/components/addressBook/model/addressBookDto';
-import { AddressBookService } from 'src/app/components/addressBook/service/address-book.service';
-import { SessionStorageService } from 'src/app/components/auth/service/session-storage.service';
-import { AirbillService } from 'src/app/components/awb/service/airbill.service';
-import { CountryService } from 'src/app/components/country/service/country.service';
-import { DropdownService } from 'src/app/layout/service/dropdown.service';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
+import { Router } from "@angular/router";
+import { MessageService } from "primeng/api";
+import { Table } from "primeng/table";
+import { finalize } from "rxjs";
+import { IAddressBook } from "src/app/components/addressBook/model/addressBookDto";
+import { AddressBookService } from "src/app/components/addressBook/service/address-book.service";
+import { SessionStorageService } from "src/app/components/auth/service/session-storage.service";
+import { AirbillService } from "src/app/components/awb/service/airbill.service";
+import { CountryService } from "src/app/components/country/service/country.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 
 declare var onScan: any;
 
@@ -18,7 +24,7 @@ declare var onScan: any;
   styleUrls: ["./multiple-scan.component.scss"],
   providers: [MessageService],
 })
-export class MultipleScanComponent implements OnInit,OnDestroy{
+export class MultipleScanComponent implements OnInit, OnDestroy {
   productField?;
   status?;
 
@@ -28,7 +34,7 @@ export class MultipleScanComponent implements OnInit,OnDestroy{
   removeId: any;
   scanOptions;
   trackingNumber;
-  updatedStatuses:any = {};
+  updatedStatuses: any = {};
 
   constructor(
     private countryService: CountryService,
@@ -65,7 +71,7 @@ export class MultipleScanComponent implements OnInit,OnDestroy{
     });
   }
 
-  onStatusChange(updatedStatus:any,uniqueNumber:any) {
+  onStatusChange(updatedStatus: any, uniqueNumber: any) {
     if (this.updatedStatuses.hasOwnProperty(uniqueNumber)) {
       // Property exists, so update it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
@@ -74,10 +80,40 @@ export class MultipleScanComponent implements OnInit,OnDestroy{
       this.updatedStatuses[uniqueNumber] = updatedStatus;
     }
     console.log(this.updatedStatuses);
-
   }
 
-  onUpdateStatus() {}
+  onUpdateStatus() {
+    if (
+      this.updatedStatuses != null &&
+      Object.keys(this.updatedStatuses).length > 0
+    ) {
+      this.awbService
+        .updateMultipleAwbTrackingStatus(this.updatedStatuses)
+        .subscribe(
+          (res: any) => {
+            this.messageService.add({
+              severity: "success",
+              summary: "Sucess",
+              detail: "All Airbills Status Updated",
+            });
+            this.airBills = [];
+          },
+          (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: error?.error?.error,
+            });
+          }
+        );
+    } else {
+      this.messageService.add({
+        severity: "warn",
+        summary: "Warning",
+        detail: "No Change Detect.",
+      });
+    }
+  }
 
   getAwbOnScan(uniqueNumber: any) {
     const existingItem = this.airBills.find(
@@ -187,4 +223,3 @@ export class MultipleScanComponent implements OnInit,OnDestroy{
     onScan.detachFrom(document);
   }
 }
-

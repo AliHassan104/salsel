@@ -317,7 +317,7 @@ public class AwbServiceImpl implements AwbService {
     @Transactional
     public AwbDto updateAwbStatusOnScan(Long uniqueNumber, String awbStatus) {
         Awb existingAwb = awbRepository.findByUniqueNumber(uniqueNumber)
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for UniqueNumber => %d", uniqueNumber)));
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for Tracking Number => %d", uniqueNumber)));
 
         User currentUser = helperUtils.getCurrentUser();
         existingAwb.setAssignedToUser(currentUser.getName());

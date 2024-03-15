@@ -24,19 +24,31 @@
 </p-dialog>
 
 <div class="container">
-        <a class="col-6 card tracking-card">
-            <div class="">
-                <img src="../../../../../assets/tracking/qr-code.gif" alt="Single Scan" class="tracking">
-                <p class="tracking-text">Scan Code</p>
-            </div>
-        </a>
+    <a class="col-6 card tracking-card">
+        <div class="">
+            <img src="../../../../../assets/tracking/qr-code.gif" alt="Single Scan" class="tracking">
+            <p class="tracking-text">Scan Code</p>
+        </div>
+    </a>
+    <div class="w-full md:w-2">
+        <p-divider layout="vertical" styleClass="hidden md:flex"><b>OR</b></p-divider>
+        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b>OR</b></p-divider>
+    </div>
+    <div class="col-6 card tracking-card">
+        <img src="../../../../../assets/tracking/search-box.gif" alt="Tracking" class="tracking">
+        <div class="flex justify-content-center align-items-center flex-column  tracking-container">
+            <input pInputText type="text" [(ngModel)]="trackingNumber" #trackingField
+                placeholder="Insert Tracking Number" class="w-full" />
+            <button pButton label="Search" class="input-btn" (click)="onTrackTrackingNumber()"></button>
+        </div>
+    </div>
 </div>
 
 
 
 
-    <audio #beepSound>
-        <source src="../../assets/sounds/store-scanner-beep-90395.mp3" type="audio/mpeg">
-    </audio>
+<audio #beepSound>
+    <source src="../../assets/sounds/store-scanner-beep-90395.mp3" type="audio/mpeg">
+</audio>
 
-    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
