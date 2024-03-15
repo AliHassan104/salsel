@@ -18,7 +18,6 @@ import { ForgotPasswordModule } from "./components/auth/forgot-password/forgot-p
 import { NewPasswordModule } from "./components/auth/new-password/new-password.module";
 import { VerificationModule } from "./components/auth/verification/verification.module";
 
-
 @NgModule({
   declarations: [
     AppComponent,

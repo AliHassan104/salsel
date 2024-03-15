@@ -1,0 +1,96 @@
+.container{
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card{
+    max-width:420px;
+    max-height: 420px;
+    margin-bottom: 0px !important;
+    position: relative;
+    background: rgba(0, 0, 0, 0.801);
+    transition: all .5s ease;
+}
+
+.tracking-text{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 17px 99px;
+    width: max-content;
+    font-size: 40px;
+    background-color: rgba(0, 0, 0, 0.546);
+    color: white;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+.tracking{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+//   width: -webkit-fill-available;
+}
+
+tr td {
+  text-align: center !important;
+}
+
+@media screen and (max-width: 576px) {
+  .addBtn {
+    margin-top: 20px;
+  }
+}
+
+.refresh {
+  cursor: pointer;
+  color: #93003c;
+  font-size: 17px;
+  transition: all 0.5s ease;
+}
+
+.refresh:hover {
+  color: #c10751;
+}
+
+.submit-btn {
+  background-color: #93003c;
+  outline: none;
+  border: none;
+  //   padding: 10px 20px;
+  color: #fff;
+  font-size: 14px;
+  width: 140px;
+}
+.submit-btn:hover {
+  background-color: #c10751;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask{
+    align-items: self-start !important;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask .p-dialog{
+    margin-top: 6% !important;
+}
+
+p-dialog::ng-deep .p-dialog .p-dialog-header .p-dialog-title{
+    font-size: 2rem;
+}
+
+span.tracking {
+  font-weight: 500;
+  font-size: 20px;
+  /* margin-bottom: 1rem; */
+}
+
+.tracking-heading {
+  color: #000000;
+  font-size: 22px;
+  margin-top: 8px;
+  font-weight: 700;
+}

@@ -1,0 +1,68 @@
+.container{
+    height: 80vh;
+}
+
+.scan{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    cursor: pointer;
+//   width: -webkit-fill-available;
+}
+.tracking{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+//   width: -webkit-fill-available;
+}
+
+.card{
+    max-width:450px;
+    max-height: 450px;
+    margin-bottom: 0px !important;
+    position: relative;
+    background: rgba(0, 0, 0, 0.801);
+    transition: all .5s ease;
+}
+
+.tracking-card:hover .tracking-text{
+    background-color: black;
+}
+
+.scan-card:hover .scan-text{
+    background-color: black;
+}
+
+.tracking-text{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 17px 103px;
+    width: max-content;
+    font-size: 40px;
+    background-color: rgba(0, 0, 0, 0.546);
+    color: white;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+.scan-text{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 82px;
+    width: max-content;
+    font-size: 40px;
+    background-color: rgba(0, 0, 0, 0.546);
+    color: white;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+a{
+  cursor: pointer;
+}

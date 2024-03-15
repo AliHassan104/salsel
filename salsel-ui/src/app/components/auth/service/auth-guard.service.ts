@@ -191,6 +191,14 @@ export class AuthGuardService implements CanActivate {
       url: ["/create-address-book"],
       permissions: "CREATE_ADDRESS_BOOK",
     };
+    const trackingAndScanObj = {
+      url: [
+        "/tracking-and-scan",
+        "/tracking-and-scan/scan",
+        "/tracking-and-scan/tracking",
+      ],
+      permissions: "TRACKING_AND_SCAN",
+    };
 
     return [
       dashboardObj,
@@ -223,6 +231,7 @@ export class AuthGuardService implements CanActivate {
       createTicketSubCategoryObj,
       readAddressBookObj,
       createAddressBookObj,
+      trackingAndScanObj
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

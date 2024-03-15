@@ -58,6 +58,12 @@ export class AppMenuComponent implements OnInit {
             permission: "READ_ADDRESS_BOOK",
           },
           {
+            label: "Scan And Tracking",
+            icon: "pi pi-map",
+            routerLink: "tracking-and-scan",
+            permission: "TRACKING_AND_SCAN",
+          },
+          {
             label: "Department",
             icon: "pi pi-database",
             routerLink: "department/list",

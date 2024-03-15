@@ -108,13 +108,19 @@ import { VerificationComponent } from "./components/auth/verification/verificati
                 ).then((m) => m.DepartmentCategoryFormModule),
               canActivate: [AuthGuardService],
             },
-
             {
               path: "product",
               loadChildren: () =>
                 import("./components/product-field/product-field.module").then(
                   (m) => m.ProductFieldModule
                 ),
+            },
+            {
+              path: "tracking-and-scan",
+              loadChildren: () =>
+                import(
+                  "./components/tracking/module/scan-and-tracking.module"
+                ).then((m) => m.ScanAndTrackingModule),
             },
             {
               path: "country/list",

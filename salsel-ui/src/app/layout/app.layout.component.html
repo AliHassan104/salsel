@@ -11,34 +11,3 @@
     <div class="layout-mask"></div>
 </div>
 
-
-    <p-dialog [modal]="true" (onHide)="onCloseScan()" header="Update Status" [(visible)]="codeScan"
-        [style]="{ width: '60vw'}">
-        <div>
-            <span *ngIf="uniqueScanNum != null" class="tracking">Tracking Number</span>
-            <h1 *ngIf="uniqueScanNum != null" class="tracking-heading">#{{uniqueScanNum}}</h1>
-            <form [formGroup]="scanForm" (ngSubmit)="onUpdateStatus(scanForm.value)">
-                <div class="p-fluid p-formgrid grid">
-                    <div class="field col-12 md:col-6">
-                        <label htmlFor="status"><strong>Update Status</strong></label>
-                        <p-dropdown appendTo="body" [options]="scanOptions" placeholder="Select Status"
-                            formControlName="updatedStatus"
-                            [ngClass]="{'ng-dirty':scanForm.get('assignedTo')?.touched && scanForm.get('assignedTo')?.invalid}"></p-dropdown>
-                        <small *ngIf="!scanForm.get('updatedStatus')?.valid && scanForm.get('updatedStatus')?.touched"
-                            class="text-red-500">
-                            Required
-                        </small>
-                    </div>
-                    <div class="flex justify-content-end w-full">
-                        <button pButton label="Update Status" type="Submit" class="mx-3 submit-btn"></button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </p-dialog>
-
-    <audio #beepSound>
-        <source src="../../assets/sounds/store-scanner-beep-90395.mp3" type="audio/mpeg">
-    </audio>
-
-    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

@@ -38,6 +38,10 @@ export class AirbillService {
     return this.http.get(`${this.url}awb/${id}`);
   }
 
+  getSingleBillByUniqueNumber(uniqueNumber: any) {
+    return this.http.get(`${this.url}awb/unique-number/${uniqueNumber}`);
+  }
+
   deleteBill(id: any) {
     return this.http.delete(`${this.url}awb/${id}`);
   }

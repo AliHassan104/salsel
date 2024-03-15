@@ -1,0 +1,28 @@
+<div *ngIf="singleScan || multipleScan" class="flex justify-content-end">
+    <button pButton label="Back"
+        class="mb-2 addBtn" (click)="onBack()"></button>
+</div>
+
+<div class="grid container flex justify-content-center align-items-center" *ngIf="singleOrMultipleMode">
+    <a class="col-6 card tracking-card mr-2" (click)="onSingleScan()">
+        <div class="">
+            <img src="../../../../assets/tracking/9365828_4133449.jpg" alt="Single Scan" class="tracking">
+            <p class="tracking-text">Single Scan</p>
+        </div>
+    </a>
+    <a class="col-6 card scan-card ml-2" (click)="onMultipleScan()">
+        <div class="">
+            <img src="../../../../assets/tracking/13416094_5228739.jpg" alt="Multiple Scan" class="scan">
+            <p class="scan-text">Multiple Scan</p>
+        </div>
+    </a>
+</div>
+
+<div *ngIf="singleScan" class="container">
+    <app-single-scan></app-single-scan>
+</div>
+
+
+<div *ngIf="multipleScan" class="container">
+    <app-multiple-scan></app-multiple-scan>
+</div>
