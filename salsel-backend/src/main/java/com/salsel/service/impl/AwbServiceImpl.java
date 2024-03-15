@@ -367,6 +367,28 @@ public class AwbServiceImpl implements AwbService {
         return toDto(updatedAwb);
     }
 
+    @Override
+    @Transactional
+    public List<AwbDto> updateMultipleAwbStatusOnScan(Map<Long, String> statusMap) {
+        List<Awb> updatedAwbList = new ArrayList<>();
+
+        for (Map.Entry<Long, String> entry : statusMap.entrySet()) {
+            Long uniqueNumber = entry.getKey();
+            String newStatus = entry.getValue();
+
+            Awb awb = awbRepository.findByUniqueNumber(uniqueNumber)
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for UniqueNumber => %d", uniqueNumber)));
+
+            awb.setAwbStatus(newStatus);
+            awbRepository.save(awb);
+            updatedAwbList.add(awb);
+        }
+
+        return updatedAwbList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     @Async
     public void sendEmailAsync(Awb createdAwb) {
         try {

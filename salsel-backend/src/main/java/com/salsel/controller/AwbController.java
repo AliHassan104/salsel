@@ -129,6 +129,15 @@ public class AwbController {
         return ResponseEntity.ok(updatedAwbDto);
     }
 
+    @PutMapping("/awb/awb-status/scan")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
+    public ResponseEntity<List<AwbDto>> updateMultipleAwbStatusOnScan(@RequestBody Map<Long, String> statusMap) {
+        List<AwbDto> updatedAwbDtoList = awbService.updateMultipleAwbStatusOnScan(statusMap);
+        return ResponseEntity.ok(updatedAwbDtoList);
+    }
+
+
+
     @GetMapping("/download-awb-excel")
     public void downloadAwbBetweenDates(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
