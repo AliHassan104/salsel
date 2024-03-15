@@ -382,6 +382,12 @@ public class AwbServiceImpl implements AwbService {
             awb.setAwbStatus(newStatus);
             awbRepository.save(awb);
             updatedAwbList.add(awb);
+
+            AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
+            awbShippingHistory.setStatus(true);
+            awbShippingHistory.setAwbStatus(newStatus);
+            awbShippingHistory.setAwb(awb);
+            awbShippingHistoryRepository.save(awbShippingHistory);
         }
 
         return updatedAwbList.stream()
