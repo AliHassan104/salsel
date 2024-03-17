@@ -30,18 +30,6 @@
             <p class="tracking-text">Scan Code</p>
         </div>
     </a>
-    <div class="w-full md:w-2">
-        <p-divider layout="vertical" styleClass="hidden md:flex"><b>OR</b></p-divider>
-        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b>OR</b></p-divider>
-    </div>
-    <div class="col-6 card tracking-card">
-        <img src="../../../../../assets/tracking/search-box.gif" alt="Tracking" class="tracking">
-        <div class="flex justify-content-center align-items-center flex-column  tracking-container">
-            <input pInputText type="text" [(ngModel)]="trackingNumber" #trackingField
-                placeholder="Insert Tracking Number" class="w-full" />
-            <button pButton label="Search" class="input-btn" (click)="onTrackTrackingNumber()"></button>
-        </div>
-    </div>
 </div>
 
 

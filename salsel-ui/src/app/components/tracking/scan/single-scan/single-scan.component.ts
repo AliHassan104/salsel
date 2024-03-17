@@ -14,7 +14,6 @@ declare var onScan: any;
   providers: [MessageService],
 })
 export class SingleScanComponent implements OnInit, OnDestroy {
-  trackingNumber;
   codeScan: boolean = false;
   uniqueScanNum;
   scanOptions;
@@ -29,8 +28,7 @@ export class SingleScanComponent implements OnInit, OnDestroy {
     private formService: FormvalidationService
   ) {
     onScan.attachTo(document, {
-      onScan: (sScanned, iQty) => {
-        console.log("Scanned:", iQty + "x " + sScanned);
+      onScan: (sScanned) => {
         this.uniqueScanNum = sScanned;
         this.onDetectionOfScan();
       },
@@ -50,8 +48,6 @@ export class SingleScanComponent implements OnInit, OnDestroy {
     this.beepSound?.nativeElement?.play();
     console.log(this.uniqueScanNum);
   }
-
-  onTrackTrackingNumber(){}
 
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {

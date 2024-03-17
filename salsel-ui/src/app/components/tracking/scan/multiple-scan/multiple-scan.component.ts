@@ -49,12 +49,14 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
       onScan: (sScanned, iQty) => {
         console.log("Scanned:", iQty + "x " + sScanned);
         this.uniqueScanNum = sScanned;
+        this.beep()
         this.getAwbOnScan(sScanned);
       },
     });
   }
   loading: any;
   @ViewChild("trackingField") trackingField: ElementRef;
+  @ViewChild("beepSound") beepSound: ElementRef<HTMLAudioElement>;
 
   ngOnInit(): void {
     this.getAllProductFields();
@@ -115,6 +117,10 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
     }
   }
 
+  beep() {
+    this.beepSound?.nativeElement?.play();
+  }
+
   getAwbOnScan(uniqueNumber: any) {
     const existingItem = this.airBills.find(
       (item) => item?.uniqueNumber === parseInt(uniqueNumber)
@@ -143,8 +149,9 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTrackTrackingNumber() {
-    if (this.trackingNumber) {
+  onTrackTrackingNumber(value: any) {
+    this.trackingNumber = value;
+    if (this.trackingNumber != "") {
       const existingItem = this.airBills.find(
         (item) => item?.uniqueNumber === parseInt(this.trackingNumber)
       );

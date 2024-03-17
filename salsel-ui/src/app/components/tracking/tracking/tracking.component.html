@@ -1,1 +1,99 @@
+<div *ngIf="!trackingMode" class="flex justify-content-end">
+    <button pButton label="Back" class="mb-2 addBtn" routerLink="/tracking-and-scan"></button>
+</div>
 
+<div class="container" *ngIf="!trackingMode">
+    <a class="col-6 card tracking-card">
+        <div class="">
+            <img src="../../../../../assets/tracking/qr-code.gif" alt="Single Scan" class="tracking">
+            <p class="tracking-text">Scan Code</p>
+        </div>
+    </a>
+    <div class="w-full md:w-2">
+        <p-divider layout="vertical" styleClass="hidden md:flex"><b>OR</b></p-divider>
+        <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'"><b>OR</b></p-divider>
+    </div>
+    <div class="col-6 card tracking-card">
+        <img src="../../../../../assets/tracking/search-box.gif" alt="Tracking" class="tracking">
+        <div class="flex justify-content-center align-items-center flex-column tracking-container">
+            <input pInputText type="text" #trackingField
+                placeholder="Insert Tracking Number" class="trackingField mb-3" />
+            <button pButton label="Search" class="input-btn" (click)="onTrackTrackingNumber(trackingField.value)"></button>
+        </div>
+    </div>
+</div>
+
+<div class="card" *ngIf="trackingMode">
+    <div class="grid">
+        <div class="col-12 lg:col-4">
+            <div class="flex justify-content-between align-items-center" style="min-height: 69px;">
+                <div>
+                    <span class="tracking">Tracking No.</span>
+                    <h1 class="tracking-heading">{{ '#' + singleBill?.uniqueNumber}}</h1>
+                </div>
+                <button pButton label="Back" class="p-button-outlined mobile-btn" (click)="onBack()"></button>
+            </div>
+            <p-divider></p-divider>
+            <div>
+                <span class="order">Current Status</span>
+                <h1 class="order-heading">{{singleBill?.awbStatus}}</h1>
+                <p class="order-content">as on {{singleBill?.createdAt | date:'d MMMM, y, EEEE'}}</p>
+            </div>
+        </div>
+        <p-divider layout="vertical"></p-divider>
+        <div class="col-12 lg:col-8">
+            <div class="flex justify-content-between align-items-center" style="min-height: 69px;">
+                <span class="order history">Tracking History <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()"
+                        [ngClass]="{'pi-spin': refresh }" style="font-weight: bold;"></i></span>
+                <button pButton label="Back" class="p-button-outlined desktop-btn" (click)="onBack()"></button>
+            </div>
+            <p-divider></p-divider>
+            <div>
+                <p-timeline [value]="history" align="alternate" styleClass="customized-timeline"
+                    class="desktop-timeline">
+                    <ng-template pTemplate="marker" let-history>
+                        <span
+                            class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1"
+                            [style.backgroundColor]="getColor(history?.awbStatus)">
+                            <i [ngClass]="getIcon(history?.awbStatus)"></i>
+                        </span>
+                    </ng-template>
+                    <ng-template pTemplate="content" let-history>
+                        <p-card class="custom-card" [header]="history?.awbStatus"
+                            [subheader]="history?.timestamp | date:'MMM d, y, h:mm a'">
+                            <img *ngIf="history?.awbStatus"
+                                [src]="'../../../../assets/TIME/' + getImage(history?.awbStatus)"
+                                [alt]="history?.awbStatus" width="200" />
+                        </p-card>
+                    </ng-template>
+                </p-timeline>
+                <p-timeline [value]="history" align="left" styleClass="customized-timeline" class="mobile-timeline">
+                    <ng-template pTemplate="marker" let-history>
+                        <span
+                            class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1"
+                            [style.backgroundColor]="getColor(history?.awbStatus)">
+                            <i [ngClass]="getIcon(history?.awbStatus)"></i>
+                        </span>
+                    </ng-template>
+                    <ng-template pTemplate="content" let-history>
+                        <p-card class="mobile-card" [header]="history?.awbStatus"
+                            [subheader]="history?.timestamp | date:'MMM d, y, h:mm a'">
+                            <img *ngIf="history?.awbStatus"
+                                [src]="'../../../../assets/TIME/' + getImage(history?.awbStatus)"
+                                [alt]="history?.awbStatus" width="200" />
+                        </p-card>
+                    </ng-template>
+                </p-timeline>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<audio #beepSound>
+    <source src="../../assets/sounds/store-scanner-beep-90395.mp3" type="audio/mpeg">
+</audio>
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

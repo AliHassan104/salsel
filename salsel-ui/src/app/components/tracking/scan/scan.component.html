@@ -3,6 +3,11 @@
         class="mb-2 addBtn" (click)="onBack()"></button>
 </div>
 
+<div *ngIf="singleOrMultipleMode" class="flex justify-content-end">
+    <button pButton label="Back"
+        class="mb-2 addBtn" routerLink="/tracking-and-scan"></button>
+</div>
+
 <div class="grid container flex justify-content-center align-items-center" *ngIf="singleOrMultipleMode">
     <a class="col-6 card tracking-card mr-2" (click)="onSingleScan()">
         <div class="">

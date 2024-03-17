@@ -15,10 +15,10 @@
                                 (click)="removeAll()"></button>
                         </div>
                         <div class="flex align-items-center">
-                            <input pInputText type="text" [(ngModel)]="trackingNumber" #trackingField
+                            <input pInputText type="text" #trackingField
                                 placeholder="Insert Tracking Number" class="w-full" />
                             <button pButton label="Add" class="input-btn"
-                                (click)="onTrackTrackingNumber()"></button>
+                                (click)="onTrackTrackingNumber(trackingField?.value)"></button>
                         </div>
                     </div>
                 </ng-template>
@@ -88,5 +88,9 @@
                 (click)="confirmRemoveSelected()"></button>
         </ng-template>
     </p-dialog>
+
+    <audio #beepSound>
+        <source src="../../assets/sounds/store-scanner-beep-90395.mp3" type="audio/mpeg">
+    </audio>
 
     <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

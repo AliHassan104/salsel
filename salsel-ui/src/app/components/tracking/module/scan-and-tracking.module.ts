@@ -22,10 +22,18 @@ import { TrackingComponent } from '../tracking/tracking.component';
 import { SingleScanComponent } from '../scan/single-scan/single-scan.component';
 import { MultipleScanComponent } from '../scan/multiple-scan/multiple-scan.component';
 import { DividerModule } from 'primeng/divider';
+import { TimelineModule } from 'primeng/timeline';
+import { CardModule } from 'primeng/card';
 
 
 @NgModule({
-  declarations: [TrackingAndScanComponent,ScanComponent,TrackingComponent,SingleScanComponent,MultipleScanComponent],
+  declarations: [
+    TrackingAndScanComponent,
+    ScanComponent,
+    TrackingComponent,
+    SingleScanComponent,
+    MultipleScanComponent,
+  ],
   imports: [
     CommonModule,
     TableModule,
@@ -46,6 +54,8 @@ import { DividerModule } from 'primeng/divider';
     TooltipModule,
     DialogModule,
     ScanTrackingRoutingModule,
-],
+    TimelineModule,
+    CardModule
+  ],
 })
 export class ScanAndTrackingModule {}

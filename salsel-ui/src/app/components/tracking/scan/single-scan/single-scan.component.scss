@@ -28,6 +28,37 @@
     transition: all 0.5s ease;
 }
 
+.tracking-container{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px 35px;
+    width: max-content;
+    font-size: 40px;
+    background-color: rgba(0, 0, 0, 0.546);
+    color: white;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+.input-btn{
+    width: 100px;
+}
+
+.input-btn:focus{
+    box-shadow: none !important;
+}
+
+.trackingField{
+    width: 322px;
+    padding: 19px;
+}
+
+.trackingField:focus-visible,.trackingField:focus{
+    box-shadow: none !important;
+}
+
 .tracking{
     width: 100%;
     height: 100%;
