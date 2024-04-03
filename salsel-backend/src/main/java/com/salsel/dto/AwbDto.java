@@ -1,6 +1,7 @@
 package com.salsel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salsel.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +40,6 @@ public class AwbDto {
     private String serviceTypeCode;
     private String createdBy;
     private String assignedTo;
-    private String assignedToUser;
-
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
@@ -61,4 +60,5 @@ public class AwbDto {
     private Boolean emailFlag;
     private String awbUrl;
     private String awbStatus;
+    private User assignedToUser;
 }

@@ -43,7 +43,7 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
     @Query("SELECT a FROM Awb a WHERE a.status = :status And a.createdBy = :createdBy ORDER BY a.id DESC")
     List<Awb> findAllInDesOrderByEmailAndStatus(@Param("status") boolean status, @Param("createdBy") String createdBy);
 
-    @Query("SELECT a FROM Awb a WHERE a.status = :status And a.assignedToUser = :user")
+    @Query("SELECT a FROM Awb a WHERE a.status = :status And a.assignedToUser.name = :user")
     List<Awb> findAllAwbByAssignedUserAndStatus(@Param("status") boolean status, @Param("user") String user);
 
     @Query("SELECT a FROM Awb a WHERE a.status = :status And a.assignedTo = :assignedTo ORDER BY a.id DESC")
@@ -60,7 +60,7 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
     @Query("SELECT COUNT(a) FROM Awb a WHERE a.status = :status")
     Long countByStatus(@Param("status") Boolean status);
 
-    @Query("SELECT COUNT(a) FROM Awb a WHERE a.assignedToUser = :name")
+    @Query("SELECT COUNT(a) FROM Awb a WHERE a.assignedToUser.name = :name")
     Long countByLoggedInUser(String name);
 
     List<Awb> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);

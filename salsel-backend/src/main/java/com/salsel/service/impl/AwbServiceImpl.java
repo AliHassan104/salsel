@@ -74,6 +74,7 @@ public class AwbServiceImpl implements AwbService {
             awb.setAwbStatus("AWB Created");
             awb.setStatus(true);
             awb.setEmailFlag(false);
+
             Awb createdAwb = awbRepository.save(awb);
             Long awbId = createdAwb.getId();
 
@@ -320,7 +321,7 @@ public class AwbServiceImpl implements AwbService {
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for Tracking Number => %d", uniqueNumber)));
 
         User currentUser = helperUtils.getCurrentUser();
-        existingAwb.setAssignedToUser(currentUser.getName());
+        existingAwb.setAssignedToUser(currentUser);
         existingAwb.setCreatedBy(currentUser.getEmail());
 
         switch (awbStatus) {
@@ -541,6 +542,18 @@ public class AwbServiceImpl implements AwbService {
     public Long getAllAwbByAssignedUser() {
         User user = helperUtils.getCurrentUser();
         return awbRepository.countByLoggedInUser(user.getName());
+    }
+
+    @Override
+    public AwbDto assignAwbToUser(Long userId, Long awbId) {
+        Awb awb = awbRepository.findById(awbId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", awbId)));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", userId)));
+
+        awb.setAssignedToUser(user);
+        return toDto(awb);
     }
 
     public AwbDto toDto(Awb awb) {

@@ -30,4 +30,5 @@ public interface AwbService {
     LocalDate getMinCreatedAt();
     LocalDate getMaxCreatedAt();
     Long getAllAwbByAssignedUser();
+    AwbDto assignAwbToUser(Long userId, Long awbId);
 }

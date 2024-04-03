@@ -49,7 +49,6 @@ public class Awb {
     private String accountNumber;
     private String serviceTypeCode;
     private String assignedTo;
-    private String assignedToUser;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;
@@ -70,4 +69,8 @@ public class Awb {
     private Boolean emailFlag;
     private String awbUrl;
     private String awbStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "assigned_to_user_id")
+    private User assignedToUser;
 }

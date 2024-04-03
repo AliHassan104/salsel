@@ -15,8 +15,6 @@ public interface ExcelGenerationService {
     List<Map<String, Object>> convertUsersToExcelData(List<UserDto> users);
     List<Map<String, Object>> convertTicketsToExcelData(List<TicketDto> tickets);
     List<Map<String, Object>> convertAccountsToExcelData(List<AccountDto> accounts);
-
     List<Map<String,Object>> convertAirBillsToExcelData(List<AwbDto> airbills);
-
     void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
 }

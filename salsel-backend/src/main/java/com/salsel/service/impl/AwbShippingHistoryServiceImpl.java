@@ -1,7 +1,6 @@
 package com.salsel.service.impl;
 
 import com.salsel.dto.AwbShippingHistoryDto;
-import com.salsel.model.AddressBook;
 import com.salsel.model.AwbShippingHistory;
 import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.service.AwbShippingHistoryService;
