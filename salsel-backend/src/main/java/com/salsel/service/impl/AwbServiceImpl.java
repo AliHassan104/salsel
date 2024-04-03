@@ -545,6 +545,7 @@ public class AwbServiceImpl implements AwbService {
     }
 
     @Override
+    @Transactional
     public AwbDto assignAwbToUser(Long userId, Long awbId) {
         Awb awb = awbRepository.findById(awbId)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", awbId)));
@@ -553,7 +554,8 @@ public class AwbServiceImpl implements AwbService {
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", userId)));
 
         awb.setAssignedToUser(user);
-        return toDto(awb);
+        Awb assignedAwb = awbRepository.save(awb);
+        return toDto(assignedAwb);
     }
 
     public AwbDto toDto(Awb awb) {
