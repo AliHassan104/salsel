@@ -129,6 +129,14 @@ public class AwbController {
         return ResponseEntity.ok(updatedAwbDto);
     }
 
+    @PutMapping("/awb/{awb-id}/user/{user-id}")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
+    public ResponseEntity<AwbDto> assignAwbToUser(@PathVariable(name = "awb-id") Long awbId,
+                                                  @PathVariable(name = "user-id") Long userId) {
+        AwbDto assignedAwbDto = awbService.assignAwbToUser(userId,awbId);
+        return ResponseEntity.ok(assignedAwbDto);
+    }
+
     @PutMapping("/awb/awb-status/scan")
     @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
     public ResponseEntity<List<AwbDto>> updateMultipleAwbStatusOnScan(@RequestBody Map<Long, String> statusMap) {
