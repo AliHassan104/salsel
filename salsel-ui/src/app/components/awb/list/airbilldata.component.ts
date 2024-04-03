@@ -300,9 +300,11 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onSubmit(data: any) {
+    console.log(data.employeeId.id);
+
     if (this.awbForm.valid) {
       this._airbillService
-        .updateAssignedTo(this.assignId, data)
+        .assignedAirbillToUser(this.assignId, data?.employeeId?.id)
         .subscribe((res: any) => {
           this.assignDialog = false;
           this.awbForm.reset();

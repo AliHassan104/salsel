@@ -194,7 +194,7 @@
                             <button pTooltip="Assign" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
                                 type="button" icon="pi pi-volume-down"
                                 class="p-button-rounded p-button-help p-button-outlined mx-1"
-                                (click)="onAssignBill(data.id)"></button>
+                                (click)="onAssignBill(data?.id)"></button>
                         </td>
                         <td>
                             {{data?.createdAt | date:'d MMM, Y'}}
