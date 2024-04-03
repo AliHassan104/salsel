@@ -1,4 +1,10 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { Table } from "primeng/table";
 import { AirbillService } from "../service/airbill.service";
@@ -11,6 +17,7 @@ import { RolesService } from "../../permissions/service/roles.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { DatePipe } from "@angular/common";
+import { UserService } from "../../auth/usermanagement/service/user.service";
 
 @Component({
   selector: "app-airbilldata",
@@ -19,7 +26,8 @@ import { DatePipe } from "@angular/common";
   providers: [MessageService, DatePipe],
 })
 export class AirbilldataComponent implements OnInit {
-
+  users: any;
+  employeeId: any;
   excelDataForm!: FormGroup;
   minDate;
   maxDate;
@@ -44,6 +52,7 @@ export class AirbilldataComponent implements OnInit {
     private roleService: RolesService,
     private formService: FormvalidationService,
     private datePipe: DatePipe,
+    private userService: UserService
   ) {}
 
   loading: any;
@@ -60,11 +69,20 @@ export class AirbilldataComponent implements OnInit {
     });
     this.awbForm = new FormGroup({
       assignedTo: new FormControl(null, [Validators.required]),
+      employeeId: new FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required]),
     });
 
     this.getAirbills();
     this.getAllProductFields();
     this.getMinMax();
+    this.getUsers();
+  }
+
+  onShowModal(){
+    this.awbForm.patchValue({
+        assignedTo : "ROLE_COURIER"
+    })
   }
 
   getMinMax() {
@@ -72,6 +90,45 @@ export class AirbilldataComponent implements OnInit {
       this.minDate = new Date(res.minDate);
       this.maxDate = new Date(res.maxDate);
     });
+  }
+
+  getUsers() {
+    this.userService.getUserByRoleName("ROLE_COURIER").subscribe((res: any) => {
+      this.users = res;
+      this.employeeId = res;
+    });
+  }
+
+  getUserByRoleName(data: any) {
+    this.userService.getUserByRoleName(data?.value).subscribe((res: any) => {
+      this.users = res;
+      this.employeeId = res;
+    });
+  }
+
+  onSelectName(data: any) {
+    let user = this.users.filter((x) => x?.name == data?.value?.name);
+
+    if (user.length > 1) {
+      this.employeeId = user;
+    } else {
+      this.employeeId = this.users;
+      this.awbForm.patchValue({
+        employeeId: user[0],
+      });
+    }
+  }
+
+  onSelectEmployeeId(data: any) {
+    let user = this.users.filter(
+      (x) => x?.employeeId == data?.value?.employeeId
+    );
+
+    if (user) {
+      this.awbForm.patchValue({
+        name: user[0],
+      });
+    }
   }
 
   getAirbills() {
@@ -111,7 +168,6 @@ export class AirbilldataComponent implements OnInit {
         startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
         endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
       };
-      console.log(formattedDates);
 
       this._airbillService.downloadAwbDataInExcel(formattedDates).subscribe(
         (res: any) => {

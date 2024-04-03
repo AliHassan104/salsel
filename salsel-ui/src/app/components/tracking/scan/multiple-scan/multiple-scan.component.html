@@ -13,6 +13,8 @@
                         <div class="mb-2">
                             <button pButton label="Remove All" class="p-button-outlined"
                                 (click)="removeAll()"></button>
+                                <p-dropdown class="ml-3 custom-dropdown" appendTo="body" [options]="scanOptions"
+                                  [ngModel]="selectedStatus"  (ngModelChange)="onAllstatusChange($event)" placeholder="Select Status" [disabled]="airBills.length == 0"></p-dropdown>
                         </div>
                         <div class="flex align-items-center">
                             <input pInputText type="text" #trackingField
@@ -38,7 +40,12 @@
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                Status
+                                Current Status
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Scan
                             </div>
                         </th>
                     </tr>
@@ -54,8 +61,11 @@
                             {{awb?.uniqueNumber}}
                         </td>
                         <td>
+                            {{awb?.awbStatus}}
+                        </td>
+                        <td>
                             <p-dropdown class="ml-3 custom-dropdown" appendTo="body" [options]="scanOptions"
-                                [ngModel]="awb?.awbStatus" (ngModelChange)="onStatusChange($event,awb?.uniqueNumber)"
+                                [ngModel]="selectedStatus" (ngModelChange)="onStatusChange($event,awb?.uniqueNumber)"
                                 placeholder="Select"></p-dropdown>
                         </td>
                     </tr>

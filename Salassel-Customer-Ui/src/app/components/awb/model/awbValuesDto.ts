@@ -34,4 +34,5 @@ export interface IAwbDto {
   pickupDistrict?: string;
   createdBy?: string;
   uniqueNumber?: string;
+  assignedTo?:string
 }

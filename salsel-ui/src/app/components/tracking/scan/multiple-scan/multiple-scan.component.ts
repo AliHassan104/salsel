@@ -27,6 +27,9 @@ declare var onScan: any;
 export class MultipleScanComponent implements OnInit, OnDestroy {
   productField?;
   status?;
+  selectedStatus;
+
+  removedAwb: any;
 
   removeDialog: any;
   airBills = [];
@@ -47,9 +50,8 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
   ) {
     onScan.attachTo(document, {
       onScan: (sScanned, iQty) => {
-        console.log("Scanned:", iQty + "x " + sScanned);
         this.uniqueScanNum = sScanned;
-        this.beep()
+        this.beep();
         this.getAwbOnScan(sScanned);
       },
     });
@@ -81,13 +83,23 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
       // Property does not exist, so add it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
     }
-    console.log(this.updatedStatuses);
+  }
+
+  onAllstatusChange(selectedStatus: any) {
+    // Set the selected status for the entire table
+    this.selectedStatus = selectedStatus;
+
+    // Iterate through each item in airBills and trigger onStatusChange for each item
+    this.airBills.forEach((awb: any) => {
+      this.onStatusChange(selectedStatus, awb.uniqueNumber);
+    });
   }
 
   onUpdateStatus() {
     if (
       this.updatedStatuses != null &&
-      Object.keys(this.updatedStatuses).length > 0
+      Object.keys(this.updatedStatuses).length > 0 &&
+      this.selectedStatus != null
     ) {
       this.awbService
         .updateMultipleAwbTrackingStatus(this.updatedStatuses)
@@ -99,6 +111,8 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
               detail: "All Airbills Status Updated",
             });
             this.airBills = [];
+            this.selectedStatus = "";
+            this.updatedStatuses = {};
           },
           (error) => {
             this.messageService.add({
@@ -130,6 +144,11 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
       this.awbService.getSingleBillByUniqueNumber(uniqueNumber).subscribe(
         (res: any) => {
           this.airBills.push(res);
+          if (this.airBills.length > 1) {
+            this.airBills.forEach((awb: any) => {
+              this.onStatusChange(this.selectedStatus, awb.uniqueNumber);
+            });
+          }
         },
         (error) => {
           this.messageService.add({
@@ -156,14 +175,17 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
         (item) => item?.uniqueNumber === parseInt(this.trackingNumber)
       );
 
-      console.log(existingItem);
-
       if (!existingItem) {
         this.awbService
           .getSingleBillByUniqueNumber(this.trackingNumber)
           .subscribe(
             (res: any) => {
               this.airBills.push(res);
+              if (this.airBills.length > 1) {
+                this.airBills.forEach((awb: any) => {
+                  this.onStatusChange(this.selectedStatus, awb.uniqueNumber);
+                });
+              }
               this.trackingField.nativeElement.value = "";
             },
             (error) => {
@@ -193,14 +215,19 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
 
   confirmRemoveSelected() {
     this.airBills.splice(this.removeId, 1);
+
+    // If the item is also present in updatedStatuses, remove it from there as well
+    if (this.updatedStatuses.hasOwnProperty(this.removedAwb.uniqueNumber)) {
+      delete this.updatedStatuses[this.removedAwb.uniqueNumber];
+    }
     this.removeDialog = false;
   }
 
   removeAwb(awb: any) {
     const index = this.airBills.indexOf(awb);
-    console.log(index);
 
     if (index !== -1) {
+      this.removedAwb = awb;
       this.removeId = index;
       this.removeDialog = true;
     }
@@ -208,6 +235,8 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
 
   removeAll() {
     this.airBills = [];
+    this.updatedStatuses = {};
+    this.selectedStatus = "";
   }
 
   success() {
