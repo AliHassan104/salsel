@@ -31,4 +31,5 @@ public interface AwbService {
     LocalDate getMaxCreatedAt();
     Long getAllAwbByAssignedUser();
     AwbDto assignAwbToUser(Long userId, Long awbId);
+    List<AwbDto> getAllAwbByStatus(String status);
 }

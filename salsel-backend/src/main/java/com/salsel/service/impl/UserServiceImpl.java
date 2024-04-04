@@ -248,6 +248,8 @@ public class UserServiceImpl implements UserService {
             existingUser.setFirstname(userDto.getFirstname());
             existingUser.setLastname(userDto.getLastname());
             existingUser.setEmployeeId(userDto.getEmployeeId());
+            existingUser.setCountry(userDto.getCountry());
+            existingUser.setCity(userDto.getCity());
 
             rolesAssignedForFirstTime = existingUser.getRoles().isEmpty() && !userDto.getRoles().isEmpty();
             existingUser.getRoles().removeIf(role -> !userDto.getRoles().contains(role));
@@ -359,6 +361,8 @@ public class UserServiceImpl implements UserService {
                 .employeeId(userDto.getEmployeeId())
                 .password(userDto.getPassword())
                 .status(userDto.getStatus())
+                .city(userDto.getCity())
+                .country(userDto.getCountry())
                 .roles(userDto.getRoles())
                 .build();
     }
