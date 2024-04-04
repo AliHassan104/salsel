@@ -1,8 +1,10 @@
 package com.salsel.service;
 
-import com.salsel.dto.AccountDto;
+
 import com.salsel.dto.AwbDto;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -31,5 +33,6 @@ public interface AwbService {
     LocalDate getMaxCreatedAt();
     Long getAllAwbByAssignedUser();
     AwbDto assignAwbToUser(Long userId, Long awbId);
-    List<AwbDto> getAllAwbByStatus(String status);
+    List<Map<String,Object>> getAwbByStatusChangedOnPreviousDay(String status);
+    List<Map<String,Object>> getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
 }

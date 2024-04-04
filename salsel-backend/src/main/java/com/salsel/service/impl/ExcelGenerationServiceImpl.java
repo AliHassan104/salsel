@@ -1,28 +1,37 @@
 package com.salsel.service.impl;
 
-import com.salsel.constants.ExcelConstants;
 import com.salsel.dto.AccountDto;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.TicketDto;
 import com.salsel.dto.UserDto;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.Awb;
 import com.salsel.model.Role;
+import com.salsel.service.AwbService;
 import com.salsel.service.ExcelGenerationService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.salsel.constants.AwbStatusConstants.DELIVERED;
+import static com.salsel.constants.AwbStatusConstants.PICKED_UP;
 import static com.salsel.constants.ExcelConstants.*;
 
 @Service
 public class ExcelGenerationServiceImpl implements ExcelGenerationService {
+
+    private final AwbService awbService;
+
+    public ExcelGenerationServiceImpl(AwbService awbService) {
+        this.awbService = awbService;
+    }
+
     @Override
     public List<Map<String, Object>> convertUsersToExcelData(List<UserDto> users) {
         List<Map<String, Object>> excelData = new ArrayList<>();
@@ -180,13 +189,25 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         return excelData;
     }
 
+    @Override
+    public ByteArrayOutputStream generateAwbStatusReport(String status) throws IOException {
+        List<Map<String, Object>> pickedUpReportData = awbService.getAwbByStatusChangedOnPreviousDay(status);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(pickedUpReportData, outputStream, status);
+        return outputStream;
+    }
+
+    @Override
+    public ByteArrayOutputStream generateAwbTransitStatusReport() throws IOException {
+        List<Map<String, Object>> transitStatusReportData = awbService.getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(transitStatusReportData, outputStream, TRANSIT);
+        return outputStream;
+    }
 
 
     @Override
     public void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
-        if (excelData == null || excelData.isEmpty()) {
-            throw new IllegalArgumentException("Excel data is empty");
-        }
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = null;
@@ -196,10 +217,26 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Ticket");
         } else if (type.equalsIgnoreCase(ACCOUNT_TYPE)) {
             sheet = workbook.createSheet("Account");
-        }else if(type.equalsIgnoreCase(AWB_TYPE)){
+        } else if(type.equalsIgnoreCase(AWB_TYPE)){
             sheet = workbook.createSheet("Awb");
-        }else {
+        } else if(type.equalsIgnoreCase(PICKED_UP)) {
+            sheet = workbook.createSheet("Picked Up Status Report");
+        } else if(type.equalsIgnoreCase(DELIVERED)) {
+            sheet = workbook.createSheet("Delivered Status Report");
+        } else if(type.equalsIgnoreCase(TRANSIT)) {
+            sheet = workbook.createSheet("Transit Report");
+        } else {
             throw new RecordNotFoundException("Type not valid");
+        }
+
+        if (excelData == null || excelData.isEmpty()) {
+            // If excelData is empty, write a message in the Excel file
+            Row emptyRow = sheet.createRow(0);
+            Cell emptyCell = emptyRow.createCell(0);
+            emptyCell.setCellValue("No data available");
+            workbook.write(outputStream);
+            workbook.close();
+            return;
         }
 
         // Create header row
@@ -226,12 +263,27 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             colIndex = 0;
             for (Object value : rowData.values()) {
                 Cell cell = row.createCell(colIndex++);
-                if (value instanceof String) {
-                    cell.setCellValue((String) value);
-                } else if (value instanceof Long) {
-                    cell.setCellValue((Long) value);
+                if (value != null) {
+                    if (value instanceof String) {
+                        cell.setCellValue((String) value);
+                    } else if (value instanceof Long) {
+                        cell.setCellValue((Long) value);
+                    } else if (value instanceof Integer) {
+                        cell.setCellValue((Integer) value);
+                    } else if (value instanceof Double) {
+                        cell.setCellValue((Double) value);
+                    } else if (value instanceof Boolean) {
+                        cell.setCellValue((Boolean) value);
+                    } else if (value instanceof Date) {
+                        cell.setCellValue((Date) value);
+                    } else if (value instanceof Calendar) {
+                        cell.setCellValue((Calendar) value);
+                    } else {
+                        cell.setCellValue(value.toString());
+                    }
+                } else {
+                    cell.setCellValue("N/A");
                 }
-                // Add more data type handling as needed
             }
         }
 
@@ -243,6 +295,5 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         workbook.write(outputStream);
         workbook.close();
     }
-
 
 }

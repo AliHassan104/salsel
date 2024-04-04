@@ -2,6 +2,7 @@ package com.salsel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salsel.model.Awb;
+import com.salsel.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,8 @@ public class AwbShippingHistoryDto {
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
+    private User statusUpdateByUser;
+    private String comment;
     private String awbStatus;
     private Boolean status;
     private Awb awb;

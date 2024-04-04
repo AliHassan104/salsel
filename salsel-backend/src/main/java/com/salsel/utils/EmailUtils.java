@@ -5,36 +5,42 @@ import com.salsel.model.Awb;
 import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
 import com.salsel.service.AwbService;
+import com.salsel.service.ExcelGenerationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.transaction.Transactional;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
+import static com.salsel.constants.AwbStatusConstants.DELIVERED;
+import static com.salsel.constants.AwbStatusConstants.PICKED_UP;
 
 @Component
 public class EmailUtils {
     private final JavaMailSender javaMailSender;
     private final AwbRepository awbRepository;
     private final AwbService awbService;
+    private final ExcelGenerationService excelGenerationService;
 
 
-    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, AwbService awbService) {
+    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, AwbService awbService, ExcelGenerationService excelGenerationService) {
         this.javaMailSender = javaMailSender;
         this.awbRepository = awbRepository;
         this.awbService = awbService;
+        this.excelGenerationService = excelGenerationService;
     }
 
     @Value("${spring.mail.username}")
     private String sender;
-
 
     @Async
     public void sendEmail(String sender, String userEmail, Long awbId, byte[] pdfBytes) {
@@ -72,6 +78,55 @@ public class EmailUtils {
 
         } else {
             throw new RecordNotFoundException("Awb not found for id: " + awbId);
+        }
+    }
+
+
+    @Async
+    public void sendEmail(String toAddress, String[] ccAddresses) {
+        try {
+            // Get the date of the previous day
+            LocalDate previousDate = LocalDate.now().minusDays(1);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+            String formattedDate = previousDate.format(formatter);
+
+            // Generate the Excel reports
+            ByteArrayOutputStream pickedUpReport = excelGenerationService.generateAwbStatusReport(PICKED_UP);
+            ByteArrayOutputStream deliveredReport = excelGenerationService.generateAwbStatusReport(DELIVERED);
+            ByteArrayOutputStream transitStatusReport = excelGenerationService.generateAwbTransitStatusReport();
+
+            // Create the email message
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(sender);
+            helper.setTo(toAddress);
+            if (ccAddresses != null && ccAddresses.length > 0) {
+                helper.setCc(ccAddresses);
+            }
+            helper.setSubject("Daily Status Reports");
+
+            // Set the email body with the formatted date
+            String emailBody = "Gents,\n"
+                    + "Pls find attached Daily Automated Report for Date: " + formattedDate + "\n\n"
+                    + "Salassil System Alert\n"
+                    + "Salassilexpress.com";
+            helper.setText(emailBody);
+
+            // Create ByteArrayResources from the byte arrays
+            ByteArrayResource pickedUpReportResource = new ByteArrayResource(pickedUpReport.toByteArray());
+            ByteArrayResource deliveredReportResource = new ByteArrayResource(deliveredReport.toByteArray());
+            ByteArrayResource transitStatusReportResource = new ByteArrayResource(transitStatusReport.toByteArray());
+
+            // Attach the reports using ByteArrayResource
+            helper.addAttachment("PickedUpReport.xlsx", pickedUpReportResource);
+            helper.addAttachment("DeliveredReport.xlsx", deliveredReportResource);
+            helper.addAttachment("TransitStatusReport.xlsx", transitStatusReportResource);
+
+            // Send the email
+            javaMailSender.send(message);
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
