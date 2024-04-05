@@ -45,6 +45,25 @@
                         Required
                     </small>
                 </div>
+                <!-- Country -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="country"><strong>Country</strong></label>
+                    <p-dropdown #dropdown [options]="countries" placeholder="Select Country" formControlName="country" filter="true"
+                        (onChange)="getCountry($event)"
+                        [ngClass]="{'ng-dirty':userForm.get('country')?.touched && userForm.get('country')?.invalid}"></p-dropdown>
+                    <small *ngIf="!userForm.get('country')?.valid && userForm.get('country')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!--City -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="City"><strong>City</strong></label>
+                    <p-dropdown #dropdown1 [options]="cities" placeholder="Select city" formControlName="city" filter="true"
+                        [ngClass]="{'ng-dirty':userForm.get('city')?.touched && userForm.get('city')?.invalid}"></p-dropdown>
+                    <small *ngIf="!userForm.get('city')?.valid && userForm.get('city')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
                 <!-- Password -->
                 <div class="field col-12 md:col-6" *ngIf="!editMode">
                     <label htmlFor=" address"><strong>Password</strong></label>

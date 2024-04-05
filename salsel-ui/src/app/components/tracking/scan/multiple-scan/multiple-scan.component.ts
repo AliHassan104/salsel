@@ -79,9 +79,12 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
     if (this.updatedStatuses.hasOwnProperty(uniqueNumber)) {
       // Property exists, so update it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
+      console.log(this.updatedStatuses,"if");
+
     } else {
       // Property does not exist, so add it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
+      console.log(this.updatedStatuses, "else");
     }
   }
 
@@ -98,8 +101,7 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
   onUpdateStatus() {
     if (
       this.updatedStatuses != null &&
-      Object.keys(this.updatedStatuses).length > 0 &&
-      this.selectedStatus != null
+      Object.keys(this.updatedStatuses).length > 0
     ) {
       this.awbService
         .updateMultipleAwbTrackingStatus(this.updatedStatuses)
@@ -181,6 +183,8 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
           .subscribe(
             (res: any) => {
               this.airBills.push(res);
+              console.log(res);
+
               if (this.airBills.length > 1) {
                 this.airBills.forEach((awb: any) => {
                   this.onStatusChange(this.selectedStatus, awb.uniqueNumber);

@@ -11,4 +11,6 @@ export interface IUser {
   password?: string;
   roles?: [IRole];
   status?: true;
+  country?:string,
+  city?:string
 }

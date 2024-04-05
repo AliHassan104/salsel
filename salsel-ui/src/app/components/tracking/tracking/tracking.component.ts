@@ -44,6 +44,8 @@ export class TrackingComponent {
     this._airbillService.getBillTrackingHistory({ awbId: id }).subscribe(
       (res: any) => {
         this.history = res;
+        console.log(res);
+
         this.history = this.history.reverse();
         this.trackingMode = true;
       },

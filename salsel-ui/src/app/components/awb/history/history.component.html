@@ -36,6 +36,8 @@
                     <ng-template pTemplate="content" let-history>
                         <p-card class="custom-card" [header]="history?.awbStatus"
                             [subheader]="history?.timestamp | date:'MMM d, y, h:mm a'">
+                            <p *ngIf="history?.statusUpdateByUser?.city != null" style="font-size: 16px;"><span style="font-weight: 700;color: #93003c;">Location:</span>
+                                {{history?.statusUpdateByUser?.city}}, {{history?.statusUpdateByUser?.country}}</p>
                             <img *ngIf="history?.awbStatus"
                                 [src]="'../../../../assets/TIME/' + getImage(history?.awbStatus)"
                                 [alt]="history?.awbStatus" width="200" />
@@ -53,6 +55,8 @@
                     <ng-template pTemplate="content" let-history>
                         <p-card class="mobile-card" [header]="history?.awbStatus"
                             [subheader]="history?.timestamp | date:'MMM d, y, h:mm a'">
+                            <p *ngIf="history?.statusUpdateByUser?.city != null" style="font-size: 16px;"><span style="font-weight: 700;color: #93003c;">Location:</span>
+                                {{history?.statusUpdateByUser?.city}}, {{history?.statusUpdateByUser?.country}}</p>
                             <img *ngIf="history?.awbStatus"
                                 [src]="'../../../../assets/TIME/' + getImage(history?.awbStatus)"
                                 [alt]="history?.awbStatus" width="200" />
