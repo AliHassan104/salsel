@@ -28,7 +28,7 @@ public class AwbStatusReportScheduler {
             currentDate = currentDate.plusDays(1);
         }
 
-//        // Construct the  recipient email addresses
+        // Construct the  recipient email addresses
         String toAddress = "a.choudhary@salassilexpress.com";
         String[] ccAddresses = {"ashraf@salassilexpress.com", "samer@salassilexpress.com", "muhammadtabish05@gmail.com"};
 

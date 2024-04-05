@@ -376,6 +376,7 @@ public class AwbServiceImpl implements AwbService {
                     .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for UniqueNumber => %d", uniqueNumber)));
 
             awb.setAwbStatus(newStatus);
+
             awbRepository.save(awb);
             updatedAwbList.add(awb);
 
