@@ -3,6 +3,7 @@ package com.salsel.repository;
 import com.salsel.model.Awb;
 import com.salsel.model.AwbShippingHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -14,5 +15,8 @@ public interface AwbShippingHistoryRepository extends JpaRepository<AwbShippingH
     List<AwbShippingHistory> findByAwbId(Long awbId);
     List<AwbShippingHistory> findByAwbStatusAndTimestampBetween(String status, LocalDateTime startDateTime, LocalDateTime endDateTime);
     List<AwbShippingHistory> findByTimestampBetweenAndAwbStatusNotIn(LocalDateTime startDateTime, LocalDateTime endDateTime, List<String> status);
-    Optional<AwbShippingHistory> findTopByAwbOrderByTimestampDesc(Awb awb);
+//    Optional<AwbShippingHistory> findTopByAwbOrderByTimestampDesc(Awb awb);
+
+    @Query("SELECT h FROM AwbShippingHistory h WHERE h.awb.id = ?1 ORDER BY h.timestamp DESC")
+    Optional<AwbShippingHistory> findLatestByAwbId(Long awbId);
 }
