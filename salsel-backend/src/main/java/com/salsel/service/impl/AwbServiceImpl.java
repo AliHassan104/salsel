@@ -6,14 +6,12 @@ import com.lowagie.text.pdf.PdfReader;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.Awb;
-import com.salsel.model.AwbShippingHistory;
-import com.salsel.model.Role;
-import com.salsel.model.User;
+import com.salsel.model.*;
 import com.salsel.repository.AwbRepository;
 import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.AwbService;
+import com.salsel.service.AwbShippingHistoryService;
 import com.salsel.service.CodeGenerationService;
 import com.salsel.service.PdfGenerationService;
 import com.salsel.utils.AssignmentEmailsUtils;
@@ -31,10 +29,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.salsel.constants.AwbStatusConstants.*;
@@ -51,15 +47,17 @@ public class AwbServiceImpl implements AwbService {
     private final CodeGenerationService codeGenerationService;
     private final AssignmentEmailsUtils assignmentEmailsUtils;
     private final AwbShippingHistoryRepository awbShippingHistoryRepository;
+    private final AwbShippingHistoryService awbShippingHistoryService;
     private final PdfGenerationService pdfGenerationService;
 
-    public AwbServiceImpl(AwbRepository awbRepository, HelperUtils helperUtils, UserRepository userRepository, CodeGenerationService codeGenerationService, AssignmentEmailsUtils assignmentEmailsUtils, AwbShippingHistoryRepository awbShippingHistoryRepository, PdfGenerationService pdfGenerationService) {
+    public AwbServiceImpl(AwbRepository awbRepository, HelperUtils helperUtils, UserRepository userRepository, CodeGenerationService codeGenerationService, AssignmentEmailsUtils assignmentEmailsUtils, AwbShippingHistoryRepository awbShippingHistoryRepository, AwbShippingHistoryService awbShippingHistoryService, PdfGenerationService pdfGenerationService) {
         this.awbRepository = awbRepository;
         this.helperUtils = helperUtils;
         this.userRepository = userRepository;
         this.codeGenerationService = codeGenerationService;
         this.assignmentEmailsUtils = assignmentEmailsUtils;
         this.awbShippingHistoryRepository = awbShippingHistoryRepository;
+        this.awbShippingHistoryService = awbShippingHistoryService;
         this.pdfGenerationService = pdfGenerationService;
     }
 
@@ -75,14 +73,16 @@ public class AwbServiceImpl implements AwbService {
             awb.setStatus(true);
             awb.setEmailFlag(false);
 
+            if(awb.getAssignedToUser() != null){
+                User user = userRepository.findById(awb.getAssignedToUser().getId())
+                        .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", awb.getAssignedToUser().getId())));
+                awb.setAssignedToUser(user);
+            }
+
             Awb createdAwb = awbRepository.save(awb);
             Long awbId = createdAwb.getId();
 
-            AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
-            awbShippingHistory.setStatus(true);
-            awbShippingHistory.setAwbStatus(AWB_CREATED);
-            awbShippingHistory.setAwb(createdAwb);
-            awbShippingHistoryRepository.save(awbShippingHistory);
+            awbShippingHistoryService.addAwbShippingHistory(createdAwb);
 
             codeGenerationService.generateBarcode(awb.getUniqueNumber().toString(), awbId);
             codeGenerationService.generateBarcodeVertical(awb.getUniqueNumber().toString(), awbId);
@@ -357,12 +357,7 @@ public class AwbServiceImpl implements AwbService {
         }
 
         Awb updatedAwb = awbRepository.save(existingAwb);
-
-        AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
-        awbShippingHistory.setStatus(true);
-        awbShippingHistory.setAwbStatus(existingAwb.getAwbStatus());
-        awbShippingHistory.setAwb(updatedAwb);
-        awbShippingHistoryRepository.save(awbShippingHistory);
+        awbShippingHistoryService.addAwbShippingHistory(updatedAwb);
 
         sendEmailAsync(updatedAwb);
         return toDto(updatedAwb);
@@ -384,11 +379,7 @@ public class AwbServiceImpl implements AwbService {
             awbRepository.save(awb);
             updatedAwbList.add(awb);
 
-            AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
-            awbShippingHistory.setStatus(true);
-            awbShippingHistory.setAwbStatus(newStatus);
-            awbShippingHistory.setAwb(awb);
-            awbShippingHistoryRepository.save(awbShippingHistory);
+            awbShippingHistoryService.addAwbShippingHistory(awb);
         }
 
         return updatedAwbList.stream()
@@ -556,6 +547,80 @@ public class AwbServiceImpl implements AwbService {
         awb.setAssignedToUser(user);
         Awb assignedAwb = awbRepository.save(awb);
         return toDto(assignedAwb);
+    }
+
+    @Override
+    public List<Map<String,Object>> getAwbByStatusChangedOnPreviousDay(String status) {
+        // Calculate the start and end times for the previous day
+        LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MIN);
+        LocalDateTime endDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+
+        List<AwbShippingHistory> awbList = awbShippingHistoryRepository.findByAwbStatusAndTimestampBetween(status, startDateTime, endDateTime);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        int count = 1;
+
+        for (AwbShippingHistory awbShippingHistory : awbList) {
+
+            User user = awbShippingHistory.getStatusUpdateByUser();
+            if(user == null){
+                throw new RecordNotFoundException("User not found");
+            }
+            String location = user.getCity() + ", " + user.getCountry();
+
+            Awb awb = awbRepository.findById(awbShippingHistory.getAwb().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", awbShippingHistory.getAwb().getId())));
+
+            Map<String, Object> awbMap = new LinkedHashMap<>();
+            awbMap.put("S.#", count++);
+            awbMap.put("AWB#", awb.getUniqueNumber());
+            awbMap.put("Last Status", awbShippingHistory.getAwbStatus());
+            awbMap.put("Location", location);
+            awbMap.put("Date", awbShippingHistory.getTimestamp().toLocalDate());
+            awbMap.put("ID", awbShippingHistory.getId());
+            awbMap.put("Comments", awbShippingHistory.getComment());
+
+            result.add(awbMap);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<Map<String,Object>> getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered() {
+        LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MIN);
+        LocalDateTime endDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+
+        List<AwbShippingHistory> awbList = awbShippingHistoryRepository.findByTimestampBetweenAndAwbStatusNotIn(startDateTime, endDateTime,
+                Arrays.asList(PICKED_UP, DELIVERED));
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        int count = 1;
+
+        for (AwbShippingHistory awbShippingHistory : awbList) {
+
+            User user = awbShippingHistory.getStatusUpdateByUser();
+            if(user == null){
+                throw new RecordNotFoundException("User not found");
+            }
+            String location = user.getCity() + ", " + user.getCountry();
+
+            Awb awb = awbRepository.findById(awbShippingHistory.getAwb().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", awbShippingHistory.getAwb().getId())));
+
+            Map<String, Object> awbMap = new LinkedHashMap<>();
+            awbMap.put("S.#", count++);
+            awbMap.put("AWB#", awb.getUniqueNumber());
+            awbMap.put("Last Status", awbShippingHistory.getAwbStatus());
+            awbMap.put("Location", location);
+            awbMap.put("Date", awbShippingHistory.getTimestamp().toLocalDate());
+            awbMap.put("ID", awbShippingHistory.getId());
+            awbMap.put("Comments", awbShippingHistory.getComment());
+
+            result.add(awbMap);
+        }
+
+        return result;
     }
 
     public AwbDto toDto(Awb awb) {

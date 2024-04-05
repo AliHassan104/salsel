@@ -19,7 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.salsel.constants.AwbStatusConstants.DELIVERED;
+import static com.salsel.constants.AwbStatusConstants.PICKED_UP;
 import static com.salsel.constants.ExcelConstants.AWB_TYPE;
+import static com.salsel.constants.ExcelConstants.TRANSIT;
 
 @RestController
 @RequestMapping("/api")
@@ -209,4 +212,38 @@ public class AwbController {
         return ResponseEntity.ok(dateRange);
     }
 
+//    @GetMapping("/awb/status-report")
+//    public ResponseEntity<List<Map<String, Object>>> getAllAwbByStatusUpdateInLastDay(@RequestParam() String status){
+//        List<Map<String,Object>> map = awbService.getAwbByStatusChangedOnPreviousDay(status);
+//        return ResponseEntity.ok(map);
+//    }
+
+//    @GetMapping("/awb/transit-status-report")
+//    public ResponseEntity<List<Map<String, Object>>> getAllAwbByStatusUpdateInLastDayForTransitReport(){
+//        List<Map<String,Object>> map = awbService.getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
+//        return ResponseEntity.ok(map);
+//    }
+
+    @GetMapping("/awb/status-report/{status}")
+    public void StatusReport(@PathVariable String status,
+                                        HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=report.xlsx");
+
+        List<Map<String,Object>> map = awbService.getAwbByStatusChangedOnPreviousDay(status);
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(map, outputStream, PICKED_UP);
+        outputStream.close();
+    }
+
+    @GetMapping("/awb/transit-status-report")
+    public void TransitStatusReport(HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=Report.xlsx");
+
+        List<Map<String,Object>> map = awbService.getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(map, outputStream, TRANSIT);
+        outputStream.close();
+    }
 }

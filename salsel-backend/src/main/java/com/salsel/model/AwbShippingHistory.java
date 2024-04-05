@@ -27,6 +27,11 @@ public class AwbShippingHistory {
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
+    @ManyToOne
+    @JoinColumn(name = "status_update_by_user")
+    private User statusUpdateByUser;
+
+    private String comment;
     private String awbStatus;
     private Boolean status;
 

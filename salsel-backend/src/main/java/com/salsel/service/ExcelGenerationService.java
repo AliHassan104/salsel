@@ -6,6 +6,7 @@ import com.salsel.dto.AwbDto;
 import com.salsel.dto.TicketDto;
 import com.salsel.dto.UserDto;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -16,5 +17,7 @@ public interface ExcelGenerationService {
     List<Map<String, Object>> convertTicketsToExcelData(List<TicketDto> tickets);
     List<Map<String, Object>> convertAccountsToExcelData(List<AccountDto> accounts);
     List<Map<String,Object>> convertAirBillsToExcelData(List<AwbDto> airbills);
+    ByteArrayOutputStream generateAwbStatusReport(String status) throws IOException;
+    ByteArrayOutputStream generateAwbTransitStatusReport() throws IOException;
     void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
 }

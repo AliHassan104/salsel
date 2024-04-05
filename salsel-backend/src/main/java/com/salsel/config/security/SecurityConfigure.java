@@ -40,7 +40,9 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/download-user-excel",
             "/api/download-ticket-excel",
             "/api/download-account-excel",
-            "/api/reset-code-check"
+            "/api/reset-code-check",
+            "/api/awb/status-report/{status}",
+            "/api/awb/transit-status-report"
     };
 
     @Autowired

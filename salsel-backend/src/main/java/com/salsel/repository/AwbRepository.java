@@ -88,8 +88,4 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
     LocalDate findMaxCreatedAt();
 
     List<Awb> findByAwbStatus(String awbStatus);
-
-//    @Query("SELECT MAX(a.uniqueNumber) FROM Awb a")
-//    Long findMaxUniqueNumber();
-
 }
