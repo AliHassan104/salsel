@@ -28,7 +28,7 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
     @Override
     public AwbShippingHistoryDto addAwbShippingHistory(Awb awb) {
         // Retrieve the latest shipping history entry for the AWB
-        Optional<AwbShippingHistory> latestHistoryOptional = awbShippingHistoryRepository.findLatestByAwbId(awb.getId());
+        Optional<AwbShippingHistory> latestHistoryOptional = awbShippingHistoryRepository.findTop1ByAwbOrderByTimestampDesc(awb);
 
         // Check if the latest history entry exists and has the same status as the current AWB
         if (latestHistoryOptional.isPresent()) {
