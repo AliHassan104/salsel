@@ -191,8 +191,7 @@
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
                                 (click)="onActiveBill(data.id)"></button>
 
-                            <button *ngIf="activeStatus && sessionStorageService.getRoleName() == 'ADMIN' ||
-      sessionStorageService.getRoleName() == 'CUSTOMER_SERVICE_AGENT'" pTooltip="Assign" tooltipPosition="bottom" pButton pRipple
+                            <button pTooltip="Assign" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
                                 type="button" icon="pi pi-volume-down"
                                 class="p-button-rounded p-button-help p-button-outlined mx-1"
                                 (click)="onAssignBill(data?.id)"></button>

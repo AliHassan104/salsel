@@ -400,6 +400,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
         createdBy: this.loginUserEmail,
+        assignedTo: formValue.requestType == "Pick-up" ? "ROLE_OPERATION_AGENT" : "",
       };
 
       //   Create Ticket
