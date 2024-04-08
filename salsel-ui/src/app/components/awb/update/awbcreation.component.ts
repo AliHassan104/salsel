@@ -229,7 +229,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         this.preprocessedAccountNumbers = this.accountNumbers.map(
           (account: any) => ({
             label: `${account.accountNumber}, ${account.customerName}`,
-            value: account.number,
+            value: account?.accountNumber,
           })
         );
       });
@@ -366,6 +366,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSubmit() {
+
     if (this.awbForm.valid) {
       // Date and Time get from form
       let ticketDate: Date = this.awbForm.value.pickupDate;
@@ -400,6 +401,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         content: formValue.content,
         currency: formValue.currency,
         pieces: formValue.pieces,
+        accountNumber:formValue?.accountNumber?.value,
         serviceType: formValue.serviceType,
         productType: formValue.productType,
         requestType: formValue.requestType,

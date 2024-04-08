@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
@@ -9,6 +9,10 @@ import { UserService } from "../service/user.service";
 import { IUser } from "../model/userDto";
 import { LoginService } from "../../service/login.service";
 import { Password } from "primeng/password";
+import { Dropdown } from "primeng/dropdown";
+import { CityService } from "src/app/components/City/service/city.service";
+import { CountryService } from "src/app/components/country/service/country.service";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
 
 @Component({
   selector: "app-add-user",
@@ -17,10 +21,16 @@ import { Password } from "primeng/password";
   providers: [MessageService],
 })
 export class AddUserComponent implements OnInit {
+  countries?;
+  cities?;
   editMode;
   editId;
   singleUser?: IUser;
   roles?;
+  params: any = { status: true };
+
+  @ViewChild("dropdown") dropdown?: Dropdown;
+  @ViewChild("dropdown1") dropdown1?: Dropdown;
   constructor(
     private router: Router,
     private messageService: MessageService,
@@ -28,15 +38,52 @@ export class AddUserComponent implements OnInit {
     private formService: FormvalidationService,
     private rolesService: RolesService,
     private userService: UserService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private cityService: CityService,
+    private countryService: CountryService,
+    private dropdownService: DropdownService
   ) {}
 
   userForm!: FormGroup;
 
   ngOnInit(): void {
     this.formSetup();
-    this.queryParamSetup();
     this.getRoles();
+    this.queryParamSetup();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dropdown) {
+      (this.dropdown.filterBy as any) = {
+        split: (_: any) => [(item: any) => item],
+      };
+    }
+    if (this.dropdown1) {
+      (this.dropdown1.filterBy as any) = {
+        split: (_: any) => [(item: any) => item],
+      };
+    }
+  }
+
+  //   Get All Cities
+  getAllCities(countryName) {
+    this.cityService.getAllCities(this.params).subscribe((res: any) => {
+      this.cities = res;
+      let filterCities = this.cities.filter(
+        (city) => city?.country?.name == countryName
+      );
+      this.cities = this.dropdownService.extractNames(filterCities);
+    });
+  }
+
+  getCountry(country: any) {
+    this.cityService.getAllCities(this.params).subscribe((res: any) => {
+      this.cities = res;
+      let filterCities = this.cities.filter(
+        (city: any) => city?.country?.name == country?.value
+      );
+      this.cities = this.dropdownService.extractNames(filterCities);
+    });
   }
 
   formSetup() {
@@ -51,6 +98,8 @@ export class AddUserComponent implements OnInit {
       ]),
       roles: new FormControl(null, Validators.required),
       employeeId: new FormControl(null, Validators.required),
+      country : new FormControl(null,Validators.required),
+      city:new FormControl(null,Validators.required)
     });
   }
 
@@ -101,10 +150,13 @@ export class AddUserComponent implements OnInit {
       this.userService.GetUserById(this.editId).subscribe((res: any) => {
         this.singleUser = res;
 
+
         this.rolesService.getRoles().subscribe((res: any) => {
           const role = res.filter(
             (value) => value?.name == this.singleUser?.roles[0]?.name
           );
+
+          this.getAllCities(this.singleUser?.country);
 
           this.userForm.patchValue({
             email: this.singleUser?.email,
@@ -113,6 +165,8 @@ export class AddUserComponent implements OnInit {
             phone: this.singleUser?.phone,
             employeeId: this.singleUser?.employeeId,
             roles: role != null ? role[0] : "",
+            country:this.singleUser?.country,
+            city:this.singleUser?.city
           });
         });
       });
@@ -122,6 +176,11 @@ export class AddUserComponent implements OnInit {
   getRoles() {
     this.rolesService.getRoles().subscribe((res: any) => {
       this.roles = res;
+    });
+
+    this.countryService.getAllCountries(this.params).subscribe((res) => {
+      this.countries = res;
+      this.countries = this.dropdownService.extractNames(this.countries);
     });
   }
 
@@ -137,6 +196,8 @@ export class AddUserComponent implements OnInit {
           phone: formValue.phone,
           email: formValue.email,
           employeeId: formValue.employeeId,
+          country:formValue.country,
+          city:formValue.city,
           roles: [
             {
               id: formValue.roles.id,

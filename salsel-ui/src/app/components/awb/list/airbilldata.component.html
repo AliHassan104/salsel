@@ -194,7 +194,7 @@
                             <button pTooltip="Assign" tooltipPosition="bottom" *ngIf="activeStatus" pButton pRipple
                                 type="button" icon="pi pi-volume-down"
                                 class="p-button-rounded p-button-help p-button-outlined mx-1"
-                                (click)="onAssignBill(data.id)"></button>
+                                (click)="onAssignBill(data?.id)"></button>
                         </td>
                         <td>
                             {{data?.createdAt | date:'d MMM, Y'}}
@@ -301,7 +301,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog header="header" [modal]="true" (onHide)="onCloseDialog()" [draggable]="false" [(visible)]="assignDialog"
+    <p-dialog header="header" [modal]="true" (onShow)="onShowModal()" (onHide)="onCloseDialog()" [draggable]="false" [(visible)]="assignDialog"
         [style]="{ width: '60vw' }">
         <ng-template pTemplate="header">
             <div class="inline-flex align-items-center justify-content-center gap-2">
@@ -310,12 +310,32 @@
         </ng-template>
         <form [formGroup]="awbForm" (ngSubmit)="onSubmit(awbForm.value)">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="status"><strong>Assigned To</strong></label>
-                    <p-dropdown appendTo="body" [options]="assignedTo" placeholder="Assigned To"
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="status"><strong>Role</strong></label>
+                    <p-dropdown (onChange)="getUserByRoleName($event)" appendTo="body" [options]="assignedTo" placeholder="Assigned To"
                         formControlName="assignedTo"
                         [ngClass]="{'ng-dirty':awbForm.get('assignedTo')?.touched && awbForm.get('assignedTo')?.invalid}"></p-dropdown>
                     <small *ngIf="!awbForm.get('assignedTo')?.valid && awbForm.get('assignedTo')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="status"><strong>Employee Id</strong></label>
+                    <p-dropdown (onChange)="onSelectEmployeeId($event)" appendTo="body" [options]="employeeId" optionLabel="employeeId" filter="true"  placeholder="Select Employee Id"
+                        formControlName="employeeId"
+                        [ngClass]="{'ng-dirty':awbForm.get('employeeId')?.touched && awbForm.get('employeeId')?.invalid}"></p-dropdown>
+                    <small *ngIf="!awbForm.get('employeeId')?.valid && awbForm.get('employeeId')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="status"><strong>Name</strong></label>
+                    <p-dropdown (onChange)="onSelectName($event)" appendTo="body" filter="true" [options]="users" optionLabel="name" placeholder="Select Name"
+                        formControlName="name"
+                        [ngClass]="{'ng-dirty':awbForm.get('name')?.touched && awbForm.get('name')?.invalid}"></p-dropdown>
+                    <small *ngIf="!awbForm.get('name')?.valid && awbForm.get('name')?.touched"
                         class="text-red-500">
                         Required
                     </small>

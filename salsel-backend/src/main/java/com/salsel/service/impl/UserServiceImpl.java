@@ -345,6 +345,8 @@ public class UserServiceImpl implements UserService {
                 .password(user.getPassword())
                 .status(user.getStatus())
                 .roles(user.getRoles())
+                .country(user.getCountry())
+                .city(user.getCity())
                 .build();
     }
 

@@ -51,6 +51,10 @@ export class UserService {
     return this.http.get(`${this.url}user/name/${name}`);
   }
 
+  getUserByRoleName(roleName: string) {
+    return this.http.get(`${this.url}user/role/${roleName}`);
+  }
+
   getUserByEmail(email: string) {
     return this.http.get(`${this.url}user/email/${email}`);
   }

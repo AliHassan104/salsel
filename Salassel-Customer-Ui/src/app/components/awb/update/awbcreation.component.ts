@@ -386,6 +386,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         status: formValue.status,
         dutyAndTaxesBillTo: formValue.dutyAndTaxesBillTo,
         weight: formValue.weight,
+        accountNumber:formValue?.accountNumber?.value,
         amount: formValue.amount,
         content: formValue.content,
         currency: formValue.currency,
@@ -399,6 +400,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
         createdBy: this.loginUserEmail,
+        assignedTo: formValue.requestType == "Pick-up" ? "ROLE_OPERATION_AGENT" : "",
       };
 
       //   Create Ticket
@@ -447,7 +449,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .subscribe((res: any) => {
         this.addressBookStatus = res.body;
-        
+
         if (res?.body == "both") {
           this.success();
           this.router.navigate(["awb/list"]);

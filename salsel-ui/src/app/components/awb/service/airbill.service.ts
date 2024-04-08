@@ -90,6 +90,10 @@ export class AirbillService {
     );
   }
 
+  assignedAirbillToUser(awbId:any,userId:any){
+    return this.http.put(`${this.url}awb/${awbId}/user/${userId}`, {});
+  }
+
   getBillTrackingHistory(params: any) {
     return this.http.get(`${this.url}awb-shipping-history`, { params });
   }
