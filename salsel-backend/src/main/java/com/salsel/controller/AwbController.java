@@ -63,6 +63,14 @@ public class AwbController {
         return ResponseEntity.ok(awbDtoList);
     }
 
+    @GetMapping("/awb/assigned-user/status")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity<List<AwbDto>> getAllAwbByAssignedUserAndStatus(@RequestParam(value = "status") String status,
+                                                                         @RequestParam(value = "userId") Long userId) {
+        List<AwbDto> awbDtoList = awbService.getAwbByAssignedUserAndStatus(userId,status);
+        return ResponseEntity.ok(awbDtoList);
+    }
+
     @GetMapping("/awb/logged-in-user-role")
     @PreAuthorize("hasAuthority('READ_AWB')")
     public ResponseEntity<List<AwbDto>> getAllAwbByLoggedInUserRole(@RequestParam(value = "status") Boolean status) {

@@ -220,6 +220,18 @@ public class AwbServiceImpl implements AwbService {
         return awbDtoList;
     }
 
+    @Override
+    public List<AwbDto> getAwbByAssignedUserAndStatus(Long userId, String status) {
+        List<Awb> awbList = awbRepository.findAllInDesOrderByAssignedUserAndIdAndAwbStatus(status, userId);
+        List<AwbDto> awbDtoList = new ArrayList<>();
+
+        for (Awb awb : awbList) {
+            AwbDto awbDto = toDto(awb);
+            awbDtoList.add(awbDto);
+        }
+        return awbDtoList;
+    }
+
 
     @Override
     public List<AwbDto> getAwbByLoggedInUserRole(Boolean status) {
