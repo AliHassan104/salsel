@@ -5,10 +5,7 @@ import com.salsel.dto.AwbShippingHistoryDto;
 import com.salsel.service.AwbShippingHistoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +24,20 @@ public class AwbShippingHistoryController {
     public ResponseEntity<List<AwbShippingHistoryDto>> getAllAwbShippingHistory(@RequestParam(value = "awbId") Long awbId) {
         List<AwbShippingHistoryDto> awbShippingHistoryDtoList = awbShippingHistoryService.findByAwbId(awbId);
         return ResponseEntity.ok(awbShippingHistoryDtoList);
+    }
+
+    @PutMapping("/awb-shipping-history/update-comment")
+    @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
+    public ResponseEntity<AwbShippingHistoryDto> updateCommentInAwbShippingHistory(@RequestParam(value = "awbId") Long awbId,
+                                                                                   @RequestParam(value = "comment") String comment) {
+        AwbShippingHistoryDto awbShippingHistoryDto = awbShippingHistoryService.addCommentToAwbShippingHistory(comment,awbId);
+        return ResponseEntity.ok(awbShippingHistoryDto);
+    }
+
+    @GetMapping("/awb-shipping-history/awb/{id}")
+    @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
+    public ResponseEntity<AwbShippingHistoryDto> getAwbShippingHistoryByAwb(@PathVariable() Long id) {
+        AwbShippingHistoryDto awbShippingHistoryDto = awbShippingHistoryService.findLatestAwbShippingHistoryByAwb(id);
+        return ResponseEntity.ok(awbShippingHistoryDto);
     }
 }

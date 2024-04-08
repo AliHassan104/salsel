@@ -147,7 +147,14 @@ public class AwbController {
         return ResponseEntity.ok(updatedAwbDtoList);
     }
 
-
+    @PutMapping("/awb/awb-status/unique-number/comment")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
+    public ResponseEntity<AwbDto> updateAwbStatusAndComment(@RequestParam() String status,
+                                                            @RequestParam() Long uniqueNumber,
+                                                            @RequestParam() String comment) {
+        AwbDto updatedAwbDto = awbService.updateAwbStatusAndCommentOnScan(uniqueNumber,status,comment);
+        return ResponseEntity.ok(updatedAwbDto);
+    }
 
     @GetMapping("/download-awb-excel")
     public void downloadAwbBetweenDates(

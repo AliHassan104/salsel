@@ -1,6 +1,7 @@
 package com.salsel.service.impl;
 
 import com.salsel.dto.AwbShippingHistoryDto;
+import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
 import com.salsel.model.AwbShippingHistory;
 import com.salsel.repository.AwbShippingHistoryRepository;
@@ -8,11 +9,10 @@ import com.salsel.service.AwbShippingHistoryService;
 import com.salsel.utils.HelperUtils;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.salsel.constants.AwbStatusConstants.AWB_CREATED;
 
 @Service
 public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService {
@@ -26,9 +26,10 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
     }
 
     @Override
+    @Transactional
     public AwbShippingHistoryDto addAwbShippingHistory(Awb awb) {
         // Retrieve the latest shipping history entry for the AWB
-        Optional<AwbShippingHistory> latestHistoryOptional = awbShippingHistoryRepository.findTop1ByAwbOrderByTimestampDesc(awb);
+        Optional<AwbShippingHistory> latestHistoryOptional = awbShippingHistoryRepository.findTop1ByAwbIdOrderByTimestampDesc(awb.getId());
 
         // Check if the latest history entry exists and has the same status as the current AWB
         if (latestHistoryOptional.isPresent()) {
@@ -47,6 +48,27 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
 
         AwbShippingHistory createdHistory = awbShippingHistoryRepository.save(awbShippingHistory);
         return toDto(createdHistory);
+    }
+
+    @Override
+    @Transactional
+    public AwbShippingHistoryDto addCommentToAwbShippingHistory(String comment, Long awbId) {
+        AwbShippingHistory latestAwbHistory = awbShippingHistoryRepository.findTop1ByAwbIdOrderByTimestampDesc(awbId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for id => %d", awbId)));
+
+        if (comment == null || comment.isEmpty()) {
+            latestAwbHistory.setComment(null);
+        } else {
+            latestAwbHistory.setComment(comment);
+        }
+        return toDto(latestAwbHistory);
+    }
+
+    @Override
+    public AwbShippingHistoryDto findLatestAwbShippingHistoryByAwb(Long awbId) {
+        AwbShippingHistory awbShippingHistory = awbShippingHistoryRepository.findTop1ByAwbIdOrderByTimestampDesc(awbId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("AwbShippingHistory not found for id => %d", awbId)));
+        return toDto(awbShippingHistory);
     }
 
     @Override

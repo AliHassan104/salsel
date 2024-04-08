@@ -30,11 +30,11 @@ public class AssignmentEmailsUtils {
             helper.setTo(user.getEmail());
             helper.setSubject("Airbill Assignment - AWB Number " + awbNumber);
 
-            String resetLink = "http://localhost:4200/#/awb/list/"+id;
+//            String resetLink = "http://localhost:4200/#/awb/list/"+id;
             String emailContent = "Dear " + user.getName() + ",\n\n"
                     + "An airbill with ID " + awbNumber +  " has been assigned to you.\n"
                     + "Kindly review it urgently and take necessary action.\n\n"
-                    + resetLink + "\n\n\n"
+//                    + resetLink + "\n\n\n"
                     + "Best regards,\n"
                     + "Salassil Express Team";
 

@@ -364,6 +364,55 @@ public class AwbServiceImpl implements AwbService {
     }
 
     @Override
+    public AwbDto updateAwbStatusAndCommentOnScan(Long uniqueNumber, String awbStatus, String comment) {
+        Awb existingAwb = awbRepository.findByUniqueNumber(uniqueNumber)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for Tracking Number => %d", uniqueNumber)));
+
+        User currentUser = helperUtils.getCurrentUser();
+        existingAwb.setAssignedToUser(currentUser);
+        existingAwb.setCreatedBy(currentUser.getEmail());
+
+        switch (awbStatus) {
+            case AWB_CREATED:
+                existingAwb.setAwbStatus(AWB_CREATED);
+                break;
+            case PICKED_UP:
+                existingAwb.setAwbStatus(PICKED_UP);
+                break;
+            case ARRIVED_IN_STATION:
+                existingAwb.setAwbStatus(ARRIVED_IN_STATION);
+                break;
+            case HELD_IN_STATION:
+                existingAwb.setAwbStatus(HELD_IN_STATION);
+                break;
+            case DEPART_FROM_STATION:
+                existingAwb.setAwbStatus(DEPART_FROM_STATION);
+                break;
+            case ARRIVED_IN_HUB:
+                existingAwb.setAwbStatus(ARRIVED_IN_HUB);
+                break;
+            case DEPART_FROM_HUB:
+                existingAwb.setAwbStatus(DEPART_FROM_HUB);
+                break;
+            case OUT_FOR_DELIVERY:
+                existingAwb.setAwbStatus(OUT_FOR_DELIVERY);
+                break;
+            case DELIVERED:
+                existingAwb.setAwbStatus(DELIVERED);
+                break;
+            default:
+                throw new RecordNotFoundException("Awb Status not valid");
+        }
+
+        Awb updatedAwb = awbRepository.save(existingAwb);
+        awbShippingHistoryService.addAwbShippingHistory(updatedAwb);
+        awbShippingHistoryService.addCommentToAwbShippingHistory(comment, updatedAwb.getId());
+
+        sendEmailAsync(updatedAwb);
+        return toDto(updatedAwb);
+    }
+
+    @Override
     @Transactional
     public List<AwbDto> updateMultipleAwbStatusOnScan(Map<Long, String> statusMap) {
         List<Awb> updatedAwbList = new ArrayList<>();
