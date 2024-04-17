@@ -27,10 +27,8 @@ public interface TicketService {
     void setToActiveById(Long id);
     TicketDto update(Long id, TicketDto ticketDto, List<MultipartFile> pdfFiles, List<String> fileNames);
     List<TicketDto> getTicketsBetweenDates(LocalDate startDate, LocalDate endDate);
-
     LocalDate getMinCreatedAt();
     LocalDate getMaxCreatedAt();
-
     Map<String, Long> getStatusCounts();
     Map<String, Long> getStatusCountsBasedOnLoggedInUser();
     Long getTicketCount();

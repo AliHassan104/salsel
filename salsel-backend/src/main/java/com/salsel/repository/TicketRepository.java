@@ -68,4 +68,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
             "WHERE t.status = :status\n" +
             "  AND (t.createdBy = :createdBy OR t.assignedTo = :assignedTo)")
     Long countByStatusAndCreatedByOrAssignedTo(boolean status, String createdBy, String assignedTo);
+
+    @Query("SELECT t FROM Ticket t WHERE ticketStatus != 'Closed'")
+    List<Ticket> getAllTicketsWhereStatusIsNotClosed();
 }

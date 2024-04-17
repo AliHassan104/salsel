@@ -2,6 +2,7 @@ package com.salsel.utils;
 
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
+import com.salsel.model.Ticket;
 import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
 import com.salsel.service.AwbService;
@@ -19,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import static com.salsel.constants.AwbStatusConstants.DELIVERED;
@@ -81,6 +83,54 @@ public class EmailUtils {
         }
     }
 
+    @Async
+    public void sendAlertEmailForPendingTickets(List<Ticket> tickets, String toAddress, String[] ccAddresses) throws MessagingException {
+        StringBuilder emailBody = new StringBuilder();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        emailBody.append("<html><body>");
+        emailBody.append("<h2 style='color: black;'>Pending Tickets Summary</h2>");
+        emailBody.append("<table style='border-collapse: collapse; border: 1px solid black; color: black;'>");
+        emailBody.append("<tr><th style='border: 1px solid black; font-weight: bold; color: black;'>Ticket ID</th>");
+        emailBody.append("<th style='border: 1px solid black; font-weight: bold; color: black;'>Created At</th>");
+        emailBody.append("<th style='border: 1px solid black; font-weight: bold; color: black;'>Shipper</th>");
+        emailBody.append("<th style='border: 1px solid black; font-weight: bold; color: black;'>Recipient</th>");
+        emailBody.append("<th style='border: 1px solid black; font-weight: bold; color: black;'>Origin</th>");
+        emailBody.append("<th style='border: 1px solid black; font-weight: bold; color: black;'>Destination</th>");
+        emailBody.append("<th style='border: 1px solid black; font-weight: bold; color: black;'>Status</th></tr>");
+
+        for (Ticket ticket : tickets) {
+            emailBody.append("<tr>");
+            emailBody.append("<td style='border: 1px solid black; padding: 3px 5px 3px 5px;'>").append(ticket.getId()).append("</td>");
+            emailBody.append("<td style='border: 1px solid black; padding: 3px 5px;'>").append(ticket.getCreatedAt().format(dateFormatter)).append("</td>");
+            emailBody.append("<td style='border: 1px solid black; padding: 3px 5px 3px 5px;'>").append(ticket.getShipperName()).append("</td>");
+            emailBody.append("<td style='border: 1px solid black; padding: 3px 5px 3px 5px;'>").append(ticket.getRecipientName()).append("</td>");
+            emailBody.append("<td style='border: 1px solid black; padding: 3px 5px 3px 5px;'>").append(ticket.getOriginCountry()).append(", ").append(ticket.getOriginCity()).append("</td>");
+            emailBody.append("<td style='border: 1px solid black; padding: 3px 5px 3px 5px;'>").append(ticket.getDestinationCountry()).append(", ").append(ticket.getDestinationCity()).append("</td>");
+            emailBody.append("<td style='border: 1px solid black; padding: 3px 5px 3px 5px;'>").append(ticket.getTicketStatus()).append("</td>");
+            emailBody.append("</tr>");
+        }
+
+        emailBody.append("</table>");
+        emailBody.append("</body></html>");
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        try {
+            helper.setFrom(sender);
+            helper.setTo(toAddress);
+            if (ccAddresses != null && ccAddresses.length > 0) {
+                helper.setCc(ccAddresses);
+            }
+            helper.setSubject("Alert: Pending Tickets");
+            helper.setText(emailBody.toString(), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        javaMailSender.send(message);
+    }
 
     @Async
     public void sendEmail(String toAddress, String[] ccAddresses) {
@@ -158,7 +208,7 @@ public class EmailUtils {
             helper.setTo(user.getEmail());
             helper.setSubject("Password Reset Request");
 
-            String resetLink =  user.getEmail() + "&code=" + resetCode;
+            String resetLink = user.getEmail() + "&code=" + resetCode;
 
             String emailContent = "<html><body>"
                     + "<p>Dear <strong style='color: blue;'>" + user.getName() + "</strong>,</p>"
@@ -230,7 +280,6 @@ public class EmailUtils {
             System.err.println("Error sending email: " + e.getMessage());
         }
     }
-
 
 
 }

@@ -1,19 +1,24 @@
 package com.salsel.scheduler;
 
+import com.salsel.model.Ticket;
+import com.salsel.repository.TicketRepository;
 import com.salsel.utils.EmailUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Component
-public class AwbStatusReportScheduler {
-
+public class EmailScheduler {
     private final EmailUtils emailUtils;
+    private final TicketRepository ticketRepository;
 
-    public AwbStatusReportScheduler(EmailUtils emailUtils) {
+    public EmailScheduler(EmailUtils emailUtils, TicketRepository ticketRepository) {
         this.emailUtils = emailUtils;
+        this.ticketRepository = ticketRepository;
     }
 
     @Scheduled(cron = "0 5 0 * * ?") // Execute every day at 12:05 AM
@@ -37,5 +42,19 @@ public class AwbStatusReportScheduler {
 
         // Log or handle success/failure
         System.out.println("Daily email report sent for " + currentDate);
+    }
+
+    @Scheduled(cron = "0 6 0 * * ?") // Execute every day at 12:06 AM
+    public void sendEmailForPendingTickets() {
+        List<Ticket> pendingTickets = ticketRepository.getAllTicketsWhereStatusIsNotClosed();
+        if(!pendingTickets.isEmpty()){
+            String toAddress = "a.choudhary@salassilexpress.com";
+            String[] ccAddresses = {"ashraf@salassilexpress.com", "samer@salassilexpress.com", "muhammadtabish05@gmail.com"};
+            try {
+                emailUtils.sendAlertEmailForPendingTickets(pendingTickets, toAddress, ccAddresses);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

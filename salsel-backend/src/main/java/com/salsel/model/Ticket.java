@@ -57,7 +57,6 @@ public class Ticket {
     @Column(length = 1000)
     private String textarea;
 
-
     private String ticketCategory;
     private String ticketFlag;
     private String assignedTo;
