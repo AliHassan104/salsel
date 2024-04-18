@@ -11,5 +11,5 @@ public interface EmployeeService {
     EmployeeDto findById(Long id);
     void deleteById(Long id);
     void setToActiveById(Long id);
-    EmployeeDto update(Long id, EmployeeDto employeeDto);
+    EmployeeDto update(Long id, EmployeeDto employeeDto, List<MultipartFile> pdfFiles, List<String> fileNames, MultipartFile passportFile, MultipartFile idFile);
 }

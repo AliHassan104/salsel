@@ -160,7 +160,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeDto update(Long id, EmployeeDto employeeDto) {
+    public EmployeeDto update(Long id, EmployeeDto employeeDto, List<MultipartFile> files, List<String> fileNames, MultipartFile passportFile, MultipartFile idFile) {
         Employee existingEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Employee not found for id => %d", id)));
 
@@ -172,6 +172,61 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingEmployee.setMobile(employeeDto.getMobile());
         existingEmployee.setTransportation(employeeDto.getTransportation());
         existingEmployee.setOtherAllowance(employeeDto.getOtherAllowance());
+
+        if (passportFile != null && !passportFile.isEmpty()) {
+            String folderKey = "Employee/Employee_" + id;
+            bucketService.deleteFilesStartingWith(folderKey,"passport_");
+            String folderName = "Employee_" + existingEmployee.getId();
+            String savedUrl = helperUtils.savePdfToS3(passportFile, folderName, "passport");
+            existingEmployee.setPassportFilePath(savedUrl);
+            logger.info("Passport is uploaded to S3 in folder '{}'.", folderName);
+        }
+
+        if (idFile != null && !idFile.isEmpty()) {
+            String folderKey = "Employee/Employee_" + id;
+            bucketService.deleteFilesStartingWith(folderKey,"id_");
+            String folderName = "Employee_" + existingEmployee.getId();
+            String savedUrl = helperUtils.savePdfToS3(idFile, folderName, "id");
+            existingEmployee.setPassportFilePath(savedUrl);
+            logger.info("Id is uploaded to S3 in folder '{}'.", folderName);
+        }
+
+        if (files != null && !files.isEmpty()) {
+            // Delete existing files
+            for (String fileName : fileNames) {
+                bucketService.deleteFile(fileName);
+            }
+
+            // Save new files
+            String folderName = "Employee_" + existingEmployee.getId();
+            List<String> savedUrls = helperUtils.savePdfListToS3(files, folderName, "Employee");
+
+            // Create new attachments
+            List<EmployeeAttachment> employeeAttachmentList = new ArrayList<>();
+            for (String savedUrl : savedUrls) {
+                EmployeeAttachment employeeAttachment = new EmployeeAttachment();
+                employeeAttachment.setFilePath(savedUrl);
+                employeeAttachment.setEmployee(existingEmployee);
+                employeeAttachmentList.add(employeeAttachment);
+            }
+
+            // Update existing Employee attachments
+            existingEmployee.getAttachments().clear();
+            existingEmployee.getAttachments().addAll(employeeAttachmentList);
+
+            // Save attachments to the database
+            employeeAttachmentRepository.saveAll(employeeAttachmentList);
+            logger.info("Files are updated on S3 in folder '{}'.", folderName);
+        }else {
+            // No new files attached, delete existing files
+            for (String fileName : fileNames) {
+                bucketService.deleteFile(fileName);
+            }
+
+            // Clear existing attachments in the database
+            existingEmployee.getAttachments().clear();
+            logger.info("Existing Files are deleted.");
+        }
 
         User user = userRepository.findById(employeeDto.getUserId())
                 .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", employeeDto.getUserId())));

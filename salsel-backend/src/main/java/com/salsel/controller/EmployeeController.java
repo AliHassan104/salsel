@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class EmployeeController {
     private final EmployeeService employeeService;
-
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
@@ -53,8 +52,13 @@ public class EmployeeController {
 
     @PutMapping("/employee/{id}")
     @PreAuthorize("hasAuthority('CREATE_EMPLOYEE') and hasAuthority('READ_EMPLOYEE')")
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id,@RequestBody EmployeeDto employeeDto) {
-        EmployeeDto updatedEmployeeDto = employeeService.update(id, employeeDto);
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id,
+                                                      @RequestPart(name = "employeeDto") EmployeeDto employeeDto,
+                                                      @RequestPart(name = "files", required = false) List<MultipartFile> files,
+                                                      @RequestParam("fileNames") List<String> fileNames,
+                                                      @RequestPart(name = "passport", required = false) MultipartFile passportFile,
+                                                      @RequestPart(name = "idFile", required = false) MultipartFile idFile) {
+        EmployeeDto updatedEmployeeDto = employeeService.update(id, employeeDto, files, fileNames, passportFile, idFile);
         return ResponseEntity.ok(updatedEmployeeDto);
     }
 
