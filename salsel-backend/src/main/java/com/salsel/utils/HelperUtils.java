@@ -115,17 +115,7 @@ public class HelperUtils {
             String fileExtension = "." + FilenameUtils.getExtension(pdf.getOriginalFilename());
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
             String newFileName = FilenameUtils.getBaseName(fileName) + "_" + timestamp + fileExtension;
-
-//            if(Objects.equals(fileName, "passport")){
-//                return bucketService.save(pdf.getBytes(), folderName, newFileName, "Employee"); // Save PDF and return the URL
-//
-//            }
-//            else if (Objects.equals(fileName, "id")){
-//
-//            }
-
             return bucketService.save(pdf.getBytes(), folderName, newFileName, "Employee"); // Save PDF and return the URL
-
         } catch (IOException e) {
             logger.error("Failed to save File to S3", e);
             throw new RuntimeException("Failed to save File to S3: " + e.getMessage());
