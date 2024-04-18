@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -23,7 +24,14 @@ public class Employee {
     private Double salary;
     private Double housing;
     private Double transportation;
+    private Double mobile;
     private Double otherAllowance;
+    private String passportFilePath;
+    private String idFilePath;
     private Long userId;
     private Boolean status;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "employee_id")
+    private List<EmployeeAttachment> attachments;
 }

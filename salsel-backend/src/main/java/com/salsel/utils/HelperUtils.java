@@ -3,6 +3,7 @@ package com.salsel.utils;
 import com.amazonaws.services.s3.AmazonS3;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Employee;
 import com.salsel.model.Otp;
 import com.salsel.model.User;
 import com.salsel.repository.UserRepository;
@@ -11,7 +12,6 @@ import com.salsel.service.impl.bucketServiceImpl;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.salsel.service.impl.bucketServiceImpl.EMPLOYEE;
 
 @Component
 public class HelperUtils {
@@ -107,7 +109,55 @@ public class HelperUtils {
         }
     }
 
-    public List<String> saveTicketPdfListToS3(List<MultipartFile> pdfFiles, String folderName) {
+    public void saveFileToBucketAndSetUrl(MultipartFile file, Employee employee, String fileType) {
+        if (file != null && !file.isEmpty()) {
+            String folderName = "Employee_" + employee.getId();
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
+            String fileName = fileType + "_" + timestamp + "." + FilenameUtils.getExtension(file.getOriginalFilename());
+            String url = null;
+            try {
+                url = bucketService.save(file.getBytes(), folderName, fileName, EMPLOYEE);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            // Set URL based on fileType
+            switch (fileType) {
+                case "passport":
+                    employee.setPassportFilePath(url);
+                    break;
+                case "id":
+                    employee.setIdFilePath(url);
+                    break;
+                // Add additional cases for other file types if needed
+                default:
+                    break;
+            }
+        }
+    }
+
+//    public List<String> saveTicketPdfListToS3(List<MultipartFile> pdfFiles, String folderName) {
+//        try {
+//            List<String> savedPdfUrls = new ArrayList<>();
+//
+//            for (MultipartFile pdf : pdfFiles) {
+//                String filename = pdf.getOriginalFilename();
+//                String fileExtension = "." + FilenameUtils.getExtension(pdf.getOriginalFilename());
+//                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
+//                String newFileName = FilenameUtils.getBaseName(filename) + "_" + timestamp + fileExtension;
+//
+//                // Save to S3 bucket
+//                String savedPdfUrl = bucketService.save(pdf.getBytes(), folderName, newFileName, "Ticket");
+//                savedPdfUrls.add(savedPdfUrl);
+//            }
+//
+//            return savedPdfUrls;
+//        } catch (IOException e) {
+//            logger.error("Failed to save PDFs to S3", e);
+//            throw new RuntimeException("Failed to save PDFs to S3: " + e.getMessage());
+//        }
+//    }
+
+    public List<String> savePdfListToS3(List<MultipartFile> pdfFiles, String folderName, String folderType) {
         try {
             List<String> savedPdfUrls = new ArrayList<>();
 
@@ -118,7 +168,7 @@ public class HelperUtils {
                 String newFileName = FilenameUtils.getBaseName(filename) + "_" + timestamp + fileExtension;
 
                 // Save to S3 bucket
-                String savedPdfUrl = bucketService.save(pdf.getBytes(), folderName, newFileName, "Ticket");
+                String savedPdfUrl = bucketService.save(pdf.getBytes(), folderName, newFileName, folderType);
                 savedPdfUrls.add(savedPdfUrl);
             }
 

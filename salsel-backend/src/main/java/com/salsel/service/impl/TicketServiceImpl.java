@@ -4,14 +4,16 @@ import com.salsel.criteria.SearchCriteria;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.*;
+import com.salsel.model.Role;
+import com.salsel.model.Ticket;
+import com.salsel.model.TicketAttachment;
+import com.salsel.model.User;
 import com.salsel.repository.TicketAttachmentRepository;
 import com.salsel.repository.TicketRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.BucketService;
 import com.salsel.service.TicketService;
 import com.salsel.specification.FilterSpecification;
-import com.salsel.utils.EmailUtils;
 import com.salsel.utils.HelperUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,7 +26,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,16 +39,14 @@ public class TicketServiceImpl implements TicketService {
     private final TicketAttachmentRepository ticketAttachmentRepository;
     private final UserRepository userRepository;
     private final HelperUtils helperUtils;
-    private final EmailUtils emailUtils;
     private final BucketService bucketService;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public TicketServiceImpl(TicketRepository ticketRepository, TicketAttachmentRepository ticketAttachmentRepository, UserRepository userRepository, HelperUtils helperUtils, EmailUtils emailUtils, BucketService bucketService){
+    public TicketServiceImpl(TicketRepository ticketRepository, TicketAttachmentRepository ticketAttachmentRepository, UserRepository userRepository, HelperUtils helperUtils, BucketService bucketService){
         this.ticketRepository = ticketRepository;
         this.ticketAttachmentRepository = ticketAttachmentRepository;
         this.userRepository = userRepository;
         this.helperUtils = helperUtils;
-        this.emailUtils = emailUtils;
         this.bucketService = bucketService;
     }
 
@@ -69,7 +68,7 @@ public class TicketServiceImpl implements TicketService {
         // Save PDFs to S3 bucket if provided
         if (pdfFiles != null && !pdfFiles.isEmpty()) {
             String folderName = "Ticket_" + createdTicket.getId();
-            List<String> savedPdfUrls = helperUtils.saveTicketPdfListToS3(pdfFiles, folderName);
+            List<String> savedPdfUrls = helperUtils.savePdfListToS3(pdfFiles, folderName, "Ticket");
 
             List<TicketAttachment> ticketAttachmentList = new ArrayList<>();
             for (String savedPdfUrl : savedPdfUrls) {
@@ -311,7 +310,7 @@ public class TicketServiceImpl implements TicketService {
 
             // Save new files
             String folderName = "Ticket_" + existingTicket.getId();
-            List<String> savedPdfUrls = helperUtils.saveTicketPdfListToS3(pdfFiles, folderName);
+            List<String> savedPdfUrls = helperUtils.savePdfListToS3(pdfFiles, folderName, "Ticket");
 
             // Create new attachments
             List<TicketAttachment> ticketAttachmentList = new ArrayList<>();

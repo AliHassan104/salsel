@@ -29,6 +29,7 @@ public class bucketServiceImpl implements BucketService {
     public static final String ACCOUNT = "Account";
     public static final String AWB = "Awb";
     public static final String TICKET = "Ticket";
+    public static final String EMPLOYEE = "Employee";
     @Autowired
     private AmazonS3 s3Client;
     @Value("${application.bucket.name}")
@@ -51,7 +52,10 @@ public class bucketServiceImpl implements BucketService {
                 folderKey = AWB + "/" + folderName;
             } else if (folderType.equalsIgnoreCase(TICKET)) {
                 folderKey = TICKET + "/" + folderName;
-            } else {
+            } else if (folderType.equalsIgnoreCase(EMPLOYEE)) {
+                folderKey = EMPLOYEE + "/" + folderName;
+            }
+            else {
                 throw new RecordNotFoundException("Invalid folder type: " + folderType);
             }
 

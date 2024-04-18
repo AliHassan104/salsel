@@ -3,10 +3,12 @@ package com.salsel.controller;
 import com.salsel.dto.DepartmentDto;
 import com.salsel.dto.EmployeeDto;
 import com.salsel.dto.PaginationResponse;
+import com.salsel.dto.TicketDto;
 import com.salsel.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,8 +23,11 @@ public class EmployeeController {
 
     @PostMapping("/employee")
     @PreAuthorize("hasAuthority('CREATE_EMPLOYEE') and hasAuthority('READ_EMPLOYEE')")
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
-        return ResponseEntity.ok(employeeService.save(employeeDto));
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestPart("employeeDto") EmployeeDto employeeDto,
+                                                      @RequestPart(name = "passport", required = false) MultipartFile passport,
+                                                      @RequestPart(name = "id", required = false) MultipartFile id,
+                                                      @RequestPart(name = "docs", required = false) List<MultipartFile> docs) {
+        return ResponseEntity.ok(employeeService.save(employeeDto, passport, id, docs));
     }
 
     @GetMapping("/employee")
