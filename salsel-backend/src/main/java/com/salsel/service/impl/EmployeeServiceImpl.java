@@ -187,7 +187,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             bucketService.deleteFilesStartingWith(folderKey,"id_");
             String folderName = "Employee_" + existingEmployee.getId();
             String savedUrl = helperUtils.savePdfToS3(idFile, folderName, "id");
-            existingEmployee.setPassportFilePath(savedUrl);
+            existingEmployee.setIdFilePath(savedUrl);
             logger.info("Id is uploaded to S3 in folder '{}'.", folderName);
         }
 
@@ -251,6 +251,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .idFilePath(employee.getIdFilePath())
                 .userId(employee.getUserId())
                 .status(employee.getStatus())
+                .attachments(employee.getAttachments())
                 .build();
     }
 
@@ -269,6 +270,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .idFilePath(employeeDto.getIdFilePath())
                 .userId(employeeDto.getUserId())
                 .status(employeeDto.getStatus())
+                .attachments(employeeDto.getAttachments())
                 .build();
     }
 }

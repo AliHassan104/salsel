@@ -3,14 +3,14 @@
         <div class="card">
             <h1 class="m-0"
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
-                All Tickets</h1>
+                All Employees</h1>
             <div class="flex justify-content-end addBtn">
-                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_TICKET')" pButton label="Create Ticket"
-                    class="mb-2" routerLink="/create-ticket"></button>
+                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_EMPLOYEE')" pButton label="Add Employee"
+                    class="mb-2" routerLink="/create-employee"></button>
             </div>
             <hr>
-            <p-table #dt1 [value]="tickets" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-                [globalFilterFields]="['ticketStatus','ticketFlag','category','ticketType','departmentCategory','assignedTo','id']"
+            <p-table #dt1 [value]="employees" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+                [globalFilterFields]="['department','housing','jobTitle','mobile','nationality','salary','otherAllowance','transportation']"
                 styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
                 responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
@@ -20,7 +20,8 @@
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
-                                <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download" (click)="visible = true"></button>
+                            <!-- <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download"
+                                (click)="visible = true"></button> -->
                             <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
                                 style="font-weight: bold;"></i>
                         </div>
@@ -41,42 +42,42 @@
                         </th>
                         <th style="min-width: 16rem">
                             <div class="flex justify-content-center align-items-center">
-                                Created At
+                                Department
                             </div>
                         </th>
                         <th style="min-width: 16rem">
                             <div class="flex justify-content-center align-items-center">
-                                Ticket Number
+                                Housing
                             </div>
                         </th>
                         <th style="min-width: 13rem">
                             <div class="flex justify-content-center align-items-center">
-                                Ticket Type
+                                Job Title
                             </div>
                         </th>
                         <th style="min-width: 13rem">
                             <div class="flex justify-content-center align-items-center">
-                                Ticket Status
+                                Mobile Number
                             </div>
                         </th>
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-center align-items-center">
-                                Ticket Flag
+                                Nationality
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                Category
+                                Other Allowance
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                Assigned To
+                                Salary
                             </div>
                         </th>
                         <th style="min-width: 14rem">
                             <div class="flex justify-content-center align-items-center">
-                                Department Category
+                                Transportation
                             </div>
                         </th>
                     </tr>
@@ -89,58 +90,58 @@
                         " class="p-button-rounded p-button-secondary p-button-outlined mx-2"
                                 routerLink="{{data.id}}"></button>
                             <button pTooltip="Edit" tooltipPosition="bottom"
-                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_TICKET')"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_EMPLOYEE')"
                                 pButton pRipple type="button" icon="pi pi-file-edit"
                                 class="p-button-rounded p-button-outlined mx-2"
-                                (click)="onEditTicket(data.id)"></button>
+                                (click)="onEditEmployee(data.id)"></button>
                             <button pTooltip="Deactivate" tooltipPosition="bottom"
-                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_TICKET')"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_EMPLOYEE')"
                                 pButton pRipple type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
-                                (click)="onDeleteTicket(data.id)"></button>
+                                (click)="onDeleteEmployee(data.id)"></button>
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus"
-                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_TICKET')" pButton pRipple
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_EMPLOYEE')" pButton pRipple
                                 type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
-                                (click)="onActiveTicket(data.id)"></button>
+                                (click)="onActiveEmployee(data.id)"></button>
                         </td>
                         <td>
-                            {{ data?.createdAt | date:'d MMM, Y' }}
+                            {{data?.department}}
                         </td>
                         <td>
-                            {{ data?.id | padWithZeros: 4}}
+                            {{data?.housing}}
                         </td>
                         <td>
-                            {{ data?.ticketType }}
+                            {{data?.jobTitle}}
                         </td>
                         <td>
-                            {{data?.ticketStatus}}
+                            {{data?.mobile}}
 
                         </td>
                         <td>
-                            {{data?.ticketFlag}}
+                            {{data?.nationality}}
                         </td>
                         <td>
-                            {{ data?.ticketCategory }}
+                            {{data?.otherAllowance}}
                         </td>
                         <td>
-                            {{ data?.assignedTo }}
+                            {{data?.salary}}
                         </td>
                         <td>
-                            {{ data?.departmentCategory }}
+                            {{data?.transportation}}
                         </td>
 
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td style="text-align: start !important;" colspan="8">{{activeStatus?'No tickets found.':'No
-                            Inactive tickets found.'}}</td>
+                        <td style="text-align: start !important;" colspan="8">{{activeStatus?'No employee found.':'No
+                            Inactive employee found.'}}</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="loadingbody">
                     <tr>
-                        <td style="text-align: start !important;" colspan="8">Loading tickets data. Please wait.</td>
+                        <td style="text-align: start !important;" colspan="8">Loading employees data. Please wait.</td>
                     </tr>
                 </ng-template>
             </p-table>
@@ -153,7 +154,7 @@
     <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
         <div class="flex align-items-center justify-content-center">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-            <span>Are you sure you want to deactivate selected ticket?</span>
+            <span>Are you sure you want to deactivate selected employee?</span>
         </div>
         <ng-template pTemplate="footer">
             <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
@@ -163,37 +164,39 @@
         </ng-template>
     </p-dialog>
 
-        <p-dialog header="Download Ticket Report" [(visible)]="visible" [modal]="true" [style]="{ width: '70vw' }"
-            class="customDialogExcel" [draggable]="false" [resizable]="false">
-            <form action="" [formGroup]="excelDataForm" (ngSubmit)="onDownloadExcel(excelDataForm.value)" class="mt-6">
-                <div class="p-fluid p-formgrid grid">
-                    <div class="field col-6">
-                        <label>From Date</label>
-                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
-                            [maxDate]="maxDate" formControlName="fromDate" appendTo="body"
-                            [ngClass]="{'ng-dirty':excelDataForm.get('fromDate')?.touched && excelDataForm.get('fromDate')?.invalid}"></p-calendar>
-                        <small *ngIf="!excelDataForm.get('fromDate')?.valid && excelDataForm.get('fromDate')?.touched"
-                            class="text-red-500">
-                            Required
-                        </small>
-                    </div>
+    <!-- <p-dialog header="Download Ticket Report" [(visible)]="visible" [modal]="true" [style]="{ width: '70vw' }"
+        class="customDialogExcel" [draggable]="false" [resizable]="false">
+        <form action="" [formGroup]="excelDataForm" (ngSubmit)="onDownloadExcel(excelDataForm.value)" class="mt-6">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-6">
+                    <label>From Date</label>
+                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
+                        [maxDate]="maxDate" formControlName="fromDate" appendTo="body"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('fromDate')?.touched && excelDataForm.get('fromDate')?.invalid}"></p-calendar>
+                    <small *ngIf="!excelDataForm.get('fromDate')?.valid && excelDataForm.get('fromDate')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
 
-                    <div class="field col-6">
-                        <label>To Date</label>
-                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
-                            [maxDate]="maxDate" formControlName="toDate" appendTo="body"
-                            [ngClass]="{'ng-dirty':excelDataForm.get('toDate')?.touched && excelDataForm.get('toDate')?.invalid}"></p-calendar>
-                        <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
-                            class="text-red-500">
-                            Required
-                        </small>
-                    </div>
+                <div class="field col-6">
+                    <label>To Date</label>
+                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
+                        [maxDate]="maxDate" formControlName="toDate" appendTo="body"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('toDate')?.touched && excelDataForm.get('toDate')?.invalid}"></p-calendar>
+                    <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
                 </div>
-                <div class="flex justify-content-center w-full mt-5">
-                    <button pButton label="Download" type="Submit" class="mx-3 submit-btn add-btn"></button>
-                    <button pButton label="Cancel" (click)="onCancel()" type="button" class="mx-3 p-button-outlined"></button>
-                </div>
-            </form>
-        </p-dialog>
+            </div>
+            <div class="flex justify-content-center w-full mt-5">
+                <button pButton label="Download" type="Submit" class="mx-3 submit-btn add-btn"></button>
+                <button pButton label="Cancel" (click)="onCancel()" type="button"
+                    class="mx-3 p-button-outlined"></button>
+            </div>
+        </form>
+    </p-dialog> -->
+
 
     <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

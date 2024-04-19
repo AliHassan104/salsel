@@ -108,7 +108,7 @@
                             {{ data?.createdAt | date:'d MMM, Y'}}
                         </td>
                         <td>
-                            {{ data?.id }}
+                            {{ data?.id | padWithZeros: 4}}
                         </td>
                         <td>
                             {{ data?.ticketType }}
@@ -195,6 +195,6 @@
             </div>
         </form>
     </p-dialog>
-    
+
 
     <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

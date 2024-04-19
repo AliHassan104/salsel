@@ -61,6 +61,22 @@ import { VerificationComponent } from "./components/auth/verification/verificati
               canActivate: [AuthGuardService],
             },
             {
+              path: "employee/list",
+              loadChildren: () =>
+                import("./components/hr-module/hr-module.module").then(
+                  (m) => m.HrModuleModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-employee",
+              loadChildren: () =>
+                import("./components/hr-module/update/hr-form.module").then(
+                  (m) => m.HrFormModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
               path: "awb/list",
               loadChildren: () =>
                 import("./components/awb/airbill.module").then(

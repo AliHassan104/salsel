@@ -112,7 +112,8 @@
                         <p-dropdown [options]="categories" placeholder="Select category" formControlName="category"
                             (onChange)="getTicketCategory($event.value)"
                             [ngClass]="{'ng-dirty':ticketForm.get('category')?.touched && ticketForm.get('category')?.invalid}"></p-dropdown>
-                        <small *ngIf="!ticketForm.get('category')?.valid && ticketForm.get('category')?.touched && !ticketForm.get('category')?.disabled"
+                        <small
+                            *ngIf="!ticketForm.get('category')?.valid && ticketForm.get('category')?.touched && !ticketForm.get('category')?.disabled"
                             class="text-red-500">
                             Required
                         </small>
@@ -124,7 +125,8 @@
                         <p-dropdown [options]="subCategories" placeholder="Select Sub category"
                             formControlName="subCategory"
                             [ngClass]="{'ng-dirty':ticketForm.get('subCategory')?.touched && ticketForm.get('subCategory')?.invalid}"></p-dropdown>
-                        <small *ngIf="!ticketForm.get('subCategory')?.valid && ticketForm.get('subCategory')?.touched && !ticketForm.get('subCategory')?.disabled"
+                        <small
+                            *ngIf="!ticketForm.get('subCategory')?.valid && ticketForm.get('subCategory')?.touched && !ticketForm.get('subCategory')?.disabled"
                             class="text-red-500">
                             Required
                         </small>
@@ -143,7 +145,7 @@
                     <!-- Status -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="status"><strong>Ticket Status</strong></label>
-                        <p-dropdown [options]="status" (onChange)="onSelectTicketStatus($event)" placeholder="Select Ticket Status" formControlName="ticketStatus"
+                        <p-dropdown [options]="status" placeholder="Select Ticket Status" formControlName="ticketStatus"
                             [ngClass]="{'ng-dirty':ticketForm.get('status')?.touched && ticketForm.get('status')?.invalid}"></p-dropdown>
                         <small *ngIf="!ticketForm.get('status')?.valid && ticketForm.get('status')?.touched"
                             class="text-red-500">
@@ -339,31 +341,3 @@
 
 
 <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
-
-<p-dialog [(visible)]="addCommentDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
-    <div class="flex align-items-center justify-content-start">
-        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-        <span>Do you want to Add Comment?</span>
-    </div>
-    <ng-template pTemplate="footer">
-        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-            (click)="addCommentDialog = false"></button>
-        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
-            (click)="confirmAddComment()"></button>
-    </ng-template>
-</p-dialog>
-
-
-<p-dialog header="Add Comment" [(visible)]="visible" [modal]="true" [style]="{ width: '70vw' }"
-    class="customDialogExcel" [draggable]="false" [resizable]="false">
-    <form [formGroup]="postCommentForm" (ngSubmit)="onPostComment()">
-        <div class="mb-3 p-fluid">
-            <textarea #textArea pInputTextarea rows="4" placeholder="Enter Your Comment" formControlName="postComment"
-                [ngClass]="{'ng-dirty':postCommentForm.get('postComment')?.touched && postCommentForm.get('postComment')?.invalid}"></textarea>
-        </div>
-        <div class="flex justify-content-end">
-            <button pButton label="Post Comment" type="submit" class="w-10rem">
-            </button>
-        </div>
-    </form>
-</p-dialog>

@@ -81,6 +81,14 @@ export class AuthGuardService implements CanActivate {
       url: ["/create-ticket"],
       permissions: "CREATE_TICKET",
     };
+    const readBookingObj = {
+      url: ["/booking/list", "/booking/list/:id"],
+      permissions: "READ_TICKET",
+    };
+    const createBookingObj = {
+      url: ["/booking-ticket"],
+      permissions: "CREATE_TICKET",
+    };
     const readAwbObj = {
       url: ["/awb/list", "/awb/list/:billid"],
       permissions: "READ_AWB",
@@ -130,7 +138,9 @@ export class AuthGuardService implements CanActivate {
       accountHistoryrObj,
       profileObj,
       readAddressBookObj,
-      createAddressBookObj
+      createAddressBookObj,
+      readBookingObj,
+      createBookingObj
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

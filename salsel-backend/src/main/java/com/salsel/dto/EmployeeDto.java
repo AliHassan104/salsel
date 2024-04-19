@@ -1,9 +1,13 @@
 package com.salsel.dto;
 
+import com.salsel.model.EmployeeAttachment;
+import com.salsel.model.TicketAttachment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -23,4 +27,5 @@ public class EmployeeDto {
     private String idFilePath;
     private Long userId;
     private Boolean status;
+    private List<EmployeeAttachment> attachments;
 }

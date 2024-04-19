@@ -37,11 +37,13 @@ import { TagModule } from "primeng/tag";
 import { SingleCharacterPipe } from "./pipe/single-character.pipe";
 import { ExtractFileNamePipe } from "./pipe/extract-file-name.pipe";
 import { ImageModule } from "primeng/image";
+import { PadWithZerosPipe } from "./pipe/pad-with-zeros.pipe";
 
 @NgModule({
   declarations: [
     TicketitemComponent,
     TicketsdataComponent,
+    PadWithZerosPipe,
     DaysAgoPipe,
     PartialEmailPipe,
     SingleCharacterPipe,

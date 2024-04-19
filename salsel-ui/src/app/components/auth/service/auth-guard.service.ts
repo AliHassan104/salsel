@@ -83,6 +83,14 @@ export class AuthGuardService implements CanActivate {
       url: ["/create-ticket"],
       permissions: "CREATE_TICKET",
     };
+    const readEmployeeObj = {
+      url: ["/employee/list", "/employee/list/:id"],
+      permissions: "READ_EMPLOYEE",
+    };
+    const createEmployeeObj = {
+      url: ["/create-employee"],
+      permissions: "CREATE_EMPLOYEE",
+    };
     const readAwbObj = {
       url: ["/awb/list", "/awb/list/:billid"],
       permissions: "READ_AWB",
@@ -231,7 +239,9 @@ export class AuthGuardService implements CanActivate {
       createTicketSubCategoryObj,
       readAddressBookObj,
       createAddressBookObj,
-      trackingAndScanObj
+      trackingAndScanObj,
+      createEmployeeObj,
+      readEmployeeObj
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

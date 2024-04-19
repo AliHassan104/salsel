@@ -1,25 +1,24 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
-import { Table } from "primeng/table";
-import { Router } from "@angular/router";
-import { MessageService } from "primeng/api";
-import { DropdownService } from "src/app/layout/service/dropdown.service";
-import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
-import { SessionStorageService } from "../../auth/service/session-storage.service";
-import { AccountService } from "../../accounts/service/account.service";
-import { finalize } from "rxjs";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { DatePipe } from "@angular/common";
-import { FormvalidationService } from "../service/formvalidation.service";
+import { DatePipe } from '@angular/common';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
+import { finalize } from 'rxjs';
+import { DropdownService } from 'src/app/layout/service/dropdown.service';
+import { AccountService } from '../../accounts/service/account.service';
+import { SessionStorageService } from '../../auth/service/session-storage.service';
+import { Ticket } from '../../Tickets/model/ticketValuesDto';
+import { FormvalidationService } from '../../Tickets/service/formvalidation.service';
+import { TicktingService } from '../../Tickets/service/tickting.service';
 
 @Component({
-  selector: "app-ticketsdata",
-  templateUrl: "./ticketsdata.component.html",
-  styleUrls: ["./ticketsdata.component.scss"],
+  selector: "app-bookinglist",
+  templateUrl: "./bookinglist.component.html",
+  styleUrls: ["./bookinglist.component.scss"],
   providers: [MessageService, DatePipe],
 })
-export class TicketsdataComponent implements OnInit {
-  //   Activity Work
+export class BookinglistComponent {
   excelDataForm!: FormGroup;
   minDate;
   maxDate;
@@ -28,10 +27,9 @@ export class TicketsdataComponent implements OnInit {
   status?;
   selectedStatus: string = "Active";
   activeStatus: boolean = true;
+
   deleteProductsDialog: any;
   serachText?: string;
-  refresh: boolean = true;
-
   constructor(
     private _ticktingService: TicktingService,
     private router: Router,
@@ -50,6 +48,7 @@ export class TicketsdataComponent implements OnInit {
   page?: any = 0;
   size?: number = 1;
   totalRecords?: number;
+  refresh: boolean = true;
 
   ngOnInit(): void {
     this.excelDataForm = new FormGroup({
@@ -198,6 +197,34 @@ export class TicketsdataComponent implements OnInit {
 
   onCancel() {
     this.visible = false;
+  }
+
+  onDownloadAttachment(url, id) {
+    this.accountService.downloadAgreement(url).subscribe(
+      (res: any) => {
+        this.downloadSuccess();
+        this.accountService.downloadFile(res, `Ticket_Attachment_${id}`);
+      },
+      (error) => {
+        this.downloadError();
+      }
+    );
+  }
+
+  downloadError() {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Attachment Not Found",
+    });
+  }
+
+  downloadSuccess() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "File Successfully Downloaded",
+    });
   }
 
   //   Delete Ticket

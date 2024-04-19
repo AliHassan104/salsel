@@ -36,6 +36,22 @@ import { VerificationComponent } from "./components/auth/verification/verificati
               canActivate: [AuthGuardService],
             },
             {
+              path: "booking/list",
+              loadChildren: () =>
+                import("./components/Booking/booking.module").then(
+                  (m) => m.BookingModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-booking",
+              loadChildren: () =>
+                import("./components/Booking/update/booking-form.module").then(
+                  (m) => m.BookingFormModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
               path: "ticket/list",
               loadChildren: () =>
                 import("./components/Tickets/tickets.module").then(
@@ -62,9 +78,9 @@ import { VerificationComponent } from "./components/auth/verification/verificati
             {
               path: "create-address-book",
               loadChildren: () =>
-                import("./components/addressBook/update/modules/address-book-update.module").then(
-                  (m) => m.AddressBookUpdateModule
-                ),
+                import(
+                  "./components/addressBook/update/modules/address-book-update.module"
+                ).then((m) => m.AddressBookUpdateModule),
               canActivate: [AuthGuardService],
             },
             {

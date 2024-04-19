@@ -1,46 +1,33 @@
-import { TicketCategory } from "./../../ticketCategory/model/ticketCategoryDto";
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { TicktingService } from "src/app/components/Tickets/service/tickting.service";
-import { HttpClient } from "@angular/common/http";
-import { Ticket } from "src/app/components/Tickets/model/ticketValuesDto";
-import { MessageService } from "primeng/api";
-import { environment } from "src/environments/environment";
-import { DropdownService } from "src/app/layout/service/dropdown.service";
-import { FormvalidationService } from "../service/formvalidation.service";
-import { CountryService } from "../../country/service/country.service";
-import { CityService } from "../../City/service/city.service";
-import { DepartmentService } from "../../department/service/department.service";
-import { DepartmentCategoryService } from "../../department-category/service/department-category.service";
-import { SessionStorageService } from "../../auth/service/session-storage.service";
-import { RolesService } from "../../permissions/service/roles.service";
-import { AccountService } from "../../accounts/service/account.service";
-import { Dropdown } from "primeng/dropdown";
-import { UserService } from "../../auth/usermanagement/service/user.service";
-import { TicketCategoryService } from "../../ticketCategory/service/ticket-category.service";
-import { TicketSubCategoryService } from "../../ticketSubCategory/service/ticket-sub-category.service";
-import { ITicketSubCategory } from "../../ticketSubCategory/model/ticketSubCategoryDeto";
-import { TicketCommentsService } from "../service/ticket-comments.service";
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { Dropdown } from 'primeng/dropdown';
+import { DropdownService } from 'src/app/layout/service/dropdown.service';
+import { CityService } from 'src/app/service/city.service';
+import { CountryService } from 'src/app/service/country.service';
+import { DepartmentCategoryService } from 'src/app/service/department-category.service';
+import { DepartmentService } from 'src/app/service/department.service';
+import { RolesService } from 'src/app/service/roles.service';
+import { AccountService } from '../../accounts/service/account.service';
+import { SessionStorageService } from '../../auth/service/session-storage.service';
+import { ITicketSubCategory } from '../../Tickets/model/ticketSubCategoryDto';
+import { Ticket } from '../../Tickets/model/ticketValuesDto';
+import { FormvalidationService } from '../../Tickets/service/formvalidation.service';
+import { TicketCategoryService } from '../../Tickets/service/ticket-category.service';
+import { TicketSubCategoryService } from '../../Tickets/service/ticket-sub-category.service';
+import { TicktingService } from '../../Tickets/service/tickting.service';
 
 @Component({
-  selector: "app-ticketform",
-  templateUrl: "./ticketform.component.html",
-  styleUrls: ["./ticketform.component.scss"],
+  selector: "app-bookingform",
+  templateUrl: "./bookingform.component.html",
+  styleUrls: ["./bookingform.component.scss"],
   providers: [MessageService],
 })
-export class TicketformComponent implements OnInit {
+export class BookingformComponent {
   params = { status: true };
 
-  //   DIALOG BOX
-  addCommentDialog: boolean = false;
-  visible: boolean = false;
   // ALL PRODUCT FIELDS
   productFields;
 
@@ -69,7 +56,6 @@ export class TicketformComponent implements OnInit {
 
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
-  postCommentForm!: FormGroup;
   ticketType?: string[];
   fileList: File[] = [];
   subCategories;
@@ -101,18 +87,13 @@ export class TicketformComponent implements OnInit {
     private sessionStorageService: SessionStorageService,
     private accountService: AccountService,
     private ticketCategoryService: TicketCategoryService,
-    private ticketSubCategoryService: TicketSubCategoryService,
-    private commentsService: TicketCommentsService
+    private ticketSubCategoryService: TicketSubCategoryService
   ) {}
 
   ngOnInit(): void {
     // TICKET FORM CONTROLS
 
     this.ticketFormSetup();
-
-    this.postCommentForm = new FormGroup({
-      postComment: new FormControl(null, Validators.required),
-    });
 
     this.getAllProductFields();
 
@@ -226,7 +207,6 @@ export class TicketformComponent implements OnInit {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
 
-
         // Attachments
 
         const filePaths = this.singleTicket.attachments.map(
@@ -234,7 +214,6 @@ export class TicketformComponent implements OnInit {
         );
 
         const FileNames = filePaths.join(",");
-
 
         this.ticketEditParams = { fileNames: FileNames };
 
@@ -713,42 +692,6 @@ export class TicketformComponent implements OnInit {
         });
       }
     );
-  }
-
-  onSelectTicketStatus(data: any) {
-    this.addCommentDialog = true;
-  }
-
-  confirmAddComment() {
-    this.addCommentDialog = false
-    this.visible = true
-  }
-
-  onPostComment() {
-    if (this.postCommentForm.valid) {
-      let data = {
-        comment: this.postCommentForm.value.postComment,
-        name: localStorage.getItem("loginUserName"),
-        ticket: { id: this.editId },
-      };
-
-      this.commentsService.createTicketComment(data).subscribe((res: any) => {
-        this.messageService.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Posted Successfully",
-        });
-        this.postCommentForm.reset();
-        this.visible = false
-      });
-    } else {
-      this.formService.markFormGroupTouched(this.postCommentForm);
-      this.messageService.add({
-        severity: "error",
-        summary: "Error",
-        detail: "Please Fill the Required Field",
-      });
-    }
   }
 
   attachFiles(file: File) {

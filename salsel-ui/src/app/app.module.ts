@@ -17,6 +17,9 @@ import { PermissionsModule } from "./components/permissions/permissions.module";
 import { ForgotPasswordModule } from "./components/auth/forgot-password/forgot-password.module";
 import { NewPasswordModule } from "./components/auth/new-password/new-password.module";
 import { VerificationModule } from "./components/auth/verification/verification.module";
+import { HrModuleDataComponent } from './components/hr-module/list/hr-module-data.component';
+import { HrModuleFormComponent } from './components/hr-module/update/hr-module-form.component';
+import { HrModuleViewComponent } from './components/hr-module/view/hr-module-view.component';
 
 @NgModule({
   declarations: [

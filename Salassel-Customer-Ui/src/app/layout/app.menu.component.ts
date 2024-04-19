@@ -52,6 +52,12 @@ export class AppMenuComponent implements OnInit {
             permission: "READ_AWB",
           },
           {
+            label: "Booking",
+            icon: "pi pi-calendar",
+            routerLink: "booking/list",
+            permission: "READ_TICKET",
+          },
+          {
             label: "Address Book",
             icon: "pi pi-book",
             routerLink: "address-book/list",

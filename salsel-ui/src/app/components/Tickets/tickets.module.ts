@@ -36,6 +36,7 @@ import { AutoFocusModule } from "primeng/autofocus";
 import { TagModule } from "primeng/tag";
 import { SingleCharacterPipe } from './pipe/single-character.pipe';
 import { ExtractFileNamePipe } from './pipe/extract-file-name.pipe';
+import { PadWithZerosPipe } from './pipe/pad-with-zeros.pipe';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { ExtractFileNamePipe } from './pipe/extract-file-name.pipe';
     PartialEmailPipe,
     SingleCharacterPipe,
     ExtractFileNamePipe,
+    PadWithZerosPipe,
   ],
   imports: [
     CommonModule,

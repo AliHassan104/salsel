@@ -262,7 +262,6 @@ export class AccountFormComponent implements OnInit, AfterViewInit {
           summary: "Error",
           detail: "Error Attaching File",
         });
-        // Handle the error (e.g., show a user-friendly message)
       }
     );
   }

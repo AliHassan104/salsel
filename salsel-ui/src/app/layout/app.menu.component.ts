@@ -34,8 +34,14 @@ export class AppMenuComponent implements OnInit {
             permission: "CREATE_USER",
           },
           {
-            label: "Account",
+            label: "Employee",
             icon: "pi pi-users",
+            routerLink: "employee/list",
+            permission: "CREATE_EMPLOYEE",
+          },
+          {
+            label: "Account",
+            icon: "pi pi-wallet",
             routerLink: "account/list",
             permission: "READ_ACCOUNT",
           },
