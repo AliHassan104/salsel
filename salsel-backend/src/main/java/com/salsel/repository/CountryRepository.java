@@ -28,6 +28,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
     @Query("SELECT c FROM Country c WHERE c.status = :status ORDER BY c.id DESC")
     List<Country> findAllInDesOrderByIdAndStatus(@Param("status") boolean status);
+    Country findCountryByName(String name);
 
     @Query("SELECT c FROM Country c WHERE c.status = true ORDER BY c.id DESC")
     Page<Country> findAllInDesOrderByIdAndStatus(Pageable page);

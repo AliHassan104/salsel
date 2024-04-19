@@ -141,7 +141,6 @@ public class HelperUtils {
                 case "id":
                     employee.setIdFilePath(url);
                     break;
-                // Add additional cases for other file types if needed
                 default:
                     break;
             }

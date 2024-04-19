@@ -1,8 +1,6 @@
 package com.salsel.repository;
 
 import com.salsel.model.Account;
-import com.salsel.model.Awb;
-import com.salsel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,8 +26,8 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     @Query("SELECT MAX(CAST(a.accountNumber AS long)) FROM Account a")
     Long findMaxAccountNumber();
 
-    @Query("SELECT a.accountNumber FROM Account a WHERE a.id = (SELECT MAX(b.id) FROM Account b)")
-    Long findAccountNumberByLatestId();
+    @Query("SELECT a FROM Account a WHERE a.id = (SELECT MAX(b.id) FROM Account b)")
+    Account findAccountByLatestId();
 
     List<Account> findAllByCreatedAtBetween(LocalDate startDate, LocalDate endDate);
 

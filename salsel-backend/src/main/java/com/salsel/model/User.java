@@ -24,7 +24,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate createdAt;
-    private String employeeId;
+    private Long employeeId;
     private String name;
     private String firstname;
     private String lastname;

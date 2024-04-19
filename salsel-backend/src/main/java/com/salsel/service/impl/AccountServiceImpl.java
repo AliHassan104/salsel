@@ -4,6 +4,7 @@ import com.salsel.dto.AccountDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Account;
+import com.salsel.model.Country;
 import com.salsel.model.User;
 import com.salsel.repository.AccountRepository;
 import com.salsel.repository.CountryRepository;
@@ -51,15 +52,24 @@ public class AccountServiceImpl implements AccountService {
         account.setStatus(true);
         account.setCreatedAt(LocalDate.now());
 
-        Long accountNumberWithCountryCode = accountRepository.findAccountNumberByLatestId();
+        Account latestAccount = accountRepository.findAccountByLatestId();
 
-        if(accountNumberWithCountryCode != null){
-            accountNumberWithCountryCode++;
-            String accountNumber = accountNumberWithCountryCode.toString().substring(3);
-            Integer countryCode = countryRepository.findCountryCodeByCountryName(accountDto.getCounty());
-            String concatenatedValue = countryCode.toString() + accountNumber;
-            Long combinedValue = Long.parseLong(concatenatedValue);
-            account.setAccountNumber(combinedValue);
+        if(latestAccount != null){
+            // Retrieve the country code from the latest Account
+            Country country = countryRepository.findCountryByName(latestAccount.getCounty());
+            Integer countryCode = country.getCode();
+
+            // Extract the accountNumber and remove the country code
+            String accountNumberStr = String.valueOf(latestAccount.getAccountNumber());
+            String accountNumberWithoutCountryCode = accountNumberStr.substring(String.valueOf(countryCode).length());
+
+            // Retrieve the new country code and prepend it to the account Number
+            Integer newCountryCode = countryRepository.findCountryCodeByCountryName(account.getCounty());
+            String code = String.valueOf(newCountryCode);
+            Long newAccNum = Long.parseLong(code + accountNumberWithoutCountryCode);
+
+            newAccNum++;
+            account.setAccountNumber(newAccNum);
         }
         else{
             String firstAccountNumber = "0000001";
@@ -75,7 +85,38 @@ public class AccountServiceImpl implements AccountService {
             User user = new User();
             user.setEmail(account.getEmail());
             user.setCreatedAt(LocalDate.now());
+            user.setCountry(account.getCounty());
+            user.setCity(accountDto.getCity());
+            user.setName(account.getCustName());
             user.setStatus(true);
+
+            // If there are existing users, adjust the employee ID to include the country code
+            User latestUser = userRepository.findUserByLatestId();
+
+            if (latestUser != null) {
+
+                // Retrieve the country code from the latest user
+                Country country = countryRepository.findCountryByName(latestUser.getCountry());
+                Integer countryCode = country.getCode();
+
+                // Extract the employee ID and remove the country code
+                String empIdStr = String.valueOf(latestUser.getEmployeeId());
+                String empIdWithoutCountryCode = empIdStr.substring(String.valueOf(countryCode).length());
+
+                // Retrieve the new country code and prepend it to the employee ID
+                Integer newCountryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+                String code = String.valueOf(newCountryCode);
+                Long newEmpId = Long.parseLong(code + empIdWithoutCountryCode);
+
+                newEmpId++;
+                user.setEmployeeId(newEmpId);
+            } else {
+                String firstEmployeeId = "0001";
+                Integer countryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+                String concatenatedValue = countryCode.toString() + firstEmployeeId;
+                Long combinedValue = Long.parseLong(concatenatedValue);
+                user.setEmployeeId(combinedValue);
+            }
             User createdUser = userRepository.save(user);
         }
         createdAccount = accountRepository.save(account);

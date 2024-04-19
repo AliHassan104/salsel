@@ -18,7 +18,7 @@ import java.util.Set;
 public class UserDto {
     private Long id;
     private LocalDate createdAt;
-    private String employeeId;
+    private Long employeeId;
     private String name;
     private String firstname;
     private String lastname;

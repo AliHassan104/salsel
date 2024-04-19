@@ -4,9 +4,11 @@ import com.salsel.dto.UserDto;
 import com.salsel.exception.InvalidResetCodeException;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.exception.UserAlreadyExistAuthenticationException;
+import com.salsel.model.Country;
 import com.salsel.model.Otp;
 import com.salsel.model.Role;
 import com.salsel.model.User;
+import com.salsel.repository.CountryRepository;
 import com.salsel.repository.OtpRepository;
 import com.salsel.repository.RoleRepository;
 import com.salsel.repository.UserRepository;
@@ -27,14 +29,16 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
     private final OtpRepository otpRepository;
+    private final CountryRepository countryRepository;
     private final HelperUtils helperUtils;
     private final EmailUtils emailUtils;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, OtpRepository otpRepository, HelperUtils helperUtils, EmailUtils emailUtils) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, OtpRepository otpRepository, CountryRepository countryRepository, HelperUtils helperUtils, EmailUtils emailUtils) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
         this.otpRepository = otpRepository;
+        this.countryRepository = countryRepository;
         this.helperUtils = helperUtils;
         this.emailUtils = emailUtils;
     }
@@ -48,19 +52,48 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
         Optional<User> userExist = userRepository.findByEmployeeId(user.getEmployeeId());
 
-        if(existingUser.isPresent() || userExist.isPresent()){
+        if (existingUser.isPresent() || userExist.isPresent()) {
             throw new UserAlreadyExistAuthenticationException("User Already Exist");
         }
 
         user.setStatus(true);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Set<Role> roleList = new HashSet<>();
-        for(Role role: user.getRoles()){
+        for (Role role : user.getRoles()) {
             roleRepository.findById(role.getId())
-                    .orElseThrow(()-> new RecordNotFoundException("Role not found"));
+                    .orElseThrow(() -> new RecordNotFoundException("Role not found"));
             roleList.add(role);
         }
         user.setRoles(roleList);
+
+        // If there are existing users, adjust the employee ID to include the country code
+        User latestUser = userRepository.findUserByLatestId();
+
+        if (latestUser != null) {
+
+            // Retrieve the country code from the latest user
+            Country country = countryRepository.findCountryByName(latestUser.getCountry());
+            Integer countryCode = country.getCode();
+
+            // Extract the employee ID and remove the country code
+            String empIdStr = String.valueOf(latestUser.getEmployeeId());
+            String empIdWithoutCountryCode = empIdStr.substring(String.valueOf(countryCode).length());
+
+            // Retrieve the new country code and prepend it to the employee ID
+            Integer newCountryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+            String code = String.valueOf(newCountryCode);
+            Long newEmpId = Long.parseLong(code + empIdWithoutCountryCode);
+
+            newEmpId++;
+            user.setEmployeeId(newEmpId);
+        } else {
+            String firstEmployeeId = "0001";
+            Integer countryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+            String concatenatedValue = countryCode.toString() + firstEmployeeId;
+            Long combinedValue = Long.parseLong(concatenatedValue);
+            user.setEmployeeId(combinedValue);
+        }
+
         userRepository.save(user);
         return toDto(user);
     }
@@ -71,7 +104,7 @@ public class UserServiceImpl implements UserService {
         User user = toEntity(userdto);
         user.setCreatedAt(LocalDate.now());
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-        if(existingUser.isPresent()){
+        if (existingUser.isPresent()) {
             throw new UserAlreadyExistAuthenticationException("User Already Exist");
         }
 
@@ -79,7 +112,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Set<Role> roleList = new HashSet<>();
         Role role = roleRepository.findByName("ROLE_CUSTOMER_USER")
-                .orElseThrow(()-> new RecordNotFoundException("Role not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Role not found"));
         roleList.add(role);
         user.setRoles(roleList);
         userRepository.save(user);
@@ -129,7 +162,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public List<UserDto> getAll(Boolean status) {
         List<User> userList = userRepository.findAllInDesOrderByIdAndStatus(status);
@@ -167,17 +199,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findByEmployeeId(String employeeId) {
+    public UserDto findByEmployeeId(Long employeeId) {
         Optional<User> optionalUser = userRepository.findByEmployeeId(employeeId);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             return toDto(user);
         } else {
-            throw new RecordNotFoundException(String.format("Incorrect Username => %s", employeeId));
+            throw new RecordNotFoundException(String.format("Incorrect Username => %d", employeeId));
         }
     }
-
 
 
     @Override
@@ -228,13 +259,13 @@ public class UserServiceImpl implements UserService {
         // Check if the provided Email matches with any other user's email (excluding the current user)
         if (!existingUser.getEmail().equalsIgnoreCase(userDto.getEmail())) {
             Optional<User> alreadyExistUser = userRepository.findByEmail(userDto.getEmail());
-            if(alreadyExistUser.isPresent()){
+            if (alreadyExistUser.isPresent()) {
                 throw new UserAlreadyExistAuthenticationException("Email Already Exist");
             }
         }
 
         // Check if the provided employeeId matches with any other user's employeeId (excluding the current user)
-        if (!existingUser.getEmployeeId().equalsIgnoreCase(userDto.getEmployeeId())) {
+        if (!existingUser.getEmployeeId().equals(userDto.getEmployeeId())) {
             Optional<User> alreadyExistUserEmployeeId = userRepository.findByEmployeeId(userDto.getEmployeeId());
             if (alreadyExistUserEmployeeId.isPresent()) {
                 throw new UserAlreadyExistAuthenticationException("Employee ID Already Exist");
