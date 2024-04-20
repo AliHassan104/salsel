@@ -86,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
             user.setEmail(account.getEmail());
             user.setCreatedAt(LocalDate.now());
             user.setCountry(account.getCounty());
-            user.setCity(accountDto.getCity());
+            user.setCity(account.getCity());
             user.setName(account.getCustName());
             user.setStatus(true);
 

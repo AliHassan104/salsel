@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Builder
@@ -18,6 +19,15 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private LocalDate createdAt;
+    private String name;
+    private String firstname;
+    private String lastname;
+    private String phone;
+    private Long employeeNumber;
+    private String email;
+    private String city;
+    private String country;
     private String nationality;
     private String jobTitle;
     private String department;
@@ -28,7 +38,8 @@ public class Employee {
     private Double otherAllowance;
     private String passportFilePath;
     private String idFilePath;
-    private Long userId;
+    private String position;
+    private Boolean createAsUser;
     private Boolean status;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

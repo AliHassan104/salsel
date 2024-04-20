@@ -38,19 +38,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByRoleName(@Param("roleName") String roleName);
 
     Optional<User> findByEmail(String userEmail);
-
-//    @Query("SELECT u.employeeId FROM User u WHERE u.id = (SELECT MAX(e.id) FROM User e)")
-//    Long findEmployeeIdByLatestId();
-
     @Query("SELECT u FROM User u WHERE u.id = (SELECT MAX(e.id) FROM User e)")
     User findUserByLatestId();
-
-
 
     Optional<User> findByEmployeeId(Long employeeId);
     Optional<User> findByEmailAndStatusIsTrue(String email);
 
-//    List<User> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<User> findAllByCreatedAtBetween(LocalDate startDate, LocalDate endDate);
     Optional<User> findByNameAndStatusIsTrue(String name);
 

@@ -1,6 +1,7 @@
 package com.salsel.repository;
 
 import com.salsel.model.Employee;
+import com.salsel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("SELECT e FROM Employee e WHERE e.id = :id AND e.status = true")
     Employee findByIdWhereStatusIsTrue(@Param("id") Long id);
+
+    @Query("SELECT e FROM Employee e WHERE e.id = (SELECT MAX(em.id) FROM Employee em)")
+    Employee findEmployeeByLatestId();
 }
