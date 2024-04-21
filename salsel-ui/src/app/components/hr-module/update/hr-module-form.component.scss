@@ -160,3 +160,20 @@ input[type="file"]::file-selector-button {
 input[type="file"]::file-selector-button:hover {
   background: #c10751;
 }
+
+p-radioButton::ng-deep .p-radiobutton .p-radiobutton-box{
+    width: 16px !important;
+    height: 16px !important;
+    margin-top: 2px;
+}
+
+p-radioButton::ng-deep .p-radiobutton .p-radiobutton-box .p-radiobutton-icon{
+    height: 6px;
+    width: 6px;
+}
+
+
+p-radioButton::ng-deep .p-radiobutton .p-radiobutton-box.p-highlight{
+    background: #93003c !important;
+    border-color: #93003c !important;
+}

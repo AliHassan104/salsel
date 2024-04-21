@@ -68,8 +68,12 @@ export class HrModuleViewComponent {
       this.singleEmployee = res.body;
 
       this.employeeAttachments = this.singleEmployee?.attachments;
-      this.attachCopy(this.singleEmployee?.passportFilePath,"passport")
-      this.attachCopy(this.singleEmployee?.idFilePath, "id");
+      if (this.singleEmployee?.passportFilePath) {
+          this.attachCopy(this.singleEmployee?.passportFilePath,"passport")
+      }
+      if (this.singleEmployee?.idFilePath) {
+          this.attachCopy(this.singleEmployee?.idFilePath, "id");
+      }
     });
   }
 

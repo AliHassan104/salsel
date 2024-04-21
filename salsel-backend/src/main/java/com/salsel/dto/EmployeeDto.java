@@ -27,6 +27,7 @@ public class EmployeeDto {
     private String country;
     private String nationality;
     private String jobTitle;
+    private String address;
     private String department;
     private Long employeeNumber;
     private Double salary;

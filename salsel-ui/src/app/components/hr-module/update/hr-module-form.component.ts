@@ -39,14 +39,14 @@ export class HrModuleFormComponent {
   countries?;
   originCities?;
   department?;
+  roleNames
 
   // FOR EDIT PURPOSE
   editMode: boolean = false;
   editId;
   singleEmployee: IEmployee;
   editFileName: string;
-  pickDate;
-  pickTime;
+  roleName
   userRole;
 
   fileName: string = "";
@@ -68,11 +68,6 @@ export class HrModuleFormComponent {
   @ViewChild("dropdown") dropdown?: Dropdown;
   @ViewChild("dropdown1") dropdown1?: Dropdown;
   @ViewChild("dropdown2") dropdown2?: Dropdown;
-  @ViewChild("dropdown3") dropdown3?: Dropdown;
-  @ViewChild("dropdown4") dropdown4?: Dropdown;
-  @ViewChild("dropdown5") dropdown5?: Dropdown;
-  @ViewChild("dropdown6") dropdown6?: Dropdown;
-  @ViewChild("dropdown7") dropdown7?: Dropdown;
 
   //   CONSTRUCTOR
   constructor(
@@ -104,50 +99,40 @@ export class HrModuleFormComponent {
     this.userRole = this.sessionStorageService.getRoleName();
   }
 
-  //   ngAfterViewChecked(): void {
-  //     if (this.employeeForm.get("ticketType").value == "Pickup Request") {
-  //       const dropdowns = [
-  //         this.dropdown,
-  //         this.dropdown1,
-  //         this.dropdown2,
-  //         this.dropdown3,
-  //       ];
+    ngAfterViewChecked(): void {
+        const dropdowns = [
+            this.dropdown,
+          this.dropdown1,
+          this.dropdown2,
+        ];
 
-  //       dropdowns.forEach((dropdown, index) => {
-  //         if (dropdown) {
-  //           (dropdown.filterBy as any) = {
-  //             split: (_: any) => [(item: any) => item],
-  //           };
-  //         }
-  //       });
-  //     } else if (this.employeeForm.get("ticketType")?.value == "Rate Inquiry") {
-  //       const dropdowns = [
-  //         this.dropdown4,
-  //         this.dropdown5,
-  //         this.dropdown6,
-  //         this.dropdown7,
-  //       ];
-
-  //       dropdowns.forEach((dropdown, index) => {
-  //         if (dropdown) {
-  //           (dropdown.filterBy as any) = {
-  //             split: (_: any) => [(item: any) => item],
-  //           };
-  //         }
-  //       });
-  //     }
-  //   }
+        dropdowns.forEach((dropdown, index) => {
+          if (dropdown) {
+            (dropdown.filterBy as any) = {
+              split: (_: any) => [(item: any) => item],
+            };
+          }
+        });
+      } 
 
   employeeFormSetup() {
     this.employeeForm = new FormGroup({
-      mobile: new FormControl(null),
-      nationality: new FormControl(null),
-      jobTitle: new FormControl(null),
-      department: new FormControl(null),
-      salary: new FormControl(null),
-      transportation: new FormControl(null),
-      otherAllowance: new FormControl(null),
-      housing: new FormControl(null),
+      mobile: new FormControl(null, Validators.required),
+      firstname: new FormControl(null, Validators.required),
+      surname: new FormControl(null, Validators.required),
+      address: new FormControl(null, Validators.required),
+      city: new FormControl(null, Validators.required),
+      country: new FormControl(null, Validators.required),
+      nationality: new FormControl(null, Validators.required),
+      jobTitle: new FormControl(null, Validators.required),
+      department: new FormControl(null, Validators.required),
+      salary: new FormControl(null, Validators.required),
+      transportation: new FormControl(null, Validators.required),
+      otherAllowance: new FormControl(null, Validators.required),
+      housing: new FormControl(null, Validators.required),
+      createdAsUser: new FormControl(null),
+      email: new FormControl(null),
+      position: new FormControl(null),
     });
   }
 
@@ -178,15 +163,17 @@ export class HrModuleFormComponent {
           );
 
           const FileNames = filePaths.join(",");
-          if(FileNames){
-              this.editFileName = `${FileNames},${passwordPath},${idPath}`;
-          }else{
-              this.editFileName = `${passwordPath},${idPath}`;
-
+          if (FileNames) {
+            this.editFileName = `${FileNames},${passwordPath},${idPath}`;
+          } else {
+            this.editFileName = `${passwordPath},${idPath}`;
           }
-
-          this.attachCopy(passwordPath, "passport");
-          this.attachCopy(idPath, "id");
+          if (passwordPath != null) {
+            this.attachCopy(passwordPath, "passport");
+          }
+          if (idPath != null) {
+            this.attachCopy(idPath, "id");
+          }
 
           for (let i = 0; i < this.singleEmployee?.attachments?.length; i++) {
             this.attachAgreement(
@@ -195,15 +182,26 @@ export class HrModuleFormComponent {
             );
           }
 
+          this.getCountry(this.singleEmployee?.country);
+
           this.employeeForm.patchValue({
             mobile: this.singleEmployee?.mobile,
             nationality: this.singleEmployee?.nationality,
             jobTitle: this.singleEmployee?.jobTitle,
+            housing: this.singleEmployee?.housing,
             department: this.singleEmployee?.department,
             salary: this.singleEmployee?.salary,
             transportation: this.singleEmployee?.transportation,
             otherAllowance: this.singleEmployee?.otherAllowance,
-            housing: this.singleEmployee?.housing,
+            email: this.singleEmployee?.email,
+            position: this.singleEmployee?.position,
+            createdAsUser: this.singleEmployee?.createAsUser,
+            firstname: this.singleEmployee?.firstname,
+            surname: this.singleEmployee?.lastname,
+            address: this.singleEmployee?.address,
+            city: this.singleEmployee?.city,
+            country: this.singleEmployee?.country,
+
           });
         });
     }
@@ -212,6 +210,15 @@ export class HrModuleFormComponent {
   //   GET ALL PRODUCT FIELD
 
   getAllProductFields() {
+    this.dropdownService.getAllProductFields().subscribe((res) => {
+      this.productFields = res;
+
+      this.roleName = this.dropdownService.extractNames(
+        this.productFields.filter((data) => data.name == "Role Name")[0]
+          ?.productFieldValuesList
+      );
+      
+    });
     // Get All Countries
 
     this.countryService.getAllCountries(this.params).subscribe((res) => {
@@ -233,11 +240,7 @@ export class HrModuleFormComponent {
   }
 
   //   GET ALL CITIES,DEPARTMENT CATEGORIES
-  getAllCitiesAndDepartmentCategories(
-    destinationCountry: any,
-    originCountry: any,
-    department: any
-  ) {
+  getAllCitiesAndDepartmentCategories(originCountry: any) {
     this.cityService.getAllCities(this.params).subscribe((res) => {
       this.originCities = res;
       //   Origin Cities
@@ -250,18 +253,20 @@ export class HrModuleFormComponent {
 
   //   GET COUNTRYFROM DROPDOWN
   getCountry(country) {
-    this.cityService.getAllCities(this.params).subscribe((res) => {
+    this.cityService.getAllCitiesByCountryName(country).subscribe((res) => {
       this.originCities = res;
-      let filterCities = this.originCities.filter(
-        (city) => city?.country?.name == country.value
-      );
-      this.originCities = this.dropdownService.extractNames(filterCities);
+      //   let filterCities = this.originCities.filter(
+      //     (city) => city?.country?.name == country.value
+      //   );
+      this.originCities = this.dropdownService.extractNames(this.originCities);
     });
   }
 
   //  ON TICKET FORM SUBMIT
 
   onSubmit() {
+    console.log(this.employeeForm.value);
+
     if (this.employeeForm.valid) {
       const formValue = this.employeeForm.value;
       const employeeData: IEmployee = {
@@ -272,15 +277,33 @@ export class HrModuleFormComponent {
         otherAllowance: formValue?.otherAllowance,
         salary: formValue?.salary,
         transportation: formValue?.transportation,
-        mobile: formValue?.transportation,
-        userId: 20,
+        mobile: formValue?.mobile,
+        phone: formValue?.mobile,
+        email: formValue?.email,
+        position: formValue?.position,
+        createAsUser: formValue?.createdAsUser,
+        firstname: formValue?.firstname,
+        name: `${formValue?.firstname} ${formValue.surname}`,
+        lastname: formValue?.surname,
+        address: formValue?.address,
+        city: formValue?.city,
+        country: formValue?.country,
       };
 
       if (this.editMode) {
-        this.employeeService.update(this.editId,employeeData,{fileNames:this.editFileName},this.passportAttachment,this.idAttachment,this.otherDocs).subscribe((res:any)=>{
+        this.employeeService
+          .update(
+            this.editId,
+            employeeData,
+            { fileNames: this.editFileName },
+            this.passportAttachment,
+            this.idAttachment,
+            this.otherDocs
+          )
+          .subscribe((res: any) => {
             this.employeeForm.reset();
             this.router.navigate(["employee/list"]);
-        })
+          });
       } else {
         this.employeeService
           .create(
@@ -492,7 +515,7 @@ export class HrModuleFormComponent {
   // PART OF POPUP
 
   onCancel() {
-    this.router.navigate(["ticket/list"]);
+    this.router.navigate(["employee/list"]);
   }
 
   //   Pop up message

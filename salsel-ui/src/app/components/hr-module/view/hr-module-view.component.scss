@@ -212,6 +212,20 @@ p-image::ng-deep .p-image.p-component.p-image-preview-container {
   width: -webkit-fill-available;
 }
 
+
+
+
+h5 a i{
+    font-size: 18px; 
+    color:#93003c;
+    margin: 0px 10px;
+    cursor: pointer;
+    font-weight: 900;
+}
+h5 a i:hover{
+    color:#b70f52;
+}
+
 .refresh {
   cursor: pointer;
   color: #93003c;

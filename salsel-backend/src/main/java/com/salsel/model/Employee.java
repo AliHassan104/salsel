@@ -27,6 +27,7 @@ public class Employee {
     private Long employeeNumber;
     private String email;
     private String city;
+    private String address;
     private String country;
     private String nationality;
     private String jobTitle;
