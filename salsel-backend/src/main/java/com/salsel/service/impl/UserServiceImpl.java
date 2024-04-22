@@ -56,8 +56,9 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistAuthenticationException("User Already Exist");
         }
 
+        String password = helperUtils.generateResetPassword();
         user.setStatus(true);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         Set<Role> roleList = new HashSet<>();
         for (Role role : user.getRoles()) {
             roleRepository.findById(role.getId())
@@ -95,6 +96,7 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(user);
+        emailUtils.sendWelcomeEmail(user, password);
         return toDto(user);
     }
 

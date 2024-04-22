@@ -3,9 +3,9 @@
         <div class="card flex justify-content-between align-items-center">
             <h1 class="m-0"
                 style="color: #93003c; font-size: 19px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700; font-size: 24px;">
-                Ticket Details</h1>
-            <button pButton label="Back"
-                [routerLink]="['/employee/list']" routerLinkActive="router-link-active" ></button>
+                Employee Details</h1>
+            <button pButton label="Back" [routerLink]="['/employee/list']"
+                routerLinkActive="router-link-active"></button>
         </div>
     </div>
 </div>
@@ -14,16 +14,28 @@
     <div class="col-12 lg:col-8">
         <div class="card p-fluid" style="padding-bottom: 10rem;">
             <div class="grid customP">
-                <div class="col-12">
-                    <h4>Shipper Infomation</h4>
-                    <p><strong>Shipper Name:</strong> {{singleEmployee?.department}}</p>
-                    <p><strong>Shipper Contact Number:</strong> {{singleEmployee?.mobile}}</p>
-                    <p><strong>Pickup Address:</strong> {{singleEmployee?.nationality}}</p>
-                    <p><strong>Street Name:</strong> {{singleEmployee?.salary}}</p>
-                    <p><strong>District:</strong> {{singleEmployee?.otherAllowance}}</p>
-                    <p><strong>Shipper Ref Number: </strong>{{singleEmployee?.transportation}}</p>
-                    <p><strong>Origin Country:</strong> {{singleEmployee?.jobTitle}}</p>
-                    <p><strong>Origin City:</strong> {{singleEmployee?.housing}}</p>
+                <div class="col-12 md:col-6">
+                    <h4>Personal Infomation</h4>
+                    <p><strong>Name:</strong> {{singleEmployee?.name}}</p>
+                    <p *ngIf="singleEmployee?.email"><strong>Email:</strong> {{singleEmployee?.email}}</p>
+                    <p><strong>Nationality:</strong> {{singleEmployee?.nationality}}</p>
+                    <p><strong>Mobile:</strong> {{singleEmployee?.mobile}}</p>
+                    <p><strong>Address:</strong> {{singleEmployee?.address}}</p>
+                    <p><strong>country:</strong> {{singleEmployee?.country}}</p>
+                    <p><strong>city:</strong> {{singleEmployee?.city}}</p>
+                </div>
+                <div class="col-12 md:col-6">
+                    <h4>Personal Infomation</h4>
+                    <p><strong>Employee Number:</strong> {{singleEmployee?.employeeNumber}}</p>
+                    <p><strong>Job Title:</strong> {{singleEmployee?.jobTitle}}</p>
+                    <p><strong>Salary:</strong> {{singleEmployee?.salary}}</p>
+                    <p *ngIf="singleEmployee?.position"><strong>Position:</strong> {{singleEmployee?.position}}</p>
+                </div>
+                <div class="col-12 md:col-6">
+                    <h4>Benefits and Allowances</h4>
+                    <p><strong>Hosuing:</strong> {{singleEmployee?.housing}}</p>
+                    <p><strong>Transportation: </strong>{{singleEmployee?.transportation}}</p>
+                    <p><strong>Other Allowance:</strong> {{singleEmployee?.otherAllowance}}</p>
                 </div>
             </div>
         </div>
@@ -31,23 +43,20 @@
 
 
     <div class="col-12 lg:col-4">
-        <div class="card p-fluid">
-                <h5 class="col-12 m-0"> <i class="pi pi-id-card mr-3"></i>
-                    ID
-                </h5>
-                    <p-image [src]="idImageSrc" alt="Image" height="auto"
-                        [preview]="true"></p-image>
+        <div class="card p-fluid" *ngIf="singleEmployee?.idFilePath">
+            <h5 class="col-12 m-0"> <i class="pi pi-id-card mr-3"></i>
+                ID <a href="{{ idImageSrc }}" download="id_image.jpg"><i class="pi pi-download"></i></a>
+            </h5>
+            <p-image [src]="idImageSrc" alt="Image" height="auto" [preview]="true"></p-image>
         </div>
 
-        <div class="card p-fluid">
-            <div class="grid">
-                <h5 class="col-8 m-0"> <i class="pi pi-id-card mr-3"></i>
-                    Passport
-                </h5>
-                <div>
-                    <img [src]="passportImageSrc" alt="" style="width: 100%; height: auto;">
-                </div>
-            </div>
+        <div class="card p-fluid" *ngIf="singleEmployee?.passportFilePath">
+            <h5 class="col-8 m-0"> <i class="pi pi-id-card mr-3"></i>
+                Passport <a href="{{ passportImageSrc }}" download="passport_image.jpg"><i
+                        class="pi pi-download"></i></a>
+            </h5>
+            <p-image [src]="passportImageSrc" alt="Image" height="auto" [preview]="true"></p-image>
+
         </div>
 
         <div class="card">

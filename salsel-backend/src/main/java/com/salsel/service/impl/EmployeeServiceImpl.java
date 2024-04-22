@@ -82,9 +82,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee createdEmployee = employeeRepository.save(employee);
 
-        if(employee.getCreateAsUser()){
+        if(employee.getCreateAsUser() != null){
+            System.out.println("outside existing user");
             Optional<User> existingUser = userRepository.findByEmail(employee.getEmail());
             if (!existingUser.isPresent()) {
+                System.out.println("inside existing user");
                 User user = new User();
                 String password = helperUtils.generateResetPassword();
                 user.setCreatedAt(LocalDate.now());
@@ -100,7 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 user.setPhone(employee.getPhone());
 
                 Role role = roleRepository.findByName(employee.getPosition())
-                        .orElseThrow(() -> new RecordNotFoundException("Role  not found"));
+                        .orElseThrow(() -> new RecordNotFoundException("Role not found"));
 
                 user.getRoles().add(role);
                 user.setStatus(true);
@@ -177,6 +179,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingEmployee.setMobile(employeeDto.getMobile());
         existingEmployee.setTransportation(employeeDto.getTransportation());
         existingEmployee.setOtherAllowance(employeeDto.getOtherAllowance());
+        existingEmployee.setAddress(employeeDto.getAddress());
+        existingEmployee.setFirstname(employeeDto.getFirstname());
+        existingEmployee.setLastname(employeeDto.getLastname());
+        existingEmployee.setName(existingEmployee.getName());
 
         if (passportFile != null && !passportFile.isEmpty()) {
             String folderKey = "Employee/Employee_" + id;
@@ -263,6 +269,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .status(employee.getStatus())
                 .createAsUser(employee.getCreateAsUser())
                 .attachments(employee.getAttachments())
+                .address(employee.getAddress())
                 .build();
     }
 
@@ -292,6 +299,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeNumber(employeeDto.getEmployeeNumber())
                 .createAsUser(employeeDto.getCreateAsUser())
                 .attachments(employeeDto.getAttachments())
+                .address(employeeDto.getAddress())
                 .build();
     }
 }

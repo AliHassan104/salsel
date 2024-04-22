@@ -92,14 +92,9 @@ export class AddUserComponent implements OnInit {
       firstname: new FormControl(null),
       lastname: new FormControl(null),
       phone: new FormControl(null),
-      password: new FormControl(null, [
-        Validators.required,
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
-      ]),
       roles: new FormControl(null, Validators.required),
-      employeeId: new FormControl(null, Validators.required),
-      country : new FormControl(null,Validators.required),
-      city:new FormControl(null,Validators.required)
+      country: new FormControl(null, Validators.required),
+      city: new FormControl(null, Validators.required),
     });
   }
 
@@ -150,7 +145,6 @@ export class AddUserComponent implements OnInit {
       this.userService.GetUserById(this.editId).subscribe((res: any) => {
         this.singleUser = res;
 
-
         this.rolesService.getRoles().subscribe((res: any) => {
           const role = res.filter(
             (value) => value?.name == this.singleUser?.roles[0]?.name
@@ -163,10 +157,9 @@ export class AddUserComponent implements OnInit {
             firstname: this.singleUser?.firstname,
             lastname: this.singleUser?.lastname,
             phone: this.singleUser?.phone,
-            employeeId: this.singleUser?.employeeId,
             roles: role != null ? role[0] : "",
-            country:this.singleUser?.country,
-            city:this.singleUser?.city
+            country: this.singleUser?.country,
+            city: this.singleUser?.city,
           });
         });
       });
@@ -185,26 +178,25 @@ export class AddUserComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.editMode) {
-      if (this.userForm.get("employeeId")?.valid) {
-        let formValue = this.userForm.value;
-        let fullname = formValue.firstname + " " + formValue.lastname;
-        const data = {
-          firstname: formValue.firstname,
-          lastname: formValue.lastname,
-          name: fullname,
-          phone: formValue.phone,
-          email: formValue.email,
-          employeeId: formValue.employeeId,
-          country:formValue.country,
-          city:formValue.city,
-          roles: [
-            {
-              id: formValue.roles.id,
-            },
-          ],
-          status: true,
-        };
+    if (this.userForm.valid) {
+      let formValue = this.userForm.value;
+      let fullname = formValue.firstname + " " + formValue.lastname;
+      const data = {
+        firstname: formValue.firstname,
+        lastname: formValue.lastname,
+        name: fullname,
+        phone: formValue.phone,
+        email: formValue.email,
+        country: formValue.country,
+        city: formValue.city,
+        roles: [
+          {
+            id: formValue.roles.id,
+          },
+        ],
+        status: true,
+      };
+      if (this.editMode) {
         this.userService.updateUser(this.editId, data).subscribe(
           (res: any) => {
             this.userForm.reset();
@@ -219,27 +211,6 @@ export class AddUserComponent implements OnInit {
           }
         );
       } else {
-        this.formService.markFormGroupTouched(this.userForm);
-      }
-    } else {
-      if (this.userForm.valid) {
-        let formValue = this.userForm.value;
-        let fullname = formValue.firstname + " " + formValue.lastname;
-        const data = {
-          firstname: formValue.firstname,
-          lastname: formValue.lastname,
-          name: fullname,
-          phone: formValue.phone,
-          email: formValue.email,
-          password: formValue.password,
-          employeeId: formValue.employeeId,
-          roles: [
-            {
-              id: formValue.roles.id,
-            },
-          ],
-          status: true,
-        };
         this.loginService.signUp(data).subscribe(
           (res: any) => {
             this.userForm.reset();
@@ -253,10 +224,10 @@ export class AddUserComponent implements OnInit {
             });
           }
         );
-      } else {
-        this.alert();
-        this.formService.markFormGroupTouched(this.userForm);
       }
+    } else {
+      this.alert();
+      this.formService.markFormGroupTouched(this.userForm);
     }
   }
 

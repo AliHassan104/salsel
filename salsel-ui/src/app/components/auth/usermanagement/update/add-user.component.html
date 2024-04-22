@@ -65,7 +65,7 @@
                     </small>
                 </div>
                 <!-- Password -->
-                <div class="field col-12 md:col-6" *ngIf="!editMode">
+                <!-- <div class="field col-12 md:col-6" *ngIf="!editMode">
                     <label htmlFor=" address"><strong>Password</strong></label>
                     <p-password [toggleMask]="true" class="w-20rem" placeholder="Enter Password" [strongRegex]="true"
                         [ngClass]="{'ng-dirty':userForm.get('password')?.touched && userForm.get('password')?.invalid}"
@@ -83,9 +83,9 @@
                             <li *ngIf="isShortPassword()">Minimum length of 8 characters</li>
                         </ul>
                     </small>
-                </div>
+                </div> -->
                 <!-- Employee Id -->
-                <div class="field col-12 md:col-6">
+                <!-- <div class="field col-12 md:col-6">
                     <label htmlFor="employeeId"><strong>Employee Id</strong></label>
                     <input pInputText id="employeeId" type="text" formControlName="employeeId"
                         placeholder="Enter Employee Id"
@@ -94,7 +94,8 @@
                         class="text-red-500">
                         Required
                     </small>
-                </div>
+                </div> -->
+                <!-- Role -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="department"><strong>Role</strong></label>
                     <p-dropdown [options]="roles" optionLabel="name" placeholder="Select Role" formControlName="roles"

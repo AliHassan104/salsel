@@ -25,7 +25,7 @@ import { ToastModule } from 'primeng/toast';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { HrModuleFormComponent } from './hr-module-form.component';
-
+import { CheckboxModule } from "primeng/checkbox";
 
 
 @NgModule({
@@ -57,6 +57,7 @@ import { HrModuleFormComponent } from './hr-module-form.component';
     PaginatorModule,
     TooltipModule,
     HrFormRoutingModule,
+    CheckboxModule
   ],
 })
 export class HrFormModule {}

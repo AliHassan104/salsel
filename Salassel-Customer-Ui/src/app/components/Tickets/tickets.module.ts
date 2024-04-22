@@ -38,16 +38,12 @@ import { SingleCharacterPipe } from "./pipe/single-character.pipe";
 import { ExtractFileNamePipe } from "./pipe/extract-file-name.pipe";
 import { ImageModule } from "primeng/image";
 import { PadWithZerosPipe } from "./pipe/pad-with-zeros.pipe";
+import { CommonPipeModule } from "../common-pipe/common-pipe.module";
 
 @NgModule({
   declarations: [
     TicketitemComponent,
     TicketsdataComponent,
-    PadWithZerosPipe,
-    DaysAgoPipe,
-    PartialEmailPipe,
-    SingleCharacterPipe,
-    ExtractFileNamePipe,
   ],
   imports: [
     CommonModule,
@@ -55,6 +51,7 @@ import { PadWithZerosPipe } from "./pipe/pad-with-zeros.pipe";
     CommonModule,
     ReactiveFormsModule,
     RatingModule,
+    CommonPipeModule,
     ButtonModule,
     SliderModule,
     InputTextModule,
