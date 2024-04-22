@@ -115,6 +115,35 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RecordNotFoundException("Role not found"));
         roleList.add(role);
         user.setRoles(roleList);
+
+        // If there are existing users, adjust the employee ID to include the country code
+        User latestUser = userRepository.findUserByLatestId();
+
+        if (latestUser != null) {
+
+            // Retrieve the country code from the latest user
+            Country country = countryRepository.findCountryByName(latestUser.getCountry());
+            Integer countryCode = country.getCode();
+
+            // Extract the employee ID and remove the country code
+            String empIdStr = String.valueOf(latestUser.getEmployeeId());
+            String empIdWithoutCountryCode = empIdStr.substring(String.valueOf(countryCode).length());
+
+            // Retrieve the new country code and prepend it to the employee ID
+            Integer newCountryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+            String code = String.valueOf(newCountryCode);
+            Long newEmpId = Long.parseLong(code + empIdWithoutCountryCode);
+
+            newEmpId++;
+            user.setEmployeeId(newEmpId);
+        } else {
+            String firstEmployeeId = "0001";
+            Integer countryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+            String concatenatedValue = countryCode.toString() + firstEmployeeId;
+            Long combinedValue = Long.parseLong(concatenatedValue);
+            user.setEmployeeId(combinedValue);
+        }
+
         userRepository.save(user);
         return toDto(user);
     }
