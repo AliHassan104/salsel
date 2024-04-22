@@ -31,7 +31,12 @@ import { HrModuleRoutingModule } from './hr-module-routing.module';
 import { HrModuleDataComponent } from './list/hr-module-data.component';
 import { HrModuleViewComponent } from './view/hr-module-view.component';
 import { ImageModule } from "primeng/image";
+import { DaysAgoPipe } from '../Tickets/pipe/days-ago.pipe';
 import { ExtractFileNamePipe } from '../Tickets/pipe/extract-file-name.pipe';
+import { PadWithZerosPipe } from '../Tickets/pipe/pad-with-zeros.pipe';
+import { PartialEmailPipe } from '../Tickets/pipe/partial-email.pipe';
+import { SingleCharacterPipe } from '../Tickets/pipe/single-character.pipe';
+import { SHAREDModule } from '../shared/shared.module';
 
 
 
@@ -39,7 +44,7 @@ import { ExtractFileNamePipe } from '../Tickets/pipe/extract-file-name.pipe';
   declarations: [
     HrModuleDataComponent,
     HrModuleViewComponent,
-    ExtractFileNamePipe
+
   ],
   imports: [
     CommonModule,
@@ -73,7 +78,7 @@ import { ExtractFileNamePipe } from '../Tickets/pipe/extract-file-name.pipe';
     AutoFocusModule,
     TagModule,
     HrModuleRoutingModule,
-    
+    SHAREDModule
   ],
 })
 export class HrModuleModule {}
