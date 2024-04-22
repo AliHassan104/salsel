@@ -225,7 +225,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // GET ALL AccountNumbers
     this.accountService
-      .getAllAccounts({ status: true })
+      .getAllAccountsByUserLoggedIn({ status: true })
       .subscribe((res: any) => {
         this.accountNumbers = res.body;
         this.preprocessedAccountNumbers = this.accountNumbers.map(

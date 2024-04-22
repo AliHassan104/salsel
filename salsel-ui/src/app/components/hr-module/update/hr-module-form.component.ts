@@ -113,7 +113,7 @@ export class HrModuleFormComponent {
             };
           }
         });
-      } 
+      }
 
   employeeFormSetup() {
     this.employeeForm = new FormGroup({
@@ -213,29 +213,29 @@ export class HrModuleFormComponent {
     this.dropdownService.getAllProductFields().subscribe((res) => {
       this.productFields = res;
 
-      this.roleName = this.dropdownService.extractNames(
+      this.roleName = this.dropdownService?.extractNames(
         this.productFields.filter((data) => data.name == "Role Name")[0]
           ?.productFieldValuesList
       );
-      
+
     });
     // Get All Countries
 
     this.countryService.getAllCountries(this.params).subscribe((res) => {
       this.countries = res;
-      this.countries = this.dropdownService.extractNames(this.countries);
+      this.countries = this.dropdownService?.extractNames(this.countries);
     });
 
     // Get All Departments
     this.departmentService.getDepartments(this.params).subscribe((res) => {
       this.department = res.body;
-      this.department = this.dropdownService.extractNames(this.department);
+      this.department = this.dropdownService?.extractNames(this.department);
     });
 
     // Get All Roles
     this.roleService.getRoles().subscribe((res: any) => {
       this.assignedTo = res;
-      this.assignedTo = this.dropdownService.extractNames(this.assignedTo);
+      this.assignedTo = this.dropdownService?.extractNames(this.assignedTo);
     });
   }
 
@@ -247,7 +247,7 @@ export class HrModuleFormComponent {
       let filterOriginCities = this.originCities.filter(
         (value) => value?.country?.name == originCountry
       );
-      this.originCities = this.dropdownService.extractNames(filterOriginCities);
+      this.originCities = this.dropdownService?.extractNames(filterOriginCities);
     });
   }
 
@@ -258,7 +258,7 @@ export class HrModuleFormComponent {
       //   let filterCities = this.originCities.filter(
       //     (city) => city?.country?.name == country.value
       //   );
-      this.originCities = this.dropdownService.extractNames(this.originCities);
+      this.originCities = this.dropdownService?.extractNames(this.originCities);
     });
   }
 
