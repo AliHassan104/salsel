@@ -39,14 +39,14 @@ export class HrModuleFormComponent {
   countries?;
   originCities?;
   department?;
-  roleNames
+  roleNames;
 
   // FOR EDIT PURPOSE
   editMode: boolean = false;
   editId;
   singleEmployee: IEmployee;
   editFileName: string;
-  roleName
+  roleName;
   userRole;
 
   fileName: string = "";
@@ -99,21 +99,17 @@ export class HrModuleFormComponent {
     this.userRole = this.sessionStorageService.getRoleName();
   }
 
-    ngAfterViewChecked(): void {
-        const dropdowns = [
-            this.dropdown,
-          this.dropdown1,
-          this.dropdown2,
-        ];
+  ngAfterViewChecked(): void {
+    const dropdowns = [this.dropdown, this.dropdown1, this.dropdown2];
 
-        dropdowns.forEach((dropdown, index) => {
-          if (dropdown) {
-            (dropdown.filterBy as any) = {
-              split: (_: any) => [(item: any) => item],
-            };
-          }
-        });
+    dropdowns.forEach((dropdown, index) => {
+      if (dropdown) {
+        (dropdown.filterBy as any) = {
+          split: (_: any) => [(item: any) => item],
+        };
       }
+    });
+  }
 
   employeeFormSetup() {
     this.employeeForm = new FormGroup({
@@ -201,7 +197,6 @@ export class HrModuleFormComponent {
             address: this.singleEmployee?.address,
             city: this.singleEmployee?.city,
             country: this.singleEmployee?.country,
-
           });
         });
     }
@@ -217,7 +212,6 @@ export class HrModuleFormComponent {
         this.productFields.filter((data) => data.name == "Role Name")[0]
           ?.productFieldValuesList
       );
-
     });
     // Get All Countries
 
@@ -247,7 +241,8 @@ export class HrModuleFormComponent {
       let filterOriginCities = this.originCities.filter(
         (value) => value?.country?.name == originCountry
       );
-      this.originCities = this.dropdownService?.extractNames(filterOriginCities);
+      this.originCities =
+        this.dropdownService?.extractNames(filterOriginCities);
     });
   }
 

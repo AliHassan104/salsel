@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
@@ -13,6 +13,8 @@ import { Dropdown } from "primeng/dropdown";
 import { CityService } from "src/app/components/City/service/city.service";
 import { CountryService } from "src/app/components/country/service/country.service";
 import { DropdownService } from "src/app/layout/service/dropdown.service";
+import { HrModuleService } from "src/app/components/hr-module/service/hr-module.service";
+import { Table } from "primeng/table";
 
 @Component({
   selector: "app-add-user",
@@ -21,6 +23,8 @@ import { DropdownService } from "src/app/layout/service/dropdown.service";
   providers: [MessageService],
 })
 export class AddUserComponent implements OnInit {
+  visible: boolean = false;
+  employees;
   countries?;
   cities?;
   editMode;
@@ -28,6 +32,9 @@ export class AddUserComponent implements OnInit {
   singleUser?: IUser;
   roles?;
   params: any = { status: true };
+
+  loading: any;
+  @ViewChild("filter") filter!: ElementRef;
 
   @ViewChild("dropdown") dropdown?: Dropdown;
   @ViewChild("dropdown1") dropdown1?: Dropdown;
@@ -41,7 +48,8 @@ export class AddUserComponent implements OnInit {
     private loginService: LoginService,
     private cityService: CityService,
     private countryService: CountryService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    private employeeService: HrModuleService
   ) {}
 
   userForm!: FormGroup;
@@ -50,6 +58,7 @@ export class AddUserComponent implements OnInit {
     this.formSetup();
     this.getRoles();
     this.queryParamSetup();
+    this.onGettingEmployee();
   }
 
   ngAfterViewInit(): void {
@@ -233,6 +242,53 @@ export class AddUserComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(["user/list"]);
+  }
+
+  autoFillData() {
+    this.visible = true;
+  }
+
+  onSelectEmployee(id:any){
+    this.employeeService.getEmployeeById(id).subscribe((response:any)=>{
+        const employee = response.body;
+
+
+        this.getAllCities(employee?.country);
+
+        this.userForm.patchValue({
+          firstname: employee?.firstname,
+          lastname: employee?.lastname,
+          phone: employee?.mobile,
+          country: employee?.country,
+          city: employee?.city,
+        });
+
+        this.visible = false;
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Data has been filled in successfully.",
+        });
+    })
+
+  }
+
+  onGettingEmployee() {
+    this.employeeService.getAllEmployees(this.params).subscribe((res: any) => {
+      // const filteredData = res?.body?.filter((item) => !item.email);
+      // console.log(filteredData);
+      // this.employees = filteredData;
+      this.employees = res.body;
+    });
+  }
+
+  onGlobalFilter(table: Table, event: Event) {
+    table.filterGlobal((event.target as HTMLInputElement).value, "contains");
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.filter.nativeElement.value = "";
   }
 
   alert() {
