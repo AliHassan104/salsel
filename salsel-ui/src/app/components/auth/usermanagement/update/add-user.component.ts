@@ -32,6 +32,8 @@ export class AddUserComponent implements OnInit {
   singleUser?: IUser;
   roles?;
   params: any = { status: true };
+  employeeFromUser: boolean = false;
+  submittedUserInfo
 
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
@@ -104,6 +106,7 @@ export class AddUserComponent implements OnInit {
       roles: new FormControl(null, Validators.required),
       country: new FormControl(null, Validators.required),
       city: new FormControl(null, Validators.required),
+      employeeId: new FormControl(null),
     });
   }
 
@@ -190,23 +193,44 @@ export class AddUserComponent implements OnInit {
     if (this.userForm.valid) {
       let formValue = this.userForm.value;
       let fullname = formValue.firstname + " " + formValue.lastname;
-      const data = {
-        firstname: formValue.firstname,
-        lastname: formValue.lastname,
-        name: fullname,
-        phone: formValue.phone,
-        email: formValue.email,
-        country: formValue.country,
-        city: formValue.city,
-        roles: [
-          {
-            id: formValue.roles.id,
-          },
-        ],
-        status: true,
-      };
+      if (this.employeeFromUser) {
+        this.submittedUserInfo = {
+          firstname: formValue.firstname,
+          lastname: formValue.lastname,
+          name: fullname,
+          phone: formValue.phone,
+          email: formValue.email,
+          country: formValue.country,
+          city: formValue.city,
+          roles: [
+            {
+              id: formValue.roles.id,
+            },
+          ],
+          status: true,
+          employeeId : formValue.employeeId
+        };
+      } else {
+        this.submittedUserInfo = {
+          firstname: formValue.firstname,
+          lastname: formValue.lastname,
+          name: fullname,
+          phone: formValue.phone,
+          email: formValue.email,
+          country: formValue.country,
+          city: formValue.city,
+          roles: [
+            {
+              id: formValue.roles.id,
+            },
+          ],
+          status: true,
+          employeeId: null,
+        };
+      }
+
       if (this.editMode) {
-        this.userService.updateUser(this.editId, data).subscribe(
+        this.userService.updateUser(this.editId, this.submittedUserInfo).subscribe(
           (res: any) => {
             this.userForm.reset();
             this.router.navigate(["user/list"]);
@@ -220,7 +244,7 @@ export class AddUserComponent implements OnInit {
           }
         );
       } else {
-        this.loginService.signUp(data).subscribe(
+        this.loginService.signUp(this.submittedUserInfo).subscribe(
           (res: any) => {
             this.userForm.reset();
             this.router.navigate(["user/list"]);
@@ -248,36 +272,33 @@ export class AddUserComponent implements OnInit {
     this.visible = true;
   }
 
-  onSelectEmployee(id:any){
-    this.employeeService.getEmployeeById(id).subscribe((response:any)=>{
-        const employee = response.body;
+  onSelectEmployee(id: any) {
+    this.employeeFromUser = true
+    this.employeeService.getEmployeeById(id).subscribe((response: any) => {
+      const employee = response.body;
 
+      this.getAllCities(employee?.country);
 
-        this.getAllCities(employee?.country);
+      this.userForm.patchValue({
+        firstname: employee?.firstname,
+        lastname: employee?.lastname,
+        phone: employee?.mobile,
+        country: employee?.country,
+        city: employee?.city,
+        employeeId: employee?.employeeNumber,
+      });
 
-        this.userForm.patchValue({
-          firstname: employee?.firstname,
-          lastname: employee?.lastname,
-          phone: employee?.mobile,
-          country: employee?.country,
-          city: employee?.city,
-        });
-
-        this.visible = false;
-        this.messageService.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Data has been filled in successfully.",
-        });
-    })
-
+      this.visible = false;
+      this.messageService.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Data has been filled in successfully.",
+      });
+    });
   }
 
   onGettingEmployee() {
     this.employeeService.getAllEmployees(this.params).subscribe((res: any) => {
-      // const filteredData = res?.body?.filter((item) => !item.email);
-      // console.log(filteredData);
-      // this.employees = filteredData;
       this.employees = res.body;
     });
   }
