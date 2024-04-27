@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.salsel.service.impl.bucketServiceImpl.EMPLOYEE;
 
@@ -52,8 +53,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public EmployeeDto save(EmployeeDto employeeDto, MultipartFile passport, MultipartFile id, List<MultipartFile> docs) {
         Employee employee = toEntity(employeeDto);
+        employee.setCreatedAt(LocalDate.now());
         employee.setStatus(true);
 
+        // Calculate total amount, replacing null values with 0
+        double amount = Stream.of(
+                        employee.getSalary(),
+                        employee.getMobile(),
+                        employee.getHousing(),
+                        employee.getTransportation(),
+                        employee.getOtherAllowance())
+                .mapToDouble(value -> value != null ? value : 0.0)
+                .sum();
+
+        employee.setTotalAmount(amount);
         Employee latestEmployee = employeeRepository.findEmployeeByLatestId();
 
         if (latestEmployee != null) {
@@ -267,6 +280,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .passportFilePath(employee.getPassportFilePath())
                 .idFilePath(employee.getIdFilePath())
                 .status(employee.getStatus())
+                .totalAmount(employee.getTotalAmount())
                 .createAsUser(employee.getCreateAsUser())
                 .attachments(employee.getAttachments())
                 .address(employee.getAddress())
@@ -297,6 +311,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .idFilePath(employeeDto.getIdFilePath())
                 .status(employeeDto.getStatus())
                 .employeeNumber(employeeDto.getEmployeeNumber())
+                .totalAmount(employeeDto.getTotalAmount())
                 .createAsUser(employeeDto.getCreateAsUser())
                 .attachments(employeeDto.getAttachments())
                 .address(employeeDto.getAddress())

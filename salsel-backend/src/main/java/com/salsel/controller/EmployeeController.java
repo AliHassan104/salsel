@@ -1,10 +1,11 @@
 package com.salsel.controller;
 
-import com.salsel.dto.DepartmentDto;
 import com.salsel.dto.EmployeeDto;
-import com.salsel.dto.PaginationResponse;
-import com.salsel.dto.TicketDto;
 import com.salsel.service.EmployeeService;
+import com.salsel.service.PdfGenerationService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,10 @@ import java.util.List;
 @RequestMapping("/api")
 public class EmployeeController {
     private final EmployeeService employeeService;
-    public EmployeeController(EmployeeService employeeService) {
+    private final PdfGenerationService pdfGenerationService;
+    public EmployeeController(EmployeeService employeeService, PdfGenerationService pdfGenerationService) {
         this.employeeService = employeeService;
+        this.pdfGenerationService = pdfGenerationService;
     }
 
     @PostMapping("/employee")
@@ -67,6 +70,19 @@ public class EmployeeController {
     public ResponseEntity<Void> updateEmployeeStatusToActive(@PathVariable Long id) {
         employeeService.setToActiveById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/employee/pdf/{id}")
+    @PreAuthorize("hasAuthority('CREATE_EMPLOYEE') and hasAuthority('READ_EMPLOYEE')")
+    public ResponseEntity<byte[]> generateEmployeePdf(@PathVariable Long id) {
+        // Generate PDF
+        byte[] pdfBytes = pdfGenerationService.generateEmployeePdf(id);
+
+        // Set response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "EmployeeDetails.pdf");
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
 }
