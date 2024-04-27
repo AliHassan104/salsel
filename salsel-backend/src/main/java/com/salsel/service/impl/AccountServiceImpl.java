@@ -5,9 +5,11 @@ import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Account;
 import com.salsel.model.Country;
+import com.salsel.model.Role;
 import com.salsel.model.User;
 import com.salsel.repository.AccountRepository;
 import com.salsel.repository.CountryRepository;
+import com.salsel.repository.RoleRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.AccountService;
 import com.salsel.service.BucketService;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final HelperUtils helperUtils;
     private final EmailUtils emailUtils;
     private final BucketService bucketService;
@@ -35,9 +38,10 @@ public class AccountServiceImpl implements AccountService {
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
 
-    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, HelperUtils helperUtils, EmailUtils emailUtils, BucketService bucketService, CountryRepository countryRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, RoleRepository roleRepository, HelperUtils helperUtils, EmailUtils emailUtils, BucketService bucketService, CountryRepository countryRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.helperUtils = helperUtils;
         this.emailUtils = emailUtils;
         this.bucketService = bucketService;
@@ -89,6 +93,10 @@ public class AccountServiceImpl implements AccountService {
             user.setCity(account.getCity());
             user.setName(account.getCustName());
             user.setStatus(true);
+
+            Role role = roleRepository.findByName("ROLE_CUSTOMER_USER")
+                    .orElseThrow(() -> new RecordNotFoundException("Role Customer not found."));
+            user.getRoles().add(role);
 
             // If there are existing users, adjust the employee ID to include the country code
             User latestUser = userRepository.findUserByLatestId();

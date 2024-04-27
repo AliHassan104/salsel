@@ -38,6 +38,7 @@ public class EmployeeDto {
     private String passportFilePath;
     private String idFilePath;
     private String position;
+    private Double totalAmount;
     private Boolean createAsUser;
     private Boolean status;
     private List<EmployeeAttachment> attachments;

@@ -40,6 +40,7 @@ public class Employee {
     private String passportFilePath;
     private String idFilePath;
     private String position;
+    private Double totalAmount;
     private Boolean createAsUser;
     private Boolean status;
 
