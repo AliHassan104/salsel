@@ -95,11 +95,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee createdEmployee = employeeRepository.save(employee);
 
-        if(employee.getCreateAsUser() != null){
-            System.out.println("outside existing user");
+        if(employee.getCreateAsUser()) {
             Optional<User> existingUser = userRepository.findByEmail(employee.getEmail());
             if (!existingUser.isPresent()) {
-                System.out.println("inside existing user");
                 User user = new User();
                 String password = helperUtils.generateResetPassword();
                 user.setCreatedAt(LocalDate.now());
@@ -123,6 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 emailUtils.sendWelcomeEmail(createdUser, password);
             }
         }
+
 
         helperUtils.saveFileToBucketAndSetUrl(passport, createdEmployee, "passport");
         helperUtils.saveFileToBucketAndSetUrl(id, createdEmployee, "id");

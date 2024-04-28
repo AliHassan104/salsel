@@ -28,5 +28,6 @@ public class UserDto {
     private Boolean status;
     private String city;
     private String country;
+    private Long employeeReferenceId;
     private Set<Role> roles = new HashSet<>();
 }

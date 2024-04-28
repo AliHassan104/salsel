@@ -50,9 +50,8 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDate.now());
 
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-        Optional<User> userExist = userRepository.findByEmployeeId(user.getEmployeeId());
 
-        if (existingUser.isPresent() || userExist.isPresent()) {
+        if (existingUser.isPresent()) {
             throw new UserAlreadyExistAuthenticationException("User Already Exist");
         }
 
@@ -67,36 +66,62 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(roleList);
 
-        // If there are existing users, adjust the employee ID to include the country code
-        User latestUser = userRepository.findUserByLatestId();
+        if(user.getEmployeeId() == null){
+            // If there are existing users, adjust the employee ID to include the country code
+            User latestUser = userRepository.findUserByLatestId();
 
-        if (latestUser != null) {
+            if (latestUser != null) {
 
-            // Retrieve the country code from the latest user
-            Country country = countryRepository.findCountryByName(latestUser.getCountry());
+                // Retrieve the country code from the latest user
+                Country country = countryRepository.findCountryByName(latestUser.getCountry());
+                Integer countryCode = country.getCode();
+
+                // Extract the employee ID and remove the country code
+                String empIdStr = String.valueOf(latestUser.getEmployeeId());
+                String empIdWithoutCountryCode = empIdStr.substring(String.valueOf(countryCode).length());
+
+                // Retrieve the new country code and prepend it to the employee ID
+                Integer newCountryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+                String code = String.valueOf(newCountryCode);
+                Long newEmpId = Long.parseLong(code + empIdWithoutCountryCode);
+
+                newEmpId++;
+                user.setEmployeeId(newEmpId);
+            } else {
+                String firstEmployeeId = "0001";
+                Integer countryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
+                String concatenatedValue = countryCode.toString() + firstEmployeeId;
+                Long combinedValue = Long.parseLong(concatenatedValue);
+                user.setEmployeeId(combinedValue);
+            }
+        }
+        else{
+            Optional<User> userExist = userRepository.findByEmployeeId(user.getEmployeeId());
+            Long employeeId = user.getEmployeeId();
+
+            while (userExist.isPresent()) {
+                // If user with the same employeeId exists, increment employeeId by 1
+                employeeId++;
+                userExist = userRepository.findByEmployeeId(employeeId);
+            }
+
+            Country country = countryRepository.findCountryByName(user.getCountry());
             Integer countryCode = country.getCode();
 
-            // Extract the employee ID and remove the country code
-            String empIdStr = String.valueOf(latestUser.getEmployeeId());
-            String empIdWithoutCountryCode = empIdStr.substring(String.valueOf(countryCode).length());
+            String empIdStr = String.valueOf(employeeId);
+            String extractedCountryCode = empIdStr.substring(0, countryCode.toString().length());
 
-            // Retrieve the new country code and prepend it to the employee ID
-            Integer newCountryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
-            String code = String.valueOf(newCountryCode);
-            Long newEmpId = Long.parseLong(code + empIdWithoutCountryCode);
-
-            newEmpId++;
-            user.setEmployeeId(newEmpId);
-        } else {
-            String firstEmployeeId = "0001";
-            Integer countryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
-            String concatenatedValue = countryCode.toString() + firstEmployeeId;
-            Long combinedValue = Long.parseLong(concatenatedValue);
-            user.setEmployeeId(combinedValue);
+            if (extractedCountryCode.equals(String.valueOf(countryCode))) {
+                user.setEmployeeId(employeeId);
+            } else {
+                throw new RecordNotFoundException("Country code doesn't match with employeeId");
+            }
         }
 
+
+
         userRepository.save(user);
-        emailUtils.sendWelcomeEmail(user, password);
+//        emailUtils.sendWelcomeEmail(user, password);
         return toDto(user);
     }
 
@@ -409,6 +434,7 @@ public class UserServiceImpl implements UserService {
                 .roles(user.getRoles())
                 .country(user.getCountry())
                 .city(user.getCity())
+                .employeeReferenceId(user.getEmployeeReferenceId())
                 .build();
     }
 
@@ -426,6 +452,7 @@ public class UserServiceImpl implements UserService {
                 .password(userDto.getPassword())
                 .status(userDto.getStatus())
                 .city(userDto.getCity())
+                .employeeReferenceId(userDto.getEmployeeReferenceId())
                 .country(userDto.getCountry())
                 .roles(userDto.getRoles())
                 .build();
