@@ -54,11 +54,12 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
         Employee employee = employeeRepository.findById(empId)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Employee not found for id => %d", empId)));
 
-        String htmlContent = "<html><head><title>Employee Details</title></head><body>" +
+        String htmlContent = "<html><head><title>Employee Details</title></head><body style='font-family: Arial, sans-serif; margin: 0; padding: 0;'>" +
+                "<div style='max-width: 800px; margin: 0 auto; padding: 10px 20px;'>" +
                 "<div style='position: relative;'>" +
-                "<img src='src/main/resources/static/images/logo.jpeg' style='position: absolute; top: 20px; left: 20px; width: 100px; height: auto;'/>" +
-                "<h1 style='text-align: center;'>Employee #" + employee.getId() + "</h1>" +
-                "<div style='margin-left: 20px;'>" +
+                "<img src='src/main/resources/static/images/logo.jpeg' style='position: absolute; top: -15px; left: 5px; width: 100px; height: auto;'/>" +
+                "<h2 style='text-align: center;'>Employee #" + employee.getId() + "</h2>" +
+                "<div style='margin-left: 20px; margin-top:40px;'>" +
                 "<p><strong>Created At:</strong> " + (employee.getCreatedAt() != null ? employee.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "null") + "</p>" +
                 "<p><strong>Name:</strong> " + (employee.getName() != null ? employee.getName() : "null") + "</p>" +
                 "<p><strong>Phone:</strong> " + (employee.getPhone() != null ? employee.getPhone() : "null") + "</p>" +
@@ -77,7 +78,8 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
                 "<p><strong>Total Amount:</strong> " + (employee.getTotalAmount() != null ? employee.getTotalAmount() : "null") + "</p>" +
                 "<p><strong>Position:</strong> " + (employee.getPosition() != null ? employee.getPosition() : "null") + "</p>" +
                 "<p><strong>Status:</strong> " + (employee.getStatus() != null ? employee.getStatus() : "null") + "</p>" +
-                "</div></div></body></html>";
+                "</div></div></div></body></html>";
+
 
         // Step 2: Use Flying Saucer to convert HTML to PDF
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

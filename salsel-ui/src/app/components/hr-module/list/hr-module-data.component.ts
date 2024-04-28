@@ -17,7 +17,7 @@ import { TicktingService } from '../../Tickets/service/tickting.service';
   selector: "app-hr-module-data",
   templateUrl: "./hr-module-data.component.html",
   styleUrls: ["./hr-module-data.component.scss"],
-  providers:[MessageService,DatePipe]
+  providers: [MessageService, DatePipe],
 })
 export class HrModuleDataComponent {
   excelDataForm!: FormGroup;
@@ -34,7 +34,7 @@ export class HrModuleDataComponent {
 
   constructor(
     private _ticktingService: TicktingService,
-    private employeeService:HrModuleService,
+    private employeeService: HrModuleService,
     private router: Router,
     private messageService: MessageService,
     private dropdownService: DropdownService,
@@ -63,12 +63,12 @@ export class HrModuleDataComponent {
     // this.getMinMax();
   }
 
-//   getMinMax() {
-//     this._ticktingService.getMinMax().subscribe((res: any) => {
-//       this.minDate = new Date(res.minDate);
-//       this.maxDate = new Date(res.maxDate);
-//     });
-//   }
+  //   getMinMax() {
+  //     this._ticktingService.getMinMax().subscribe((res: any) => {
+  //       this.minDate = new Date(res.minDate);
+  //       this.maxDate = new Date(res.maxDate);
+  //     });
+  //   }
 
   //   Get all Employees
   getEmployees() {
@@ -157,45 +157,45 @@ export class HrModuleDataComponent {
     });
   }
 
-//   onDownloadExcel(data: any) {
-//     if (this.excelDataForm.valid) {
-//       const formattedDates = {
-//         startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
-//         endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
-//       };
-//       console.log(formattedDates);
+  //   onDownloadExcel(data: any) {
+  //     if (this.excelDataForm.valid) {
+  //       const formattedDates = {
+  //         startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
+  //         endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
+  //       };
+  //       console.log(formattedDates);
 
-//       this._ticktingService.downloadEmployeeDataInExcel(formattedDates).subscribe(
-//         (res: any) => {
-//           this._ticktingService.downloadExcelFile(
-//             res,
-//             `Employee${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
-//           );
-//           this.messageService.add({
-//             severity: "success",
-//             summary: "Success",
-//             detail: "Download Successfull",
-//           });
-//           this.excelDataForm.reset();
-//           this.visible = false;
-//         },
-//         (error) => {
-//           this.messageService.add({
-//             severity: "error",
-//             summary: "Error",
-//             detail: "No Data Found",
-//           });
-//         }
-//       );
-//     } else {
-//       this.formService.markFormGroupTouched(this.excelDataForm);
-//       this.messageService.add({
-//         severity: "error",
-//         summary: "Error",
-//         detail: "Please Fill All The Fields.",
-//       });
-//     }
-//   }
+  //       this._ticktingService.downloadEmployeeDataInExcel(formattedDates).subscribe(
+  //         (res: any) => {
+  //           this._ticktingService.downloadExcelFile(
+  //             res,
+  //             `Employee${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+  //           );
+  //           this.messageService.add({
+  //             severity: "success",
+  //             summary: "Success",
+  //             detail: "Download Successfull",
+  //           });
+  //           this.excelDataForm.reset();
+  //           this.visible = false;
+  //         },
+  //         (error) => {
+  //           this.messageService.add({
+  //             severity: "error",
+  //             summary: "Error",
+  //             detail: "No Data Found",
+  //           });
+  //         }
+  //       );
+  //     } else {
+  //       this.formService.markFormGroupTouched(this.excelDataForm);
+  //       this.messageService.add({
+  //         severity: "error",
+  //         summary: "Error",
+  //         detail: "Please Fill All The Fields.",
+  //       });
+  //     }
+  //   }
 
   onCancel() {
     this.visible = false;
@@ -213,6 +213,34 @@ export class HrModuleDataComponent {
     const queryParams = { updateMode: "true", id: id };
     this.router.navigate(["create-employee"], {
       queryParams: queryParams,
+    });
+  }
+
+  onDownloadEmployeeInfo(id, empNum) {
+    this.employeeService.getEmployeeForm(id).subscribe(
+      (res: any) => {
+        this.downloadSuccess();
+        this.employeeService.downloadFile(res, `Employee_${empNum}.pdf`);
+      },
+      (error) => {
+        this.downloadError();
+      }
+    );
+  }
+
+  downloadError() {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Download Failed",
+    });
+  }
+
+  downloadSuccess() {
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "File Successfully Downloaded",
     });
   }
 
@@ -239,6 +267,4 @@ export class HrModuleDataComponent {
       detail: "Deactivation Successfull",
     });
   }
-
-
 }

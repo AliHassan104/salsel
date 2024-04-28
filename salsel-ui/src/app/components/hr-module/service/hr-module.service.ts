@@ -77,13 +77,21 @@ export class HrModuleService {
       formData.append("idFile", Nid);
     }
 
-    return this.http.put<any>(`${this.url}employee/${id}`, formData,{params});
+    return this.http.put<any>(`${this.url}employee/${id}`, formData, {
+      params,
+    });
   }
 
   getAllEmployees(params: any): Observable<EntityEmployeeResponseType> {
     return this.http.get<IEmployee[]>(`${this.url}employee`, {
       params,
       observe: "response",
+    });
+  }
+
+  getEmployeeForm(id: any) {
+    return this.http.get(`${this.url}employee/pdf/${id}`, {
+      responseType: "blob" as "json",
     });
   }
 
@@ -97,8 +105,16 @@ export class HrModuleService {
     return this.http.delete<IEmployee>(url, { observe: "response" });
   }
 
-  updateEmployeeStatus(id:any) {
+  updateEmployeeStatus(id: any) {
     let url = `${this.url}employee/status/${id}`;
     return this.http.put<any>(url, { observe: "response" });
+  }
+
+  downloadFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
   }
 }
