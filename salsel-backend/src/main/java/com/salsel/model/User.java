@@ -24,7 +24,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate createdAt;
+
+    @Column(unique = true)
     private Long employeeId;
+
     private String name;
     private String firstname;
     private String lastname;
@@ -34,6 +37,7 @@ public class User {
     private Boolean status;
     private String city;
     private String country;
+    private Long employeeReferenceId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",

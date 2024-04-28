@@ -24,7 +24,10 @@ public class Employee {
     private String firstname;
     private String lastname;
     private String phone;
+
+    @Column(unique = true)
     private Long employeeNumber;
+
     private String email;
     private String city;
     private String address;
