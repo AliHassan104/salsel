@@ -8,7 +8,10 @@ import com.salsel.model.Country;
 import com.salsel.model.Otp;
 import com.salsel.model.Role;
 import com.salsel.model.User;
-import com.salsel.repository.*;
+import com.salsel.repository.CountryRepository;
+import com.salsel.repository.OtpRepository;
+import com.salsel.repository.RoleRepository;
+import com.salsel.repository.UserRepository;
 import com.salsel.service.UserService;
 import com.salsel.utils.EmailUtils;
 import com.salsel.utils.HelperUtils;
@@ -23,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
     private final OtpRepository otpRepository;
@@ -31,9 +33,8 @@ public class UserServiceImpl implements UserService {
     private final HelperUtils helperUtils;
     private final EmailUtils emailUtils;
 
-    public UserServiceImpl(UserRepository userRepository, EmployeeRepository employeeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, OtpRepository otpRepository, CountryRepository countryRepository, HelperUtils helperUtils, EmailUtils emailUtils) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, OtpRepository otpRepository, CountryRepository countryRepository, HelperUtils helperUtils, EmailUtils emailUtils) {
         this.userRepository = userRepository;
-        this.employeeRepository = employeeRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
         this.otpRepository = otpRepository;
@@ -433,6 +434,7 @@ public class UserServiceImpl implements UserService {
                 .roles(user.getRoles())
                 .country(user.getCountry())
                 .city(user.getCity())
+                .employeeReferenceId(user.getEmployeeReferenceId())
                 .build();
     }
 
@@ -450,6 +452,7 @@ public class UserServiceImpl implements UserService {
                 .password(userDto.getPassword())
                 .status(userDto.getStatus())
                 .city(userDto.getCity())
+                .employeeReferenceId(userDto.getEmployeeReferenceId())
                 .country(userDto.getCountry())
                 .roles(userDto.getRoles())
                 .build();
