@@ -45,6 +45,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   pickupDate;
   pickupTime;
   productFields?;
+  todayDate = new Date();
 
   // DROPDOWNS FORM PRODUCT FIELD
   currencies?;

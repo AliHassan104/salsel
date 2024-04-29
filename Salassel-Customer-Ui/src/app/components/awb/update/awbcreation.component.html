@@ -115,7 +115,7 @@
                 <!-- Pickup Date -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="dcity">Pickup Date</label>
-                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="pickupDate"
+                    <p-calendar dateFormat="yy-mm-dd" [minDate]="todayDate" [showIcon]="true" formControlName="pickupDate"
                         placeholder="Select Pickup Date"
                         [ngClass]="{'ng-dirty':awbForm.get('pickupDate')?.touched && awbForm.get('pickupDate')?.invalid}"></p-calendar>
                     <small *ngIf="!awbForm.get('pickupDate')?.valid && awbForm.get('pickupDate')?.touched"

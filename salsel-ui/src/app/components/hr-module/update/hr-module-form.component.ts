@@ -72,7 +72,6 @@ export class HrModuleFormComponent {
   //   CONSTRUCTOR
   constructor(
     private employeeService: HrModuleService,
-    private _ticketService: TicktingService,
     private router: Router,
     private http: HttpClient,
     private messageService: MessageService,
@@ -150,7 +149,6 @@ export class HrModuleFormComponent {
         .getEmployeeById(this.editId)
         .subscribe((res: any) => {
           this.singleEmployee = res.body;
-          console.log(res.body);
           const passwordPath = this.singleEmployee?.passportFilePath;
           const idPath = this.singleEmployee?.idFilePath;
 
@@ -260,7 +258,6 @@ export class HrModuleFormComponent {
   //  ON TICKET FORM SUBMIT
 
   onSubmit() {
-    console.log(this.employeeForm.value);
 
     if (this.employeeForm.valid) {
       const formValue = this.employeeForm.value;
@@ -324,7 +321,6 @@ export class HrModuleFormComponent {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files.length > 0) {
       const selectedFile = fileInput.files[0];
-      console.log(selectedFile);
 
       // Check if the selected file has a PDF extension or it's an image file
       if (
@@ -349,8 +345,6 @@ export class HrModuleFormComponent {
     const fileInput = event.target;
     if (fileInput.files && fileInput.files.length > 0) {
       const selectedFile = fileInput.files[0];
-      console.log(selectedFile);
-
       // Check if the selected file has a PDF extension or it's an image file
       if (
         selectedFile.name.toLowerCase().endsWith(".pdf") ||

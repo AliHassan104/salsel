@@ -25,8 +25,9 @@
                     <p><strong>city:</strong> {{singleEmployee?.city}}</p>
                 </div>
                 <div class="col-12 md:col-6">
-                    <h4>Personal Infomation</h4>
+                    <h4>Job Infomation</h4>
                     <p><strong>Employee Number:</strong> {{singleEmployee?.employeeNumber}}</p>
+                    <p><strong>Department:</strong> {{singleEmployee?.department}}</p>
                     <p><strong>Job Title:</strong> {{singleEmployee?.jobTitle}}</p>
                     <p><strong>Salary:</strong> {{singleEmployee?.salary}}</p>
                     <p *ngIf="singleEmployee?.position"><strong>Position:</strong> {{singleEmployee?.position}}</p>
@@ -36,6 +37,7 @@
                     <p><strong>Hosuing:</strong> {{singleEmployee?.housing}}</p>
                     <p><strong>Transportation: </strong>{{singleEmployee?.transportation}}</p>
                     <p><strong>Other Allowance:</strong> {{singleEmployee?.otherAllowance}}</p>
+                    <p><strong>Total Amount:</strong> {{singleEmployee?.totalAmount}}</p>
                 </div>
             </div>
         </div>

@@ -95,7 +95,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee createdEmployee = employeeRepository.save(employee);
 
-        if(employee.getCreateAsUser()) {
+        if(employee.getCreateAsUser() != null) {
             Optional<User> existingUser = userRepository.findByEmail(employee.getEmail());
             if (!existingUser.isPresent()) {
                 User user = new User();

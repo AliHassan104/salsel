@@ -208,7 +208,7 @@ export class AddUserComponent implements OnInit {
             },
           ],
           status: true,
-          employeeId : formValue.employeeId
+          employeeReferenceId: formValue.employeeId,
         };
       } else {
         this.submittedUserInfo = {
@@ -225,7 +225,6 @@ export class AddUserComponent implements OnInit {
             },
           ],
           status: true,
-          employeeId: null,
         };
       }
 

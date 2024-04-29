@@ -52,6 +52,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   destinationCities?;
   productType?;
   serviceType?;
+  todayDate = new Date();
 
   // FOR EDIT AND CREATE AIRBILL FROM TICKET
   ticketMode;

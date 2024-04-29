@@ -66,6 +66,7 @@ export class TicketformComponent implements OnInit {
   fileName: string = "";
   ticketAttachment?: File[] = [];
   ticketEditParams?;
+  todayDate = new Date();
 
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
@@ -226,7 +227,6 @@ export class TicketformComponent implements OnInit {
       this._ticketService.getSingleTicket(this.editId).subscribe((res) => {
         this.singleTicket = res;
 
-
         // Attachments
 
         const filePaths = this.singleTicket.attachments.map(
@@ -234,7 +234,6 @@ export class TicketformComponent implements OnInit {
         );
 
         const FileNames = filePaths.join(",");
-
 
         this.ticketEditParams = { fileNames: FileNames };
 
@@ -720,8 +719,8 @@ export class TicketformComponent implements OnInit {
   }
 
   confirmAddComment() {
-    this.addCommentDialog = false
-    this.visible = true
+    this.addCommentDialog = false;
+    this.visible = true;
   }
 
   onPostComment() {
@@ -739,7 +738,7 @@ export class TicketformComponent implements OnInit {
           detail: "Posted Successfully",
         });
         this.postCommentForm.reset();
-        this.visible = false
+        this.visible = false;
       });
     } else {
       this.formService.markFormGroupTouched(this.postCommentForm);

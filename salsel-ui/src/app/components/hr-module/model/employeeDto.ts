@@ -23,6 +23,7 @@ export interface IEmployee {
   createAsUser?: boolean;
   address?:string;
   lastname?:string;
+  totalAmount?:any
 }
 
  export class Employee implements IEmployee {
@@ -51,4 +52,5 @@ export interface IEmployee {
    createAsUser?: boolean;
    address?: string;
    lastname?: string;
+   totalAmount?: any;
  }

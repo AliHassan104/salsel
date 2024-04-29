@@ -256,7 +256,7 @@
                     <!-- Pickup Date -->
                     <div class="field col-12 md:col-6">
                         <label htmlFor="dcity"><strong>Pickup Date</strong></label>
-                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="pickupDate"
+                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [minDate]="todayDate" formControlName="pickupDate"
                             [ngClass]="{'ng-dirty':ticketForm.get('pickupDate')?.touched && ticketForm.get('pickupDate')?.invalid}"></p-calendar>
                         <small *ngIf="!ticketForm.get('pickupDate')?.valid && ticketForm.get('pickupDate')?.touched"
                             class="text-red-500">

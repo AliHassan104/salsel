@@ -47,6 +47,7 @@ export class TicketformComponent implements OnInit {
   originCities?;
   department?;
   departmentCategory?;
+  todayDate = new Date();
 
   // FOR EDIT PURPOSE
   editMode;
@@ -64,7 +65,7 @@ export class TicketformComponent implements OnInit {
   ticketForm!: FormGroup;
   ticketType?: string[];
   fileList: File[] = [];
-  subCategories
+  subCategories;
 
   @ViewChild("fileInput") fileInput: ElementRef;
   @ViewChild("dropdown") dropdown?: Dropdown;
