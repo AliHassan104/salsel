@@ -107,10 +107,20 @@ public class EmployeeServiceImpl implements EmployeeService {
                 user.setCreatedAt(LocalDate.now());
                 user.setCountry(employee.getCountry());
                 user.setCity(employee.getCity());
-                user.setEmployeeId(employee.getEmployeeNumber());
                 user.setFirstname(employee.getFirstname());
                 user.setLastname(employee.getLastname());
                 user.setPhone(employee.getPhone());
+
+                // Check if employeeId already exists, if yes, increment until unique
+                Optional<User> userExist = userRepository.findByEmployeeId(employee.getEmployeeNumber());
+                Long employeeId = employee.getEmployeeNumber();
+                while (userExist.isPresent()) {
+                    // If user with the same employeeId exists, increment employeeId by 1
+                    employeeId++;
+                    userExist = userRepository.findByEmployeeId(employeeId);
+                }
+                user.setEmployeeId(employeeId);
+
 
                 Role role = roleRepository.findByName(employee.getPosition())
                         .orElseThrow(() -> new RecordNotFoundException("Role not found"));
@@ -118,7 +128,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 user.getRoles().add(role);
                 user.setStatus(true);
                 User createdUser = userRepository.save(user);
-                emailUtils.sendWelcomeEmail(createdUser, password);
+//                emailUtils.sendWelcomeEmail(createdUser, password);
             }
         }
 
