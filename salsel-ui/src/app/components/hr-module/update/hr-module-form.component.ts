@@ -126,9 +126,30 @@ export class HrModuleFormComponent {
       otherAllowance: new FormControl(null, Validators.required),
       housing: new FormControl(null, Validators.required),
       createdAsUser: new FormControl(null),
-      email: new FormControl(null),
+      email: new FormControl(null, [Validators.required, Validators.email]),
       position: new FormControl(null),
     });
+  }
+
+   toggleValidators(isUser: boolean): void {
+    console.log(isUser);
+    
+    const emailControl = this.employeeForm.get('email');
+    const positionControl = this.employeeForm.get('position');
+
+    if (isUser) {
+      emailControl.setValidators([Validators.required, Validators.email]);
+      positionControl.setValidators(Validators.required);
+    } else {
+      emailControl.clearValidators();
+      positionControl.clearValidators();
+      emailControl.reset();
+      positionControl.reset();
+    }
+
+    // Trigger validation after updating validators
+    emailControl.updateValueAndValidity();
+    positionControl.updateValueAndValidity();
   }
 
   queryParamSetup() {

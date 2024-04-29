@@ -201,11 +201,11 @@
                         <label htmlFor="createdAsUser"><strong>Would you like to create it as User?</strong></label>
                         <div class="flex" style="margin-top: 10px;">
                             <div class="field-radiobutton mr-4">
-                                <p-radioButton name="createdAsUser" [value]="true" formControlName="createdAsUser"></p-radioButton>
+                                <p-radioButton name="createdAsUser" [value]="true" formControlName="createdAsUser" (onClick)="toggleValidators(true)"></p-radioButton>
                                 <label for="Yes">Yes</label>
                             </div>
                             <div class="field-radiobutton">
-                                <p-radioButton name="createdAsUser" [value]="null" formControlName="createdAsUser"></p-radioButton>
+                                <p-radioButton name="createdAsUser" [value]="null" formControlName="createdAsUser" (onClick)="toggleValidators(false)"></p-radioButton>
                                 <label for="No">No</label>
                             </div>
                         </div>

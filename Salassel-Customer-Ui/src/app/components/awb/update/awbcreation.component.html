@@ -169,7 +169,7 @@
                 <!-- Weight -->
                 <div class="field col-12 md:col-3">
                     <label htmlFor="weight">Weight</label>
-                    <input pInputText id="weight" type="text" formControlName="weight"
+                    <input pInputText id="weight" type="number" formControlName="weight"
                         [ngClass]="{'ng-dirty':awbForm.get('weight')?.touched && awbForm.get('weight')?.invalid}"
                         placeholder="Enter Weight" [required]="true" />
                     <small *ngIf="!awbForm.get('weight')?.valid && awbForm.get('weight')?.touched" class="text-red-500">
