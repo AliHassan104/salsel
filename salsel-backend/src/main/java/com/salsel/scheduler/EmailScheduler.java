@@ -57,4 +57,13 @@ public class EmailScheduler {
             }
         }
     }
+
+    @Scheduled(cron = "0 6 0 * * ?") // Execute every day at 4:40 PM
+    public void sendEmailForBillingReport() {
+            String toAddress = "usmankhann13888@mailddrop.cc";
+            String[] ccAddresses = {"usmankhann13777@maildrop.cc"};
+        emailUtils.sendBillingEmail(toAddress, ccAddresses);
+
+        System.out.println("Daily email report sent for Billing");
+    }
 }
