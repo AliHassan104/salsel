@@ -24,6 +24,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 
     public static final String[] PUBLIC_URLS = {
             "/api/login",
+            "/api/login/web-user",
             "/api/signup/customer",
             "/v3/api-docs",
             "/v2/api-docs",
@@ -37,6 +38,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/awb/pdf/{file-name}/{awbId}",
             "/api/forgot-password",
             "/api/reset-password",
+            "/api/send/otp",
             "/api/download-user-excel",
             "/api/download-ticket-excel",
             "/api/download-account-excel",

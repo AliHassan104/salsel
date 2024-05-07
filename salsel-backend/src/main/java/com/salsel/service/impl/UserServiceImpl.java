@@ -382,6 +382,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void sendOtpForAwbCreation(String userEmail) {
+        String resetCode = helperUtils.generateResetCode();
+        Otp otp = new Otp();
+        otp.setResetCode(resetCode);
+        otpRepository.save(otp);
+        emailUtils.sendOtpEmailForAwb(userEmail, resetCode);
+    }
+
+    @Override
     @Transactional
     public void resetPassword(String userEmail, String resetCode, String newPassword) {
         User user = userRepository.findByEmail(userEmail)
