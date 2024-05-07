@@ -296,7 +296,7 @@ public class EmailUtils {
                     + "Best regards,\n"
                     + "Salassil Express Team";
 
-            helper.setText(emailContent, true);
+            helper.setText(emailContent);
             javaMailSender.send(message);
 
         } catch (MessagingException e) {
