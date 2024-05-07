@@ -7,6 +7,7 @@ import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
 import com.salsel.service.AwbService;
 import com.salsel.service.ExcelGenerationService;
+import com.salsel.service.PdfGenerationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,12 +34,15 @@ public class EmailUtils {
     private final AwbService awbService;
     private final ExcelGenerationService excelGenerationService;
 
+    private final PdfGenerationService pdfGenerationService;
 
-    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, AwbService awbService, ExcelGenerationService excelGenerationService) {
+
+    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, AwbService awbService, ExcelGenerationService excelGenerationService, PdfGenerationService pdfGenerationService) {
         this.javaMailSender = javaMailSender;
         this.awbRepository = awbRepository;
         this.awbService = awbService;
         this.excelGenerationService = excelGenerationService;
+        this.pdfGenerationService = pdfGenerationService;
     }
 
     @Value("${spring.mail.username}")
@@ -179,6 +183,55 @@ public class EmailUtils {
             throw new RuntimeException(e);
         }
     }
+
+    @Async
+    public void sendBillingEmail(String toAddress, String[] ccAddresses) {
+        try {
+            // Get the date
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+            String formattedDate = currentDate.format(formatter);
+
+            // Generate the Excel report for billing
+            ByteArrayOutputStream billingReport = excelGenerationService.generateBillingReport();
+
+//            Generate PDF
+            byte[] pdfBillingReport = pdfGenerationService.generateBillingPdf();
+
+            // Create the email message
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(sender);
+            helper.setTo(toAddress);
+            if (ccAddresses != null && ccAddresses.length > 0) {
+                helper.setCc(ccAddresses);
+            }
+            helper.setSubject("Daily Billing Report");
+
+            // Set the email body with the formatted date
+            String emailBody = "Gents,\n"
+                    + "Please find attached Daily Billing Report for Date: " + formattedDate + "\n\n"
+                    + "Salassil System Alert\n"
+                    + "Salassilexpress.com";
+            helper.setText(emailBody);
+
+            // Create a ByteArrayResource from the billing report byte array
+            ByteArrayResource billingReportResource = new ByteArrayResource(billingReport.toByteArray());
+            ByteArrayResource pdfBillingReportResource = new ByteArrayResource(pdfBillingReport);
+
+            // Attach the billing report using ByteArrayResource
+            helper.addAttachment("BillingReport.xlsx", billingReportResource);
+            helper.addAttachment("BillingReport.pdf", pdfBillingReportResource);
+
+            // Send the email
+            javaMailSender.send(message);
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 //    @Transactional
 //    @Scheduled(fixedRate = 300000) // 5 minutes in milliseconds

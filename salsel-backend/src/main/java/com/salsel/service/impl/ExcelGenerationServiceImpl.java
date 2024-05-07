@@ -1,23 +1,24 @@
 package com.salsel.service.impl;
 
-import com.salsel.dto.AccountDto;
-import com.salsel.dto.AwbDto;
-import com.salsel.dto.TicketDto;
-import com.salsel.dto.UserDto;
+import com.salsel.dto.*;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Role;
 import com.salsel.service.AwbService;
+import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.JDBCType;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 import static com.salsel.constants.AwbStatusConstants.DELIVERED;
 import static com.salsel.constants.AwbStatusConstants.PICKED_UP;
@@ -28,8 +29,11 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
     private final AwbService awbService;
 
-    public ExcelGenerationServiceImpl(AwbService awbService) {
+    private final BillingService billingService;
+
+    public ExcelGenerationServiceImpl(AwbService awbService, BillingService billingService) {
         this.awbService = awbService;
+        this.billingService = billingService;
     }
 
     @Override
@@ -190,6 +194,25 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     }
 
     @Override
+    public List<Map<String, Object>> convertBillingsToExcelData(List<BillingDto> billings) {
+        List<Map<String, Object>> excelData = new ArrayList<>();
+
+        for (BillingDto billing : billings) {
+            Map<String, Object> billingData = new LinkedHashMap<>();
+            billingData.put("Id", billing.getId());
+            billingData.put("AccountNumber", billing.getAccountNumber());
+            billingData.put("ShipmentNumber", billing.getShipmentNumber());
+            billingData.put("Product", billing.getProduct());
+            billingData.put("ServiceDetails", billing.getServiceDetails());
+            billingData.put("Charges", billing.getCharges());
+            // Add more fields as needed...
+
+            excelData.add(billingData);
+        }
+        return excelData;
+    }
+
+    @Override
     public ByteArrayOutputStream generateAwbStatusReport(String status) throws IOException {
         List<Map<String, Object>> pickedUpReportData = awbService.getAwbByStatusChangedOnPreviousDay(status);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -202,6 +225,14 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         List<Map<String, Object>> transitStatusReportData = awbService.getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         createExcelFile(transitStatusReportData, outputStream, TRANSIT);
+        return outputStream;
+    }
+
+    @Override
+    public ByteArrayOutputStream generateBillingReport() throws IOException {
+        List<Map<String, Object>> transitStatusReportData = billingService.getBillingByExcel();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(transitStatusReportData, outputStream, BILLING);
         return outputStream;
     }
 
@@ -225,6 +256,8 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Delivered Status Report");
         } else if(type.equalsIgnoreCase(TRANSIT)) {
             sheet = workbook.createSheet("Transit Report");
+        } else if(type.equalsIgnoreCase(BILLING)) {
+            sheet = workbook.createSheet("Billing Report");
         } else {
             throw new RecordNotFoundException("Type not valid");
         }
@@ -249,6 +282,10 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         font.setBold(true);
         font.setFontHeightInPoints((short) 12);
         headerStyle.setFont(font);
+        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+
+        CellStyle centerStyle = workbook.createCellStyle();
+        centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
 
         for (String key : excelData.get(0).keySet()) {
             Cell cell = headerRow.createCell(colIndex++);
@@ -286,6 +323,57 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
                 }
             }
         }
+
+        // Apply center alignment for all rows except header row
+        centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        for (int r = 1; r < rowIndex; r++) {
+            Row currentRow = sheet.getRow(r);
+            for (int c = 0; c < excelData.get(0).size(); c++) {
+                Cell currentCell = currentRow.getCell(c);
+                if (currentCell != null) {
+                    currentCell.setCellStyle(centerStyle);
+                }
+            }
+        }
+
+        // Merging the first 5 columns of the total row and aligning the total charges to the right
+        if (type.equalsIgnoreCase(BILLING)) {
+            int totalRowIndex = rowIndex - 1;
+            Row totalRow = sheet.getRow(totalRowIndex);
+            if (totalRow != null) {
+                // Merge the first 5 columns
+                sheet.addMergedRegion(new CellRangeAddress(totalRowIndex, totalRowIndex, 0, 4));
+
+                // Set bold font style for "Total Charges"
+                Font boldFont = workbook.createFont();
+                boldFont.setBold(true);
+
+                // Apply bold font style and align "Total Charges" to the right
+                Cell totalChargesCell = totalRow.createCell(0);
+                totalChargesCell.setCellValue("Total Charges:");
+
+                CellStyle boldStyle = workbook.createCellStyle();
+                boldStyle.setFont(boldFont);
+                boldStyle.setAlignment(CellStyle.ALIGN_RIGHT);
+
+                totalChargesCell.setCellStyle(boldStyle);
+
+                // Align the sum of charges in the last column to the center
+                CellStyle centerAlignedStyle = workbook.createCellStyle();
+                centerAlignedStyle.setAlignment(CellStyle.ALIGN_CENTER);
+                Cell sumChargesCell = totalRow.createCell(excelData.get(0).size() - 1); // Assuming totalRow is the last row
+                sumChargesCell.setCellValue((Double) excelData.get(excelData.size() - 1).get("Charges")); // Assuming "Charges" is the last column
+                sumChargesCell.setCellStyle(centerAlignedStyle);
+
+                // Apply bold font style for the sum of charges cell
+                CellStyle boldCenterStyle = workbook.createCellStyle();
+                boldCenterStyle.cloneStyleFrom(centerAlignedStyle);
+                boldCenterStyle.setFont(boldFont);
+                sumChargesCell.setCellStyle(boldCenterStyle);
+            }
+        }
+
+
 
         // Auto-size columns
         for (int i = 0; i < excelData.get(0).size(); i++) {

@@ -110,8 +110,28 @@ export class HrModuleService {
     return this.http.put<any>(url, { observe: "response" });
   }
 
+//   getBillingReports() {
+//     return this.http.get(`${this.url}download-billing`, {
+//       responseType: "blob" as "json",
+//     });
+//   }
+
+//   getBillingReportsxl() {
+//     return this.http.get(`${this.url}download-billing-xl`, {
+//       responseType: "blob" as "json",
+//     });
+//   }
+
   downloadFile(data: any, filename: string) {
     const blob = new Blob([data], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  downloadExcelFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/xlsx" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     link.download = filename;
