@@ -14,5 +14,7 @@ public interface BillingService {
 
     BillingDto findById(Long id);
 
-    List<Map<String,Object>> getBillingByExcel();
+    List<Map<String,Object>> getBillingInvoiceDataByExcel();
+
+//    Map<Long, List<BillingDto>> getAllGroupedByInvoice(Boolean status);
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BillingServiceImpl implements BillingService {
@@ -47,6 +48,17 @@ public class BillingServiceImpl implements BillingService {
         return billingDtoList;
     }
 
+//    @Override
+//    public Map<Long, List<BillingDto>> getAllGroupedByInvoice(Boolean status) {
+//        List<Billing> billings = billingRepository.findAllInDesOrderByIdAndStatus(status);
+//
+//        Map<Long, List<BillingDto>> result = billings.stream()
+//                .collect(Collectors.groupingBy(Billing::getInvoiceNo,
+//                        Collectors.mapping(this::toDto, Collectors.toList())));
+//
+//        return result;
+//    }
+
     @Override
     public List<BillingDto> getAllBillingsWhereStatusIsNotClosed() {
         List<Billing> billings = billingRepository.getAllBillingsWhereStatusIsNotClosed();
@@ -68,7 +80,7 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
-    public List<Map<String, Object>> getBillingByExcel() {
+    public List<Map<String, Object>> getBillingInvoiceDataByExcel() {
         List<Billing> billingList = billingRepository.getAllBillingsWhereStatusIsNotClosed();
         List<Map<String, Object>> result = new ArrayList<>();
         int count = 1;
@@ -77,11 +89,14 @@ public class BillingServiceImpl implements BillingService {
         for (Billing billing : billingList) {
             Map<String, Object> billingMap = new LinkedHashMap<>();
             billingMap.put("#", count++);
-            billingMap.put("Account Number", billing.getAccountNumber());
-            billingMap.put("Shipment Number", billing.getShipmentNumber());
+            billingMap.put("Airway No", billing.getAirwayBillNo());
+            billingMap.put("Customer Ref#", billing.getCustomerRef());
             billingMap.put("Product", billing.getProduct());
             billingMap.put("Service Details", billing.getServiceDetails());
             billingMap.put("Charges", billing.getCharges());
+            billingMap.put("Customer Account",billing.getCustomerAccountNumber());
+            billingMap.put("Invoice No",billing.getInvoiceNo());
+            billingMap.put("Invoice Date",billing.getInvoiceDate());
 
             totalCharges += billing.getCharges(); // Calculate total charges
 
@@ -102,16 +117,28 @@ public class BillingServiceImpl implements BillingService {
     }
 
 
+
+
     public BillingDto toDto(Billing billing){
         return BillingDto.builder()
                 .id(billing.getId())
                 .serviceDetails(billing.getServiceDetails())
                 .charges(billing.getCharges())
-                .shipmentNumber(billing.getShipmentNumber())
-                .accountNumber(billing.getAccountNumber())
+                .invoiceNo(billing.getInvoiceNo())
+                .taxInvoiceTo(billing.getTaxInvoiceTo())
+                .invoiceDate(billing.getInvoiceDate())
+                .city(billing.getCity())
+                .country(billing.getCountry())
+                .taxNo(billing.getTaxNo())
+                .address(billing.getAddress())
+                .invoiceType(billing.getInvoiceType())
+                .customerRef(billing.getCustomerRef())
+                .airwayBillNo(billing.getAirwayBillNo())
+                .customerAccountNumber(billing.getCustomerAccountNumber())
                 .product(billing.getProduct())
                 .status(billing.getStatus())
                 .billingStatus(billing.getBillingStatus())
+                .vatTax(billing.getVatTax())
                 .build();
     }
 
@@ -120,11 +147,21 @@ public class BillingServiceImpl implements BillingService {
                 .id(billingDto.getId())
                 .serviceDetails(billingDto.getServiceDetails())
                 .charges(billingDto.getCharges())
-                .shipmentNumber(billingDto.getShipmentNumber())
-                .accountNumber(billingDto.getAccountNumber())
+                .invoiceNo(billingDto.getInvoiceNo())
+                .taxInvoiceTo(billingDto.getTaxInvoiceTo())
+                .invoiceDate(billingDto.getInvoiceDate())
+                .city(billingDto.getCity())
+                .country(billingDto.getCountry())
+                .taxNo(billingDto.getTaxNo())
+                .address(billingDto.getAddress())
+                .invoiceType(billingDto.getInvoiceType())
+                .customerRef(billingDto.getCustomerRef())
+                .airwayBillNo(billingDto.getAirwayBillNo())
+                .customerAccountNumber(billingDto.getCustomerAccountNumber())
                 .product(billingDto.getProduct())
                 .status(billingDto.getStatus())
                 .billingStatus(billingDto.getBillingStatus())
+                .vatTax(billingDto.getVatTax())
                 .build();
     }
 }

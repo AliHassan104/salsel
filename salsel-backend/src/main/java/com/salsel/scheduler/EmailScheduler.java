@@ -58,9 +58,9 @@ public class EmailScheduler {
         }
     }
 
-    @Scheduled(cron = "0 6 0 * * ?") // Execute every day at 4:40 PM
+    @Scheduled(cron = "0 38 19 * * ?") // Execute every day at 4:40 PM
     public void sendEmailForBillingReport() {
-            String toAddress = "usmankhann13888@mailddrop.cc";
+            String toAddress = "usmanaslamm138@gmail.com";
             String[] ccAddresses = {"usmankhann13777@maildrop.cc"};
         emailUtils.sendBillingEmail(toAddress, ccAddresses);
 

@@ -130,57 +130,82 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
 
         List<Billing> billingList = billingRepository.getAllBillingsWhereStatusIsNotClosed();
         // Define HTML content for the PDF
-        StringBuilder htmlContent = new StringBuilder("<html><head><title>Billing Details</title></head><body style='font-family: Arial, sans-serif; margin: 0; padding: 0;'>");
-        htmlContent.append("<div style='max-width: 800px; margin: 0 auto; padding: 0px 20px;'>");
-        htmlContent.append("<div style='position: relative;'>");
-        htmlContent.append("<img src='src/main/resources/static/images/logo.jpeg' style='position: absolute; top: 0px; left: 5px; width: 120px; height: auto;'/>");
-        htmlContent.append("<p style='position: absolute; top: 0px; right: 0px;color:#93003c; font-weight:bold;'></p>");
-        htmlContent.append("<h2 style='text-align: center;'>Billing Report</h2>");
-        htmlContent.append("<div style='margin-left: 20px;'>");
-
-        // Start table
-        htmlContent.append("<table style='width:100%; margin-top:50px ; border-collapse: collapse;'>");
-        htmlContent.append("<tr>");
-        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>#</th>");
-        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>Account Number</th>");
-        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>Shipment Number</th>");
-        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>Product</th>");
-        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>Service Details</th>");
-        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>Charges</th>");
-        // Add more table headers as needed
-
-        // End table row
+        StringBuilder htmlContent = new StringBuilder("<html><body style='font-family: Arial, sans-serif;margin: 0; padding: 0;'>");
+        htmlContent.append("<div style='max-width:800px; margin: 0 auto; padding: 0px 5px; min-height:950px; position:relative'>");
+        htmlContent.append("<div style='position:relative; min-height:100px;'>");
+        htmlContent.append("<img src='src/main/resources/static/images/logo.jpeg' style='position:absolute; left:0px; width: 160px; height: auto;'/>");
+        htmlContent.append("<p style='font-weight:bold; line-height:22px;position:absolute; right:0px; font-size:14px;white-space: nowrap;'>Salassil Express Shipping LLC<br/>Dubai, UAE</p>");
+        htmlContent.append("</div>");
+        htmlContent.append("<div style='margin-top: 20px;'>");
+        htmlContent.append("<h4 style='text-align: center;'>TAX INVOICE</h4>");
+        htmlContent.append("<p>TAX Invoice To:</p>");
+        htmlContent.append("<p>TAX No:</p>");
+        htmlContent.append("<p>Address:</p>");
+        htmlContent.append("<p>Invoice No:</p>");
+        htmlContent.append("<p>Invoice Date:</p>");
+        htmlContent.append("</div>");
+        htmlContent.append("<div>");
+        htmlContent.append("<table style='width:100%; margin-top:10px ; border-collapse: collapse;'>");
+        htmlContent.append("<tr style='background-color: #305496; color:white; font-size:14px'>");
+        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>#</th>");
+        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>Airway Bill No</th>");
+        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>Customer Ref#</th>");
+        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>Product</th>");
+        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>Service Details</th>");
+        htmlContent.append("<th style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>Charges</th>");
         htmlContent.append("</tr>");
 
+        // Populate table rows dynamically
         int count = 1;
-        // Iterate over billing list and populate table rows
         for (Billing billing : billingList) {
-            htmlContent.append("<tr>");
-            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>").append(count).append("</td>");
-            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>").append(billing.getAccountNumber()).append("</td>");
-            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>").append(billing.getShipmentNumber()).append("</td>");
-            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>").append(billing.getProduct()).append("</td>");
-            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>").append(billing.getServiceDetails()).append("</td>");
-            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 8px;'>").append(billing.getCharges()).append("</td>");
-            // Add more table cells with billing data as needed
+            htmlContent.append("<tr style='font-size:14px'>");
+            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(count).append("</td>");
+            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(billing.getAirwayBillNo()).append("</td>");
+            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(billing.getCustomerRef()).append("</td>");
+            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(billing.getProduct()).append("</td>");
+            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(billing.getServiceDetails()).append("</td>");
+            htmlContent.append("<td style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(billing.getCharges()).append("</td>");
             htmlContent.append("</tr>");
             count++;
         }
 
+
+
         // Calculate total charges
         double totalCharges = billingList.stream().mapToDouble(Billing::getCharges).sum();
 
-        // Add total row to the table
-        htmlContent.append("<tr>");
-        htmlContent.append("<td colspan='5' style='font-weight:bold ; border: 1px solid #dddddd; text-align: right; padding: 8px;'>Total:</td>");
-        htmlContent.append("<td style='font-weight:bold ; border: 1px solid #dddddd; text-align: center; padding: 8px;'>").append(totalCharges).append("</td>");
+        // Total row
+        htmlContent.append("<tr style='font-size:14px'>");
+        htmlContent.append("<td colspan='4'></td>"); // Empty column
+        htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: right; padding: 4px;'>Total:</td>");
+        htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(totalCharges).append("</td>");
         htmlContent.append("</tr>");
 
-        // End table
+        htmlContent.append("<tr style='font-size:14px'>");
+        htmlContent.append("<td colspan='4'></td>"); // Empty column
+        htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: right; padding: 4px;'>VAT/Tax:</td>");
+        htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(totalCharges).append("</td>");
+        htmlContent.append("</tr>");
+
+        htmlContent.append("<tr style='font-size:14px'>");
+        htmlContent.append("<td colspan='4'></td>"); // Empty column
+        htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: right; padding: 4px;'>G. Total:</td>");
+        htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(totalCharges).append("</td>");
+        htmlContent.append("</tr>");
+
+        // End of table and other content
         htmlContent.append("</table>");
 
-        // End of HTML content
-        htmlContent.append("</div></div></div></body></html>");
+        htmlContent.append("</div>");
+        htmlContent.append("<div style='position: absolute; bottom: 0px; left: 20px;'>");
+        htmlContent.append("<p style='text-align: center; font-size:15px;white-space: nowrap;'>if you have any question regarding this invoice, Pls contact us by email at: billing@salassilexpress.com</p>");
+        htmlContent.append("<p style='text-align: center; font-size:15px;white-space: nowrap;'>billing@salassilexpress.com: <img src='src/main/resources/static/images/arabic.png' style='width: 420px;height:auto'/></p>");
+        htmlContent.append("<p style='text-align:center; margin-top:40px; font-weight:bold;white-space: nowrap;'>This is a computer-generated TAX invoice and no signature required.</p>");
+        htmlContent.append("<p style='text-align:center; font-weight:bold;white-space: nowrap;'><img src='src/main/resources/static/images/arabic1.png' style='width: 400px; height: auto;'/></p>");
+        htmlContent.append("</div>");
+        htmlContent.append("</div></body></html>");
+
+
 
         // Step 2: Use Flying Saucer to convert HTML to PDF
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -195,8 +220,10 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
         }
     }
 
-
-
+    @Override
+    public byte[] generateSalassilStatementPdf() {
+        return new byte[0];
+    }
 
 
 }

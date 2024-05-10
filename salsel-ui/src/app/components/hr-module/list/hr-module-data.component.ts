@@ -228,6 +228,15 @@ export class HrModuleDataComponent {
     );
   }
 
+//   onDownlaodBill(){
+//     this.employeeService.getBillingReports().subscribe((res:any)=>{
+//         this.employeeService.downloadFile(res,"bill.pdf")
+//         this.employeeService.getBillingReportsxl().subscribe((res:any)=>{
+//             this.employeeService.downloadExcelFile(res,"bill.xlsx")
+//         })
+//     })
+//   }
+
 
 
   downloadError() {
