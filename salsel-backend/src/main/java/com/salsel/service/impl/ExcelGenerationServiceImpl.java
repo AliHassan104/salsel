@@ -1,5 +1,6 @@
 package com.salsel.service.impl;
 
+import com.amazonaws.util.IOUtils;
 import com.salsel.dto.*;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Role;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.JDBCType;
 import java.time.format.DateTimeFormatter;
@@ -200,8 +202,8 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         for (BillingDto billing : billings) {
             Map<String, Object> billingData = new LinkedHashMap<>();
             billingData.put("Id", billing.getId());
-            billingData.put("AccountNumber", billing.getAccountNumber());
-            billingData.put("ShipmentNumber", billing.getShipmentNumber());
+            billingData.put("AccountNumber", billing.getCustomerAccountNumber());
+            billingData.put("ShipmentNumber", billing.getCustomerRef());
             billingData.put("Product", billing.getProduct());
             billingData.put("ServiceDetails", billing.getServiceDetails());
             billingData.put("Charges", billing.getCharges());
@@ -230,7 +232,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
     @Override
     public ByteArrayOutputStream generateBillingReport() throws IOException {
-        List<Map<String, Object>> transitStatusReportData = billingService.getBillingByExcel();
+        List<Map<String, Object>> transitStatusReportData = billingService.getBillingInvoiceDataByExcel();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         createExcelFile(transitStatusReportData, outputStream, BILLING);
         return outputStream;
@@ -338,6 +340,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
         // Merging the first 5 columns of the total row and aligning the total charges to the right
         if (type.equalsIgnoreCase(BILLING)) {
+
             int totalRowIndex = rowIndex - 1;
             Row totalRow = sheet.getRow(totalRowIndex);
             if (totalRow != null) {

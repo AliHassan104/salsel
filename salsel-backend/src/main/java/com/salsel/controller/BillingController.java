@@ -51,6 +51,13 @@ public class BillingController {
         return ResponseEntity.ok(billingDtoList);
     }
 
+//    @GetMapping("/billings")
+//    @PreAuthorize("hasAuthority('READ_BILLING')")
+//    public ResponseEntity<Map<Long, List<BillingDto>>> getAllBillingsGroupedByInvoice(@RequestParam(value = "status") Boolean status) {
+//        Map<Long, List<BillingDto>> billingGroupedByInvoice = billingService.getAllGroupedByInvoice(status);
+//        return ResponseEntity.ok(billingGroupedByInvoice);
+//    }
+
     @GetMapping("/download-billing-xl")
     public void downloadAccountsBetweenDates(HttpServletResponse response) throws IOException {
 

@@ -93,6 +93,11 @@
                                 pRipple type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveEmployee(data.id)"></button>
+                            <!-- <button pTooltip="Activate" tooltipPosition="bottom"
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_EMPLOYEE')" pButton
+                                pRipple type="button" icon="pi pi-check"
+                                class="p-button-rounded p-button-success p-button-outlined mx-2"
+                                (click)="onDownlaodBill()"></button> -->
                             <button pTooltip="Download Employee Info" tooltipPosition="bottom" *ngIf="activeStatus" pButton
                                 pRipple type="button" icon="pi pi-download"
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
