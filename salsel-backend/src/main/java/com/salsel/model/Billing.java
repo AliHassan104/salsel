@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -22,9 +23,8 @@ public class Billing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
-    private LocalDateTime invoiceDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate invoiceDate;
 
     private Long customerAccountNumber;
     private Long airwayBillNo;

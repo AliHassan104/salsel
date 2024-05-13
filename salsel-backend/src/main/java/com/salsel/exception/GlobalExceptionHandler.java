@@ -25,6 +25,16 @@ public class GlobalExceptionHandler
         return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = BillingException.class)
+    public ResponseEntity<ErrorMessage<Object>> billingException(BillingException ex)
+    {
+        ErrorMessage<Object> errorMessage = ErrorMessage.builder()
+                .error(ex.getMessage())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorMessage,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(value = AddressBookDetailsAlreadyExist.class)
     public ResponseEntity<ErrorMessage<Object>> resourceAlreadyExistException(AddressBookDetailsAlreadyExist ex)
     {

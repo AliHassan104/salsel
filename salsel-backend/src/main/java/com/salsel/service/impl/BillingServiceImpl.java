@@ -1,15 +1,19 @@
 package com.salsel.service.impl;
 
-import com.salsel.dto.AccountDto;
+import com.amazonaws.services.cloudwatch.model.InvalidFormatException;
 import com.salsel.dto.BillingDto;
+import com.salsel.exception.BillingException;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Billing;
 import com.salsel.repository.BillingRepository;
 import com.salsel.service.BillingService;
+import com.salsel.utils.ExcelUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class BillingServiceImpl implements BillingService {
 
     private final BillingRepository billingRepository;
@@ -33,6 +38,36 @@ public class BillingServiceImpl implements BillingService {
         Billing createdBilling = billingRepository.save(billing);
 
         return toDto(createdBilling);
+    }
+
+    @Override
+    @Transactional
+    public List<BillingDto> uploadDataExcel(MultipartFile file) {
+        try {
+            if (!ExcelUtils.isExcelFile(file)) {
+                throw new RecordNotFoundException("Please Enter a valid excel file.");
+            }
+
+            boolean headersMatch = ExcelUtils.validateExcelHeaders(file);
+            if (!headersMatch) {
+                throw new RecordNotFoundException("Excel Headers don't match.");
+            }
+            log.info("Headers Matched");
+
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+            throw new BillingException("Excel Validation Failed");
+        }
+
+        List<Billing> billingList = ExcelUtils.processExcelFile(file);
+        if(!billingList.isEmpty()){
+            List<Billing> savedBillingList = billingRepository.saveAll(billingList);
+            return savedBillingList.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }
+
+        return null;
     }
 
     @Override
