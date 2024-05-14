@@ -5,6 +5,7 @@ import com.salsel.dto.BillingDto;
 import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -51,12 +53,35 @@ public class BillingController {
         return ResponseEntity.ok(billingDtoList);
     }
 
+    @PutMapping("/billing/status/{id}")
+    @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
+    public ResponseEntity<Void> updateAccountStatusToActive(@PathVariable Long id) {
+        billingService.setToActiveById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/billing/{id}")
+    @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        billingService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
 //    @GetMapping("/billings")
 //    @PreAuthorize("hasAuthority('READ_BILLING')")
 //    public ResponseEntity<Map<Long, List<BillingDto>>> getAllBillingsGroupedByInvoice(@RequestParam(value = "status") Boolean status) {
 //        Map<Long, List<BillingDto>> billingGroupedByInvoice = billingService.getAllGroupedByInvoice(status);
 //        return ResponseEntity.ok(billingGroupedByInvoice);
 //    }
+
+    @GetMapping("/billing/{id}")
+    @PreAuthorize("hasAuthority('READ_BILLING')")
+    public ResponseEntity<BillingDto> getInvoiceById(@PathVariable Long id) {
+        BillingDto billingDto = billingService.findById(id);
+        return ResponseEntity.ok(billingDto);
+    }
+
+
 
     @GetMapping("/download-billing-xl")
     public void downloadAccountsBetweenDates(HttpServletResponse response) throws IOException {

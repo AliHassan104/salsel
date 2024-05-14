@@ -3,13 +3,22 @@ package com.salsel.service.impl;
 import com.salsel.dto.AccountDto;
 import com.salsel.dto.BillingDto;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Account;
 import com.salsel.model.Billing;
 import com.salsel.repository.BillingRepository;
 import com.salsel.service.BillingService;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,6 +68,17 @@ public class BillingServiceImpl implements BillingService {
 //        return result;
 //    }
 
+
+    // Check if a row is empty (all cells are empty)
+    private boolean isRowEmpty(Row row) {
+        for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+            if (row.getCell(i) != null && !row.getCell(i).toString().trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public List<BillingDto> getAllBillingsWhereStatusIsNotClosed() {
         List<Billing> billings = billingRepository.getAllBillingsWhereStatusIsNotClosed();
@@ -77,6 +97,22 @@ public class BillingServiceImpl implements BillingService {
         Billing billing = billingRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Bill not found for id ==> %d", id)));
                 return toDto(billing);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        Billing billing = billingRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
+        billingRepository.setStatusInactive(billing.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Billing billing = billingRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
+        billingRepository.setStatusActive(billing.getId());
     }
 
     @Override

@@ -61,6 +61,14 @@ import { VerificationComponent } from "./components/auth/verification/verificati
               canActivate: [AuthGuardService],
             },
             {
+              path: "billing/list",
+              loadChildren: () =>
+                import("./components/billing/billing.module").then(
+                  (m) => m.BillingModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
               path: "employee/list",
               loadChildren: () =>
                 import("./components/hr-module/hr-module.module").then(
