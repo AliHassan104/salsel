@@ -16,6 +16,8 @@ import com.salsel.service.TicketService;
 import com.salsel.specification.FilterSpecification;
 import com.salsel.utils.HelperUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jcajce.provider.symmetric.AES;
+import org.bouncycastle.jcajce.provider.symmetric.util.PBE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,26 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketStatus("Open");
         ticket.setTicketFlag("Normal");
         ticket.setAssignedTo("ROLE_CUSTOMER_SERVICE_AGENT");
+
+        Optional<Ticket> latestTicket = ticketRepository.findTicketByLatestId();
+        if (latestTicket.isPresent()) {
+            Ticket existingTicket = latestTicket.get();
+            String currentTicketNumber = existingTicket.getTicketNumber();
+            Long ticketNumber = Long.parseLong(currentTicketNumber);
+
+            ticketNumber++;
+
+            String newTicketNumber;
+            if (currentTicketNumber.matches("^0\\d+$")) {
+                newTicketNumber = String.format("%0" + currentTicketNumber.length() + "d", ticketNumber); // Maintain leading zeros
+            } else {
+                newTicketNumber = String.valueOf(ticketNumber); // No leading zeros
+            }
+            ticket.setTicketNumber(newTicketNumber);
+        }else{
+            ticket.setTicketNumber("001");
+        }
+
 
         Ticket createdTicket = ticketRepository.save(ticket);
 
@@ -373,6 +395,7 @@ public class TicketServiceImpl implements TicketService {
         return TicketDto.builder()
                 .id(ticket.getId())
                 .createdAt(ticket.getCreatedAt())
+                .ticketNumber(ticket.getTicketNumber())
                 .shipperName(ticket.getShipperName())
                 .shipperContactNumber(ticket.getShipperContactNumber())
                 .pickupAddress(ticket.getPickupAddress())
@@ -415,6 +438,7 @@ public class TicketServiceImpl implements TicketService {
         return Ticket.builder()
                 .id(ticketDto.getId())
                 .createdAt(ticketDto.getCreatedAt())
+                .ticketNumber(ticketDto.getTicketNumber())
                 .shipperName(ticketDto.getShipperName())
                 .shipperContactNumber(ticketDto.getShipperContactNumber())
                 .pickupAddress(ticketDto.getPickupAddress())

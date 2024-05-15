@@ -65,9 +65,9 @@ public class BillingServiceImpl implements BillingService {
             return savedBillingList.stream()
                     .map(this::toDto)
                     .collect(Collectors.toList());
+        }else{
+            throw new RecordNotFoundException("Excel File is empty.");
         }
-
-        return null;
     }
 
     @Override
@@ -159,6 +159,7 @@ public class BillingServiceImpl implements BillingService {
                 .id(billing.getId())
                 .serviceDetails(billing.getServiceDetails())
                 .charges(billing.getCharges())
+                .transactionNumber(billing.getTransactionNumber())
                 .invoiceNo(billing.getInvoiceNo())
                 .taxInvoiceTo(billing.getTaxInvoiceTo())
                 .invoiceDate(billing.getInvoiceDate())
@@ -174,6 +175,7 @@ public class BillingServiceImpl implements BillingService {
                 .status(billing.getStatus())
                 .billingStatus(billing.getBillingStatus())
                 .vatTax(billing.getVatTax())
+                .taxAmount(billing.getTaxAmount())
                 .build();
     }
 
@@ -181,6 +183,7 @@ public class BillingServiceImpl implements BillingService {
         return Billing.builder()
                 .id(billingDto.getId())
                 .serviceDetails(billingDto.getServiceDetails())
+                .transactionNumber(billingDto.getTransactionNumber())
                 .charges(billingDto.getCharges())
                 .invoiceNo(billingDto.getInvoiceNo())
                 .taxInvoiceTo(billingDto.getTaxInvoiceTo())
@@ -197,6 +200,7 @@ public class BillingServiceImpl implements BillingService {
                 .status(billingDto.getStatus())
                 .billingStatus(billingDto.getBillingStatus())
                 .vatTax(billingDto.getVatTax())
+                .taxAmount(billingDto.getTaxAmount())
                 .build();
     }
 }

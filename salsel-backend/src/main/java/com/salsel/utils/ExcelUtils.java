@@ -39,7 +39,7 @@ public class ExcelUtils {
     }
 
     public static boolean validateExcelHeaders(MultipartFile multipartFile) {
-        String[] expectedHeaders = {"S.#", "Airway No", "Customer Ref#", "Product", "Service Details", "Charges", "Customer Account", "Invoice No", "Invoice Date"};
+        String[] expectedHeaders = {"Customer Account", "Date", "Transaction Number", "Customer Ref#", "Product", "Service Details", "Charges", "Tax Amount"};
 
         try (Workbook workbook = WorkbookFactory.create(multipartFile.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0); // Assuming the headers are in the first sheet
@@ -86,17 +86,18 @@ public class ExcelUtils {
                 Row row = sheet.getRow(rowNum);
                 if (row != null) {
                     Billing billing = new Billing();
-                    billing.setAirwayBillNo((long) (row.getCell(1).getNumericCellValue()));
-                    billing.setCustomerRef((long) (row.getCell(2).getNumericCellValue()));
-                    billing.setProduct(row.getCell(3).getStringCellValue());
-                    billing.setServiceDetails(row.getCell(4).getStringCellValue());
-                    billing.setCharges(row.getCell(5).getNumericCellValue());
-                    billing.setCustomerAccountNumber((long) (row.getCell(6).getNumericCellValue()));
-                    billing.setInvoiceNo((long) (row.getCell(7).getNumericCellValue()));
+                    billing.setCustomerAccountNumber((long) (row.getCell(0).getNumericCellValue()));
 
-                    Date invoiceDate = row.getCell(8).getDateCellValue();
+                    Date invoiceDate = row.getCell(1).getDateCellValue();
                     LocalDate localDate = invoiceDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     billing.setInvoiceDate(localDate);
+
+                    billing.setTransactionNumber((long) row.getCell(2).getNumericCellValue());
+                    billing.setCustomerRef((long) (row.getCell(3).getNumericCellValue()));
+                    billing.setProduct(row.getCell(4).getStringCellValue());
+                    billing.setServiceDetails(row.getCell(5).getStringCellValue());
+                    billing.setCharges(row.getCell(6).getNumericCellValue());
+                    billing.setTaxAmount(row.getCell(7).getNumericCellValue());
 
                     billing.setStatus(true);
                     billingList.add(billing);

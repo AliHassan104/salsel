@@ -133,7 +133,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
         StringBuilder htmlContent = new StringBuilder("<html><body style='font-family: Arial, sans-serif;margin: 0; padding: 0;'>");
         htmlContent.append("<div style='max-width:800px; margin: 0 auto; padding: 0px 5px; min-height:950px; position:relative'>");
         htmlContent.append("<div style='position:relative; min-height:100px;'>");
-        htmlContent.append("<img src='src/main/resources/static/images/logo.jpeg' style='position:absolute; left:0px; width: 160px; height: auto;'/>");
+        htmlContent.append("<img src='https://api.salassilexpress.com/api/file/Logo/logo.jpeg' style='position:absolute; left:0px; width: 160px; height: auto;'/>");
         htmlContent.append("<p style='font-weight:bold; line-height:22px;position:absolute; right:0px; font-size:14px;white-space: nowrap;'>Salassil Express Shipping LLC<br/>Dubai, UAE</p>");
         htmlContent.append("</div>");
         htmlContent.append("<div style='margin-top: 20px;'>");

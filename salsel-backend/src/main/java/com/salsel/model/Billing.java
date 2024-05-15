@@ -27,6 +27,7 @@ public class Billing {
     private LocalDate invoiceDate;
 
     private Long customerAccountNumber;
+    private Long transactionNumber;
     private Long airwayBillNo;
     private Long invoiceNo;
     private String address;
@@ -42,5 +43,5 @@ public class Billing {
     private Boolean status;
     private String billingStatus;
     private Double vatTax;
-
+    private Double taxAmount;
 }

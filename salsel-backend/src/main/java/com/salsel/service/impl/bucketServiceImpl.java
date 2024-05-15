@@ -27,6 +27,7 @@ import java.util.Map;
 public class bucketServiceImpl implements BucketService {
 
     public static final String ACCOUNT = "Account";
+    public static final String LOGO = "Logo";
     public static final String AWB = "Awb";
     public static final String TICKET = "Ticket";
     public static final String EMPLOYEE = "Employee";
@@ -133,6 +134,28 @@ public class bucketServiceImpl implements BucketService {
     public byte[] downloadFile(String folderName, String fileName, String folderType) {
         try {
             String key = folderType + "/" + folderName + "/" + fileName;
+
+            // Check if the file exists in the S3 bucket
+            if (!s3Client.doesObjectExist(bucketName, key)) {
+                throw new FileNotFoundException("File not found: " + key);
+            }
+
+            S3Object s3Object = s3Client.getObject(bucketName, key);
+
+            try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
+                return IOUtils.toByteArray(inputStream);
+            }
+            // Ensure the input stream is closed
+        } catch (IOException e) {
+            logger.error("Error downloading file from S3 bucket: {}", fileName, e);
+            throw new RuntimeException("Error downloading file from S3 bucket: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public byte[] downloadFile(String fileName, String folderType) {
+        try {
+            String key = folderType + "/" + fileName;
 
             // Check if the file exists in the S3 bucket
             if (!s3Client.doesObjectExist(bucketName, key)) {

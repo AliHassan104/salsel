@@ -71,4 +71,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecif
 
     @Query("SELECT t FROM Ticket t WHERE ticketStatus != 'Closed'")
     List<Ticket> getAllTicketsWhereStatusIsNotClosed();
+
+    @Query("SELECT t FROM Ticket t WHERE t.id = (SELECT MAX(e.id) FROM Ticket e)")
+    Optional<Ticket> findTicketByLatestId();
 }

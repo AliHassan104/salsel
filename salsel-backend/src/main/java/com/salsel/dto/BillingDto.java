@@ -17,6 +17,7 @@ public class BillingDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate invoiceDate;
     private Long customerAccountNumber;
+    private Long transactionNumber;
     private Long airwayBillNo;
     private Long invoiceNo;
     private String address;
@@ -32,4 +33,5 @@ public class BillingDto {
     private Boolean status;
     private String billingStatus;
     private Double vatTax;
+    private Double taxAmount;
 }
