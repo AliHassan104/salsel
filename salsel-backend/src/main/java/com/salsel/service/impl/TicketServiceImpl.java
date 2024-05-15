@@ -81,7 +81,7 @@ public class TicketServiceImpl implements TicketService {
             }
             ticket.setTicketNumber(newTicketNumber);
         }else{
-            ticket.setTicketNumber("001");
+            ticket.setTicketNumber("0001");
         }
 
 
