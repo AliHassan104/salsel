@@ -281,6 +281,32 @@ public class EmailUtils {
     }
 
     @Async
+    public void sendOtpEmailForAwb(String email, String otp) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(sender);
+            helper.setTo(email);
+            helper.setSubject("AWB Creation OTP");
+
+            String emailContent = "Dear User,\n\n"
+                    + "To proceed with the creation of your AWB, please verify your identity using the OTP below:\n\n"
+                    + "OTP: " + otp + "\n\n"
+                    + "If you did not initiate this action, please contact our support team immediately.\n\n"
+                    + "Best regards,\n"
+                    + "Salassil Express Team";
+
+            helper.setText(emailContent);
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.err.println("Error sending email: " + e.getMessage());
+        }
+    }
+
+
+    @Async
     public void sendWelcomeEmail(User user, String generatedPassword) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

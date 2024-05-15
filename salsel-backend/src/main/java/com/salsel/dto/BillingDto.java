@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 @Data
 public class BillingDto {
     private Long id;
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
-    private LocalDateTime invoiceDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate invoiceDate;
     private Long customerAccountNumber;
+    private Long transactionNumber;
     private Long airwayBillNo;
     private Long invoiceNo;
     private String address;
@@ -32,4 +33,5 @@ public class BillingDto {
     private Boolean status;
     private String billingStatus;
     private Double vatTax;
+    private Double taxAmount;
 }

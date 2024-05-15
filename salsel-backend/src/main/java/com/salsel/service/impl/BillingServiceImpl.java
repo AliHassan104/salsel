@@ -1,7 +1,8 @@
 package com.salsel.service.impl;
 
-import com.salsel.dto.AccountDto;
+import com.amazonaws.services.cloudwatch.model.InvalidFormatException;
 import com.salsel.dto.BillingDto;
+import com.salsel.exception.BillingException;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Account;
 import com.salsel.model.Billing;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class BillingServiceImpl implements BillingService {
 
     private final BillingRepository billingRepository;
@@ -42,6 +44,36 @@ public class BillingServiceImpl implements BillingService {
         Billing createdBilling = billingRepository.save(billing);
 
         return toDto(createdBilling);
+    }
+
+    @Override
+    @Transactional
+    public List<BillingDto> uploadDataExcel(MultipartFile file) {
+        try {
+            if (!ExcelUtils.isExcelFile(file)) {
+                throw new RecordNotFoundException("Please Enter a valid excel file.");
+            }
+
+            boolean headersMatch = ExcelUtils.validateExcelHeaders(file);
+            if (!headersMatch) {
+                throw new RecordNotFoundException("Excel Headers don't match.");
+            }
+            log.info("Headers Matched");
+
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+            throw new BillingException("Excel Validation Failed");
+        }
+
+        List<Billing> billingList = ExcelUtils.processExcelFile(file);
+        if(!billingList.isEmpty()){
+            List<Billing> savedBillingList = billingRepository.saveAll(billingList);
+            return savedBillingList.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }else{
+            throw new RecordNotFoundException("Excel File is empty.");
+        }
     }
 
     @Override
@@ -160,6 +192,7 @@ public class BillingServiceImpl implements BillingService {
                 .id(billing.getId())
                 .serviceDetails(billing.getServiceDetails())
                 .charges(billing.getCharges())
+                .transactionNumber(billing.getTransactionNumber())
                 .invoiceNo(billing.getInvoiceNo())
                 .taxInvoiceTo(billing.getTaxInvoiceTo())
                 .invoiceDate(billing.getInvoiceDate())
@@ -175,6 +208,7 @@ public class BillingServiceImpl implements BillingService {
                 .status(billing.getStatus())
                 .billingStatus(billing.getBillingStatus())
                 .vatTax(billing.getVatTax())
+                .taxAmount(billing.getTaxAmount())
                 .build();
     }
 
@@ -182,6 +216,7 @@ public class BillingServiceImpl implements BillingService {
         return Billing.builder()
                 .id(billingDto.getId())
                 .serviceDetails(billingDto.getServiceDetails())
+                .transactionNumber(billingDto.getTransactionNumber())
                 .charges(billingDto.getCharges())
                 .invoiceNo(billingDto.getInvoiceNo())
                 .taxInvoiceTo(billingDto.getTaxInvoiceTo())
@@ -198,6 +233,7 @@ public class BillingServiceImpl implements BillingService {
                 .status(billingDto.getStatus())
                 .billingStatus(billingDto.getBillingStatus())
                 .vatTax(billingDto.getVatTax())
+                .taxAmount(billingDto.getTaxAmount())
                 .build();
     }
 }

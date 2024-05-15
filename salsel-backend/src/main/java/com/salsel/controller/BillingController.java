@@ -1,12 +1,9 @@
 package com.salsel.controller;
 
-import com.salsel.dto.AccountDto;
 import com.salsel.dto.BillingDto;
 import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,16 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-
-import static com.salsel.constants.ExcelConstants.ACCOUNT_TYPE;
 
 @RestController
 @RequestMapping("/api")
@@ -45,6 +39,14 @@ public class BillingController {
     public ResponseEntity<BillingDto> createBilling(@RequestBody BillingDto billingDto){
         return ResponseEntity.ok(billingService.save(billingDto));
     }
+
+    @PostMapping("/upload-excel")
+    @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
+    public ResponseEntity<List<BillingDto>> uploadExcelFile(@RequestPart("file") MultipartFile file){
+        List<BillingDto> billingList = billingService.uploadDataExcel(file);
+        return ResponseEntity.ok(billingList);
+    }
+
 
     @GetMapping("/billing")
     @PreAuthorize("hasAuthority('READ_BILLING')")

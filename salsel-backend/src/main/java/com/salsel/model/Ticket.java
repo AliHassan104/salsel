@@ -28,6 +28,9 @@ public class Ticket {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(unique = true)
+    private String ticketNumber;
+
     private String shipperName;
     private String shipperContactNumber;
     private String pickupAddress;

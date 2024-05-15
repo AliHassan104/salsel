@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus(true);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Set<Role> roleList = new HashSet<>();
-        Role role = roleRepository.findByName("ROLE_CUSTOMER_USER")
+        Role role = roleRepository.findByName("ROLE_WEB_USER")
                 .orElseThrow(() -> new RecordNotFoundException("Role not found"));
         roleList.add(role);
         user.setRoles(roleList);
@@ -379,6 +379,15 @@ public class UserServiceImpl implements UserService {
         otp.setResetCode(resetCode);
         otpRepository.save(otp);
         emailUtils.sendPasswordResetEmail(user, resetCode);
+    }
+
+    @Override
+    public void sendOtpForAwbCreation(String userEmail) {
+        String resetCode = helperUtils.generateResetCode();
+        Otp otp = new Otp();
+        otp.setResetCode(resetCode);
+        otpRepository.save(otp);
+        emailUtils.sendOtpEmailForAwb(userEmail, resetCode);
     }
 
     @Override

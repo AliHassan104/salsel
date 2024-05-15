@@ -27,6 +27,7 @@ public interface UserService {
     void setToActiveById(Long id);
     UserDto update(Long id, UserDto userDto);
     void forgotPassword(String userEmail);
+    void sendOtpForAwbCreation(String userEmail);
     void resetPassword(String userEmail, String resetCode, String newPassword);
     List<UserDto> getUsersBetweenDates(LocalDate startDate, LocalDate endDate);
     LocalDate getMinCreatedAt();

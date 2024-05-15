@@ -75,6 +75,24 @@ public class BucketController {
         }
     }
 
+    @GetMapping("/file/{folderType}/{fileName}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName,
+                                               @PathVariable String folderType) {
+        try {
+            byte[] fileContent = bucketService.downloadFile(fileName, folderType);
+
+            // Return the file content as a ResponseEntity with appropriate headers
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(fileContent);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(("Error downloading file: " + e.getMessage()).getBytes());
+        }
+    }
+
     @DeleteMapping("/{fileName}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteFile(@PathVariable String fileName) {

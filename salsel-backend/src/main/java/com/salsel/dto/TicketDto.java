@@ -22,6 +22,7 @@ public class TicketDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
+    private String ticketNumber;
     private String shipperName;
     private String shipperContactNumber;
     private String pickupAddress;

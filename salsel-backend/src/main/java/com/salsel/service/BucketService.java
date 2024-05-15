@@ -7,6 +7,7 @@ public interface BucketService {
     String save(byte[] pdf, String folderName, String fileName, String folderType);
     List<String> saveMultipleFiles(Map<String, byte[]> files, String folderName, String folderType);
     byte[] downloadFile(String folderName, String fileName, String folderType);
+    byte[] downloadFile(String fileName, String folderType);
     void deleteFile(String fileName);
     void deleteFileAtPath(String folderKey, String fileName);
     void deleteFilesStartingWith(String folderKey, String prefix);
