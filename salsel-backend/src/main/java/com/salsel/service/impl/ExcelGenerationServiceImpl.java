@@ -260,7 +260,9 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Transit Report");
         } else if(type.equalsIgnoreCase(BILLING)) {
             sheet = workbook.createSheet("Billing Report");
-        } else {
+        } else if(type.equalsIgnoreCase(SCANS)){
+            sheet = workbook.createSheet("Scan Report");
+        }else {
             throw new RecordNotFoundException("Type not valid");
         }
 
@@ -337,6 +339,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
                 }
             }
         }
+
 
         // Merging the first 5 columns of the total row and aligning the total charges to the right
         if (type.equalsIgnoreCase(BILLING)) {

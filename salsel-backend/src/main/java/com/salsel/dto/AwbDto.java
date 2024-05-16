@@ -19,7 +19,7 @@ import java.time.LocalTime;
 public class AwbDto {
     private Long id;
     private Long uniqueNumber;
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     private String shipperName;
     private String shipperContactNumber;
