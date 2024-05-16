@@ -21,8 +21,7 @@ import java.util.Map;
 
 import static com.salsel.constants.AwbStatusConstants.DELIVERED;
 import static com.salsel.constants.AwbStatusConstants.PICKED_UP;
-import static com.salsel.constants.ExcelConstants.AWB_TYPE;
-import static com.salsel.constants.ExcelConstants.TRANSIT;
+import static com.salsel.constants.ExcelConstants.*;
 
 @RestController
 @RequestMapping("/api")
@@ -150,9 +149,22 @@ public class AwbController {
 
     @PutMapping("/awb/awb-status/scan")
     @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
-    public ResponseEntity<List<AwbDto>> updateMultipleAwbStatusOnScan(@RequestBody Map<Long, String> statusMap) {
+    public ResponseEntity<List<AwbDto>> updateMultipleAwbStatusOnScan(@RequestBody Map<Long, String> statusMap){
         List<AwbDto> updatedAwbDtoList = awbService.updateMultipleAwbStatusOnScan(statusMap);
         return ResponseEntity.ok(updatedAwbDtoList);
+    }
+
+    @PostMapping(value = "/awb/awb-status/scan-report")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
+    public void getMultipleAwbStatusOnScanReport(@RequestBody List<AwbDto> awbMap, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> data = excelGenerationService.convertAirBillsToExcelData(awbMap);
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=awbScans.xlsx");
+
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(data, outputStream, SCANS);
+        outputStream.close();
     }
 
     @PutMapping("/awb/awb-status/unique-number/comment")

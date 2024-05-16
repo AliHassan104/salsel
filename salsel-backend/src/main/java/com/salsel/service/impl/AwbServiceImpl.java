@@ -10,10 +10,7 @@ import com.salsel.model.*;
 import com.salsel.repository.AwbRepository;
 import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.repository.UserRepository;
-import com.salsel.service.AwbService;
-import com.salsel.service.AwbShippingHistoryService;
-import com.salsel.service.CodeGenerationService;
-import com.salsel.service.PdfGenerationService;
+import com.salsel.service.*;
 import com.salsel.utils.AssignmentEmailsUtils;
 import com.salsel.utils.HelperUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +24,7 @@ import org.springframework.ui.Model;
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -440,7 +438,6 @@ public class AwbServiceImpl implements AwbService {
 
             awbRepository.save(awb);
             updatedAwbList.add(awb);
-
             awbShippingHistoryService.addAwbShippingHistory(awb);
         }
 
