@@ -1,5 +1,6 @@
 package com.salsel.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +28,10 @@ public class Employee {
 
     @Column(unique = true)
     private Long employeeNumber;
+
+    private LocalDate dateOfJoining;
+    private Double workingDays;
+    private Double noOfAbsents;
 
     private String email;
     private String city;

@@ -55,7 +55,7 @@
                     </small>
                 </div>
                 <!-- Country -->
-                <div class="field col-12 md:col-3">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="ocountry"><strong>Country</strong></label>
                     <p-dropdown #dropdown1 [options]="countries" placeholder="Select Country" formControlName="country"
                         [ngClass]="{'ng-dirty':employeeForm.get('country')?.touched && employeeForm.get('country')?.invalid}" filter="true" (onChange)="getCountry($event.value)"></p-dropdown>
@@ -65,7 +65,7 @@
                         </small>
                 </div>
                 <!-- City -->
-                <div class="field col-12 md:col-3">
+                <div class="field col-12 md:col-6">
                     <label htmlFor="oCity"><strong>City</strong></label>
                     <p-dropdown #dropdown2 [options]="originCities" placeholder="Select city" formControlName="city"
                         [ngClass]="{'ng-dirty':employeeForm.get('city')?.touched && employeeForm.get('city')?.invalid}" filter="true"></p-dropdown>
@@ -77,12 +77,11 @@
 
                 <!-- Nationality -->
                 <div class="field col-12 md:col-6">
-                    <label htmlFor="nationality"><strong>Nationality</strong></label>
-                    <input pInputText id="nationality" type="text" formControlName="nationality"
+                    <label htmlFor="ocountry"><strong>Nationality</strong></label>
+                    <p-dropdown #dropdown3 [options]="countries" placeholder="Select Nationality" formControlName="nationality"
                         [ngClass]="{'ng-dirty':employeeForm.get('nationality')?.touched && employeeForm.get('nationality')?.invalid}"
-                        placeholder="Enter Nationality" [required]="true" />
-                    <small
-                        *ngIf="!employeeForm.get('nationality')?.valid && employeeForm.get('nationality')?.touched && editMode == false"
+                        filter="true"></p-dropdown>
+                    <small *ngIf="!employeeForm.get('nationality')?.valid && employeeForm.get('nationality')?.touched && editMode == false"
                         class="text-red-500">
                         Required
                     </small>
@@ -106,6 +105,35 @@
                         [ngClass]="{'ng-dirty':employeeForm.get('department')?.touched && employeeForm.get('department')?.invalid}"></p-dropdown>
                     <small *ngIf="!employeeForm.get('department')?.valid && employeeForm.get('department')?.touched"
                         class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Date of Joining -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="dcity"><strong>Date of Joining</strong></label>
+                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" formControlName="dateOfJoining"
+                        [ngClass]="{'ng-dirty':employeeForm.get('dateOfJoining')?.touched && !employeeForm.get('dateOfJoining')?.valid}"></p-calendar>
+                    <small *ngIf="!employeeForm.get('dateOfJoining')?.valid && employeeForm.get('dateOfJoining')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Working Days -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="workingDays"><strong>Working Days</strong></label>
+                    <input pInputText id="housing" type="number" formControlName="workingDays"
+                        [ngClass]="{'ng-dirty':employeeForm.get('workingDays')?.touched && employeeForm.get('workingDays')?.invalid}"
+                        placeholder="Enter Working Days" [required]="true" />
+                    <small *ngIf="!employeeForm.get('workingDays')?.valid && employeeForm.get('workingDays')?.touched" class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- No. of Absents -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="housing"><strong>No. of Absents</strong></label>
+                    <input pInputText id="housing" type="number" formControlName="noOfAbsents"
+                        [ngClass]="{'ng-dirty':employeeForm.get('noOfAbsents')?.touched && employeeForm.get('noOfAbsents')?.invalid}"
+                        placeholder="Enter Absents" [required]="true" />
+                    <small *ngIf="!employeeForm.get('noOfAbsents')?.valid && employeeForm.get('noOfAbsents')?.touched" class="text-red-500">
                         Required
                     </small>
                 </div>
@@ -235,7 +263,7 @@
                         Required
                     </small>
                 </div>
-                
+
 
 
                 <div class="flex justify-content-end w-full">

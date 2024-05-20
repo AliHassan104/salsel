@@ -6,10 +6,12 @@ import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Role;
 import com.salsel.service.AwbService;
 import com.salsel.service.BillingService;
+import com.salsel.service.EmployeeService;
 import com.salsel.service.ExcelGenerationService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -33,10 +35,13 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
     private final BillingService billingService;
 
+
+    @Autowired
     public ExcelGenerationServiceImpl(AwbService awbService, BillingService billingService) {
         this.awbService = awbService;
         this.billingService = billingService;
     }
+
 
     @Override
     public List<Map<String, Object>> convertUsersToExcelData(List<UserDto> users) {
@@ -238,6 +243,13 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         return outputStream;
     }
 
+    @Override
+    public ByteArrayOutputStream generateEmployeeReport(List<Map<String, Object>> transitStatusReportData) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(transitStatusReportData, outputStream, EMPLOYEE);
+        return outputStream;
+    }
+
 
     @Override
     public void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
@@ -262,6 +274,8 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Billing Report");
         } else if(type.equalsIgnoreCase(SCANS)){
             sheet = workbook.createSheet("Scan Report");
+        }else if(type.equalsIgnoreCase(EMPLOYEE)){
+            sheet = workbook.createSheet("Employee Report");
         }else {
             throw new RecordNotFoundException("Type not valid");
         }

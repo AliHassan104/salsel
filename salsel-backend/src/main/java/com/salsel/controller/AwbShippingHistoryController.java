@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -38,6 +39,13 @@ public class AwbShippingHistoryController {
     @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
     public ResponseEntity<AwbShippingHistoryDto> getAwbShippingHistoryByAwb(@PathVariable() Long id) {
         AwbShippingHistoryDto awbShippingHistoryDto = awbShippingHistoryService.findLatestAwbShippingHistoryByAwb(id);
+        return ResponseEntity.ok(awbShippingHistoryDto);
+    }
+
+    @GetMapping("/awb-shipping-history/multiple-awb")
+    @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
+    public ResponseEntity <Map<Long, List<AwbShippingHistoryDto>>> getAwbShippingHistoryByMultipleAwb(@RequestBody List<Long> awbIds) {
+        Map<Long, List<AwbShippingHistoryDto>> awbShippingHistoryDto = awbShippingHistoryService.findShippingByAwbIds(awbIds);
         return ResponseEntity.ok(awbShippingHistoryDto);
     }
 }

@@ -2,7 +2,9 @@ package com.salsel.controller;
 
 import com.salsel.dto.EmployeeDto;
 import com.salsel.service.EmployeeService;
+import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +13,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 @RestController
@@ -18,9 +24,16 @@ import java.util.List;
 public class EmployeeController {
     private final EmployeeService employeeService;
     private final PdfGenerationService pdfGenerationService;
-    public EmployeeController(EmployeeService employeeService, PdfGenerationService pdfGenerationService) {
+
+    private final ExcelGenerationService excelGenerationService;
+
+
+    @Autowired
+    public EmployeeController(EmployeeService employeeService, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
         this.employeeService = employeeService;
         this.pdfGenerationService = pdfGenerationService;
+
+        this.excelGenerationService = excelGenerationService;
     }
 
     @PostMapping("/employee")
@@ -83,6 +96,25 @@ public class EmployeeController {
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("inline", "EmployeeDetails.pdf");
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/download-employee-excel")
+    public void downloadAccountsBetweenDates(HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=accounts.xlsx");
+
+        // Get the OutputStream from the response
+        OutputStream outputStream = response.getOutputStream();
+
+        // Generate the billing report Excel data
+        ByteArrayOutputStream excelData = excelGenerationService.generateEmployeeReport(employeeService.getAllEmployeeDataByExcel());
+
+        // Write the generated Excel data to the response OutputStream
+        excelData.writeTo(outputStream);
+
+        // Close the OutputStream
+        outputStream.close();
     }
 
 }

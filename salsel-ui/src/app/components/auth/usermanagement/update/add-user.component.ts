@@ -100,8 +100,8 @@ export class AddUserComponent implements OnInit {
   formSetup() {
     this.userForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
-      firstname: new FormControl(null),
-      lastname: new FormControl(null),
+      firstname: new FormControl(null, Validators.required),
+      lastname: new FormControl(null, Validators.required),
       phone: new FormControl(null),
       roles: new FormControl(null, Validators.required),
       country: new FormControl(null, Validators.required),
