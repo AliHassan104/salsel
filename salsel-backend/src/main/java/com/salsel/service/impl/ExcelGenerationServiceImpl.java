@@ -304,12 +304,12 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         Row headerRow = sheet.createRow(dataStartRow);
         int colIndex = 0;
 
-        // Set bold font style
+        // Set bold font style for header
         CellStyle headerStyle = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 12);
-        headerStyle.setFont(font);
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 12);
+        headerStyle.setFont(headerFont);
         headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
 
         CellStyle centerStyle = workbook.createCellStyle();
@@ -368,139 +368,24 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet.autoSizeColumn(i);
         }
 
+       if(type.equalsIgnoreCase(BILLING)){
+           // Add additional information at the right corner
+           Row infoRow = sheet.createRow(1); // Skipping one row from the top
+           Font boldFont = workbook.createFont();
+           boldFont.setBold(true);
+           Cell firstLineCell = infoRow.createCell(excelData.get(0).size() - 2); // Adjust the column position for the right corner
+           firstLineCell.setCellValue("Salassil Express Shipping LLC");
+           CellStyle boldStyle = workbook.createCellStyle();
+           boldStyle.setFont(boldFont);
+           firstLineCell.setCellStyle(boldStyle);
+
+           Row secondLineRow = sheet.createRow(2); // Move to the next row
+           Cell secondLineCell = secondLineRow.createCell(excelData.get(0).size() - 2); // Adjust the column position for the right corner
+           secondLineCell.setCellValue("Dubai, UAE");
+           secondLineCell.setCellStyle(boldStyle);
+       }
+
         workbook.write(outputStream);
         workbook.close();
     }
-
-
-
-//    @Override
-//    public void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
-//
-//        Workbook workbook = new XSSFWorkbook();
-//        Sheet sheet = null;
-//        if (type.equalsIgnoreCase(USER_TYPE)) {
-//            sheet = workbook.createSheet("User");
-//        } else if (type.equalsIgnoreCase(TICKET_TYPE)) {
-//            sheet = workbook.createSheet("Ticket");
-//        } else if (type.equalsIgnoreCase(ACCOUNT_TYPE)) {
-//            sheet = workbook.createSheet("Account");
-//        } else if(type.equalsIgnoreCase(AWB_TYPE)){
-//            sheet = workbook.createSheet("Awb");
-//        } else if(type.equalsIgnoreCase(PICKED_UP)) {
-//            sheet = workbook.createSheet("Picked Up Status Report");
-//        } else if(type.equalsIgnoreCase(DELIVERED)) {
-//            sheet = workbook.createSheet("Delivered Status Report");
-//        } else if(type.equalsIgnoreCase(TRANSIT)) {
-//            sheet = workbook.createSheet("Transit Report");
-//        } else if(type.equalsIgnoreCase(BILLING)) {
-//            sheet = workbook.createSheet("Billing Report");
-//        } else if(type.equalsIgnoreCase(SCANS)){
-//            sheet = workbook.createSheet("Scan Report");
-//        }else {
-//            throw new RecordNotFoundException("Type not valid");
-//        }
-//
-//        if (excelData == null || excelData.isEmpty()) {
-//            // If excelData is empty, write a message in the Excel file
-//            Row emptyRow = sheet.createRow(0);
-//            Cell emptyCell = emptyRow.createCell(0);
-//            emptyCell.setCellValue("No data available");
-//            workbook.write(outputStream);
-//            workbook.close();
-//            return;
-//        }
-//
-//        if(type.equalsIgnoreCase(BILLING)){
-//            // Add the logo to the first row and first cell
-//            InputStream logoInputStream = new ClassPathResource("static/images/logo.jpeg").getInputStream();
-//            byte[] logoBytes = IOUtils.toByteArray(logoInputStream);
-//            int pictureIdx = workbook.addPicture(logoBytes, Workbook.PICTURE_TYPE_JPEG);
-//            logoInputStream.close();
-//
-//            Drawing drawing = sheet.createDrawingPatriarch();
-//            ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
-//            anchor.setCol1(0); // Column A
-//            anchor.setRow1(0); // Row 1
-//            anchor.setCol2(2); // Column C (for larger width)
-//            anchor.setRow2(4); // Row 4 (for larger height)
-//
-//            drawing.createPicture(anchor, pictureIdx);
-//
-//            // Shift the remaining rows down to make space for the logo
-//            sheet.shiftRows(0, sheet.getLastRowNum(), 5);
-//        }
-//
-//        // Create header row
-//        Row headerRow = sheet.createRow(0);
-//        int colIndex = 0;
-//
-//        // Set bold font style
-//        CellStyle headerStyle = workbook.createCellStyle();
-//        Font font = workbook.createFont();
-//        font.setBold(true);
-//        font.setFontHeightInPoints((short) 12);
-//        headerStyle.setFont(font);
-//        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-//
-//        CellStyle centerStyle = workbook.createCellStyle();
-//        centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-//
-//        for (String key : excelData.get(0).keySet()) {
-//            Cell cell = headerRow.createCell(colIndex++);
-//            cell.setCellValue(key);
-//            cell.setCellStyle(headerStyle);
-//        }
-//
-//        // Populate data rows
-//        int rowIndex = 1;
-//        for (Map<String, Object> rowData : excelData) {
-//            Row row = sheet.createRow(rowIndex++);
-//            colIndex = 0;
-//            for (Object value : rowData.values()) {
-//                Cell cell = row.createCell(colIndex++);
-//                if (value != null) {
-//                    if (value instanceof String) {
-//                        cell.setCellValue((String) value);
-//                    } else if (value instanceof Long) {
-//                        cell.setCellValue((Long) value);
-//                    } else if (value instanceof Integer) {
-//                        cell.setCellValue((Integer) value);
-//                    } else if (value instanceof Double) {
-//                        cell.setCellValue((Double) value);
-//                    } else if (value instanceof Boolean) {
-//                        cell.setCellValue((Boolean) value);
-//                    } else if (value instanceof Date) {
-//                        cell.setCellValue((Date) value);
-//                    } else if (value instanceof Calendar) {
-//                        cell.setCellValue((Calendar) value);
-//                    } else {
-//                        cell.setCellValue(value.toString());
-//                    }
-//                } else {
-//                    cell.setCellValue("N/A");
-//                }
-//            }
-//        }
-//
-//        // Apply center alignment for all rows except header row
-//        centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-//        for (int r = 1; r < rowIndex; r++) {
-//            Row currentRow = sheet.getRow(r);
-//            for (int c = 0; c < excelData.get(0).size(); c++) {
-//                Cell currentCell = currentRow.getCell(c);
-//                if (currentCell != null) {
-//                    currentCell.setCellStyle(centerStyle);
-//                }
-//            }
-//        }
-//
-//        // Auto-size columns
-//        for (int i = 0; i < excelData.get(0).size(); i++) {
-//            sheet.autoSizeColumn(i);
-//        }
-//
-//        workbook.write(outputStream);
-//        workbook.close();
-//    }
 }
