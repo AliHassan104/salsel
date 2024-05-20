@@ -167,6 +167,22 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
+    @Transactional
+    public void deleteById(Long id) {
+        Billing billing = billingRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
+        billingRepository.setStatusInactive(billing.getId());
+    }
+
+    @Override
+    @Transactional
+    public void setToActiveById(Long id) {
+        Billing billing = billingRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
+        billingRepository.setStatusActive(billing.getId());
+    }
+
+    @Override
     public List<Map<String, Object>> getBillingInvoiceDataByExcel() {
         List<Billing> billingList = billingRepository.getAllBillingsWhereStatusIsNotClosed();
         List<Map<String, Object>> result = new ArrayList<>();

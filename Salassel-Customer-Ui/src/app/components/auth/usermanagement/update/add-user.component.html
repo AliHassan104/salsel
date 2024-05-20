@@ -39,11 +39,7 @@
                 <!-- Phone -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="phone"><strong>Phone Number</strong></label>
-                    <input pInputText id="phone" type="number" formControlName="phone" placeholder="Enter Phone Number"
-                        [ngClass]="{'ng-dirty':userForm.get('phone')?.touched && userForm.get('phone')?.invalid}" />
-                    <small *ngIf="!userForm.get('phone')?.valid && userForm.get('phone')?.touched" class="text-red-500">
-                        Required
-                    </small>
+                    <input pInputText id="phone" type="number" formControlName="phone" placeholder="Enter Phone Number"/>
                 </div>
                 <!-- Password -->
                 <div class="field col-12 md:col-6">

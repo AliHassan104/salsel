@@ -23,7 +23,10 @@ export interface IEmployee {
   createAsUser?: boolean;
   address?:string;
   lastname?:string;
-  totalAmount?:any
+  totalAmount?:any;
+  workingDays?:number;
+  noOfAbsents?:number;
+  dateOfJoining:Date;
 }
 
  export class Employee implements IEmployee {
@@ -53,4 +56,7 @@ export interface IEmployee {
    address?: string;
    lastname?: string;
    totalAmount?: any;
+   workingDays?: number;
+   noOfAbsents?: number;
+   dateOfJoining: Date;
  }

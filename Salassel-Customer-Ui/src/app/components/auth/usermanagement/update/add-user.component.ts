@@ -43,7 +43,7 @@ export class AddUserComponent implements OnInit {
       email: new FormControl(null, [Validators.required, Validators.email]),
       firstname: new FormControl(null, [Validators.required]),
       lastname: new FormControl(null, [Validators.required]),
-      phone: new FormControl(null, Validators.required),
+      phone: new FormControl(null),
       password: new FormControl(null, [
         Validators.required,
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),

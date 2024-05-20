@@ -68,6 +68,7 @@ export class HrModuleFormComponent {
   @ViewChild("dropdown") dropdown?: Dropdown;
   @ViewChild("dropdown1") dropdown1?: Dropdown;
   @ViewChild("dropdown2") dropdown2?: Dropdown;
+  @ViewChild("dropdown3") dropdown3?: Dropdown;
 
   //   CONSTRUCTOR
   constructor(
@@ -99,7 +100,7 @@ export class HrModuleFormComponent {
   }
 
   ngAfterViewChecked(): void {
-    const dropdowns = [this.dropdown, this.dropdown1, this.dropdown2];
+    const dropdowns = [this.dropdown, this.dropdown1, this.dropdown2,this.dropdown3];
 
     dropdowns.forEach((dropdown, index) => {
       if (dropdown) {
@@ -126,14 +127,17 @@ export class HrModuleFormComponent {
       otherAllowance: new FormControl(null, Validators.required),
       housing: new FormControl(null, Validators.required),
       createdAsUser: new FormControl(null),
-      email: new FormControl(null, [Validators.required, Validators.email]),
+      email: new FormControl(null),
+      dateOfJoining: new FormControl(null,Validators.required),
+      workingDays:new FormControl(null,Validators.required),
+      noOfAbsents:new FormControl(null,Validators.required),
       position: new FormControl(null),
     });
   }
 
    toggleValidators(isUser: boolean): void {
     console.log(isUser);
-    
+
     const emailControl = this.employeeForm.get('email');
     const positionControl = this.employeeForm.get('position');
 
@@ -216,6 +220,9 @@ export class HrModuleFormComponent {
             address: this.singleEmployee?.address,
             city: this.singleEmployee?.city,
             country: this.singleEmployee?.country,
+            workingDays:this.singleEmployee?.workingDays,
+            noOfAbsents:this.singleEmployee?.noOfAbsents,
+            dateOfJoining:this.singleEmployee?.dateOfJoining,
           });
         });
     }
@@ -301,6 +308,9 @@ export class HrModuleFormComponent {
         address: formValue?.address,
         city: formValue?.city,
         country: formValue?.country,
+        dateOfJoining:formValue?.dateOfJoining,
+        workingDays:formValue?.workingDays,
+        noOfAbsents:formValue?.noOfAbsents,
       };
 
       if (this.editMode) {

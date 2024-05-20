@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -70,6 +71,20 @@ public class BillingController {
     public ResponseEntity<List<Map<String, Object>>> getAllBillings(@RequestBody List<BillingDto> billingDtoList){
         List<Map<String, Object>> billingMap = billingService.getBillingInvoiceDataByExcelUploaded(billingDtoList);
         return ResponseEntity.ok(billingMap);
+    }
+
+    @PutMapping("/billing/status/{id}")
+    @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
+    public ResponseEntity<Void> updateAccountStatusToActive(@PathVariable Long id) {
+        billingService.setToActiveById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/billing/{id}")
+    @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        billingService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
 //    @GetMapping("/billings")

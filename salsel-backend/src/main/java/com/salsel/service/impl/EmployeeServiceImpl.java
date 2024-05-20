@@ -16,9 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -202,7 +200,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingEmployee.setAddress(employeeDto.getAddress());
         existingEmployee.setFirstname(employeeDto.getFirstname());
         existingEmployee.setLastname(employeeDto.getLastname());
-        existingEmployee.setName(existingEmployee.getName());
+        existingEmployee.setName(employeeDto.getName());
+        existingEmployee.setDateOfJoining(employeeDto.getDateOfJoining());
+        existingEmployee.setNoOfAbsents(employeeDto.getNoOfAbsents());
+        existingEmployee.setWorkingDays(employeeDto.getWorkingDays());
 
         if (passportFile != null && !passportFile.isEmpty()) {
             String folderKey = "Employee/Employee_" + id;
@@ -263,6 +264,39 @@ public class EmployeeServiceImpl implements EmployeeService {
         return toDto(updatedEmployee);
     }
 
+    @Override
+    public List<Map<String, Object>> getAllEmployeeDataByExcel() {
+        List<Employee> employeeList = employeeRepository.findAllInDesOrderByIdAndStatus(true);
+        List<Map<String, Object>> result = new ArrayList<>();
+        int count = 1;
+
+        for (Employee employee : employeeList) {
+            Map<String, Object> billingMap = new LinkedHashMap<>();
+            billingMap.put("#", count++);
+            billingMap.put("Name", employee.getName());
+            billingMap.put("Phone", employee.getPhone());
+            billingMap.put("Employee Number", employee.getEmployeeNumber());
+            billingMap.put("Date of Joining", employee.getDateOfJoining());
+            billingMap.put("Working Days", employee.getWorkingDays());
+            billingMap.put("No of Absents",employee.getNoOfAbsents());
+            billingMap.put("Address",employee.getAddress());
+            billingMap.put("Country",employee.getCountry());
+            billingMap.put("City",employee.getCity());
+            billingMap.put("Nationality",employee.getNationality());
+            billingMap.put("Job Title",employee.getJobTitle());
+            billingMap.put("Department",employee.getDepartment());
+            billingMap.put("Salary",employee.getSalary());
+            billingMap.put("Housing",employee.getHousing());
+            billingMap.put("Transportation",employee.getTransportation());
+            billingMap.put("Other Allowance",employee.getOtherAllowance());
+            billingMap.put("Total Amount",employee.getTotalAmount());
+
+            result.add(billingMap);
+        }
+
+        return result;
+    }
+
     public EmployeeDto toDto(Employee employee) {
         return EmployeeDto.builder()
                 .id(employee.getId())
@@ -291,6 +325,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .createAsUser(employee.getCreateAsUser())
                 .attachments(employee.getAttachments())
                 .address(employee.getAddress())
+                .dateOfJoining(employee.getDateOfJoining())
+                .workingDays(employee.getWorkingDays())
+                .noOfAbsents(employee.getNoOfAbsents())
                 .build();
     }
 
@@ -322,6 +359,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .createAsUser(employeeDto.getCreateAsUser())
                 .attachments(employeeDto.getAttachments())
                 .address(employeeDto.getAddress())
+                .dateOfJoining(employeeDto.getDateOfJoining())
+                .workingDays(employeeDto.getWorkingDays())
+                .noOfAbsents(employeeDto.getNoOfAbsents())
                 .build();
     }
 }

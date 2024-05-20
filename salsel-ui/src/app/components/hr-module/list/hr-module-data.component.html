@@ -19,8 +19,8 @@
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
-                            <!-- <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download"
-                                (click)="visible = true"></button> -->
+                            <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download"
+                                (click)="onDownloadEmployeeExcel()"></button>
                             <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
                                 style="font-weight: bold;"></i>
                         </div>

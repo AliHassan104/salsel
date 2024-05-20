@@ -1,7 +1,6 @@
 package com.salsel.service;
 
 
-import com.salsel.dto.AccountDto;
 import com.salsel.dto.BillingDto;
 import com.salsel.model.BillingAttachment;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,4 +21,9 @@ public interface BillingService {
 
     List<Map<String, Object>> getBillingInvoiceDataByExcelUploaded(List<BillingDto> billingDtoList);
 //    Map<Long, List<BillingDto>> getAllGroupedByInvoice(Boolean status);
+
+    void deleteById(Long id);
+    void setToActiveById(Long id);
+
+
 }

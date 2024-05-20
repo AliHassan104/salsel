@@ -1,0 +1,23 @@
+<div class="grid customP">
+    <div class="col-12 flex justify-content-between align-items-center">
+        <img src="../../../../../assets/logo/logo.png" alt="" width="150px" height="auto">
+        <div>
+            <h5 class="text-right m-0">Salassil Express Shipping LLC</h5>
+            <h5 class="text-right m-0 mt-1">Dubai, UAE</h5>
+        </div>
+    </div>
+    <div class="col-12">
+        <table style='width:100%; margin-top:20px ; border-collapse: collapse; '>
+            <tr style="background-color: #305496; color:white; font-size:14px">
+                <th *ngFor="let header of tableHeaders"
+                    style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>{{ header }}</th>
+            </tr>
+            <!-- Table rows dynamically -->
+            <tr *ngFor="let row of excelData; let i = index">
+                <td *ngFor="let cell of row; let j = index"
+                    style='border: 1px solid #dddddd; text-align: center; padding: 4px;'>{{ cell }}</td>
+            </tr>
+            <!-- End of dynamically generated table rows -->
+        </table>
+    </div>
+</div>

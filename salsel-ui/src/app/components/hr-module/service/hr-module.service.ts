@@ -110,11 +110,11 @@ export class HrModuleService {
     return this.http.put<any>(url, { observe: "response" });
   }
 
-//   getBillingReports() {
-//     return this.http.get(`${this.url}download-billing`, {
-//       responseType: "blob" as "json",
-//     });
-//   }
+  getEmployeeReports() {
+    return this.http.get(`${this.url}download-employee-excel`, {
+      responseType: "blob" as "json",
+    });
+  }
 
 //   getBillingReportsxl() {
 //     return this.http.get(`${this.url}download-billing-xl`, {

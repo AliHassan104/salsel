@@ -10,8 +10,7 @@ import com.salsel.utils.HelperUtils;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +77,31 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Map<Long, List<AwbShippingHistoryDto>> findShippingByAwbIds(List<Long> awbIds) {
+        Map<Long, List<AwbShippingHistoryDto>> shippingHistoryMap = new HashMap<>();
+
+        for (Long awbId : awbIds) {
+            // Find shipping history for each AWB ID
+            List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findByAwbId(awbId);
+
+            if (awbShippingHistoryList.isEmpty()) {
+                throw new RecordNotFoundException("AwbShippingHistory not found for id => " + awbId);
+            }
+
+            // Convert each entity to DTO
+            List<AwbShippingHistoryDto> shippingHistoryDtoList = awbShippingHistoryList.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+
+            // Put the list of DTOs in the map with the AWB ID as the key
+            shippingHistoryMap.put(awbId, shippingHistoryDtoList);
+        }
+
+        return shippingHistoryMap;
+    }
+
 
     public AwbShippingHistoryDto toDto(AwbShippingHistory awbShippingHistory) {
         return AwbShippingHistoryDto.builder()

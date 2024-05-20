@@ -1,5 +1,6 @@
 package com.salsel.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salsel.model.EmployeeAttachment;
 import com.salsel.model.Role;
 import com.salsel.model.TicketAttachment;
@@ -18,6 +19,9 @@ import java.util.List;
 public class EmployeeDto {
     private Long id;
     private LocalDate createdAt;
+    private LocalDate dateOfJoining;
+    private Double workingDays;
+    private Double noOfAbsents;
     private String name;
     private String firstname;
     private String lastname;

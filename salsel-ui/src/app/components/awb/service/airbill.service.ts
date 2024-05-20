@@ -90,6 +90,12 @@ export class AirbillService {
     );
   }
 
+  getMultipleAwbScanReport(data:any){
+    return this.http.post<any>(`${this.url}awb/awb-status/scan-report`, data, {
+      responseType: "blob" as "json",
+    });
+  }
+
   assignedAirbillToUser(awbId:any,userId:any){
     return this.http.put(`${this.url}awb/${awbId}/user/${userId}`, {});
   }

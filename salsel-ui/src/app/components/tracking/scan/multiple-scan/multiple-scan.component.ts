@@ -7,12 +7,11 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { Table } from "primeng/table";
-import { finalize } from "rxjs";
-import { IAddressBook } from "src/app/components/addressBook/model/addressBookDto";
+import { map, Observable, switchMap } from "rxjs";
 import { AddressBookService } from "src/app/components/addressBook/service/address-book.service";
 import { SessionStorageService } from "src/app/components/auth/service/session-storage.service";
 import { AirbillService } from "src/app/components/awb/service/airbill.service";
+import { BillingService } from "src/app/components/billing/service/billing.service";
 import { CountryService } from "src/app/components/country/service/country.service";
 import { DropdownService } from "src/app/layout/service/dropdown.service";
 
@@ -40,13 +39,11 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
   updatedStatuses: any = {};
 
   constructor(
-    private countryService: CountryService,
-    private adddressBookService: AddressBookService,
-    private router: Router,
     private messageService: MessageService,
     private dropdownService: DropdownService,
     public sessionStorageService: SessionStorageService,
-    private awbService: AirbillService
+    private awbService: AirbillService,
+    private billingService : BillingService
   ) {
     onScan.attachTo(document, {
       onScan: (sScanned, iQty) => {
@@ -79,12 +76,10 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
     if (this.updatedStatuses.hasOwnProperty(uniqueNumber)) {
       // Property exists, so update it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
-      console.log(this.updatedStatuses,"if");
 
     } else {
       // Property does not exist, so add it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
-      console.log(this.updatedStatuses, "else");
     }
   }
 
@@ -99,12 +94,22 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
   }
 
   onUpdateStatus() {
+    const allKeysNotEmpty = Object.keys(this.updatedStatuses).every(
+      (key) => !!this.updatedStatuses[key]
+    );
+
     if (
       this.updatedStatuses != null &&
-      Object.keys(this.updatedStatuses).length > 0
+      Object.keys(this.updatedStatuses).length > 0 &&
+      allKeysNotEmpty
     ) {
       this.awbService
         .updateMultipleAwbTrackingStatus(this.updatedStatuses)
+        .pipe(
+          switchMap((res: any) => {
+            return this.downloadScanReport(res);
+          })
+        )
         .subscribe(
           (res: any) => {
             this.messageService.add({
@@ -132,6 +137,15 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  downloadScanReport(data: any): Observable<any> {
+  return this.awbService.getMultipleAwbScanReport(data).pipe(
+    map((Res: any) => {
+      this.awbService.downloadExcelFile(Res, "MultipleScanReport.xlsx");
+    })
+  );
+}
+
 
   beep() {
     this.beepSound?.nativeElement?.play();
@@ -183,7 +197,6 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
           .subscribe(
             (res: any) => {
               this.airBills.push(res);
-              console.log(res);
 
               if (this.airBills.length > 1) {
                 this.airBills.forEach((awb: any) => {

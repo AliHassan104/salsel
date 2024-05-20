@@ -1,0 +1,120 @@
+tr td {
+  text-align: center !important;
+}
+
+@media screen and (max-width: 576px) {
+  .addBtn {
+    margin-top: 20px;
+  }
+}
+
+.refresh {
+  cursor: pointer;
+  color: #93003c;
+  font-size: 17px;
+  transition: all 0.5s ease;
+}
+
+.refresh:hover {
+  color: #c10751;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask{
+    align-items: self-start !important;
+}
+
+.customDialogExcel::ng-deep .p-dialog-mask .p-dialog{
+    margin-top: 6% !important;
+}
+
+.customDialogExcel::ng-deep .p-dialog-header {
+    border-bottom: 0 none;
+    background: #ffffff;
+    color: #93003c;
+    padding: 1.5rem 1.5rem 0 1.5rem;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+.customDialogExcel::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon{
+        border: 1px solid #6c757d;
+}
+
+.custom-icon-upload{
+    color: #93003C;
+    padding: 10px;
+    border-radius: 50%;
+    border: 1px solid #CBD0DC;
+}
+
+.upload-file-container{
+    background-color: #EEF1F7;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.upload-file-container .p1{
+    font-size: 16px;
+    font-weight: 600;
+    padding-left: 20px;
+}
+
+.upload-file-container .p2{
+    color: #A9ACB4;
+    padding-left: 20px;
+    font-weight: 500;
+}
+
+.uploaded-sheet-icon{
+    font-size: 20px;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+.uploaded-sheet-icon:hover{
+    color: #93003C;
+}
+
+
+
+.header-content p{
+    color: #A9ACB4;
+    font-size: 18px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.upload-body{
+    border: 2px dotted #CBD0DC;
+    padding: 20px 25px;
+}
+
+.upload-body i{
+    font-size: 40px;
+}
+
+.upload-body h5{
+    font-size: 18px;
+}
+
+.upload-body p{
+    color: #A9ACB4;
+}
+
+.fileUploadStyle{
+    padding: 10px 30px;
+    cursor: pointer;
+    border: 1px solid #A9ACB4;
+    border-radius: 10px;
+    background-color: #93003C;
+    display: inline-block;
+    color: white !important;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.fileUploadStyle:hover{
+    background-color: #ba0950;
+}

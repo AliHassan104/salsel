@@ -167,6 +167,10 @@ export class AuthGuardService implements CanActivate {
       url: ["/user/list", "/user/list/:id"],
       permissions: "READ_USER",
     };
+    const readBillingObj = {
+      url: ["/billing/list", "/billing/list/:id"],
+      permissions: "READ_USER",
+    };
     const accountHistoryrObj = {
       url: ["/awb-history/:id"],
       permissions: "READ_ACCOUNT",
@@ -241,7 +245,8 @@ export class AuthGuardService implements CanActivate {
       createAddressBookObj,
       trackingAndScanObj,
       createEmployeeObj,
-      readEmployeeObj
+      readEmployeeObj,
+      readBillingObj
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {

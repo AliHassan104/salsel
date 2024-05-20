@@ -40,6 +40,12 @@ export class AppMenuComponent implements OnInit {
             permission: "READ_EMPLOYEE",
           },
           {
+            label: "Billing",
+            icon: "pi pi-credit-card",
+            routerLink: "billing/list",
+            permission: "READ_BILLING",
+          },
+          {
             label: "Account",
             icon: "pi pi-wallet",
             routerLink: "account/list",

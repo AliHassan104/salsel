@@ -1,14 +1,15 @@
 package com.salsel.service.impl;
 
 import com.amazonaws.util.IOUtils;
-import com.salsel.dto.*;
+import com.salsel.dto.AccountDto;
+import com.salsel.dto.AwbDto;
+import com.salsel.dto.TicketDto;
+import com.salsel.dto.UserDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Role;
 import com.salsel.service.AwbService;
-import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.JDBCType;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 import static com.salsel.constants.AwbStatusConstants.DELIVERED;
 import static com.salsel.constants.AwbStatusConstants.PICKED_UP;
@@ -37,6 +36,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     public ExcelGenerationServiceImpl(AwbService awbService) {
         this.awbService = awbService;
     }
+
 
     @Override
     public List<Map<String, Object>> convertUsersToExcelData(List<UserDto> users) {
@@ -239,6 +239,13 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         return accountInvoicesMap;
     }
 
+    @Override
+    public ByteArrayOutputStream generateEmployeeReport(List<Map<String, Object>> transitStatusReportData) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(transitStatusReportData, outputStream, EMPLOYEE);
+        return outputStream;
+    }
+
 
     @Override
     public void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
@@ -263,7 +270,9 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Billing Report");
         } else if (type.equalsIgnoreCase(SCANS)) {
             sheet = workbook.createSheet("Scan Report");
-        } else {
+        }else if(type.equalsIgnoreCase(EMPLOYEE)){
+            sheet = workbook.createSheet("Employee Report");
+        }else {
             throw new RecordNotFoundException("Type not valid");
         }
 
@@ -388,4 +397,5 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         workbook.write(outputStream);
         workbook.close();
     }
+
 }

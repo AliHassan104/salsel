@@ -1,25 +1,22 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { finalize } from 'rxjs';
 import { DropdownService } from 'src/app/layout/service/dropdown.service';
-import { AccountService } from '../../accounts/service/account.service';
 import { SessionStorageService } from '../../auth/service/session-storage.service';
-import { HrModuleService } from '../service/hr-module.service';
-import { IEmployee } from '../model/employeeDto';
-import { FormvalidationService } from '../../Tickets/service/formvalidation.service';
-import { TicktingService } from '../../Tickets/service/tickting.service';
+import { IBilling } from '../model/billingDto';
+import { BillingService } from '../service/billing.service';
+import * as XLSX from "xlsx";
 
 @Component({
-  selector: "app-hr-module-data",
-  templateUrl: "./hr-module-data.component.html",
-  styleUrls: ["./hr-module-data.component.scss"],
+  selector: "app-billing",
+  templateUrl: "./billing.component.html",
+  styleUrls: ["./billing.component.scss"],
   providers: [MessageService, DatePipe],
 })
-export class HrModuleDataComponent {
+export class BillingComponent {
   excelDataForm!: FormGroup;
   minDate;
   maxDate;
@@ -31,22 +28,24 @@ export class HrModuleDataComponent {
   deleteProductsDialog: any;
   serachText?: string;
   refresh: boolean = true;
+  fileName;
+  uploadedSheet: File;
+  fileInput;
+  excelViewDialog: boolean = false;
+  excelUrl;
+  excelData;
+  tableHeaders;
 
   constructor(
-    private _ticktingService: TicktingService,
-    private employeeService: HrModuleService,
-    private router: Router,
     private messageService: MessageService,
     private dropdownService: DropdownService,
     public sessionStorageService: SessionStorageService,
-    private accountService: AccountService,
-    private datePipe: DatePipe,
-    private formService: FormvalidationService
+    private billingService: BillingService
   ) {}
 
   loading: any;
   @ViewChild("filter") filter!: ElementRef;
-  employees?: IEmployee;
+  invoices?: IBilling;
   deleteId: any;
   page?: any = 0;
   size?: number = 1;
@@ -80,8 +79,8 @@ export class HrModuleDataComponent {
       this.sessionStorageService.getRoleName() == "ADMIN" ||
       this.sessionStorageService.getRoleName() == "CUSTOMER_SERVICE_AGENT"
     ) {
-      this.employeeService
-        .getAllEmployees(queryParams)
+      this.billingService
+        .getAllInvoices(queryParams)
         .pipe(
           finalize(() => {
             this.refresh = false;
@@ -89,12 +88,12 @@ export class HrModuleDataComponent {
         )
         .subscribe((res: any) => {
           if (res.status == 200) {
-            this.employees = res.body;
+            this.invoices = res.body;
           }
         });
     } else {
-      this.employeeService
-        .getAllEmployees(queryParams)
+      this.billingService
+        .getAllInvoices(queryParams)
         .pipe(
           finalize(() => {
             this.refresh = false;
@@ -102,10 +101,75 @@ export class HrModuleDataComponent {
         )
         .subscribe((res: any) => {
           if (res.status == 200) {
-            this.employees = res.body;
+            this.invoices = res.body;
           }
         });
     }
+  }
+
+  onFileSelected(event: any) {
+    this.fileInput = event.target;
+    if (this.fileInput.files && this.fileInput.files.length > 0) {
+      const selectedFile = this.fileInput.files[0];
+
+      if (selectedFile.name.toLowerCase().endsWith(".xlsx")) {
+        this.fileName = selectedFile.name;
+        this.uploadedSheet = selectedFile;
+        this.openExcelDialog();
+      } else {
+        this.fileInput.value = null;
+        this.fileName = null;
+        this.uploadedSheet = null;
+        this.messageService.add({
+          severity: "error",
+          summary: "Invalid File",
+          detail: "Please select a valid XLSX file.",
+        });
+      }
+    }
+  }
+
+  openExcelDialog() {
+    if (this.uploadedSheet) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Extract data from the first sheet of the workbook
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        this.excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Extract table headers
+        this.tableHeaders = this.excelData.shift(); // Remove the first row (headers)
+      };
+      reader.readAsArrayBuffer(this.uploadedSheet);
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "No File Selected",
+        detail: "Please select an Excel file before viewing.",
+      });
+    }
+  }
+
+  viewExcelFile() {
+    this.excelViewDialog = true;
+  }
+
+  clearFileInput() {
+    this.fileInput.value = null;
+    this.fileName = null;
+    this.uploadedSheet = null;
+
+    // Manually trigger the change event
+    const inputChangeEvent = new Event("change", { bubbles: true });
+    this.fileInput.dispatchEvent(inputChangeEvent);
+  }
+
+  onCloseDialog() {
+    this.clearFileInput();
   }
 
   onRefresh() {
@@ -150,52 +214,12 @@ export class HrModuleDataComponent {
   }
 
   confirmDeleteSelected() {
-    this.employeeService.removeEmployee(this.deleteId).subscribe((res) => {
+    this.billingService.removeInvoice(this.deleteId).subscribe((res) => {
       this.alert();
       this.getEmployees();
       this.deleteProductsDialog = false;
     });
   }
-
-  //   onDownloadExcel(data: any) {
-  //     if (this.excelDataForm.valid) {
-  //       const formattedDates = {
-  //         startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
-  //         endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
-  //       };
-  //       console.log(formattedDates);
-
-  //       this._ticktingService.downloadEmployeeDataInExcel(formattedDates).subscribe(
-  //         (res: any) => {
-  //           this._ticktingService.downloadExcelFile(
-  //             res,
-  //             `Employee${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
-  //           );
-  //           this.messageService.add({
-  //             severity: "success",
-  //             summary: "Success",
-  //             detail: "Download Successfull",
-  //           });
-  //           this.excelDataForm.reset();
-  //           this.visible = false;
-  //         },
-  //         (error) => {
-  //           this.messageService.add({
-  //             severity: "error",
-  //             summary: "Error",
-  //             detail: "No Data Found",
-  //           });
-  //         }
-  //       );
-  //     } else {
-  //       this.formService.markFormGroupTouched(this.excelDataForm);
-  //       this.messageService.add({
-  //         severity: "error",
-  //         summary: "Error",
-  //         detail: "Please Fill All The Fields.",
-  //       });
-  //     }
-  //   }
 
   onCancel() {
     this.visible = false;
@@ -208,29 +232,12 @@ export class HrModuleDataComponent {
     this.deleteProductsDialog = true;
   }
 
-  //   Edit Employee
-  onEditEmployee(id) {
-    const queryParams = { updateMode: "true", id: id };
-    this.router.navigate(["create-employee"], {
-      queryParams: queryParams,
-    });
-  }
-
-  onDownloadEmployeeInfo(id, empNum) {
-    this.employeeService.getEmployeeForm(id).subscribe(
-      (res: any) => {
-        this.downloadSuccess();
-        this.employeeService.downloadFile(res, `Employee_${empNum}.pdf`);
-      },
-      (error) => {
-        this.downloadError();
-      }
-    );
-  }
-
-  onDownloadEmployeeExcel() {
-    this.employeeService.getEmployeeReports().subscribe((res: any) => {
-      this.employeeService.downloadExcelFile(res, "EmployeeData.xlsx");
+  onDownlaodBill() {
+    this.billingService.getBillingReports().subscribe((res: any) => {
+      this.billingService.downloadFile(res, "bill.pdf");
+      this.billingService.getBillingReportsxl().subscribe((res: any) => {
+        this.billingService.downloadExcelFile(res, "bill.xlsx");
+      });
     });
   }
 
@@ -251,7 +258,7 @@ export class HrModuleDataComponent {
   }
 
   onActiveEmployee(id) {
-    this.employeeService.updateEmployeeStatus(id).subscribe((res) => {
+    this.billingService.updateInvocieStatus(id).subscribe((res) => {
       this.success();
       this.selectedStatus = "Active";
       this.onStatusChange(this.selectedStatus);

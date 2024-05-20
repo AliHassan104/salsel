@@ -20,6 +20,7 @@ import { VerificationModule } from "./components/auth/verification/verification.
 import { HrModuleDataComponent } from './components/hr-module/list/hr-module-data.component';
 import { HrModuleFormComponent } from './components/hr-module/update/hr-module-form.component';
 import { HrModuleViewComponent } from './components/hr-module/view/hr-module-view.component';
+import { BillingComponent } from './components/billing/list/billing.component';
 
 @NgModule({
   declarations: [
