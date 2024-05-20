@@ -41,7 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.id = (SELECT MAX(e.id) FROM User e)")
     User findUserByLatestId();
 
-    Optional<User> findByEmployeeId(Long employeeId);
+    Optional<User> findByEmployeeId(String employeeId);
     Optional<User> findByEmailAndStatusIsTrue(String email);
 
     List<User> findAllByCreatedAtBetween(LocalDate startDate, LocalDate endDate);

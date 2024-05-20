@@ -27,18 +27,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final CountryRepository countryRepository;
+    private final EmailUtils emailUtils;
     private final EmployeeAttachmentRepository employeeAttachmentRepository;
     private final BucketService bucketService;
     private final HelperUtils helperUtils;
     private final BCryptPasswordEncoder encoder;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, UserRepository userRepository, RoleRepository roleRepository, CountryRepository countryRepository, EmployeeAttachmentRepository employeeAttachmentRepository, BucketService bucketService, HelperUtils helperUtils, BCryptPasswordEncoder encoder) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, UserRepository userRepository, RoleRepository roleRepository, EmailUtils emailUtils, EmployeeAttachmentRepository employeeAttachmentRepository, BucketService bucketService, HelperUtils helperUtils, BCryptPasswordEncoder encoder) {
         this.employeeRepository = employeeRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.countryRepository = countryRepository;
+        this.emailUtils = emailUtils;
         this.employeeAttachmentRepository = employeeAttachmentRepository;
         this.bucketService = bucketService;
         this.helperUtils = helperUtils;
@@ -66,27 +66,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee latestEmployee = employeeRepository.findEmployeeByLatestId();
 
         if (latestEmployee != null) {
-            // Retrieve the country code from the latest employee
-            Country country = countryRepository.findCountryByName(latestEmployee.getCountry());
-            Integer countryCode = country.getCode();
+            String currentEmployeeNumber = latestEmployee.getEmployeeNumber();
+            Long employeeNumber = Long.parseLong(currentEmployeeNumber);
 
-            // Extract the employee Number and remove the country code
-            String empNumberStr = String.valueOf(latestEmployee.getEmployeeNumber());
-            String empNumberWithoutCountryCode = empNumberStr.substring(String.valueOf(countryCode).length());
+            employeeNumber++;
 
-            // Retrieve the new country code and prepend it to the employee Number
-            Integer newCountryCode = countryRepository.findCountryCodeByCountryName(employee.getCountry());
-            String code = String.valueOf(newCountryCode);
-            Long newEmpNumber = Long.parseLong(code + empNumberWithoutCountryCode);
-
-            newEmpNumber++;
-            employee.setEmployeeNumber(newEmpNumber);
+            String newEmployeeNumber;
+            if (currentEmployeeNumber.matches("^0\\d+$")) {
+                newEmployeeNumber = String.format("%0" + currentEmployeeNumber.length() + "d", employeeNumber); // Maintain leading zeros
+            } else {
+                newEmployeeNumber = String.valueOf(employeeNumber); // No leading zeros
+            }
+            employee.setEmployeeNumber(newEmployeeNumber);
         } else {
-            String firstEmployeeNumber = "0001";
-            Integer countryCode = countryRepository.findCountryCodeByCountryName(employee.getCountry());
-            String concatenatedValue = countryCode.toString() + firstEmployeeNumber;
-            Long combinedValue = Long.parseLong(concatenatedValue);
-            employee.setEmployeeNumber(combinedValue);
+            employee.setEmployeeNumber("0001");
         }
 
         Employee createdEmployee = employeeRepository.save(employee);
@@ -109,13 +102,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                 // Check if employeeId already exists, if yes, increment until unique
                 Optional<User> userExist = userRepository.findByEmployeeId(employee.getEmployeeNumber());
-                Long employeeId = employee.getEmployeeNumber();
+                Long employeeId = Long.parseLong(employee.getEmployeeNumber());
                 while (userExist.isPresent()) {
                     // If user with the same employeeId exists, increment employeeId by 1
                     employeeId++;
-                    userExist = userRepository.findByEmployeeId(employeeId);
+                    String incrementedEmployeeId = String.format("%0" + employee.getEmployeeNumber().length() + "d", employeeId);
+                    userExist = userRepository.findByEmployeeId(incrementedEmployeeId);
                 }
-                user.setEmployeeId(employeeId);
+                user.setEmployeeId(String.format("%0" + employee.getEmployeeNumber().length() + "d", employeeId));
 
 
                 Role role = roleRepository.findByName(employee.getPosition())
@@ -124,7 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 user.getRoles().add(role);
                 user.setStatus(true);
                 User createdUser = userRepository.save(user);
-//                emailUtils.sendWelcomeEmail(createdUser, password);
+                emailUtils.sendWelcomeEmail(createdUser, password);
             }
         }
 

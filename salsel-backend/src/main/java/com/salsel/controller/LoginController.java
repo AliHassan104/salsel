@@ -50,7 +50,7 @@ public class LoginController {
             return ResponseEntity.ok(new AuthenticationResponse(jwtToken,loginCredentials.getEmail()));
 
         }else{
-            UserDto user = userService.findByEmployeeId(Long.valueOf(loginCredentials.getEmail()));
+            UserDto user = userService.findByEmployeeId(loginCredentials.getEmail());
             try {
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(user.getEmail(), loginCredentials.getPassword())

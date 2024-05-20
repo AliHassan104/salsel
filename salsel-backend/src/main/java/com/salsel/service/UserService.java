@@ -19,7 +19,7 @@ public interface UserService {
     UserDto findByName(String name);
     UserDto findByEmail(String email);
 
-    UserDto findByEmployeeId(Long employeeId);
+    UserDto findByEmployeeId(String employeeId);
 
     void isValidOtp(String resetCode);
 

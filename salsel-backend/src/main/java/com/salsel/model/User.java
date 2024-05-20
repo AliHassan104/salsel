@@ -26,7 +26,7 @@ public class User {
     private LocalDate createdAt;
 
     @Column(unique = true)
-    private Long employeeId;
+    private String employeeId;
 
     private String name;
     private String firstname;

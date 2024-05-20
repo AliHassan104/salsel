@@ -27,7 +27,7 @@ public class Employee {
     private String phone;
 
     @Column(unique = true)
-    private Long employeeNumber;
+    private String employeeNumber;
 
     private LocalDate dateOfJoining;
     private Double workingDays;

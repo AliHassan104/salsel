@@ -33,7 +33,7 @@ public class EmployeeDto {
     private String jobTitle;
     private String address;
     private String department;
-    private Long employeeNumber;
+    private String employeeNumber;
     private Double salary;
     private Double housing;
     private Double transportation;

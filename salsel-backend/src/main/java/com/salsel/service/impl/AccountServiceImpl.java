@@ -103,27 +103,20 @@ public class AccountServiceImpl implements AccountService {
 
             if (latestUser != null) {
 
-                // Retrieve the country code from the latest user
-                Country country = countryRepository.findCountryByName(latestUser.getCountry());
-                Integer countryCode = country.getCode();
+                String currentEmployeeId = latestUser.getEmployeeId();
+                Long employeeId = Long.parseLong(currentEmployeeId);
 
-                // Extract the employee ID and remove the country code
-                String empIdStr = String.valueOf(latestUser.getEmployeeId());
-                String empIdWithoutCountryCode = empIdStr.substring(String.valueOf(countryCode).length());
+                employeeId++;
 
-                // Retrieve the new country code and prepend it to the employee ID
-                Integer newCountryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
-                String code = String.valueOf(newCountryCode);
-                Long newEmpId = Long.parseLong(code + empIdWithoutCountryCode);
-
-                newEmpId++;
-                user.setEmployeeId(newEmpId);
+                String newEmployeeId;
+                if (currentEmployeeId.matches("^0\\d+$")) {
+                    newEmployeeId = String.format("%0" + currentEmployeeId.length() + "d", employeeId); // Maintain leading zeros
+                } else {
+                    newEmployeeId = String.valueOf(employeeId); // No leading zeros
+                }
+                user.setEmployeeId(newEmployeeId);
             } else {
-                String firstEmployeeId = "0001";
-                Integer countryCode = countryRepository.findCountryCodeByCountryName(user.getCountry());
-                String concatenatedValue = countryCode.toString() + firstEmployeeId;
-                Long combinedValue = Long.parseLong(concatenatedValue);
-                user.setEmployeeId(combinedValue);
+                user.setEmployeeId("0001");
             }
             User createdUser = userRepository.save(user);
         }
