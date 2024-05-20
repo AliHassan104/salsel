@@ -13,8 +13,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -191,6 +196,36 @@ public class HelperUtils {
         }
     }
 
+    public List<String> saveInvoicePdfListToS3(List<byte[]> pdfFiles, String folderName, String folderType) {
+        List<String> savedPdfUrls = new ArrayList<>();
+
+        for (byte[] pdfContent : pdfFiles) {
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
+            String newFileName = "invoice_Pdf_" + timestamp + ".pdf"; // You can adjust the naming convention as needed
+
+            // Save to S3 bucket
+            String savedPdfUrl = bucketService.save(pdfContent, folderName, newFileName, folderType);
+            savedPdfUrls.add(savedPdfUrl);
+        }
+
+        return savedPdfUrls;
+    }
+
+    public List<String> saveInvoiceExcelListToS3(List<byte[]> excelFiles, String folderName, String folderType) {
+        List<String> savedExcelUrls = new ArrayList<>();
+
+        for (byte[] excelContent : excelFiles) {
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
+            String newFileName = "invoice_Excel_" + timestamp + ".xlsx"; // You can adjust the naming convention as needed
+
+            // Save to S3 bucket
+            String savedExcelUrl = bucketService.save(excelContent, folderName, newFileName, folderType);
+            savedExcelUrls.add(savedExcelUrl);
+        }
+
+        return savedExcelUrls;
+    }
+
     public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof CustomUserDetail) {
@@ -201,5 +236,7 @@ public class HelperUtils {
             throw new RecordNotFoundException("User not Found");
         }
     }
+
+
 
 }

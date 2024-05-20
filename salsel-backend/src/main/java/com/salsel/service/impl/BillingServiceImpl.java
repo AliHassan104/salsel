@@ -4,40 +4,93 @@ import com.amazonaws.services.cloudwatch.model.InvalidFormatException;
 import com.salsel.dto.BillingDto;
 import com.salsel.exception.BillingException;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Account;
 import com.salsel.model.Billing;
+import com.salsel.model.BillingAttachment;
+import com.salsel.repository.AccountRepository;
+import com.salsel.repository.BillingAttachmentRepository;
 import com.salsel.repository.BillingRepository;
 import com.salsel.service.BillingService;
+import com.salsel.service.ExcelGenerationService;
+import com.salsel.service.PdfGenerationService;
 import com.salsel.utils.ExcelUtils;
+import com.salsel.utils.HelperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.salsel.constants.BillingConstants.*;
+import static com.salsel.service.impl.bucketServiceImpl.INVOICE;
 
 @Service
 @Slf4j
 public class BillingServiceImpl implements BillingService {
 
     private final BillingRepository billingRepository;
+    private final AccountRepository accountRepository;
+    private final BillingAttachmentRepository billingAttachmentRepository;
+    private final HelperUtils helperUtils;
+    private final PdfGenerationService pdfGenerationService;
+    private final ExcelGenerationService excelGenerationService;
 
-    public BillingServiceImpl(BillingRepository billingRepository) {
+    public BillingServiceImpl(BillingRepository billingRepository, AccountRepository accountRepository, BillingAttachmentRepository billingAttachmentRepository, HelperUtils helperUtils, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
         this.billingRepository = billingRepository;
+        this.accountRepository = accountRepository;
+        this.billingAttachmentRepository = billingAttachmentRepository;
+        this.helperUtils = helperUtils;
+        this.pdfGenerationService = pdfGenerationService;
+        this.excelGenerationService = excelGenerationService;
     }
 
     @Override
     @Transactional
-    public BillingDto save(BillingDto billingDto) {
-        Billing billing = toEntity(billingDto);
-        billing.setStatus(true);
-        Billing createdBilling = billingRepository.save(billing);
+    public List<BillingAttachment> save(List<BillingDto> billingDtoList) {
+        List<Map<String, Object>> invoices = getBillingInvoiceDataByExcelUploaded(billingDtoList);
+        Map<Long, List<byte[]>> invoicesPdf = pdfGenerationService.generateBillingPdf(invoices);
+        Map<Long, List<ByteArrayOutputStream>> excelFiles = excelGenerationService.generateBillingReports(invoices);
 
-        return toDto(createdBilling);
+        List<BillingAttachment> billingAttachmentList = new ArrayList<>();
+
+        if (invoicesPdf != null && !invoicesPdf.isEmpty()) {
+            for (Map.Entry<Long, List<byte[]>> pdfEntry : invoicesPdf.entrySet()) {
+                Long accountNumber = pdfEntry.getKey();
+                List<byte[]> pdfs = pdfEntry.getValue();
+                String folderName = "Invoice_" + accountNumber;
+
+                List<String> savedPdfUrls = helperUtils.saveInvoicePdfListToS3(pdfs, folderName, INVOICE);
+                List<String> savedExcelUrls = new ArrayList<>();
+
+                // Process the corresponding Excel files for the same account number
+                if (excelFiles.containsKey(accountNumber)) {
+                    List<ByteArrayOutputStream> excelStreams = excelFiles.get(accountNumber);
+                    List<byte[]> excelBytesList = new ArrayList<>();
+                    for (ByteArrayOutputStream excelStream : excelStreams) {
+                        excelBytesList.add(excelStream.toByteArray());
+                    }
+                    savedExcelUrls = helperUtils.saveInvoiceExcelListToS3(excelBytesList, folderName, INVOICE);
+                }
+
+                // Create BillingAttachment objects for each PDF and Excel file
+                for (int i = 0; i < savedPdfUrls.size(); i++) {
+                    String savedPdfUrl = savedPdfUrls.get(i);
+                    BillingAttachment billingAttachment = new BillingAttachment();
+                    billingAttachment.setAccountNumber(accountNumber);
+                    billingAttachment.setPdfUrl(savedPdfUrl);
+                    billingAttachment.setExcelUrl(i < savedExcelUrls.size() ? savedExcelUrls.get(i) : null);
+                    billingAttachmentList.add(billingAttachment);
+                    billingAttachmentRepository.save(billingAttachment);
+                }
+
+                log.info("Invoices are uploaded to S3 in folder '{}'.", folderName);
+            }
+        }
+        return billingAttachmentList;
     }
 
     @Override
@@ -79,7 +132,6 @@ public class BillingServiceImpl implements BillingService {
             BillingDto billingDto = toDto(billing);
             billingDtoList.add(billingDto);
         }
-
         return billingDtoList;
     }
 
@@ -151,15 +203,97 @@ public class BillingServiceImpl implements BillingService {
         return result;
     }
 
+    @Override
+    public List<Map<String, Object>> getBillingInvoiceDataByExcelUploaded(List<BillingDto> billingDtoList) {
+        String invoiceNo = null;
+        List<Map<String, Object>> result = new ArrayList<>();
 
+        // Extract unique account numbers
+        Set<Long> accountNumbers = billingDtoList.stream()
+                .map(BillingDto::getCustomerAccountNumber)
+                .collect(Collectors.toSet());
 
+        // Fetch the latest invoice number only once
+        Optional<Billing> latestBilling = billingRepository.findBillingByLatestId();
+        if (latestBilling.isPresent()) {
+            Billing existingBilling = latestBilling.get();
+            String currentInvoiceNo = existingBilling.getInvoiceNo();
+            Long existingInvoiceNo = Long.parseLong(currentInvoiceNo);
+
+            // Set the initial invoice number, maintaining leading zeros if present
+            existingInvoiceNo++;
+            if (currentInvoiceNo.matches("^0\\d+$")) {
+                invoiceNo = String.format("%0" + currentInvoiceNo.length() + "d", existingInvoiceNo);
+            } else {
+                invoiceNo = String.valueOf(existingInvoiceNo);
+            }
+        } else {
+            invoiceNo = "0001";
+        }
+
+        // Iterate over each account number
+        for (Long accountNumber : accountNumbers) {
+            Account account = accountRepository.findByAccountNumber(accountNumber);
+            if(account == null){
+                throw new RecordNotFoundException("Account not found for this accountNumber: " + accountNumber);
+            }
+
+            List<Map<String, Object>> accountInvoices = new ArrayList<>();
+            double totalCharges = 0.0;
+            LocalDate invoiceDate = LocalDate.now(); // Assuming today's date for the example
+
+            // Filter and map the billing DTOs for the current account number
+            for (BillingDto billingDto : billingDtoList) {
+                if (accountNumber.equals(billingDto.getCustomerAccountNumber())) {
+                    Map<String, Object> billingMap = new LinkedHashMap<>();
+                    billingMap.put(AIRWAY_NO, billingDto.getAirwayBillNo());
+                    billingMap.put(CUSTOMER_REF, billingDto.getCustomerRef());
+                    billingMap.put(PRODUCT, billingDto.getProduct());
+                    billingMap.put(SERVICE_DETAILS, billingDto.getServiceDetails());
+                    billingMap.put(CHARGES, billingDto.getCharges());
+                    billingMap.put(ACCOUNT_NUMBER, accountNumber);
+                    billingMap.put(INVOICE_NO, invoiceNo);
+                    billingMap.put(INVOICE_DATE, invoiceDate);
+
+                    accountInvoices.add(billingMap);
+
+                    // Accumulate the charges
+                    totalCharges += billingDto.getCharges();
+                }
+            }
+
+            // Create a summary map for the account number with total charges and invoice date
+            Map<String, Object> summaryMap = new LinkedHashMap<>();
+            summaryMap.put(ACCOUNT_NUMBER, accountNumber);
+            summaryMap.put(INVOICE_DATE, invoiceDate);
+            summaryMap.put(INVOICE_NO, invoiceNo);
+            summaryMap.put(TOTAL_CHARGES, totalCharges);
+            summaryMap.put(ADDRESS, account.getAddress());
+            summaryMap.put(TAX_NO, account.getTaxDocumentNo());
+            summaryMap.put(TAX_INVOICE_NO, account.getCustomerName());
+            summaryMap.put(INVOICES, accountInvoices);
+
+            // Add the summary map to the result list
+            result.add(summaryMap);
+
+            // Increment the invoice number for the next account
+            Long nextInvoiceNo = Long.parseLong(invoiceNo);
+            nextInvoiceNo++;
+            if (invoiceNo.matches("^0\\d+$")) {
+                invoiceNo = String.format("%0" + invoiceNo.length() + "d", nextInvoiceNo);
+            } else {
+                invoiceNo = String.valueOf(nextInvoiceNo);
+            }
+        }
+
+        return result;
+    }
 
     public BillingDto toDto(Billing billing){
         return BillingDto.builder()
                 .id(billing.getId())
                 .serviceDetails(billing.getServiceDetails())
                 .charges(billing.getCharges())
-                .transactionNumber(billing.getTransactionNumber())
                 .invoiceNo(billing.getInvoiceNo())
                 .taxInvoiceTo(billing.getTaxInvoiceTo())
                 .invoiceDate(billing.getInvoiceDate())
@@ -183,7 +317,6 @@ public class BillingServiceImpl implements BillingService {
         return Billing.builder()
                 .id(billingDto.getId())
                 .serviceDetails(billingDto.getServiceDetails())
-                .transactionNumber(billingDto.getTransactionNumber())
                 .charges(billingDto.getCharges())
                 .invoiceNo(billingDto.getInvoiceNo())
                 .taxInvoiceTo(billingDto.getTaxInvoiceTo())

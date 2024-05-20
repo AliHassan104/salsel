@@ -1,7 +1,9 @@
 package com.salsel.utils;
 
+import com.salsel.dto.BillingDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
+import com.salsel.model.Billing;
 import com.salsel.model.Ticket;
 import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
@@ -185,7 +187,7 @@ public class EmailUtils {
     }
 
     @Async
-    public void sendBillingEmail(String toAddress, String[] ccAddresses) {
+    public void sendBillingEmail(String toAddress, String[] ccAddresses, List<BillingDto> billings) {
         try {
             // Get the date
             LocalDate currentDate = LocalDate.now();
@@ -193,40 +195,40 @@ public class EmailUtils {
             String formattedDate = currentDate.format(formatter);
 
             // Generate the Excel report for billing
-            ByteArrayOutputStream billingReport = excelGenerationService.generateBillingReport();
+//            ByteArrayOutputStream billingReport = excelGenerationService.generateBillingReport();
+//
+////            Generate PDF
+//            List<byte[]> pdfBillingReport = pdfGenerationService.generateBillingPdf(billings);
+//
+//            // Create the email message
+//            MimeMessage message = javaMailSender.createMimeMessage();
+//            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//
+//            helper.setFrom(sender);
+//            helper.setTo(toAddress);
+//            if (ccAddresses != null && ccAddresses.length > 0) {
+//                helper.setCc(ccAddresses);
+//            }
+//            helper.setSubject("Daily Billing Report");
+//
+//            // Set the email body with the formatted date
+//            String emailBody = "Gents,\n"
+//                    + "Please find attached Daily Billing Report for Date: " + formattedDate + "\n\n"
+//                    + "Salassil System Alert\n"
+//                    + "Salassilexpress.com";
+//            helper.setText(emailBody);
 
-//            Generate PDF
-            byte[] pdfBillingReport = pdfGenerationService.generateBillingPdf();
-
-            // Create the email message
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-            helper.setFrom(sender);
-            helper.setTo(toAddress);
-            if (ccAddresses != null && ccAddresses.length > 0) {
-                helper.setCc(ccAddresses);
-            }
-            helper.setSubject("Daily Billing Report");
-
-            // Set the email body with the formatted date
-            String emailBody = "Gents,\n"
-                    + "Please find attached Daily Billing Report for Date: " + formattedDate + "\n\n"
-                    + "Salassil System Alert\n"
-                    + "Salassilexpress.com";
-            helper.setText(emailBody);
-
-            // Create a ByteArrayResource from the billing report byte array
-            ByteArrayResource billingReportResource = new ByteArrayResource(billingReport.toByteArray());
-            ByteArrayResource pdfBillingReportResource = new ByteArrayResource(pdfBillingReport);
-
-            // Attach the billing report using ByteArrayResource
-            helper.addAttachment("BillingReport.xlsx", billingReportResource);
-            helper.addAttachment("BillingReport.pdf", pdfBillingReportResource);
-
-            // Send the email
-            javaMailSender.send(message);
-        } catch (MessagingException | IOException e) {
+//            // Create a ByteArrayResource from the billing report byte array
+//            ByteArrayResource billingReportResource = new ByteArrayResource(billingReport.toByteArray());
+//            ByteArrayResource pdfBillingReportResource = new ByteArrayResource(pdfBillingReport);
+//
+//            // Attach the billing report using ByteArrayResource
+//            helper.addAttachment("BillingReport.xlsx", billingReportResource);
+//            helper.addAttachment("BillingReport.pdf", pdfBillingReportResource);
+//
+//            // Send the email
+////            javaMailSender.send(message);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -14,11 +14,10 @@ public interface ExcelGenerationService {
     List<Map<String, Object>> convertTicketsToExcelData(List<TicketDto> tickets);
     List<Map<String, Object>> convertAccountsToExcelData(List<AccountDto> accounts);
     List<Map<String,Object>> convertAirBillsToExcelData(List<AwbDto> airbills);
-    List<Map<String,Object>> convertBillingsToExcelData(List<BillingDto> billings);
     ByteArrayOutputStream generateAwbStatusReport(String status) throws IOException;
     ByteArrayOutputStream generateAwbTransitStatusReport() throws IOException;
 
-    ByteArrayOutputStream generateBillingReport() throws IOException;
+    Map<Long, List<ByteArrayOutputStream>> generateBillingReports(List<Map<String, Object>> billingMaps);
 
 
     void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;

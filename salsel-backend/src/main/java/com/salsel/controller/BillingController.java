@@ -1,6 +1,7 @@
 package com.salsel.controller;
 
 import com.salsel.dto.BillingDto;
+import com.salsel.model.BillingAttachment;
 import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
@@ -17,6 +18,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/api")
@@ -35,8 +39,8 @@ public class BillingController {
 
     @PostMapping("/billing")
     @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
-    public ResponseEntity<BillingDto> createBilling(@RequestBody BillingDto billingDto){
-        return ResponseEntity.ok(billingService.save(billingDto));
+    public ResponseEntity<List<BillingAttachment>> createBilling(@RequestBody List<BillingDto> billingDtoList){
+        return ResponseEntity.ok(billingService.save(billingDtoList));
     }
 
     @PostMapping("/upload-excel")
@@ -44,6 +48,13 @@ public class BillingController {
     public ResponseEntity<List<BillingDto>> uploadExcelFile(@RequestPart("file") MultipartFile file){
         List<BillingDto> billingList = billingService.uploadDataExcel(file);
         return ResponseEntity.ok(billingList);
+    }
+
+    @PostMapping("/billing/map-billings")
+    @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
+    public ResponseEntity<List<Map<String, Object>>> billingMap(List<BillingDto> billingDtoList){
+        List<Map<String, Object>> billingMap = billingService.getBillingInvoiceDataByExcelUploaded(billingDtoList);
+        return ResponseEntity.ok(billingMap);
     }
 
 
@@ -54,6 +65,13 @@ public class BillingController {
         return ResponseEntity.ok(billingDtoList);
     }
 
+    @PostMapping("/billing/sorted-employees-invoices")
+    @PreAuthorize("hasAuthority('READ_BILLING')")
+    public ResponseEntity<List<Map<String, Object>>> getAllBillings(@RequestBody List<BillingDto> billingDtoList){
+        List<Map<String, Object>> billingMap = billingService.getBillingInvoiceDataByExcelUploaded(billingDtoList);
+        return ResponseEntity.ok(billingMap);
+    }
+
 //    @GetMapping("/billings")
 //    @PreAuthorize("hasAuthority('READ_BILLING')")
 //    public ResponseEntity<Map<Long, List<BillingDto>>> getAllBillingsGroupedByInvoice(@RequestParam(value = "status") Boolean status) {
@@ -61,35 +79,71 @@ public class BillingController {
 //        return ResponseEntity.ok(billingGroupedByInvoice);
 //    }
 
-    @GetMapping("/download-billing-xl")
-    public void downloadAccountsBetweenDates(HttpServletResponse response) throws IOException {
+    @PostMapping("/download-billing-xl")
+    public void downloadBillingExcel(@RequestBody List<BillingDto> billingDtoList,HttpServletResponse response) throws IOException {
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=accounts.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=billingExcel.xlsx");
 
         // Get the OutputStream from the response
         OutputStream outputStream = response.getOutputStream();
 
         // Generate the billing report Excel data
-        ByteArrayOutputStream excelData = excelGenerationService.generateBillingReport();
+//        ByteArrayOutputStream excelData = excelGenerationService.generateBillingReport(billingDtoList);
 
         // Write the generated Excel data to the response OutputStream
-        excelData.writeTo(outputStream);
+//        excelData.writeTo(outputStream);
 
         // Close the OutputStream
         outputStream.close();
     }
 
 
-    @GetMapping("/download-billing")
-    public ResponseEntity<byte[]> generateEmployeePdf() {
-        // Generate PDF
-        byte[] pdfBytes = pdfGenerationService.generateBillingPdf();
+//    @PostMapping("/download-billing")
+//    public ResponseEntity<List<byte[]>> generateEmployeePdf(@RequestBody List<BillingDto> billingDtoList) {
+//        // Generate PDF
+//        List<byte[]> pdfBytes = pdfGenerationService.generateBillingPdf(billingDtoList);
+//
+//        // Set response headers
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_PDF);
+//        headers.setContentDispositionFormData("inline", "Billing.pdf");
+//        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+//    }
 
-        // Set response headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("inline", "EmployeeDetails.pdf");
-        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-    }
+//    @PostMapping("/download-billing")
+//    public ResponseEntity<byte[]> generateBillingZip(@RequestBody List<BillingDto> billingDtoList) {
+//        // Generate PDFs
+//        List<byte[]> pdfBytesList = pdfGenerationService.generateBillingPdf(billingDtoList);
+//
+//        // Create a zip file containing all PDFs
+//        byte[] zipBytes = createZipFile(pdfBytesList);
+//
+//        // Set response headers
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        headers.setContentDispositionFormData("attachment", "Billing.zip");
+//        headers.setContentLength(zipBytes.length);
+//
+//        return new ResponseEntity<>(zipBytes, headers, HttpStatus.OK);
+//    }
+//
+//    private byte[] createZipFile(List<byte[]> pdfBytesList) {
+//        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//             ZipOutputStream zos = new ZipOutputStream(baos)) {
+//
+//            for (int i = 0; i < pdfBytesList.size(); i++) {
+//                byte[] pdfBytes = pdfBytesList.get(i);
+//                ZipEntry zipEntry = new ZipEntry("Billing_" + (i + 1) + ".pdf");
+//                zos.putNextEntry(zipEntry);
+//                zos.write(pdfBytes);
+//                zos.closeEntry();
+//            }
+//
+//            zos.finish();
+//            return baos.toByteArray();
+//        } catch (IOException e) {
+//            throw new RuntimeException("Error creating zip file", e);
+//        }
+//    }
 }

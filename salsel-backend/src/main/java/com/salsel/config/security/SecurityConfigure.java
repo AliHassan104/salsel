@@ -44,6 +44,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/download-ticket-excel",
             "/api/download-account-excel",
             "/api/awb/awb-status/scan-report",
+            "/api/download-billing",
             "/api/reset-code-check",
             "/api/awb/status-report/{status}",
             "/api/awb/transit-status-report"

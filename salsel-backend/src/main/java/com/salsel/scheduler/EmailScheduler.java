@@ -1,7 +1,11 @@
 package com.salsel.scheduler;
 
+import com.salsel.dto.BillingDto;
+import com.salsel.model.Billing;
 import com.salsel.model.Ticket;
+import com.salsel.repository.BillingRepository;
 import com.salsel.repository.TicketRepository;
+import com.salsel.service.impl.BillingServiceImpl;
 import com.salsel.utils.EmailUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,16 +13,22 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class EmailScheduler {
     private final EmailUtils emailUtils;
     private final TicketRepository ticketRepository;
+    private final BillingRepository billingRepository;
+    private final BillingServiceImpl billingService;
 
-    public EmailScheduler(EmailUtils emailUtils, TicketRepository ticketRepository) {
+    public EmailScheduler(EmailUtils emailUtils, TicketRepository ticketRepository, BillingRepository billingRepository, BillingServiceImpl billingService) {
         this.emailUtils = emailUtils;
         this.ticketRepository = ticketRepository;
+        this.billingRepository = billingRepository;
+        this.billingService = billingService;
     }
 
     @Scheduled(cron = "0 5 0 * * ?") // Execute every day at 12:05 AM
@@ -60,9 +70,15 @@ public class EmailScheduler {
 
     @Scheduled(cron = "0 38 19 * * ?") // Execute every day at 4:40 PM
     public void sendEmailForBillingReport() {
+        List<Billing> billings = billingRepository.findAllInDesOrderByIdAndStatus(true);
+        List<BillingDto> billingDtoList = new ArrayList<>();
+        for(Billing billing : billings){
+            BillingDto billingDto = billingService.toDto(billing);
+            billingDtoList.add(billingDto);
+        }
             String toAddress = "usmanaslamm138@gmail.com";
             String[] ccAddresses = {"usmankhann13777@maildrop.cc"};
-        emailUtils.sendBillingEmail(toAddress, ccAddresses);
+        emailUtils.sendBillingEmail(toAddress, ccAddresses, billingDtoList);
 
         System.out.println("Daily email report sent for Billing");
     }

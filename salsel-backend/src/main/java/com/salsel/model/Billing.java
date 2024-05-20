@@ -27,9 +27,11 @@ public class Billing {
     private LocalDate invoiceDate;
 
     private Long customerAccountNumber;
-    private Long transactionNumber;
     private Long airwayBillNo;
-    private Long invoiceNo;
+
+    @Column(unique = true)
+    private String invoiceNo;
+
     private String address;
     private String country;
     private String city;

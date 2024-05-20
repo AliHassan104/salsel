@@ -92,7 +92,7 @@ public class ExcelUtils {
                     LocalDate localDate = invoiceDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     billing.setInvoiceDate(localDate);
 
-                    billing.setTransactionNumber((long) row.getCell(2).getNumericCellValue());
+                    billing.setAirwayBillNo((long) row.getCell(2).getNumericCellValue());
                     billing.setCustomerRef((long) (row.getCell(3).getNumericCellValue()));
                     billing.setProduct(row.getCell(4).getStringCellValue());
                     billing.setServiceDetails(row.getCell(5).getStringCellValue());

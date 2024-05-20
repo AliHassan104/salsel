@@ -34,10 +34,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final BucketService bucketService;
     private final HelperUtils helperUtils;
     private final BCryptPasswordEncoder encoder;
-    private final EmailUtils emailUtils;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, UserRepository userRepository, RoleRepository roleRepository, CountryRepository countryRepository, EmployeeAttachmentRepository employeeAttachmentRepository, BucketService bucketService, HelperUtils helperUtils, BCryptPasswordEncoder encoder, EmailUtils emailUtils) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, UserRepository userRepository, RoleRepository roleRepository, CountryRepository countryRepository, EmployeeAttachmentRepository employeeAttachmentRepository, BucketService bucketService, HelperUtils helperUtils, BCryptPasswordEncoder encoder) {
         this.employeeRepository = employeeRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -46,7 +45,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.bucketService = bucketService;
         this.helperUtils = helperUtils;
         this.encoder = encoder;
-        this.emailUtils = emailUtils;
     }
 
     @Override
