@@ -380,7 +380,9 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
             htmlContent.append("<tr style='font-size:14px'>");
             htmlContent.append("<td colspan='4'></td>"); // Empty column
             htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: right; padding: 4px;'>VAT/Tax:</td>");
-            htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: center; padding: 4px;'>").append(totalCharges * 0.05).append("</td>"); // Assuming 5% VAT/Tax
+            htmlContent.append("<td colspan='1' style='font-weight:bold; border: 1px solid #dddddd; text-align: center; padding: 4px;'>")
+                    .append(String.format("%.1f", totalCharges * 0.05))
+                    .append("</td>"); // Assuming 5% VAT/Tax
             htmlContent.append("</tr>");
 
             htmlContent.append("<tr style='font-size:14px'>");

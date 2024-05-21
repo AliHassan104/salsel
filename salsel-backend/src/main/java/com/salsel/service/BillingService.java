@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface BillingService {
-    List<BillingAttachment> save(List<BillingDto> billingDtoList);
+    List<BillingAttachment> save(MultipartFile file);
     List<BillingDto> uploadDataExcel(MultipartFile file);
     List<BillingDto> getAll(Boolean status);
 

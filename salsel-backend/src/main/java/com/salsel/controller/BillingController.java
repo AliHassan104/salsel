@@ -5,23 +5,16 @@ import com.salsel.model.BillingAttachment;
 import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/api")
@@ -40,8 +33,8 @@ public class BillingController {
 
     @PostMapping("/billing")
     @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
-    public ResponseEntity<List<BillingAttachment>> createBilling(@RequestBody List<BillingDto> billingDtoList){
-        return ResponseEntity.ok(billingService.save(billingDtoList));
+    public ResponseEntity<List<BillingAttachment>> createBilling(@RequestBody MultipartFile file){
+        return ResponseEntity.ok(billingService.save(file));
     }
 
     @PostMapping("/upload-excel")

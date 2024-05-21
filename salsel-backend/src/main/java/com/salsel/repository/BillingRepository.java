@@ -28,4 +28,6 @@ public interface BillingRepository extends JpaRepository<Billing,Long> {
 
     @Query("SELECT b FROM Billing b WHERE b.id = (SELECT MAX(e.id) FROM Billing e)")
     Optional<Billing> findBillingByLatestId();
+
+
 }

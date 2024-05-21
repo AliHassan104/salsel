@@ -5,9 +5,11 @@ import com.salsel.dto.BillingDto;
 import com.salsel.exception.BillingException;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Account;
+import com.salsel.model.Awb;
 import com.salsel.model.Billing;
 import com.salsel.model.BillingAttachment;
 import com.salsel.repository.AccountRepository;
+import com.salsel.repository.AwbRepository;
 import com.salsel.repository.BillingAttachmentRepository;
 import com.salsel.repository.BillingRepository;
 import com.salsel.service.BillingService;
@@ -34,14 +36,16 @@ public class BillingServiceImpl implements BillingService {
 
     private final BillingRepository billingRepository;
     private final AccountRepository accountRepository;
+    private final AwbRepository awbRepository;
     private final BillingAttachmentRepository billingAttachmentRepository;
     private final HelperUtils helperUtils;
     private final PdfGenerationService pdfGenerationService;
     private final ExcelGenerationService excelGenerationService;
 
-    public BillingServiceImpl(BillingRepository billingRepository, AccountRepository accountRepository, BillingAttachmentRepository billingAttachmentRepository, HelperUtils helperUtils, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
+    public BillingServiceImpl(BillingRepository billingRepository, AccountRepository accountRepository, AwbRepository awbRepository, BillingAttachmentRepository billingAttachmentRepository, HelperUtils helperUtils, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
         this.billingRepository = billingRepository;
         this.accountRepository = accountRepository;
+        this.awbRepository = awbRepository;
         this.billingAttachmentRepository = billingAttachmentRepository;
         this.helperUtils = helperUtils;
         this.pdfGenerationService = pdfGenerationService;
@@ -50,13 +54,49 @@ public class BillingServiceImpl implements BillingService {
 
     @Override
     @Transactional
-    public List<BillingAttachment> save(List<BillingDto> billingDtoList) {
+    public List<BillingAttachment> save(MultipartFile file) {
+
+        List<BillingDto> billingDtoList = uploadDataExcel(file);
         List<Map<String, Object>> invoices = getBillingInvoiceDataByExcelUploaded(billingDtoList);
         Map<Long, List<byte[]>> invoicesPdf = pdfGenerationService.generateBillingPdf(invoices);
         Map<Long, List<ByteArrayOutputStream>> excelFiles = excelGenerationService.generateBillingReports(invoices);
 
-        List<BillingAttachment> billingAttachmentList = new ArrayList<>();
+        List<Billing> billingEntities = new ArrayList<>();
+        for (Map<String, Object> bill : invoices) {
+            Account account = accountRepository.findByAccountNumber((Long) bill.get(ACCOUNT_NUMBER));
+            if (account == null) {
+                throw new RecordNotFoundException("Account not found at this account number: " + (Long) bill.get(ACCOUNT_NUMBER));
+            }
 
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> invoiceDetails = (List<Map<String, Object>>) bill.get(INVOICES);
+            for (Map<String, Object> invoiceDetail : invoiceDetails) {
+                Billing billing = Billing.builder()
+                        .airwayBillNo((Long) invoiceDetail.get(AIRWAY_NO))
+                        .customerAccountNumber((Long) bill.get(ACCOUNT_NUMBER))
+                        .customerRef((String) invoiceDetail.get(CUSTOMER_REF))
+                        .address((String) bill.get(ADDRESS))
+                        .invoiceDate((LocalDate) bill.get(INVOICE_DATE))
+                        .invoiceNo((String) bill.get(INVOICE_NO))
+                        .product(invoiceDetail.get(PRODUCT).toString())
+                        .serviceDetails(invoiceDetail.get(SERVICE_DETAILS).toString())
+                        .charges((Double) invoiceDetail.get(CHARGES))
+                        .taxNo((String) bill.get(TAX_NO))
+                        .taxInvoiceTo((String) bill.get(TAX_INVOICE_NO))
+                        .city(account.getCity())
+                        .country(account.getCounty())
+                        .status(true)
+                        .build();
+
+                billingEntities.add(billing);
+            }
+        }
+
+        billingRepository.saveAll(billingEntities);
+
+        List<Billing> savedBillingList = billingRepository.saveAll(billingEntities);
+
+        List<BillingAttachment> billingAttachmentList = new ArrayList<>();
         if (invoicesPdf != null && !invoicesPdf.isEmpty()) {
             for (Map.Entry<Long, List<byte[]>> pdfEntry : invoicesPdf.entrySet()) {
                 Long accountNumber = pdfEntry.getKey();
@@ -114,8 +154,7 @@ public class BillingServiceImpl implements BillingService {
 
         List<Billing> billingList = ExcelUtils.processExcelFile(file);
         if(!billingList.isEmpty()){
-            List<Billing> savedBillingList = billingRepository.saveAll(billingList);
-            return savedBillingList.stream()
+            return billingList.stream()
                     .map(this::toDto)
                     .collect(Collectors.toList());
         }else{
@@ -223,6 +262,7 @@ public class BillingServiceImpl implements BillingService {
     public List<Map<String, Object>> getBillingInvoiceDataByExcelUploaded(List<BillingDto> billingDtoList) {
         String invoiceNo = null;
         List<Map<String, Object>> result = new ArrayList<>();
+        Set<Long> processedAirwayBillNos = new HashSet<>();
 
         // Extract unique account numbers
         Set<Long> accountNumbers = billingDtoList.stream()
@@ -262,6 +302,15 @@ public class BillingServiceImpl implements BillingService {
             for (BillingDto billingDto : billingDtoList) {
                 if (accountNumber.equals(billingDto.getCustomerAccountNumber())) {
                     Map<String, Object> billingMap = new LinkedHashMap<>();
+                    Long airwayBillNo = billingDto.getAirwayBillNo();
+
+                    if (airwayBillNo != null && !processedAirwayBillNos.add(airwayBillNo)) {
+                        throw new RecordNotFoundException("Duplicate airway bill number found: " + airwayBillNo);
+                    }
+
+                    Awb awb = awbRepository.findByUniqueNumber(billingDto.getAirwayBillNo())
+                            .orElseThrow(() -> new RecordNotFoundException("Awb not exist in the system: " + billingDto.getAirwayBillNo()));
+
                     billingMap.put(AIRWAY_NO, billingDto.getAirwayBillNo());
                     billingMap.put(CUSTOMER_REF, billingDto.getCustomerRef());
                     billingMap.put(PRODUCT, billingDto.getProduct());

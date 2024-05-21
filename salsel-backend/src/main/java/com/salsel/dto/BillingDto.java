@@ -22,10 +22,10 @@ public class BillingDto {
     private String address;
     private String country;
     private String city;
-    private Long taxNo;
+    private String taxNo;
     private String taxInvoiceTo;
     private String invoiceType;
-    private Long customerRef;
+    private String customerRef;
     private String product;
     private String serviceDetails;
     private Double charges;

@@ -76,7 +76,9 @@ public class ExcelUtils {
     }
 
     public static List<Billing> processExcelFile(MultipartFile multipartFile) {
+        String invoiceNo = null;
         List<Billing> billingList = new ArrayList<>();
+        DataFormatter dataFormatter = new DataFormatter();
 
         try (Workbook workbook = WorkbookFactory.create(multipartFile.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0); // Assuming data starts from the second row
@@ -93,7 +95,8 @@ public class ExcelUtils {
                     billing.setInvoiceDate(localDate);
 
                     billing.setAirwayBillNo((long) row.getCell(2).getNumericCellValue());
-                    billing.setCustomerRef((long) (row.getCell(3).getNumericCellValue()));
+                    String customerRef = dataFormatter.formatCellValue(row.getCell(3));
+                    billing.setCustomerRef(customerRef);
                     billing.setProduct(row.getCell(4).getStringCellValue());
                     billing.setServiceDetails(row.getCell(5).getStringCellValue());
                     billing.setCharges(row.getCell(6).getNumericCellValue());
