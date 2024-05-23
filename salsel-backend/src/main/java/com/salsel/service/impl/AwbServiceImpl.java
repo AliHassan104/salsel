@@ -489,6 +489,46 @@ public class AwbServiceImpl implements AwbService {
     }
 
     @Override
+    public List<AwbDto> getAwbListByAwbNumbers(List<Long> awbNumbers) {
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        boolean isAdminOrCustomerServiceAgent = "ROLE_ADMIN".equals(loggedInUserRole) || "ROLE_CUSTOMER_SERVICE_AGENT".equals(loggedInUserRole);
+
+        if(isAdminOrCustomerServiceAgent){
+            return awbNumbers.stream()
+                    .map(awbNumber -> awbRepository.findByUniqueNumber(awbNumber)
+                            .orElseThrow(() -> new RecordNotFoundException(
+                                    String.format("AWB not found for awbNumber => %d", awbNumber))))
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }else{
+            return awbNumbers.stream()
+                    .flatMap(awbNumber -> awbRepository.findAllByUniqueNumberAndLoggedInUser(awbNumber, loggedInUserEmail, loggedInUserRole)
+                            .stream())
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Override
+    public List<AwbDto> getAllAwbListByCreatedBy() {
+        String loggedInUserEmail = getLoggedInUserEmail();
+        String loggedInUserRole = getLoggedInUserRole();
+
+        boolean isAdminOrCustomerServiceAgent = "ROLE_ADMIN".equals(loggedInUserRole) || "ROLE_CUSTOMER_SERVICE_AGENT".equals(loggedInUserRole);
+
+        if(isAdminOrCustomerServiceAgent){
+            return getAll(true);
+        }else{
+            return awbRepository.findAllByLoggedInUser(loggedInUserEmail,loggedInUserRole)
+                    .stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Override
     public Map<String, Long> getAwbStatusCounts() {
         Map<String, Long> statusCounts = new HashMap<>();
 

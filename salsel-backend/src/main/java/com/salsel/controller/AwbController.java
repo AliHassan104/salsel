@@ -178,15 +178,24 @@ public class AwbController {
     }
 
     @GetMapping("/download-awb-excel")
-    public void downloadAwbBetweenDates(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+    public void downloadAwbExcel(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) List<Long> awbNumbers,
+            @RequestParam(required = false) Boolean all,
             HttpServletResponse response) throws IOException {
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=airbills.xlsx");
 
-        List<AwbDto> awbDtoList = awbService.getAwbBetweenDates(startDate, endDate);
+        List<AwbDto> awbDtoList = null;
+        if(startDate != null && endDate != null){
+            awbDtoList = awbService.getAwbBetweenDates(startDate, endDate);
+        } else if (awbNumbers != null) {
+            awbDtoList = awbService.getAwbListByAwbNumbers(awbNumbers);
+        } else if (all) {
+            awbDtoList = awbService.getAllAwbListByCreatedBy();
+        }
         List<Map<String, Object>> excelData = excelGenerationService.convertAirBillsToExcelData(awbDtoList);
 
         OutputStream outputStream = response.getOutputStream();

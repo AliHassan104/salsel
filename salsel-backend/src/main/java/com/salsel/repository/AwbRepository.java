@@ -75,6 +75,11 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
     List<Awb> findAllByCreatedAtBetweenAndLoggedInUser(@Param("startDate") LocalDateTime startDate,
                                                           @Param("endDate") LocalDateTime endDate, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo);
 
+    @Query("SELECT a FROM Awb a WHERE (a.assignedTo = :assignedTo OR a.createdBy = :createdBy) AND (a.uniqueNumber = :uniqueNumber) ORDER BY a.id DESC")
+    List<Awb> findAllByUniqueNumberAndLoggedInUser(@Param("uniqueNumber") Long uniqueNumber, @Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo);
+
+    @Query("SELECT a FROM Awb a WHERE (a.assignedTo = :assignedTo OR a.createdBy = :createdBy) ORDER BY a.id DESC")
+    List<Awb> findAllByLoggedInUser(@Param("createdBy") String createdBy, @Param("assignedTo") String assignedTo);
 
     @Query("SELECT COUNT(*) FROM Awb a\n" +
             "WHERE a.status = :status\n" +
