@@ -37,13 +37,14 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
   scanOptions;
   trackingNumber;
   updatedStatuses: any = {};
+  trackingNumbers = [];
 
   constructor(
     private messageService: MessageService,
     private dropdownService: DropdownService,
     public sessionStorageService: SessionStorageService,
     private awbService: AirbillService,
-    private billingService : BillingService
+    private billingService: BillingService
   ) {
     onScan.attachTo(document, {
       onScan: (sScanned, iQty) => {
@@ -76,7 +77,6 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
     if (this.updatedStatuses.hasOwnProperty(uniqueNumber)) {
       // Property exists, so update it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
-
     } else {
       // Property does not exist, so add it
       this.updatedStatuses[uniqueNumber] = updatedStatus;
@@ -139,13 +139,12 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
   }
 
   downloadScanReport(data: any): Observable<any> {
-  return this.awbService.getMultipleAwbScanReport(data).pipe(
-    map((Res: any) => {
-      this.awbService.downloadExcelFile(Res, "MultipleScanReport.xlsx");
-    })
-  );
-}
-
+    return this.awbService.getMultipleAwbScanReport(data).pipe(
+      map((Res: any) => {
+        this.awbService.downloadExcelFile(Res, "MultipleScanReport.xlsx");
+      })
+    );
+  }
 
   beep() {
     this.beepSound?.nativeElement?.play();
@@ -184,49 +183,63 @@ export class MultipleScanComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTrackTrackingNumber(value: any) {
-    this.trackingNumber = value;
-    if (this.trackingNumber != "") {
-      const existingItem = this.airBills.find(
-        (item) => item?.uniqueNumber === parseInt(this.trackingNumber)
-      );
+  onTrackTrackingNumber(inputValue: string): void {
+    if (inputValue) {
+      const values = inputValue
+        .split(/[\n\s,]+/)
+        .map((value) => value.trim())
+        .filter((value) => value)
+        .map((value) => {
+          const num = Number(value);
+          return isNaN(num) ? null : num;
+        })
+        .filter((value) => value !== null);
 
-      if (!existingItem) {
-        this.awbService
-          .getSingleBillByUniqueNumber(this.trackingNumber)
-          .subscribe(
-            (res: any) => {
-              this.airBills.push(res);
+      this.trackingNumbers = values;
 
-              if (this.airBills.length > 1) {
-                this.airBills.forEach((awb: any) => {
-                  this.onStatusChange(this.selectedStatus, awb.uniqueNumber);
+      this.awbService.getBillTrackingNumbers(this.trackingNumbers).subscribe(
+        (res: any[]) => {
+          if (res != null && res.length > 0) {
+            res.forEach((awb: any) => {
+              // Check if the AWB already exists in the list
+              const exists = this.airBills.some(
+                (existingAwb) => existingAwb.id === awb.id
+              );
+              if (!exists) {
+                this.airBills.push(awb);
+                this.trackingField.nativeElement.value = "";
+              } else {
+                this.messageService.add({
+                  severity: "warn",
+                  summary: "Warning",
+                  detail: "Tracking number already exists",
                 });
+                this.trackingField.nativeElement.value = "";
               }
-              this.trackingField.nativeElement.value = "";
-            },
-            (error) => {
-              this.messageService.add({
-                severity: "error",
-                summary: "Error",
-                detail: error?.error?.error,
-              });
-            }
-          );
-      } else {
-        // If the tracking number already exists, show a message
+            });
+          } else {
+            this.messageService.add({
+              severity: "warn",
+              summary: "Error",
+              detail: "No Airbill Found For this tracking Number",
+            });
+            this.trackingField.nativeElement.value = "";
+          } 
+        },
+        (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: error?.error?.error,
+          });
+        }
+      );
+    }else{
         this.messageService.add({
-          severity: "warn",
-          summary: "Warning",
-          detail: "Tracking number already exists",
+          severity: "error",
+          summary: "Error",
+          detail: "Please insert a tracking number",
         });
-      }
-    } else {
-      this.messageService.add({
-        severity: "error",
-        summary: "Error",
-        detail: "Please insert a tracking number",
-      });
     }
   }
 

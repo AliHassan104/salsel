@@ -132,4 +132,10 @@ public class AccountController {
         return ResponseEntity.ok(statusCounts);
     }
 
+    @GetMapping("/account-numbers")
+    public ResponseEntity<List<Long>> getAccountNumbersByStatus(@RequestParam(value = "status") Boolean status) {
+        List<Long> accountNumbers = accountService.getAccountNumbersByStatus(status);
+        return ResponseEntity.ok(accountNumbers);
+    }
+
 }

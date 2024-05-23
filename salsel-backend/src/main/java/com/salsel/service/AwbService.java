@@ -2,6 +2,7 @@ package com.salsel.service;
 
 
 import com.salsel.dto.AwbDto;
+import com.salsel.dto.AwbShippingHistoryDto;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,4 +38,6 @@ public interface AwbService {
     AwbDto assignAwbToUser(Long userId, Long awbId);
     List<Map<String,Object>> getAwbByStatusChangedOnPreviousDay(String status);
     List<Map<String,Object>> getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
+
+     List<AwbDto> findAwbByTrackingNumbers(List<Long> awbIds);
 }

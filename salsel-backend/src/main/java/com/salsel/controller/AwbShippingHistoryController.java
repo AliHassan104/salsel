@@ -42,10 +42,17 @@ public class AwbShippingHistoryController {
         return ResponseEntity.ok(awbShippingHistoryDto);
     }
 
-    @GetMapping("/awb-shipping-history/multiple-awb")
+    @PostMapping("/awb-shipping-history/multiple-awb")
     @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
     public ResponseEntity <Map<Long, List<AwbShippingHistoryDto>>> getAwbShippingHistoryByMultipleAwb(@RequestBody List<Long> awbIds) {
         Map<Long, List<AwbShippingHistoryDto>> awbShippingHistoryDto = awbShippingHistoryService.findShippingByAwbIds(awbIds);
+        return ResponseEntity.ok(awbShippingHistoryDto);
+    }
+
+    @PostMapping("/awb-shipping-history/multiple-shipping")
+    @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
+    public ResponseEntity <List<AwbShippingHistoryDto>> getAwbTrackingHistoryByMultipleAwb(@RequestBody List<Long> awbIds) {
+        List<AwbShippingHistoryDto> awbShippingHistoryDto = awbShippingHistoryService.findTrackingByAwbIds(awbIds);
         return ResponseEntity.ok(awbShippingHistoryDto);
     }
 }

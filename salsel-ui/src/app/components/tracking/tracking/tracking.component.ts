@@ -3,6 +3,8 @@ import { MessageService } from "primeng/api";
 import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { AirbillService } from "../../awb/service/airbill.service";
+import { DatePipe } from "@angular/common";
+import { Table } from "primeng/table";
 
 declare var onScan: any;
 
@@ -10,34 +12,49 @@ declare var onScan: any;
   selector: "app-tracking",
   templateUrl: "./tracking.component.html",
   styleUrls: ["./tracking.component.scss"],
-  providers: [MessageService],
+  providers: [MessageService, DatePipe],
 })
 export class TrackingComponent {
   trackingNumber;
   trackingMode: boolean = false;
   uniqueScanNum;
+  trackingNumbers = [];
+  airBills = [];
 
   history: any[] = [];
   display: any;
   singleBill: any;
+  updatedStatuses: any = {};
+  selectedStatus;
   id;
 
+  loading: any;
+
+  @ViewChild("filter") filter!: ElementRef;
   @ViewChild("beepSound") beepSound: ElementRef<HTMLAudioElement>;
+  @ViewChild("trackingField") trackingField: ElementRef;
+  @ViewChild("singleTrackingField") singleTrackingField: ElementRef;
 
   constructor(
     private messageService: MessageService,
     private dropdownService: DropdownService,
     private _airbillService: AirbillService,
-    private formService: FormvalidationService
+    private formService: FormvalidationService,
+    private datePipe: DatePipe
   ) {
     onScan.attachTo(document, {
       onScan: (sScanned, iQty) => {
         console.log("Scanned:", iQty + "x " + sScanned);
         this.trackingNumber = sScanned;
         this.beep();
-        this.onGettingUniqueNum(sScanned);
+        this.getShippingLatestData(sScanned);
       },
     });
+  }
+
+  onClickTracking(trackingNumber: any) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    this.onGettingUniqueNum(trackingNumber);
   }
 
   getTrackingHistory(id: any) {
@@ -59,32 +76,96 @@ export class TrackingComponent {
     );
   }
 
-  beep(){
+  //   For table filtering purpose
+  onGlobalFilter(table: Table, event: any) {
+    table.filterGlobal((event.target as HTMLInputElement).value, "contains");
+  }
+
+  beep() {
     this.beepSound?.nativeElement?.play();
   }
 
   onGettingUniqueNum(uniqueNumber: any) {
     this.display = true;
-    this._airbillService.getSingleBillByUniqueNumber(uniqueNumber).subscribe(
-      (res: any) => {
+    this._airbillService
+      .getSingleBillByUniqueNumber(uniqueNumber)
+      .subscribe((res: any) => {
         this.singleBill = res;
         this.getTrackingHistory(res?.id);
-
-      },
-      (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error",
-          detail: error?.error?.error,
-        });
-      }
-    );
+      });
   }
 
-  onTrackTrackingNumber(value:any) {
-this.trackingNumber = value;
-    if (this.trackingNumber != "") {
-      this.onGettingUniqueNum(this.trackingNumber);
+  getShippingLatestData(multipleTracking: any) {
+    this.airBills = []
+    const values = multipleTracking
+      .split(/[\n\s,]+/)
+      .map((value) => value.trim())
+      .filter((value) => value)
+      .map((value) => {
+        const num = Number(value);
+        return isNaN(num) ? null : num;
+      })
+      .filter((value) => value !== null);
+
+    this.trackingNumbers = values;
+
+    this._airbillService
+      .getShippingByTrackingNumbers(this.trackingNumbers)
+      .subscribe(
+        (res: any[]) => {
+          if (res != null && res.length > 0) {
+            console.log(res);
+
+            res.forEach((awb: any) => {
+              // Check if the AWB already exists in the list
+              const exists = this.airBills.some(
+                (existingAwb) => existingAwb.id === awb.id
+              );
+              if (!exists) {
+                this.airBills.push(awb);
+                this.trackingField.nativeElement.value = "";
+              } else {
+                this.messageService.add({
+                  severity: "warn",
+                  summary: "Warning",
+                  detail: "Tracking number already exists",
+                });
+                this.trackingField.nativeElement.value = "";
+              }
+            });
+          } else {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: "No Airbill Found For this tracking Number",
+            });
+            this.trackingField.nativeElement.value = "";
+          }
+        },
+        (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: error?.error?.error,
+          });
+        }
+      );
+  }
+
+  onRemoveAll(){
+    this.airBills = [];
+  }
+
+  onTrackTrackingNumber(multipleTracking: any, singleTracking: any) {
+    if (multipleTracking) {
+      this.getShippingLatestData(multipleTracking);
+    } else if (singleTracking) {
+      this.trackingNumber = singleTracking;
+      if (this.trackingNumber != "") {
+        this.onGettingUniqueNum(this.trackingNumber);
+        this.getShippingLatestData(this.trackingNumber);
+        this.singleTrackingField.nativeElement.value = "";
+      }
     } else {
       this.messageService.add({
         severity: "error",

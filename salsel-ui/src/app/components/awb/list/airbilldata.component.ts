@@ -18,6 +18,8 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
 import { DatePipe } from "@angular/common";
 import { UserService } from "../../auth/usermanagement/service/user.service";
+import { AccountService } from "../../accounts/service/account.service";
+import { Dropdown } from "primeng/dropdown";
 
 @Component({
   selector: "app-airbilldata",
@@ -36,6 +38,7 @@ export class AirbilldataComponent implements OnInit {
   status?;
   selectedStatus: string = "Active";
   activeStatus: boolean = true;
+  accountNumbers: any;
 
   deleteProductsDialog: any;
   assignDialog: boolean = false;
@@ -52,7 +55,8 @@ export class AirbilldataComponent implements OnInit {
     private roleService: RolesService,
     private formService: FormvalidationService,
     private datePipe: DatePipe,
-    private userService: UserService
+    private userService: UserService,
+    private accountService: AccountService
   ) {}
 
   loading: any;
@@ -62,10 +66,13 @@ export class AirbilldataComponent implements OnInit {
   awbForm!: FormGroup;
   scanForm!: FormGroup;
 
+  @ViewChild("dropdown10") dropdown?: Dropdown;
+
   ngOnInit(): void {
     this.excelDataForm = new FormGroup({
       toDate: new FormControl(null, Validators.required),
       fromDate: new FormControl(null, Validators.required),
+      accountNumbers: new FormControl(null, Validators.required),
     });
     this.awbForm = new FormGroup({
       assignedTo: new FormControl(null, [Validators.required]),
@@ -77,12 +84,29 @@ export class AirbilldataComponent implements OnInit {
     this.getAllProductFields();
     this.getMinMax();
     this.getUsers();
+    this.getAllAccountNumbers();
   }
 
-  onShowModal(){
+  onShowModal() {
     this.awbForm.patchValue({
-        assignedTo : "ROLE_COURIER"
-    })
+      assignedTo: "ROLE_COURIER",
+    });
+  }
+
+  getAllAccountNumbers() {
+    this.accountService
+      .getAllAccountNumbers({ status: true })
+      .subscribe((res: any) => {
+        this.accountNumbers = res.body;
+        console.log(this.accountNumbers);
+
+        // this.preprocessedAccountNumbers = this.accountNumbers.map(
+        //   (account: any) => ({
+        //     label: `${account.accountNumber}, ${account.customerName}`,
+        //     value: account?.accountNumber,
+        //   })
+        // );
+      });
   }
 
   getMinMax() {

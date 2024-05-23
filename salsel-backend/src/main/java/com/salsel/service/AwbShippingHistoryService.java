@@ -15,4 +15,6 @@ public interface AwbShippingHistoryService {
 
     Map<Long, List<AwbShippingHistoryDto>> findShippingByAwbIds(List<Long> awbIds);
 
+    List<AwbShippingHistoryDto> findTrackingByAwbIds(List<Long> awbIds);
+
 }

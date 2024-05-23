@@ -11,7 +11,7 @@
             <hr>
             <p-table #dt1 [value]="bills" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
                 styleClass="p-datatable-gridlines" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]"
-                [globalFilterFields]="['shipperName','recipientsName','uniqueNumber','awbStatus','shipperContactNumber','recipientsContactNumber']"
+                [globalFilterFields]="['shipperName','recipientsName','uniqueNumber','awbStatus','shipperContactNumber','recipientsContactNumber','accountNumber']"
                 responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -48,6 +48,11 @@
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-center align-items-center">
                                 AWB Number
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Account Number
                             </div>
                         </th>
                         <th style="min-width: 12rem">
@@ -201,6 +206,9 @@
                         </td>
                         <td>
                             {{data?.uniqueNumber}}
+                        </td>
+                        <td>
+                            {{data?.accountNumber}}
                         </td>
                         <td>
                             {{data?.shipperName}}
@@ -369,6 +377,19 @@
                         [ngClass]="{'ng-dirty':excelDataForm.get('toDate')?.touched && excelDataForm.get('toDate')?.invalid}"></p-calendar>
                     <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
                         class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="accountNumber">Account Number</label>
+                    <p-dropdown #dropdown10 [options]="accountNumbers" appendTo="body" placeholder="Select Account Number"
+                        filter="true"></p-dropdown>
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="accountNumber">Account Number</label>
+                        <textarea #trackingField pInputTextarea type="number" cols="4" rows="5" class="w-full" formControlName="accountNumbers"
+                        [ngClass]="{'ng-dirty':awbForm.get('accountNumbers')?.touched && awbForm.get('accountNumbers')?.invalid}"></textarea>
+                    <small *ngIf="!awbForm.get('accountNumbers')?.valid && awbForm.get('accountNumbers')?.touched" class="text-red-500">
                         Required
                     </small>
                 </div>

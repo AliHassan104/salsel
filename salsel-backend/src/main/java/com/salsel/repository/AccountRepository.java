@@ -50,4 +50,7 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
             "  AND (a.email = :email)")
     Long countByStatusAndEmail(boolean status, String email);
 
+
+    @Query("SELECT a.accountNumber FROM Account a WHERE a.status = :status ORDER BY a.id DESC")
+    List<Long> findAccountNumbersByStatus(@Param("status") boolean status);
 }

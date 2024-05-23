@@ -57,6 +57,9 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
 
     Optional<Awb> findByUniqueNumber(Long uniqueNumber);
 
+    @Query("SELECT a FROM Awb a WHERE a.uniqueNumber = :uniqueNumber AND a.status = true")
+    Awb findByTrackingNumber(@Param("uniqueNumber") Long uniqueNumber);
+
     @Query("SELECT COUNT(a) FROM Awb a WHERE a.status = :status AND a.awbStatus = :awbStatus")
     Long countByStatusAndAwbStatus(@Param("status") boolean status, @Param("awbStatus") String awbStatus);
 

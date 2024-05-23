@@ -28,4 +28,7 @@ public interface AccountService {
 
     Map<String, Long> getStatusCountsBasedOnLoggedInUser();
 
+    List<Long> getAccountNumbersByStatus(Boolean status);
+
+
 }

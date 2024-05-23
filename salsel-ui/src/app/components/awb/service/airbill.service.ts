@@ -83,25 +83,33 @@ export class AirbillService {
     );
   }
 
-  updateMultipleAwbTrackingStatus(data:any) {
-    return this.http.put(
-      `${this.url}awb/awb-status/scan`,
-      data
-    );
+  updateMultipleAwbTrackingStatus(data: any) {
+    return this.http.put(`${this.url}awb/awb-status/scan`, data);
   }
 
-  getMultipleAwbScanReport(data:any){
+  getMultipleAwbScanReport(data: any) {
     return this.http.post<any>(`${this.url}awb/awb-status/scan-report`, data, {
       responseType: "blob" as "json",
     });
   }
 
-  assignedAirbillToUser(awbId:any,userId:any){
+  assignedAirbillToUser(awbId: any, userId: any) {
     return this.http.put(`${this.url}awb/${awbId}/user/${userId}`, {});
   }
 
   getBillTrackingHistory(params: any) {
     return this.http.get(`${this.url}awb-shipping-history`, { params });
+  }
+
+  getBillTrackingNumbers(data: any): Observable<any> {
+    return this.http.post<any>(`${this.url}awb/tracking-numbers`, data);
+  }
+
+  getShippingByTrackingNumbers(data: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.url}awb-shipping-history/multiple-shipping`,
+      data
+    );
   }
 
   downloadAwbDataInExcel(params: any) {

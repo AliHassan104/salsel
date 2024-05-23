@@ -289,6 +289,11 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Long> getAccountNumbersByStatus(Boolean status) {
+        return accountRepository.findAccountNumbersByStatus(status);
+    }
+
     public AccountDto toDto(Account account) {
         return AccountDto.builder()
                 .id(account.getId())
