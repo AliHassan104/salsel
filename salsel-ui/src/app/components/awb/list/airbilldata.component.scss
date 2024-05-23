@@ -56,3 +56,31 @@ span.tracking {
   margin-top: 8px;
   font-weight: 700;
 }
+
+*::ng-deep .p-inputtextarea{
+    resize: none !important;
+}
+
+*::ng-deep .p-inputtextarea:focus, *::ng-deep .p-inputtextarea:focus-visible{
+    box-shadow: none !important;
+    border-color: #93003c !important;
+}
+
+/* For WebKit browsers (e.g., Chrome, Safari) */
+textarea::-webkit-scrollbar {
+  width: 0px; /* Width of the entire scrollbar */
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the track */
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #93003c; /* Color of the thumb */
+  border-radius: 10px; /* Roundness of the thumb */
+  border: 2px solid #f1f1f1; /* Space around the thumb */
+}
+
+textarea:hover::-webkit-scrollbar{
+    width: 8px;
+}

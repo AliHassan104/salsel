@@ -1,9 +1,11 @@
 package com.salsel.service.impl;
 
+import com.salsel.dto.AwbDto;
 import com.salsel.dto.AwbShippingHistoryDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
 import com.salsel.model.AwbShippingHistory;
+import com.salsel.repository.AwbRepository;
 import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.service.AwbShippingHistoryService;
 import com.salsel.utils.HelperUtils;
@@ -19,9 +21,12 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
     private final AwbShippingHistoryRepository awbShippingHistoryRepository;
     private final HelperUtils helperUtils;
 
-    public AwbShippingHistoryServiceImpl(AwbShippingHistoryRepository awbShippingHistoryRepository, HelperUtils helperUtils) {
+    private final AwbRepository awbRepository;
+
+    public AwbShippingHistoryServiceImpl(AwbShippingHistoryRepository awbShippingHistoryRepository, HelperUtils helperUtils, AwbRepository awbRepository) {
         this.awbShippingHistoryRepository = awbShippingHistoryRepository;
         this.helperUtils = helperUtils;
+        this.awbRepository = awbRepository;
     }
 
     @Override
@@ -101,6 +106,50 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
 
         return shippingHistoryMap;
     }
+
+    @Override
+    public List<AwbShippingHistoryDto> findTrackingByAwbIds(List<Long> awbIds) {
+        List<AwbShippingHistoryDto> awbShippingHistoryDtoList = new ArrayList<>();
+        Set<Long> processedTrackingNumbers = new HashSet<>();
+
+        if (awbIds == null) {
+            throw new IllegalArgumentException("AWB IDs list cannot be null");
+        }
+
+        for (Long awbId : awbIds) {
+
+            Awb awb = awbRepository.findByTrackingNumber(awbId);
+          if(awb != null){
+    if (processedTrackingNumbers.contains(awbId)) {
+        continue;
+    }
+
+    List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findByAwbId(awb.getId());
+
+
+    if (awbShippingHistoryList != null && !awbShippingHistoryList.isEmpty()) {
+        // Find the AwbShippingHistory with the latest timestamp
+        AwbShippingHistory latestHistory = awbShippingHistoryList.stream()
+                .filter(Objects::nonNull)
+                .max(Comparator.comparing(AwbShippingHistory::getTimestamp))
+                .orElse(null);
+
+
+        if (latestHistory != null) {
+            AwbShippingHistoryDto awbShippingHistoryDto = toDto(latestHistory);
+            awbShippingHistoryDtoList.add(awbShippingHistoryDto);
+            processedTrackingNumbers.add(awbId);
+        }
+    }
+}
+
+
+        }
+
+        return awbShippingHistoryDtoList;
+    }
+
+
 
 
     public AwbShippingHistoryDto toDto(AwbShippingHistory awbShippingHistory) {

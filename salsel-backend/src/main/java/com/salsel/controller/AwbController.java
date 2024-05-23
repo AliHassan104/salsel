@@ -1,6 +1,7 @@
 package com.salsel.controller;
 
 import com.salsel.dto.AwbDto;
+import com.salsel.dto.AwbShippingHistoryDto;
 import com.salsel.service.AwbService;
 import com.salsel.service.ExcelGenerationService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -273,4 +274,12 @@ public class AwbController {
         excelGenerationService.createExcelFile(map, outputStream, TRANSIT);
         outputStream.close();
     }
+
+    @PostMapping("/awb/tracking-numbers")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity <List<AwbDto>> getAwbByTrackingNumbers(@RequestBody List<Long> trackingNumbers) {
+       List<AwbDto> awbDtoList = awbService.findAwbByTrackingNumbers(trackingNumbers);
+        return ResponseEntity.ok(awbDtoList);
+    }
+
 }

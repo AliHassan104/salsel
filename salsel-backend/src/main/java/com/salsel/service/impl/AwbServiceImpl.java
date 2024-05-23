@@ -483,6 +483,8 @@ public class AwbServiceImpl implements AwbService {
                     .stream()
                     .map(this::toDto)
                     .collect(Collectors.toList());
+
+
         }
     }
 
@@ -680,6 +682,29 @@ public class AwbServiceImpl implements AwbService {
         }
 
         return result;
+    }
+
+    @Override
+    public List<AwbDto> findAwbByTrackingNumbers(List<Long> trackingNumbers) {
+        List<AwbDto> awbDtoList = new ArrayList<>();
+        Set<Long> processedTrackingNumbers = new HashSet<>();
+
+        for (Long trackingNumber : trackingNumbers) {
+            // Check if the tracking number has already been processed
+            if (processedTrackingNumbers.contains(trackingNumber)) {
+                continue;
+            }
+
+            Awb awb = awbRepository.findByTrackingNumber(trackingNumber);
+
+            if (awb != null) {
+                AwbDto awbDto = toDto(awb);
+                awbDtoList.add(awbDto);
+                processedTrackingNumbers.add(trackingNumber);
+            }
+        }
+
+        return awbDtoList;
     }
 
     public AwbDto toDto(Awb awb) {
