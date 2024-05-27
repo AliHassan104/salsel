@@ -33,4 +33,5 @@ public class BillingDto {
     private String billingStatus;
     private Double vatTax;
     private Double taxAmount;
+    private Boolean isEmailSend;
 }

@@ -215,6 +215,10 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     public Map<Long, List<ByteArrayOutputStream>> generateBillingReports(List<Map<String, Object>> billingDataMaps) {
         Map<Long, List<ByteArrayOutputStream>> accountInvoicesMap = new LinkedHashMap<>();
 
+        if(billingDataMaps == null){
+            throw new RecordNotFoundException("Records not found for invoices.");
+        }
+
         for (Map<String, Object> billingDataMap : billingDataMaps) {
             Long accountNumber = (Long) billingDataMap.get(ACCOUNT_NUMBER);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

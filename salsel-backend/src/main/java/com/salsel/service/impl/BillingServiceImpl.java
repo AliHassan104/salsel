@@ -86,13 +86,12 @@ public class BillingServiceImpl implements BillingService {
                         .city(account.getCity())
                         .country(account.getCounty())
                         .status(true)
+                        .isEmailSend(false)
                         .build();
 
                 billingEntities.add(billing);
             }
         }
-
-        billingRepository.saveAll(billingEntities);
 
         List<Billing> savedBillingList = billingRepository.saveAll(billingEntities);
 
@@ -375,6 +374,7 @@ public class BillingServiceImpl implements BillingService {
                 .billingStatus(billing.getBillingStatus())
                 .vatTax(billing.getVatTax())
                 .taxAmount(billing.getTaxAmount())
+                .isEmailSend(billing.getIsEmailSend())
                 .build();
     }
 
@@ -399,6 +399,7 @@ public class BillingServiceImpl implements BillingService {
                 .billingStatus(billingDto.getBillingStatus())
                 .vatTax(billingDto.getVatTax())
                 .taxAmount(billingDto.getTaxAmount())
+                .isEmailSend(billingDto.getIsEmailSend())
                 .build();
     }
 }

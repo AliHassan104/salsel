@@ -2,12 +2,12 @@ package com.salsel.utils;
 
 import com.salsel.dto.BillingDto;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Account;
 import com.salsel.model.Awb;
-import com.salsel.model.Billing;
 import com.salsel.model.Ticket;
 import com.salsel.model.User;
+import com.salsel.repository.AccountRepository;
 import com.salsel.repository.AwbRepository;
-import com.salsel.service.AwbService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,26 +24,27 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.salsel.constants.AwbStatusConstants.DELIVERED;
 import static com.salsel.constants.AwbStatusConstants.PICKED_UP;
+import static com.salsel.constants.BillingConstants.ACCOUNT_NUMBER;
 
 @Component
 public class EmailUtils {
     private final JavaMailSender javaMailSender;
     private final AwbRepository awbRepository;
-    private final AwbService awbService;
     private final ExcelGenerationService excelGenerationService;
-
+    private final AccountRepository accountRepository;
     private final PdfGenerationService pdfGenerationService;
 
 
-    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, AwbService awbService, ExcelGenerationService excelGenerationService, PdfGenerationService pdfGenerationService) {
+    public EmailUtils(JavaMailSender javaMailSender, AwbRepository awbRepository, ExcelGenerationService excelGenerationService, AccountRepository accountRepository, PdfGenerationService pdfGenerationService) {
         this.javaMailSender = javaMailSender;
         this.awbRepository = awbRepository;
-        this.awbService = awbService;
         this.excelGenerationService = excelGenerationService;
+        this.accountRepository = accountRepository;
         this.pdfGenerationService = pdfGenerationService;
     }
 
@@ -187,72 +188,33 @@ public class EmailUtils {
     }
 
     @Async
-    public void sendBillingEmail(String toAddress, String[] ccAddresses, List<BillingDto> billings) {
+    public void sendBillingEmailWithAttachments(String toAddress, byte[] pdf, byte[] excel){
         try {
-            // Get the date
-            LocalDate currentDate = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-            String formattedDate = currentDate.format(formatter);
+            // Create the email message
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            // Generate the Excel report for billing
-//            ByteArrayOutputStream billingReport = excelGenerationService.generateBillingReport();
-//
-////            Generate PDF
-//            List<byte[]> pdfBillingReport = pdfGenerationService.generateBillingPdf(billings);
-//
-//            // Create the email message
-//            MimeMessage message = javaMailSender.createMimeMessage();
-//            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-//
-//            helper.setFrom(sender);
-//            helper.setTo(toAddress);
-//            if (ccAddresses != null && ccAddresses.length > 0) {
-//                helper.setCc(ccAddresses);
-//            }
-//            helper.setSubject("Daily Billing Report");
-//
-//            // Set the email body with the formatted date
-//            String emailBody = "Gents,\n"
-//                    + "Please find attached Daily Billing Report for Date: " + formattedDate + "\n\n"
-//                    + "Salassil System Alert\n"
-//                    + "Salassilexpress.com";
-//            helper.setText(emailBody);
+            helper.setFrom(sender);
+            helper.setTo(toAddress);
+            helper.setSubject("Salassil Billing Report");
 
-//            // Create a ByteArrayResource from the billing report byte array
-//            ByteArrayResource billingReportResource = new ByteArrayResource(billingReport.toByteArray());
-//            ByteArrayResource pdfBillingReportResource = new ByteArrayResource(pdfBillingReport);
-//
-//            // Attach the billing report using ByteArrayResource
-//            helper.addAttachment("BillingReport.xlsx", billingReportResource);
-//            helper.addAttachment("BillingReport.pdf", pdfBillingReportResource);
-//
-//            // Send the email
-////            javaMailSender.send(message);
+            // Set the email body with the formatted date
+            String emailBody = "Gents,\n"
+                    + "Please find attached Billing Report.\n\n"
+                    + "Salassil System Alert\n"
+                    + "Salassilexpress.com";
+            helper.setText(emailBody);
+
+            // Attach the billing report using ByteArrayResource
+            helper.addAttachment("BillingReport.xlsx", new ByteArrayResource(excel));
+            helper.addAttachment("BillingReport.pdf", new ByteArrayResource(pdf));
+
+            // Send the email
+            javaMailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
-
-
-//    @Transactional
-//    @Scheduled(fixedRate = 300000) // 5 minutes in milliseconds
-//    public void sendScheduledEmail() {
-//        List<Awb> awbList = awbRepository.findAllWhereStatusIsTrueAndEmailFlagIsFalse();
-//
-//        for (Awb awb : awbList) {
-//            if (!awb.getEmailFlag()) {
-//                byte[] pdf = awbService.downloadAwbPdf("awb_" + awb.getId() + ".pdf", awb.getId());
-//
-//                // Send email
-////                sendEmail(sender, "muhammadtabish05@gmail.com", awb.getId(), pdf);
-//
-//                // Set the flag to true after sending the email
-//                awb.setEmailFlag(true);
-//                awbRepository.save(awb);
-//            }
-//        }
-//    }
 
     @Async
     public void sendPasswordResetEmail(User user, String resetCode) {

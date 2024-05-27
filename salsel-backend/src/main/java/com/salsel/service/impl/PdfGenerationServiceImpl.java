@@ -326,6 +326,10 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
     public Map<Long,List<byte[]>> generateBillingPdf(List<Map<String, Object>> billingMaps) {
         Map<Long, List<byte[]>> accountInvoicesMap = new HashMap<>();
 
+        if(billingMaps == null){
+            throw new RecordNotFoundException("Records not found for invoices.");
+        }
+
         for (Map<String, Object> billingMap : billingMaps) {
             Long accountNumber = (Long) billingMap.get("Account Number");
 

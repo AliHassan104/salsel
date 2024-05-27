@@ -3,9 +3,11 @@ package com.salsel.utils;
 import com.amazonaws.services.s3.AmazonS3;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Billing;
 import com.salsel.model.Employee;
 import com.salsel.model.Otp;
 import com.salsel.model.User;
+import com.salsel.repository.BillingRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.BucketService;
 import com.salsel.service.impl.bucketServiceImpl;
@@ -13,13 +15,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,7 +25,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import static com.salsel.service.impl.bucketServiceImpl.EMPLOYEE;
@@ -37,6 +33,7 @@ import static com.salsel.service.impl.bucketServiceImpl.EMPLOYEE;
 public class HelperUtils {
     private AmazonS3 s3Client;
     private BucketService bucketService;
+    private BillingRepository billingRepository;
 
     @Value("${application.bucket.name}")
     String bucketName;
@@ -237,6 +234,29 @@ public class HelperUtils {
         }
     }
 
+    public byte[] downloadAttachment(String url) {
+        String[] parts = url.split("/");
+        String folderName = parts[1];
+        String folderType = parts[0];
+        String fileName = parts[2];
+        return bucketService.downloadFile(folderName, fileName, folderType);
+    }
 
+    public void updateBillingStatus(Long accountNumber) {
+        // Find and update billing status
+        List<Billing> updatedBillings = billingRepository.findByCustomerAccountNumber(accountNumber);
+        updatedBillings.forEach(billing -> {
+            billing.setIsEmailSend(true);
+            billingRepository.save(billing);
+        });
+    }
 
+    public void sleepForDelay() {
+        // Add delay between sending emails
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
