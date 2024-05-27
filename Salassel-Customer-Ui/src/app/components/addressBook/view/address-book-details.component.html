@@ -12,6 +12,12 @@
             <label htmlFor="name"><strong>Name</strong></label>
             <input pInputTextarea id="name" rows="4"  [ngModel]="singleAddress?.name" readonly/>
         </div>
+
+        <!-- Account Number -->
+        <div class="field col-12 md:col-6">
+            <label htmlFor="accountNumber"><strong>Account Number</strong></label>
+            <input pInputTextarea id="accountNumber" rows="4" [ngModel]="singleAddress?.accountNumber" readonly />
+        </div>
     
         <!-- Contact Number -->
         <div class="field col-12 md:col-6">

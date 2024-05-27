@@ -181,7 +181,7 @@ public class AwbController {
     public void downloadAwbExcel(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) List<Long> awbNumbers,
+            @RequestParam(required = false) List<String> awbNumbers,
             @RequestParam(required = false) Boolean all,
             HttpServletResponse response) throws IOException {
 
@@ -192,7 +192,7 @@ public class AwbController {
         if(startDate != null && endDate != null){
             awbDtoList = awbService.getAwbBetweenDates(startDate, endDate);
         } else if (awbNumbers != null) {
-            awbDtoList = awbService.getAwbListByAwbNumbers(awbNumbers);
+            awbDtoList = awbService.getAwbListByAccountNumbers(awbNumbers);
         } else if (all) {
             awbDtoList = awbService.getAllAwbListByCreatedBy();
         }

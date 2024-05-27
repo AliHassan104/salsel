@@ -17,6 +17,18 @@
                     </small>
                 </div>
 
+                <!-- Account Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="accountNumber">Account Number</label>
+                    <p-dropdown #dropdown2 [options]="accountNumbers" placeholder="Select Account Number" filter="true" formControlName="accountNumber"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('accountNumber')?.touched && addressBookForm.get('accountNumber')?.invalid}"
+                        [required]="true"></p-dropdown>
+                    <small *ngIf="!addressBookForm.get('accountNumber')?.valid && addressBookForm.get('accountNumber')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
                 <!-- Name -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="name"><strong>Name</strong></label>

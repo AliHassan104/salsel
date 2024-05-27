@@ -246,6 +246,13 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         return outputStream;
     }
 
+    @Override
+    public ByteArrayOutputStream generateShipmentTrackingReport(List<Map<String, Object>> transitStatusReportData) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(transitStatusReportData, outputStream, TRACKING);
+        return outputStream;
+    }
+
 
     @Override
     public void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
@@ -272,6 +279,8 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Scan Report");
         }else if(type.equalsIgnoreCase(EMPLOYEE)){
             sheet = workbook.createSheet("Employee Report");
+        }else if(type.equalsIgnoreCase(TRACKING)){
+            sheet = workbook.createSheet("Tracking Report");
         }else {
             throw new RecordNotFoundException("Type not valid");
         }

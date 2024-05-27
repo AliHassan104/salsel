@@ -12,6 +12,8 @@ import { DropdownService } from "src/app/layout/service/dropdown.service";
 import { Dropdown } from "primeng/dropdown";
 import { CityService } from "../../City/service/city.service";
 import { CountryService } from "../../country/service/country.service";
+import { AccountService } from "../../accounts/service/account.service";
+import { map } from "rxjs";
 
 @Component({
   selector: "app-address-book",
@@ -22,12 +24,15 @@ import { CountryService } from "../../country/service/country.service";
 export class AddressBookComponent {
   @ViewChild("dropdown") dropdown?: Dropdown;
   @ViewChild("dropdown1") dropdown1?: Dropdown;
+  @ViewChild("dropdown2") dropdown2?: Dropdown;
 
   addressBookForm!: FormGroup;
   addressBook?: IAddressBook;
   addressBookId?: any;
   mode?: string = "Add";
   userTypes?;
+  accountNumbers;
+  preprocessedAccountNumbers;
 
   productFields?;
   countries;
@@ -43,7 +48,8 @@ export class AddressBookComponent {
     private messageService: MessageService,
     private dropDownService: DropdownService,
     private countryService: CountryService,
-    private cityService: CityService
+    private cityService: CityService,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +63,7 @@ export class AddressBookComponent {
       country: [null, Validators.required],
       city: [null, Validators.required],
       userType: [null, Validators.required],
+      accountNumber: [null, Validators.required],
     });
 
     this.getProductFieldValues();
@@ -71,7 +78,7 @@ export class AddressBookComponent {
   }
 
   ngAfterViewInit(): void {
-    const dropdowns = [this.dropdown, this.dropdown1];
+    const dropdowns = [this.dropdown, this.dropdown1, this.dropdown2];
 
     dropdowns.forEach((dropdown, index) => {
       if (dropdown) {
@@ -98,6 +105,18 @@ export class AddressBookComponent {
         this.countries = res;
         this.countries = this.dropDownService.extractNames(this.countries);
       });
+
+    // GET ALL AccountNumbers
+    this.getAllAccountNumbers();
+  }
+
+  getAllAccountNumbers(){
+  this.accountService
+    .getAllAccounts({ status: true })
+    .pipe(map((res: any) => res?.body?.map((item: any) => String(item.accountNumber))))
+    .subscribe((res: string[]) => {
+      this.accountNumbers = res;
+    });
   }
 
   onSubmit() {
@@ -142,6 +161,7 @@ export class AddressBookComponent {
     this.addressBookService.getAddressBookById(id).subscribe((res) => {
       if (res && res.body) {
         this.addressBook = res.body;
+        
         this.patchCity(this.addressBook?.country);
         this.patchFormWithDto();
       }
@@ -159,6 +179,7 @@ export class AddressBookComponent {
       country: this.addressBook?.country,
       city: this.addressBook?.city,
       userType: this.addressBook?.userType,
+      accountNumber:this.addressBook?.accountNumber,
     });
   }
 
@@ -185,6 +206,7 @@ export class AddressBookComponent {
       country: formValue.country,
       city: formValue.city,
       userType: formValue.userType,
+      accountNumber:formValue.accountNumber,
       createdBy: localStorage.getItem("loginUserEmail"),
     };
 

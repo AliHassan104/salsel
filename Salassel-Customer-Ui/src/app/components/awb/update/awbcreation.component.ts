@@ -25,6 +25,7 @@ import { Dropdown } from "primeng/dropdown";
 import { Table } from "primeng/table";
 import { AddressBookService } from "../../addressBook/service/address-book.service";
 import { IAddressBook } from "../../addressBook/model/addressBookDto";
+import { map } from "rxjs";
 
 @Component({
   selector: "app-awbcreation",
@@ -68,7 +69,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   // SINGLE BILL AND TICKET STORE IN IT
   singleBill?: IAwbDto;
   singleTicket?: Ticket;
-  preprocessedAccountNumbers: any;
   pickupDate: Date;
   pickupTime: Date;
 
@@ -227,14 +227,16 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     // GET ALL AccountNumbers
     this.accountService
       .getAllAccountsByUserLoggedIn({ status: true })
-      .subscribe((res: any) => {
-        this.accountNumbers = res.body;
-        this.preprocessedAccountNumbers = this.accountNumbers.map(
-          (account) => ({
+      .pipe(
+        map((res: any) =>
+          res.body.map((account: any) => ({
             label: `${account.accountNumber}, ${account.customerName}`,
-            value: account.number,
-          })
-        );
+            value: String(account.accountNumber), // Ensuring the value is a string
+          }))
+        )
+      )
+      .subscribe((res: any[]) => {
+        this.accountNumbers = res;
       });
   }
 
@@ -387,7 +389,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         status: formValue.status,
         dutyAndTaxesBillTo: formValue.dutyAndTaxesBillTo,
         weight: formValue.weight,
-        accountNumber:formValue?.accountNumber?.value,
+        accountNumber: formValue?.accountNumber?.value,
         amount: formValue.amount,
         content: formValue.content,
         currency: formValue.currency,
@@ -401,12 +403,13 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         pickupStreetName: formValue.pickupStreetName,
         pickupDistrict: formValue.pickupDistrict,
         createdBy: this.loginUserEmail,
-        assignedTo: formValue.requestType == "Pick-up" ? "ROLE_OPERATION_AGENT" : "",
+        assignedTo:
+          formValue.requestType == "Pick-up" ? "ROLE_OPERATION_AGENT" : "",
       };
 
       //   Create Ticket
       this._airbillService.createBill(billData).subscribe((res) => {
-        this.checkAddressStatus()
+        this.checkAddressStatus();
       });
     } else {
       this.alert();
@@ -414,7 +417,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  billPopup(){
+  billPopup() {
     this.success();
     this.router.navigate(["awb/list"]);
     this.awbForm.reset();
@@ -424,7 +427,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.addressBookStatus == "Not Exist") {
       this.createRecipientAddress();
       this.createShipperAddress();
-      this.billPopup()
+      this.billPopup();
     } else if (this.addressBookStatus == "shipper") {
       this.createRecipientAddress();
       this.billPopup();
@@ -434,8 +437,8 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onCancelAddressRequest(){
-    this.addressDialog = false
+  onCancelAddressRequest() {
+    this.addressDialog = false;
     this.billPopup();
   }
 
@@ -474,6 +477,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       city: formValue.originCity,
       userType: "Shipper",
       createdBy: this.loginUserEmail,
+      accountNumber: formValue.accountNumber?.value,
     };
 
     this.addressBookService.create(shipperData).subscribe((res: any) => {});
@@ -491,6 +495,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       city: formValue.destinationCity,
       userType: "Recipient",
       createdBy: this.loginUserEmail,
+      accountNumber: formValue.accountNumber?.value,
     };
 
     this.addressBookService.create(recipientData).subscribe((res: any) => {});
@@ -500,11 +505,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     const params = {
       userType: "Shipper",
       status: true,
+      accountNumber: this.awbForm.get("accountNumber")?.value?.value,
     };
     this.addressType = true;
     this.tooltipVisible = true;
     this.addressBookService
-      .getAddressBooksByUserType(params)
+      .getAddressBooksByAccountNumber(params)
       .subscribe((res) => {
         if (res && res.body) {
           this.addressBooks = res.body;
@@ -517,13 +523,15 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     const params = {
       userType: "Recipient",
       status: true,
+      accountNumber: this.awbForm.get("accountNumber")?.value?.value,
     };
     this.addressType = false;
     this.tooltipVisible = true;
     this.addressBookService
-      .getAddressBooksByUserType(params)
+      .getAddressBooksByAccountNumber(params)
       .subscribe((res) => {
         if (res && res.body) {
+
           this.addressBooks = res.body;
         }
       });

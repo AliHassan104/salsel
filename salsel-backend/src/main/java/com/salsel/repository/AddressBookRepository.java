@@ -39,6 +39,7 @@ public interface AddressBookRepository extends JpaRepository<AddressBook, Long> 
     AddressBook findByIdWhereStatusIsTrue(@Param("id") Long id);
 
 
+
     @Query("SELECT ab FROM AddressBook ab WHERE ab.status = :status " +
             "AND (:userType IS NULL OR ab.userType = :userType) " +
             "AND ab.createdBy = :createdBy ORDER BY ab.id DESC")
@@ -46,6 +47,16 @@ public interface AddressBookRepository extends JpaRepository<AddressBook, Long> 
             @Param("status") boolean status,
             @Param("userType") String userType,
             @Param("createdBy") String createdBy
+    );
+
+
+    @Query("SELECT ab FROM AddressBook ab WHERE ab.status = :status " +
+            "AND (:userType IS NULL OR ab.userType = :userType) " +
+            "AND ab.accountNumber = :accountNumber ORDER BY ab.id DESC")
+    List<AddressBook> findAllInDesOrderByAccountNumberAndStatus(
+            @Param("status") boolean status,
+            @Param("userType") String userType,
+            @Param("accountNumber") String accountNumber
     );
 
     Optional<AddressBook> findByUniqueId(String uniqueId);

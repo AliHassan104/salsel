@@ -17,4 +17,6 @@ public interface AwbShippingHistoryService {
 
     List<AwbShippingHistoryDto> findTrackingByAwbIds(List<Long> awbIds);
 
+    List<Map<String,Object>> getAllShippingDataByExcel(List<Long> awbIds);
+
 }

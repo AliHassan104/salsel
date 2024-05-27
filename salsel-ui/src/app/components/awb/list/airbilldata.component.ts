@@ -39,6 +39,7 @@ export class AirbilldataComponent implements OnInit {
   selectedStatus: string = "Active";
   activeStatus: boolean = true;
   accountNumbers: any;
+  trackingNumbers: any = [];
 
   deleteProductsDialog: any;
   assignDialog: boolean = false;
@@ -70,9 +71,10 @@ export class AirbilldataComponent implements OnInit {
 
   ngOnInit(): void {
     this.excelDataForm = new FormGroup({
-      toDate: new FormControl(null, Validators.required),
-      fromDate: new FormControl(null, Validators.required),
-      accountNumbers: new FormControl(null, Validators.required),
+      toDate: new FormControl(null),
+      fromDate: new FormControl(null),
+      accountNumbers: new FormControl(null),
+      dataType: new FormControl(null, Validators.required),
     });
     this.awbForm = new FormGroup({
       assignedTo: new FormControl(null, [Validators.required]),
@@ -93,12 +95,49 @@ export class AirbilldataComponent implements OnInit {
     });
   }
 
+  onCloseExcelDialog(){
+
+    this.excelDataForm.reset();
+
+  }
+
+  toggleValidators(value: string): void {
+    const toDateControl = this.excelDataForm.get("toDate");
+    const fromDateControl = this.excelDataForm.get("fromDate");
+    const accountNumbersControl = this.excelDataForm.get("accountNumbers");
+    toDateControl.clearValidators();
+    fromDateControl.clearValidators();
+    accountNumbersControl.clearValidators();
+    toDateControl.reset();
+    fromDateControl.reset();
+    accountNumbersControl.reset();
+
+    if (value === "Date") {
+      toDateControl.setValidators([Validators.required]);
+      fromDateControl.setValidators([Validators.required]);
+    } else if (value === "Account Number") {
+      accountNumbersControl.setValidators([Validators.required]);
+    } else {
+      // Clear all validators if "All" is selected
+      toDateControl.clearValidators();
+      fromDateControl.clearValidators();
+      accountNumbersControl.clearValidators();
+      toDateControl.reset();
+      fromDateControl.reset();
+      accountNumbersControl.reset();
+    }
+
+    // Trigger validation after updating validators
+    toDateControl.updateValueAndValidity();
+    fromDateControl.updateValueAndValidity();
+    accountNumbersControl.updateValueAndValidity();
+  }
+
   getAllAccountNumbers() {
     this.accountService
       .getAllAccountNumbers({ status: true })
       .subscribe((res: any) => {
         this.accountNumbers = res.body;
-        console.log(this.accountNumbers);
 
         // this.preprocessedAccountNumbers = this.accountNumbers.map(
         //   (account: any) => ({
@@ -186,19 +225,12 @@ export class AirbilldataComponent implements OnInit {
     }
   }
 
-  onDownloadExcel(data: any) {
-    if (this.excelDataForm.valid) {
-      const formattedDates = {
-        startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
-        endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
-      };
-
-      this._airbillService.downloadAwbDataInExcel(formattedDates).subscribe(
+  excelDataDownload(startDate, endDate, accountNumbers, all, Name: string) {
+    this._airbillService
+      .downloadAwbDataInExcel(startDate, endDate, accountNumbers, all)
+      .subscribe(
         (res: any) => {
-          this._airbillService.downloadExcelFile(
-            res,
-            `Awb_${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
-          );
+          this._airbillService.downloadExcelFile(res, Name);
           this.messageService.add({
             severity: "success",
             summary: "Success",
@@ -211,10 +243,62 @@ export class AirbilldataComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error",
-            detail: "No Data Found",
+            detail: "No Airbill found",
           });
         }
       );
+  }
+
+  onSelectAccountNumbers(value: any) {
+    const selectedValues = value?.value;
+    const trackingField = this.excelDataForm.get("accountNumbers");
+    const currentValue = trackingField?.value || "";
+    const newValues = selectedValues.join("\n");
+    trackingField?.setValue(newValues);
+  }
+
+  validateTextarea(event: any) {
+    const pattern = /^[0-9\n]*$/;
+    const inputValue = event.target.value;
+    if (!pattern.test(inputValue)) {
+      event.target.value = inputValue.replace(/[^0-9\n]/g, "");
+    }
+  }
+
+  onDownloadExcel(data: any) {
+    if (this.excelDataForm.valid) {
+      const dataType = this.excelDataForm.get("dataType")?.value;
+      if (dataType == "Account Number") {
+        const values = data?.accountNumbers
+          .split(/[\n\s,]+/) // Split on newlines, spaces, and commas
+          .map((value) => value.trim()) // Trim whitespace
+          .filter((value) => value); // Filter out empty strings
+
+        this.trackingNumbers = values;
+
+        this.excelDataDownload(
+          null,
+          null,
+          this.trackingNumbers,
+          null,
+          `Awb_by_accountNumbers.xlsx`
+        );
+      } else if (dataType == "Date") {
+        const formattedDates = {
+          startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
+          endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
+        };
+
+        this.excelDataDownload(
+          formattedDates.startDate,
+          formattedDates.endDate,
+          null,
+          null,
+          `Awb_${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
+        );
+      } else {
+        this.excelDataDownload(null, null, null, true, `All_Awb.xlsx`);
+      }
     } else {
       this.formService.markFormGroupTouched(this.excelDataForm);
       this.messageService.add({
@@ -324,7 +408,6 @@ export class AirbilldataComponent implements OnInit {
   }
 
   onSubmit(data: any) {
-    console.log(data.employeeId.id);
 
     if (this.awbForm.valid) {
       this._airbillService

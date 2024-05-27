@@ -105,6 +105,14 @@ public class AddressBookServiceImpl implements AddressBookService {
     }
 
     @Override
+    public List<AddressBookDto> getAllByAccountNumber(String accountNumber, Boolean status, String userType) {
+        List<AddressBook> addressBooks = addressBookRepository.findAllInDesOrderByAccountNumberAndStatus(status,userType,accountNumber);
+        return addressBooks.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public AddressBookDto findById(Long id) {
         AddressBook addressBook = addressBookRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Record not found for id => %d", id)));
@@ -161,10 +169,13 @@ public class AddressBookServiceImpl implements AddressBookService {
         existingAddressBook.setDistrict(addressBookDto.getDistrict());
         existingAddressBook.setRefNumber(addressBookDto.getRefNumber());
         existingAddressBook.setUserType(addressBookDto.getUserType());
+        existingAddressBook.setAccountNumber(addressBookDto.getAccountNumber());
 
         AddressBook updatedAddressBook = addressBookRepository.save(existingAddressBook);
         return toDto(updatedAddressBook);
     }
+
+
 
 
     public AddressBookDto toDto(AddressBook addressBook) {
@@ -183,6 +194,7 @@ public class AddressBookServiceImpl implements AddressBookService {
                 .district(addressBook.getDistrict())
                 .status(addressBook.getStatus())
                 .createdBy(addressBook.getCreatedBy())
+                .accountNumber(addressBook.getAccountNumber())
                 .build();
     }
 
@@ -202,6 +214,7 @@ public class AddressBookServiceImpl implements AddressBookService {
                 .district(addressBookDto.getDistrict())
                 .status(addressBookDto.getStatus())
                 .createdBy(addressBookDto.getCreatedBy())
+                .accountNumber(addressBookDto.getAccountNumber())
                 .build();
     }
 }

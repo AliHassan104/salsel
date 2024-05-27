@@ -28,6 +28,8 @@ public interface AwbService {
     List<AwbDto> updateMultipleAwbStatusOnScan(Map<Long,String> statusMap);
     List<AwbDto> getAwbBetweenDates(LocalDate startDate, LocalDate endDate);
     List<AwbDto> getAwbListByAwbNumbers(List<Long> awbNumbers);
+
+    List<AwbDto> getAwbListByAccountNumbers(List<String> awbNumbers);
     List<AwbDto> getAllAwbListByCreatedBy();
     AwbDto findByUniqueNumber(Long id);
     Map<String, Long> getAwbStatusCounts();

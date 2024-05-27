@@ -29,5 +29,6 @@ public class AddressBookDto {
     private String refNumber;
     private String createdBy;
     private String userType;
+    private String accountNumber;
     private Boolean status;
 }

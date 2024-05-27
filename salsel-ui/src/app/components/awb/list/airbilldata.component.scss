@@ -84,3 +84,24 @@ textarea::-webkit-scrollbar-thumb {
 textarea:hover::-webkit-scrollbar{
     width: 8px;
 }
+
+p-radioButton::ng-deep .p-radiobutton .p-radiobutton-box{
+    width: 18px !important;
+    height: 18px !important;
+    margin-top: 2px;
+}
+
+p-radioButton::ng-deep .p-radiobutton .p-radiobutton-box .p-radiobutton-icon{
+    height: 6px;
+    width: 6px;
+}
+
+
+p-radioButton::ng-deep .p-radiobutton .p-radiobutton-box.p-highlight{
+    background: #93003c !important;
+    border-color: #93003c !important;
+}
+
+.radio-button-dialog label{
+    font-size: 18px;
+}

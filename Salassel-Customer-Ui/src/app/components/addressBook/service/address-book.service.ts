@@ -34,7 +34,9 @@ export class AddressBookService {
     });
   }
 
-  getAddressBooksByLoggedInUser(params: any): Observable<EntityAddressBookResponseType> {
+  getAddressBooksByLoggedInUser(
+    params: any
+  ): Observable<EntityAddressBookResponseType> {
     let url = `${this.url}address-book/logged-in-user`;
     return this.http.get<AddressBook[]>(url, {
       params,
@@ -42,10 +44,12 @@ export class AddressBookService {
     });
   }
 
-  getAddressBooksByUserType(params: any): Observable<EntityAddressBookResponseType> {
+  getAddressBooksByUserType(
+    params: any
+  ): Observable<EntityAddressBookResponseType> {
     let url = `${this.url}address-book/user-type`;
     return this.http.get<AddressBook[]>(url, {
-        params,
+      params,
       observe: "response",
     });
   }
@@ -69,8 +73,18 @@ export class AddressBookService {
     return this.http.delete<AddressBook>(url, { observe: "response" });
   }
 
-    updateAddressBookStatus(id: any) {
+  updateAddressBookStatus(id: any) {
     let url = `${this.url}address-book/status/${id}`;
     return this.http.put<AddressBook>(url, { observe: "response" });
-    }
+  }
+
+  getAddressBooksByAccountNumber(
+    params: any
+  ): Observable<EntityAddressBookResponseType> {
+    let url = `${this.url}address-book/account-number`;
+    return this.http.get<AddressBook[]>(url, {
+      params,
+      observe: "response",
+    });
+  }
 }

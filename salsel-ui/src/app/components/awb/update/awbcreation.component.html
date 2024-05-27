@@ -9,7 +9,7 @@
                 <!-- Account Number -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="accountNumber">Account Number</label>
-                    <p-dropdown [options]="preprocessedAccountNumbers" optionLabel="label"
+                    <p-dropdown [options]="accountNumbers" optionLabel="label"
                         placeholder="Select Account Number" filter="true" formControlName="accountNumber"
                         [ngClass]="{'ng-dirty':awbForm.get('accountNumber')?.touched && awbForm.get('accountNumber')?.invalid}"
                         [required]="true"></p-dropdown>
@@ -20,7 +20,7 @@
                 </div>
                 <!-- Shipper Name -->
                 <div class="field col-12 md:col-6">
-                    <label htmlFor="shippername">Shipper Name <img (click)="onAutoFillShipperDetails()" pTooltip="AutoFill Shipper Details From Address Book" tooltipPosition="top"
+                    <label htmlFor="shippername">Shipper Name <img *ngIf="awbForm.get('accountNumber')?.valid" (click)="onAutoFillShipperDetails()" pTooltip="AutoFill Shipper Details From Address Book" tooltipPosition="top"
                         src="../../../../assets/idea.png" class="ideaImg"></label>
                     <input pInputText id="shippername" type="text" formControlName="shipperName"
                         placeholder="Enter Shipper Name" />
@@ -70,7 +70,7 @@
                 <!-- Recipients Details -->
                 <!-- Recipient Name -->
                 <div class="field col-12 md:col-6">
-                    <label htmlFor="recipientname">Recipient Name <img (click)="onAutoFillRecipientsDetails()" pTooltip="AutoFill Recipient Details From Address Book"
+                    <label htmlFor="recipientname">Recipient Name <img *ngIf="awbForm.get('accountNumber')?.valid" (click)="onAutoFillRecipientsDetails()" pTooltip="AutoFill Recipient Details From Address Book"
                         tooltipPosition="top" src="../../../../assets/idea.png" class="ideaImg"></label>
                     <input pInputText id="recipientname" type="text" formControlName="recipientsName"
                         placeholder="Enter Recipient Name" />
