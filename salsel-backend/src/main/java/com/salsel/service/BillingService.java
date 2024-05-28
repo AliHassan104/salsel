@@ -24,6 +24,5 @@ public interface BillingService {
 
     void deleteById(Long id);
     void setToActiveById(Long id);
-
-
+    void resendBillingInvoice(Long billingId);
 }

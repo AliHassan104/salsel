@@ -106,52 +106,13 @@ public class BillingController {
         outputStream.close();
     }
 
+    @GetMapping("/billing/resend-invoice/{id}")
+    @PreAuthorize("hasAuthority('READ_BILLING')")
+    public ResponseEntity<Void> resendInvoice(@PathVariable Long id){
+        billingService.resendBillingInvoice(id);
+        return ResponseEntity.ok().build();
+    }
 
-//    @PostMapping("/download-billing")
-//    public ResponseEntity<List<byte[]>> generateEmployeePdf(@RequestBody List<BillingDto> billingDtoList) {
-//        // Generate PDF
-//        List<byte[]> pdfBytes = pdfGenerationService.generateBillingPdf(billingDtoList);
-//
-//        // Set response headers
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_PDF);
-//        headers.setContentDispositionFormData("inline", "Billing.pdf");
-//        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-//    }
-
-//    @PostMapping("/download-billing")
-//    public ResponseEntity<byte[]> generateBillingZip(@RequestBody List<BillingDto> billingDtoList) {
-//        // Generate PDFs
-//        List<byte[]> pdfBytesList = pdfGenerationService.generateBillingPdf(billingDtoList);
-//
-//        // Create a zip file containing all PDFs
-//        byte[] zipBytes = createZipFile(pdfBytesList);
-//
-//        // Set response headers
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        headers.setContentDispositionFormData("attachment", "Billing.zip");
-//        headers.setContentLength(zipBytes.length);
-//
-//        return new ResponseEntity<>(zipBytes, headers, HttpStatus.OK);
-//    }
-//
-//    private byte[] createZipFile(List<byte[]> pdfBytesList) {
-//        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//             ZipOutputStream zos = new ZipOutputStream(baos)) {
-//
-//            for (int i = 0; i < pdfBytesList.size(); i++) {
-//                byte[] pdfBytes = pdfBytesList.get(i);
-//                ZipEntry zipEntry = new ZipEntry("Billing_" + (i + 1) + ".pdf");
-//                zos.putNextEntry(zipEntry);
-//                zos.write(pdfBytes);
-//                zos.closeEntry();
-//            }
-//
-//            zos.finish();
-//            return baos.toByteArray();
-//        } catch (IOException e) {
-//            throw new RuntimeException("Error creating zip file", e);
-//        }
-//    }
 }
+
+//http://localhost:8080/api/file/Download/UploadInvoice.xlsx

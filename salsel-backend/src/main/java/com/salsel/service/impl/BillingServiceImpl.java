@@ -15,6 +15,7 @@ import com.salsel.repository.BillingRepository;
 import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
+import com.salsel.utils.EmailUtils;
 import com.salsel.utils.ExcelUtils;
 import com.salsel.utils.HelperUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -39,15 +40,17 @@ public class BillingServiceImpl implements BillingService {
     private final AwbRepository awbRepository;
     private final BillingAttachmentRepository billingAttachmentRepository;
     private final HelperUtils helperUtils;
+    private final EmailUtils emailUtils;
     private final PdfGenerationService pdfGenerationService;
     private final ExcelGenerationService excelGenerationService;
 
-    public BillingServiceImpl(BillingRepository billingRepository, AccountRepository accountRepository, AwbRepository awbRepository, BillingAttachmentRepository billingAttachmentRepository, HelperUtils helperUtils, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
+    public BillingServiceImpl(BillingRepository billingRepository, AccountRepository accountRepository, AwbRepository awbRepository, BillingAttachmentRepository billingAttachmentRepository, HelperUtils helperUtils, EmailUtils emailUtils, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
         this.billingRepository = billingRepository;
         this.accountRepository = accountRepository;
         this.awbRepository = awbRepository;
         this.billingAttachmentRepository = billingAttachmentRepository;
         this.helperUtils = helperUtils;
+        this.emailUtils = emailUtils;
         this.pdfGenerationService = pdfGenerationService;
         this.excelGenerationService = excelGenerationService;
     }
@@ -152,11 +155,11 @@ public class BillingServiceImpl implements BillingService {
         }
 
         List<Billing> billingList = ExcelUtils.processExcelFile(file);
-        if(!billingList.isEmpty()){
+        if (!billingList.isEmpty()) {
             return billingList.stream()
                     .map(this::toDto)
                     .collect(Collectors.toList());
-        }else{
+        } else {
             throw new RecordNotFoundException("Excel File is empty.");
         }
     }
@@ -166,7 +169,7 @@ public class BillingServiceImpl implements BillingService {
         List<Billing> billings = billingRepository.findAllInDesOrderByIdAndStatus(status);
         List<BillingDto> billingDtoList = new ArrayList<>();
 
-        for(Billing billing: billings){
+        for (Billing billing : billings) {
             BillingDto billingDto = toDto(billing);
             billingDtoList.add(billingDto);
         }
@@ -189,7 +192,7 @@ public class BillingServiceImpl implements BillingService {
         List<Billing> billings = billingRepository.getAllBillingsWhereStatusIsNotClosed();
         List<BillingDto> billingDtoList = new ArrayList<>();
 
-        for(Billing billing: billings){
+        for (Billing billing : billings) {
             BillingDto billingDto = toDto(billing);
             billingDtoList.add(billingDto);
         }
@@ -201,14 +204,14 @@ public class BillingServiceImpl implements BillingService {
     public BillingDto findById(Long id) {
         Billing billing = billingRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Bill not found for id ==> %d", id)));
-                return toDto(billing);
+        return toDto(billing);
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
         Billing billing = billingRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Billing not found for id => %d", id)));
         billingRepository.setStatusInactive(billing.getId());
     }
 
@@ -216,8 +219,39 @@ public class BillingServiceImpl implements BillingService {
     @Transactional
     public void setToActiveById(Long id) {
         Billing billing = billingRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Account not found for id => %d", id)));
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Billing not found for id => %d", id)));
         billingRepository.setStatusActive(billing.getId());
+    }
+
+    @Override
+    public void resendBillingInvoice(Long billingId) {
+        Billing billing = billingRepository.findById(billingId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Billing not found for id => %d", billingId)));
+
+        BillingAttachment billingAttachment = billingAttachmentRepository.findFirstByAccountNumberOrderByCreatedAtDesc(billing.getCustomerAccountNumber())
+                .orElseThrow(() -> new RecordNotFoundException(String.format("BillingAttachments not found for account number => %d", billing.getCustomerAccountNumber())));
+
+        Account account = accountRepository.findByAccountNumber(billing.getCustomerAccountNumber());
+        if (account != null) {
+            String email = account.getEmail();
+            if (email == null) {
+                throw new RecordNotFoundException(String.format("Email not found in Account for accountNumber: %d", billing.getCustomerAccountNumber()));
+            }
+
+            String pdfUrl = billingAttachment.getPdfUrl();
+            String excelUrl = billingAttachment.getExcelUrl();
+            if (pdfUrl == null || excelUrl == null) {
+                throw new RecordNotFoundException(String.format("PDF or Excel URL is null for account: %d", billing.getCustomerAccountNumber()));
+            }
+
+            byte[] pdfContent = helperUtils.downloadAttachment(pdfUrl);
+            byte[] excelContent = helperUtils.downloadAttachment(excelUrl);
+            emailUtils.sendBillingEmailWithAttachments(email, pdfContent, excelContent);
+            helperUtils.updateBillingStatus(billing.getCustomerAccountNumber());
+            log.info("Email sent with both excel and pdf to address: {}", email);
+        } else {
+            throw new RecordNotFoundException(String.format("Account not found for accountNumber: %d", billing.getCustomerAccountNumber()));
+        }
     }
 
     @Override
@@ -235,9 +269,9 @@ public class BillingServiceImpl implements BillingService {
             billingMap.put("Product", billing.getProduct());
             billingMap.put("Service Details", billing.getServiceDetails());
             billingMap.put("Charges", billing.getCharges());
-            billingMap.put("Customer Account",billing.getCustomerAccountNumber());
-            billingMap.put("Invoice No",billing.getInvoiceNo());
-            billingMap.put("Invoice Date",billing.getInvoiceDate());
+            billingMap.put("Customer Account", billing.getCustomerAccountNumber());
+            billingMap.put("Invoice No", billing.getInvoiceNo());
+            billingMap.put("Invoice Date", billing.getInvoiceDate());
 
             totalCharges += billing.getCharges(); // Calculate total charges
 
@@ -289,7 +323,7 @@ public class BillingServiceImpl implements BillingService {
         // Iterate over each account number
         for (Long accountNumber : accountNumbers) {
             Account account = accountRepository.findByAccountNumber(accountNumber);
-            if(account == null){
+            if (account == null) {
                 throw new RecordNotFoundException("Account not found for this accountNumber: " + accountNumber);
             }
 
@@ -353,7 +387,7 @@ public class BillingServiceImpl implements BillingService {
         return result;
     }
 
-    public BillingDto toDto(Billing billing){
+    public BillingDto toDto(Billing billing) {
         return BillingDto.builder()
                 .id(billing.getId())
                 .serviceDetails(billing.getServiceDetails())
@@ -378,7 +412,7 @@ public class BillingServiceImpl implements BillingService {
                 .build();
     }
 
-    public Billing toEntity(BillingDto billingDto){
+    public Billing toEntity(BillingDto billingDto) {
         return Billing.builder()
                 .id(billingDto.getId())
                 .serviceDetails(billingDto.getServiceDetails())
