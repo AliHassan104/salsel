@@ -309,8 +309,8 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog header="header" [modal]="true" (onShow)="onShowModal()" (onHide)="onCloseDialog()" [draggable]="false" [(visible)]="assignDialog"
-        [style]="{ width: '60vw' }">
+    <p-dialog header="header" [modal]="true" (onShow)="onShowModal()" (onHide)="onCloseDialog()" [draggable]="false"
+        [(visible)]="assignDialog" [style]="{ width: '60vw' }">
         <ng-template pTemplate="header">
             <div class="inline-flex align-items-center justify-content-center gap-2">
                 <span style="font-size: 20px;" class="font-bold white-space-nowrap">Assign Airway Bill</span>
@@ -320,8 +320,8 @@
             <div class="p-fluid p-formgrid grid">
                 <div class="field col-12 md:col-4">
                     <label htmlFor="status"><strong>Role</strong></label>
-                    <p-dropdown (onChange)="getUserByRoleName($event)" appendTo="body" [options]="assignedTo" placeholder="Assigned To"
-                        formControlName="assignedTo"
+                    <p-dropdown (onChange)="getUserByRoleName($event)" appendTo="body" [options]="assignedTo"
+                        placeholder="Assigned To" formControlName="assignedTo"
                         [ngClass]="{'ng-dirty':awbForm.get('assignedTo')?.touched && awbForm.get('assignedTo')?.invalid}"></p-dropdown>
                     <small *ngIf="!awbForm.get('assignedTo')?.valid && awbForm.get('assignedTo')?.touched"
                         class="text-red-500">
@@ -330,7 +330,8 @@
                 </div>
                 <div class="field col-12 md:col-4">
                     <label htmlFor="status"><strong>Employee Id</strong></label>
-                    <p-dropdown (onChange)="onSelectEmployeeId($event)" appendTo="body" [options]="employeeId" optionLabel="employeeId" filter="true"  placeholder="Select Employee Id"
+                    <p-dropdown (onChange)="onSelectEmployeeId($event)" appendTo="body" [options]="employeeId"
+                        optionLabel="employeeId" filter="true" placeholder="Select Employee Id"
                         formControlName="employeeId"
                         [ngClass]="{'ng-dirty':awbForm.get('employeeId')?.touched && awbForm.get('employeeId')?.invalid}"></p-dropdown>
                     <small *ngIf="!awbForm.get('employeeId')?.valid && awbForm.get('employeeId')?.touched"
@@ -340,11 +341,10 @@
                 </div>
                 <div class="field col-12 md:col-4">
                     <label htmlFor="status"><strong>Name</strong></label>
-                    <p-dropdown (onChange)="onSelectName($event)" appendTo="body" filter="true" [options]="users" optionLabel="name" placeholder="Select Name"
-                        formControlName="name"
+                    <p-dropdown (onChange)="onSelectName($event)" appendTo="body" filter="true" [options]="users"
+                        optionLabel="name" placeholder="Select Name" formControlName="name"
                         [ngClass]="{'ng-dirty':awbForm.get('name')?.touched && awbForm.get('name')?.invalid}"></p-dropdown>
-                    <small *ngIf="!awbForm.get('name')?.valid && awbForm.get('name')?.touched"
-                        class="text-red-500">
+                    <small *ngIf="!awbForm.get('name')?.valid && awbForm.get('name')?.touched" class="text-red-500">
                         Required
                     </small>
                 </div>
@@ -355,44 +355,72 @@
         </form>
     </p-dialog>
 
-    <p-dialog header="Download Airbill Report" [(visible)]="visible" [modal]="true" [style]="{ width: '70vw' }"
+    <p-dialog header="Download Airbill Report" [(visible)]="visible" (onHide)="onCloseExcelDialog()" [modal]="true" [style]="{ width: '70vw' }"
         class="customDialogExcel" [draggable]="false" [resizable]="false">
         <form action="" [formGroup]="excelDataForm" (ngSubmit)="onDownloadExcel(excelDataForm.value)" class="mt-6">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-6">
-                    <label>From Date</label>
-                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
-                        [maxDate]="maxDate" formControlName="fromDate" appendTo="body"
-                        [ngClass]="{'ng-dirty':excelDataForm.get('fromDate')?.touched && excelDataForm.get('fromDate')?.invalid}"></p-calendar>
-                    <small *ngIf="!excelDataForm.get('fromDate')?.valid && excelDataForm.get('fromDate')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
+                <!-- From what type of data you use to download Bill? -->
+                <div class="field col-12 text-center radio-button-dialog">
+                    <label htmlFor="createdAsUser" class="text-center"><strong>Select to Proceed?</strong></label>
+                    <div class="flex justify-content-center align-items-center">
+                        <div class="flex" style="margin-top: 10px;">
+                            <div class="field-radiobutton mr-3">
+                                <p-radioButton name="dataType" value="Account Number" formControlName="dataType"
+                                    (onClick)="toggleValidators($event.value)" [ngClass]="{'ng-dirty':excelDataForm.get('dataType')?.touched && excelDataForm.get('dataType')?.invalid}"></p-radioButton>
+                                <label for="accountNumber">Account Number</label>
+                            </div>
+                            <div class="field-radiobutton mr-3">
+                                <p-radioButton name="dataType" value="Date" formControlName="dataType"
+                                    (onClick)="toggleValidators($event.value)" [ngClass]="{'ng-dirty':excelDataForm.get('dataType')?.touched && excelDataForm.get('dataType')?.invalid}"></p-radioButton>
+                                <label for="date">Date</label>
+                            </div>
+                            <div class="field-radiobutton">
+                                <p-radioButton name="dataType" value="All" formControlName="dataType"
+                                    (onClick)="toggleValidators($event.value)" [ngClass]="{'ng-dirty':excelDataForm.get('dataType')?.touched && excelDataForm.get('dataType')?.invalid}"></p-radioButton>
+                                <label for="all">All</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <ng-container *ngIf="excelDataForm.get('dataType')?.value == 'Date'">
+                    <div class="field col-6">
+                        <label>From Date</label>
+                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
+                            [maxDate]="maxDate" formControlName="fromDate" appendTo="body"
+                            [ngClass]="{'ng-dirty':excelDataForm.get('fromDate')?.touched && excelDataForm.get('fromDate')?.invalid}"></p-calendar>
+                        <small *ngIf="!excelDataForm.get('fromDate')?.valid && excelDataForm.get('fromDate')?.touched"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
 
-                <div class="field col-6">
-                    <label>To Date</label>
-                    <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
-                        [maxDate]="maxDate" formControlName="toDate" appendTo="body"
-                        [ngClass]="{'ng-dirty':excelDataForm.get('toDate')?.touched && excelDataForm.get('toDate')?.invalid}"></p-calendar>
-                    <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="accountNumber">Account Number</label>
-                    <p-dropdown #dropdown10 [options]="accountNumbers" appendTo="body" placeholder="Select Account Number"
-                        filter="true"></p-dropdown>
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="accountNumber">Account Number</label>
-                        <textarea #trackingField pInputTextarea type="number" cols="4" rows="5" class="w-full" formControlName="accountNumbers"
-                        [ngClass]="{'ng-dirty':awbForm.get('accountNumbers')?.touched && awbForm.get('accountNumbers')?.invalid}"></textarea>
-                    <small *ngIf="!awbForm.get('accountNumbers')?.valid && awbForm.get('accountNumbers')?.touched" class="text-red-500">
-                        Required
-                    </small>
-                </div>
+                    <div class="field col-6">
+                        <label>To Date</label>
+                        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
+                            [maxDate]="maxDate" formControlName="toDate" appendTo="body"
+                            [ngClass]="{'ng-dirty':excelDataForm.get('toDate')?.touched && excelDataForm.get('toDate')?.invalid}"></p-calendar>
+                        <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="excelDataForm.get('dataType')?.value == 'Account Number'">
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="accountNumber">Account Number</label>
+                            <p-multiSelect [options]="accountNumbers" appendTo="body" (onChange)="onSelectAccountNumbers($event)" placeholder="Select Account Number" />
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label htmlFor="accountNumber">Account Number</label>
+                        <textarea #trackingField pInputTextarea type="number" cols="4" rows="5" class="w-full"
+                            formControlName="accountNumbers" (input)="validateTextarea($event)"
+                            [ngClass]="{'ng-dirty':excelDataForm.get('accountNumbers')?.touched && excelDataForm.get('accountNumbers')?.invalid}"></textarea>
+                        <small *ngIf="!excelDataForm.get('accountNumbers')?.valid && excelDataForm.get('accountNumbers')?.touched"
+                            class="text-red-500">
+                            Required
+                        </small>
+                    </div>
+                </ng-container>
             </div>
             <div class="flex justify-content-center w-full mt-5">
                 <button pButton label="Download" type="Submit" class="mx-3 submit-btn add-btn"></button>
@@ -403,6 +431,3 @@
     </p-dialog>
 
     <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
-
-
-

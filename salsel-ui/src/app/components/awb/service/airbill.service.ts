@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
@@ -112,7 +112,27 @@ export class AirbillService {
     );
   }
 
-  downloadAwbDataInExcel(params: any) {
+  downloadAwbDataInExcel(
+    startDate: string | null,
+    endDate: string | null,
+    awbNumbers: number[],
+    all: boolean | null
+  ) {
+    let params = new HttpParams();
+    if (startDate) {
+      params = params.set("startDate", startDate);
+    }
+    if (endDate) {
+      params = params.set("endDate", endDate);
+    }
+    if (awbNumbers) {
+      awbNumbers.forEach((num) => {
+        params = params.append("awbNumbers", num.toString());
+      });
+    }
+    if (all !== null) {
+      params = params.set("all", all.toString());
+    }
     return this.http.get(`${this.url}download-awb-excel`, {
       params,
       responseType: "blob" as "json", // Set the response type to 'blob'

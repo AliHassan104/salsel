@@ -26,6 +26,7 @@ import { Dropdown } from "primeng/dropdown";
 import { IAddressBook } from "../../addressBook/model/addressBookDto";
 import { AddressBookService } from "../../addressBook/service/address-book.service";
 import { Table } from "primeng/table";
+import { map } from "rxjs";
 
 @Component({
   selector: "app-awbcreation",
@@ -73,7 +74,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   // SINGLE BILL AND TICKET STORE IN IT
   singleBill?: IAwbDto;
   singleTicket?: Ticket;
-  preprocessedAccountNumbers: any;
   loginUserEmail;
 
   @ViewChild("dropdown") dropdown?: Dropdown;
@@ -223,17 +223,20 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     // GET ALL AccountNumbers
-    this.accountService
-      .getAllAccounts({ status: true })
-      .subscribe((res: any) => {
-        this.accountNumbers = res.body;
-        this.preprocessedAccountNumbers = this.accountNumbers.map(
-          (account: any) => ({
-            label: `${account.accountNumber}, ${account.customerName}`,
-            value: account?.accountNumber,
-          })
-        );
-      });
+
+      this.accountService
+        .getAllAccounts({ status: true })
+        .pipe(
+          map((res: any) =>
+            res.body.map((account: any) => ({
+              label: `${account.accountNumber}, ${account.customerName}`,
+              value: String(account.accountNumber), // Ensuring the value is a string
+            }))
+          )
+        )
+        .subscribe((res: any[]) => {
+          this.accountNumbers = res;
+        });
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -367,7 +370,6 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSubmit() {
-
     if (this.awbForm.valid) {
       // Date and Time get from form
       let ticketDate: Date = this.awbForm.value.pickupDate;
@@ -402,7 +404,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
         content: formValue.content,
         currency: formValue.currency,
         pieces: formValue.pieces,
-        accountNumber:formValue?.accountNumber?.value,
+        accountNumber: formValue?.accountNumber?.value,
         serviceType: formValue.serviceType,
         productType: formValue.productType,
         requestType: formValue.requestType,
@@ -483,6 +485,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       city: formValue.originCity,
       userType: "Shipper",
       createdBy: this.loginUserEmail,
+      accountNumber: formValue.accountNumber?.value,
     };
 
     this.addressBookService.create(shipperData).subscribe((res: any) => {});
@@ -500,6 +503,7 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
       city: formValue.destinationCity,
       userType: "Recipient",
       createdBy: this.loginUserEmail,
+      accountNumber: formValue.accountNumber?.value,
     };
 
     this.addressBookService.create(recipientData).subscribe((res: any) => {});
@@ -509,11 +513,12 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     const params = {
       userType: "Shipper",
       status: true,
+      accountNumber: this.awbForm.get("accountNumber")?.value?.value,
     };
     this.addressType = true;
     this.tooltipVisible = true;
     this.addressBookService
-      .getAddressBooksByUserType(params)
+      .getAddressBooksByAccountNumber(params)
       .subscribe((res) => {
         if (res && res.body) {
           this.addressBooks = res.body;
@@ -526,13 +531,15 @@ export class AwbcreationComponent implements OnInit, OnDestroy, AfterViewInit {
     const params = {
       userType: "Recipient",
       status: true,
+      accountNumber: this.awbForm.get("accountNumber")?.value?.value,
     };
     this.addressType = false;
     this.tooltipVisible = true;
     this.addressBookService
-      .getAddressBooksByUserType(params)
+      .getAddressBooksByAccountNumber(params)
       .subscribe((res) => {
         if (res && res.body) {
+
           this.addressBooks = res.body;
         }
       });

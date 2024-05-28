@@ -13,6 +13,8 @@ import { CityService } from "src/app/service/city.service";
 import { CountryService } from "src/app/service/country.service";
 import { ICountry } from "src/app/Model/countryDto";
 import { Dropdown } from "primeng/dropdown";
+import { AccountService } from "../../accounts/service/account.service";
+import { map } from "rxjs";
 
 @Component({
   selector: "app-address-book",
@@ -29,6 +31,8 @@ export class AddressBookComponent {
   addressBookId?: any;
   mode?: string = "Add";
   userTypes?;
+  accountNumbers;
+  preprocessedAccountNumbers;
 
   productFields?;
   countries;
@@ -42,6 +46,7 @@ export class AddressBookComponent {
     private fb: FormBuilder,
     private formService: FormvalidationService,
     private messageService: MessageService,
+    private accountService: AccountService,
     private dropDownService: DropdownService,
     private countryService: CountryService,
     private cityService: CityService
@@ -58,6 +63,7 @@ export class AddressBookComponent {
       country: [null, Validators.required],
       city: [null, Validators.required],
       userType: [null, Validators.required],
+      accountNumber: [null, Validators.required],
     });
 
     this.getProductFieldValues();
@@ -99,6 +105,18 @@ export class AddressBookComponent {
         this.countries = res;
         this.countries = this.dropDownService.extractNames(this.countries);
       });
+
+    // GET ALL AccountNumbers
+    this.accountService
+      .getAllAccountsByUserLoggedIn({ status: true })
+      .pipe(
+        map((res: any) =>
+          res?.body?.map((item: any) => String(item.accountNumber))
+        )
+      )
+      .subscribe((res: string[]) => {
+        this.accountNumbers = res;
+      });
   }
 
   onSubmit() {
@@ -120,14 +138,12 @@ export class AddressBookComponent {
           (res) => {
             if (res && res.body) {
               this.router.navigate(["address-book/list"]);
-              console.log(res,res.body);
-              
+              console.log(res, res.body);
             }
           },
           (error) => {
-            this.error(error)
+            this.error(error);
             console.log(error);
-            
           }
         );
       }
@@ -162,6 +178,7 @@ export class AddressBookComponent {
       country: this.addressBook?.country,
       city: this.addressBook?.city,
       userType: this.addressBook?.userType,
+      accountNumber: this.addressBook?.accountNumber,
     });
   }
 
@@ -188,6 +205,7 @@ export class AddressBookComponent {
       country: formValue.country,
       city: formValue.city,
       userType: formValue.userType,
+      accountNumber: formValue.accountNumber,
       createdBy: localStorage.getItem("loginUserEmail"),
     };
 

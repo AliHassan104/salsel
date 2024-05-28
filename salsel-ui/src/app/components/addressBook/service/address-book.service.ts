@@ -44,6 +44,16 @@ export class AddressBookService {
     });
   }
 
+  getAddressBooksByAccountNumber(
+    params: any
+  ): Observable<EntityAddressBookResponseType> {
+    let url = `${this.url}address-book/account-number`;
+    return this.http.get<AddressBook[]>(url, {
+      params,
+      observe: "response",
+    });
+  }
+
   isUniqueIdExists(params: any): Observable<EntityAddressBookResponseType> {
     let url = `${this.url}address-book/check-unique-id`;
     return this.http.get<AddressBook[]>(url, {
@@ -57,6 +67,7 @@ export class AddressBookService {
     let url = `${this.url}address-book/${id}`;
     return this.http.get<AddressBook>(url, { observe: "response" });
   }
+
 
   removeAddressBook(id: any) {
     let url = `${this.url}address-book/${id}`;

@@ -21,6 +21,8 @@ public interface ExcelGenerationService {
 
     ByteArrayOutputStream generateEmployeeReport(List<Map<String, Object>> transitStatusReportData) throws IOException;
 
+    ByteArrayOutputStream generateShipmentTrackingReport(List<Map<String, Object>> transitStatusReportData) throws IOException;
+
 
     void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
 }

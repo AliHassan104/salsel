@@ -1,9 +1,24 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { environment } from "src/environments/environment";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
-export class ServiceService {
+export class TrackingService {
+  url = environment.URL;
+  constructor(private http: HttpClient) {}
 
-  constructor() { }
+  downloadTrackingDataInExcel(awbNumbers: number[]) {
+    let params = new HttpParams();
+
+    awbNumbers.forEach((num) => {
+      params = params.append("trackingNumbers", num.toString());
+    });
+
+    return this.http.get(`${this.url}download-tracking-excel`, {
+      params,
+      responseType: "blob" as "json", // Set the response type to 'blob'
+    });
+  }
 }

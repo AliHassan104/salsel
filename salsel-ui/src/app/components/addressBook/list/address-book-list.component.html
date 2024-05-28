@@ -83,6 +83,11 @@
                                 User Type
                             </div>
                         </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex justify-content-center align-items-center">
+                                Account Number
+                            </div>
+                        </th>
 
 
                     </tr>
@@ -138,9 +143,9 @@
                         <td>
                             {{addressBook?.userType}}
                         </td>
-
-
-
+                        <td>
+                            {{addressBook?.accountNumber}}
+                        </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">

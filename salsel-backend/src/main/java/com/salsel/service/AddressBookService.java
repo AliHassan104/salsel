@@ -14,9 +14,12 @@ public interface AddressBookService {
     String checkUniqueIdExistsShipperOrRecipient(String uniqueId,String shipperUniqueId);
 
     List<AddressBookDto> getAllByUserType(String userType,Boolean status);
+
+    List<AddressBookDto> getAllByAccountNumber(String accountNumber,Boolean status,String userType);
     AddressBookDto findById(Long id);
     AddressBookDto findByUniqueId(String uniqueId);
     void deleteById(Long id);
     void setToActiveById(Long id);
     AddressBookDto update(Long id, AddressBookDto addressBookDto);
+
 }

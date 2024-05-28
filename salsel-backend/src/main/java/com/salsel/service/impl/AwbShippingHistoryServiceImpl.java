@@ -5,6 +5,7 @@ import com.salsel.dto.AwbShippingHistoryDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
 import com.salsel.model.AwbShippingHistory;
+import com.salsel.model.Employee;
 import com.salsel.repository.AwbRepository;
 import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.service.AwbShippingHistoryService;
@@ -12,6 +13,7 @@ import com.salsel.utils.HelperUtils;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -149,6 +151,31 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
         return awbShippingHistoryDtoList;
     }
 
+    @Override
+    public List<Map<String, Object>> getAllShippingDataByExcel(List<Long> awbIds) {
+        List<AwbShippingHistoryDto> awbShippingHistoryDtoList = findTrackingByAwbIds(awbIds);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        int count = 1;
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+        for (AwbShippingHistoryDto awbShippingHistoryDto : awbShippingHistoryDtoList) {
+            Map<String, Object> shippingMap = new LinkedHashMap<>();
+            shippingMap.put("#", count++);
+            shippingMap.put("Tracking Number", awbShippingHistoryDto.getAwb().getUniqueNumber());
+            shippingMap.put("Scan Date", awbShippingHistoryDto.getTimestamp().format(dateFormatter));
+            shippingMap.put("Scan Time", awbShippingHistoryDto.getTimestamp().format(timeFormatter));
+            shippingMap.put("scanned By", awbShippingHistoryDto.getStatusUpdateByUser().getName());
+            shippingMap.put("Current Status", awbShippingHistoryDto.getAwbStatus());
+            shippingMap.put("Location", awbShippingHistoryDto.getStatusUpdateByUser().getCountry());
+
+            result.add(shippingMap);
+        }
+
+        return result;
+    }
 
 
 

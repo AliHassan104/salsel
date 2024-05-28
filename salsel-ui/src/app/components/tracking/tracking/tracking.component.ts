@@ -5,6 +5,7 @@ import { FormvalidationService } from "../../Tickets/service/formvalidation.serv
 import { AirbillService } from "../../awb/service/airbill.service";
 import { DatePipe } from "@angular/common";
 import { Table } from "primeng/table";
+import { TrackingService } from "../service/tracking-scan.service";
 
 declare var onScan: any;
 
@@ -37,10 +38,8 @@ export class TrackingComponent {
 
   constructor(
     private messageService: MessageService,
-    private dropdownService: DropdownService,
+    private trackingService: TrackingService,
     private _airbillService: AirbillService,
-    private formService: FormvalidationService,
-    private datePipe: DatePipe
   ) {
     onScan.attachTo(document, {
       onScan: (sScanned, iQty) => {
@@ -96,7 +95,7 @@ export class TrackingComponent {
   }
 
   getShippingLatestData(multipleTracking: any) {
-    this.airBills = []
+    this.airBills = [];
     const values = multipleTracking
       .split(/[\n\s,]+/)
       .map((value) => value.trim())
@@ -152,8 +151,31 @@ export class TrackingComponent {
       );
   }
 
-  onRemoveAll(){
+  onRemoveAll() {
     this.airBills = [];
+    this.trackingNumbers = null
+  }
+
+  onDownloadEmployeeExcel(){
+    this.trackingService
+      .downloadTrackingDataInExcel(this.trackingNumbers)
+      .subscribe(
+        (res: any) => {
+          this._airbillService.downloadExcelFile(res, "Tracking_History.xlsx");
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Download Successfull",
+          });
+        },
+        (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "No Airbill found",
+          });
+        }
+      );
   }
 
   onTrackTrackingNumber(multipleTracking: any, singleTracking: any) {

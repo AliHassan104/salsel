@@ -12,7 +12,8 @@ export interface IAddressBook {
   streetName?: string;
   uniqueId?: string;
   userType?: string;
-  createdBy?:string
+  createdBy?:string;
+  accountNumber?:string;
 }
 
 export class AddressBook implements IAddressBook {
@@ -30,6 +31,7 @@ export class AddressBook implements IAddressBook {
     public streetName?: string,
     public uniqueId?: string,
     public userType?: string,
-    public createdBy?: string
+    public createdBy?: string,
+    public accountNumber?:string
   ) {}
 }

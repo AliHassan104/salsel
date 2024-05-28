@@ -40,8 +40,15 @@ public class AddressBookController {
 
     @GetMapping("/address-book/logged-in-user")
     @PreAuthorize("hasAuthority('READ_ADDRESS_BOOK')")
-    public ResponseEntity<List<AddressBookDto>> getAllAwbByLoggedInUser(@RequestParam(value = "status") Boolean status,@RequestParam(value = "userType", required = false) String userType) {
+    public ResponseEntity<List<AddressBookDto>> getAllAddressByLoggedInUser(@RequestParam(value = "status") Boolean status,@RequestParam(value = "userType", required = false) String userType) {
         List<AddressBookDto> addressBookDtoList = addressBookService.getAddressBookByLoggedInUser(status,userType);
+        return ResponseEntity.ok(addressBookDtoList);
+    }
+
+    @GetMapping("/address-book/account-number")
+    @PreAuthorize("hasAuthority('READ_ADDRESS_BOOK')")
+    public ResponseEntity<List<AddressBookDto>> getAllAddressByAccountNumber(@RequestParam(value = "status") Boolean status,@RequestParam(value = "userType", required = false) String userType,@RequestParam(value = "accountNumber") String accountNumber) {
+        List<AddressBookDto> addressBookDtoList = addressBookService.getAllByAccountNumber(accountNumber,status,userType);
         return ResponseEntity.ok(addressBookDtoList);
     }
 
@@ -66,6 +73,7 @@ public class AddressBookController {
         AddressBookDto addressBookDto = addressBookService.findByUniqueId(id);
         return ResponseEntity.ok(addressBookDto);
     }
+
 
     @PutMapping("/address-book/status/{id}")
     @PreAuthorize("hasAuthority('DELETE_ADDRESS_BOOK')")
