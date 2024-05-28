@@ -9,9 +9,9 @@ import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Role;
 import com.salsel.service.AwbService;
 import com.salsel.service.ExcelGenerationService;
+import com.salsel.utils.HelperUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -32,9 +32,11 @@ import static com.salsel.constants.ExcelConstants.*;
 public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
     private final AwbService awbService;
+    private final HelperUtils helperUtils;
 
-    public ExcelGenerationServiceImpl(AwbService awbService) {
+    public ExcelGenerationServiceImpl(AwbService awbService, HelperUtils helperUtils) {
         this.awbService = awbService;
+        this.helperUtils = helperUtils;
     }
 
 
@@ -303,7 +305,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
         if (type.equalsIgnoreCase(BILLING)) {
             // Add the logo to the first row and first cell
-            InputStream logoInputStream = new ClassPathResource("static/images/logo.jpeg").getInputStream();
+            InputStream logoInputStream = helperUtils.getInputStreamFromUrl("https://api.salassilexpress.com/api/file/Logo/logo.jpeg");
             byte[] logoBytes = IOUtils.toByteArray(logoInputStream);
             int pictureIdx = workbook.addPicture(logoBytes, Workbook.PICTURE_TYPE_JPEG);
             logoInputStream.close();
