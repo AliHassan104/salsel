@@ -89,7 +89,6 @@ export class BillingComponent {
         .subscribe((res: any) => {
           if (res.status == 200) {
             this.invoices = res.body;
-            console.log(res.body);
           }
         });
     } else {
@@ -103,7 +102,6 @@ export class BillingComponent {
         .subscribe((res: any) => {
           if (res.status == 200) {
             this.invoices = res.body;
-            console.log(res.body);
           }
         });
     }
@@ -140,15 +138,12 @@ export class BillingComponent {
   //     this.billingService
   //       .uploadExcelFileToGetData(this.uploadedSheet)
   //       .subscribe((res: any) => {
-  //         console.log(res);
   //       });
-  //     console.log(this.uploadedSheet);
   //   }
 
   uploadSheet() {
     this.billingService.uploadExcelFileToGetData(this.uploadedSheet).subscribe(
       (res: any) => {
-        console.log(res);
         this.visible = false;
         this.uploadedSheet = null;
         this.getInvoices();
@@ -210,12 +205,17 @@ export class BillingComponent {
 
   onResendInvoice(id: any) { 
     this.billingService.resendInvoice(id).subscribe((res: any) => {
-      console.log(res.body);
       this.messageService.add({
         severity: "success",
         summary: "Success",
-        detail: res.body,
+        detail: "Email Sent Successfully.",
       });
+    },(error)=>{
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: error?.error?.error,
+        });
     });
   }
 
