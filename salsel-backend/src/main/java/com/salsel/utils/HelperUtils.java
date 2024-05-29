@@ -34,9 +34,9 @@ import static com.salsel.service.impl.bucketServiceImpl.EMPLOYEE;
 
 @Component
 public class HelperUtils {
-    private AmazonS3 s3Client;
-    private BucketService bucketService;
-    private BillingRepository billingRepository;
+    private final AmazonS3 s3Client;
+    private final BucketService bucketService;
+    private final BillingRepository billingRepository;
 
     @Value("${application.bucket.name}")
     String bucketName;
@@ -44,9 +44,10 @@ public class HelperUtils {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public HelperUtils(AmazonS3 s3Client, BucketService bucketService, UserRepository userRepository) {
+    public HelperUtils(AmazonS3 s3Client, BucketService bucketService, BillingRepository billingRepository, UserRepository userRepository) {
         this.s3Client = s3Client;
         this.bucketService = bucketService;
+        this.billingRepository = billingRepository;
         this.userRepository = userRepository;
     }
 
