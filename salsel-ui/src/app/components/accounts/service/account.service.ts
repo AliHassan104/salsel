@@ -102,7 +102,7 @@ export class AccountService {
     return this.http.get(`${this.url}account/logged-in-user-status-counts`);
   }
 
-  getAllAccountNumbers(params:any){
+  getAllAccountNumbers(params: any) {
     return this.http.get(`${this.url}account-numbers`, {
       params,
       observe: "response",

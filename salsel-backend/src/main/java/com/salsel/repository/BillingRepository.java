@@ -31,4 +31,5 @@ public interface BillingRepository extends JpaRepository<Billing,Long> {
 
     @Query("SELECT b from Billing b WHERE b.customerAccountNumber = :accountNumber")
     List<Billing> findByCustomerAccountNumber(Long accountNumber);
+
 }

@@ -9,13 +9,15 @@
             </div>
             <hr>
             <p-table #dt1 [value]="invoices" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-                [globalFilterFields]="['invoiceNo']" styleClass="p-datatable-gridlines" [paginator]="true"
+                [globalFilterFields]="['invoiceNo','customerAccountNumber','airwayBillNo']" styleClass="p-datatable-gridlines" [paginator]="true"
                 [rowsPerPageOptions]="[5, 10, 20]" responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <div class="mb-2">
-                            <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
-                                (click)="clear(dt1)"></button>
+                            <!-- <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                                (click)="clear(dt1)"></button> -->
+                            <button pButton label="Excel Format" class="p-button-outlined" icon="pi pi-download"
+                                (click)="getExcelFormatSheet()"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
                             <!-- <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download"
@@ -60,6 +62,11 @@
                         </th>
                         <th style="min-width: 13rem">
                             <div class="flex justify-content-center align-items-center">
+                                Account No
+                            </div>
+                        </th>
+                        <th style="min-width: 13rem">
+                            <div class="flex justify-content-center align-items-center">
                                 Customer Ref#
                             </div>
                         </th>
@@ -71,11 +78,6 @@
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
                                 Charges
-                            </div>
-                        </th>
-                        <th style="min-width: 10rem">
-                            <div class="flex justify-content-center align-items-center">
-                                Status
                             </div>
                         </th>
                     </tr>
@@ -106,6 +108,10 @@
                                 pRipple type="button" icon="pi pi-download"
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
                                 (click)="onDownlaodBill()"></button>
+                            <button pTooltip="Resend Invoice" tooltipPosition="bottom" *ngIf="activeStatus" pButton
+                                pRipple type="button" icon="pi pi-send"
+                                class="p-button-rounded p-button-primary p-button-outlined mx-1"
+                                (click)="onResendInvoice(data?.id)"></button>
                         </td>
                         <td>
                             {{data?.invoiceNo}}
@@ -118,6 +124,9 @@
                         </td>
                         <td>
                             {{data?.airwayBillNo}}
+                        </td>
+                        <td>
+                            {{data?.customerAccountNumber}}
                         </td>
                         <td>
                             {{data?.customerRef}}
@@ -135,8 +144,8 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td style="text-align: start !important;" colspan="8">{{activeStatus?'No employee found.':'No
-                            Inactive employee found.'}}</td>
+                        <td style="text-align: start !important;" colspan="8">{{activeStatus?'No Invoice found.':'No
+                            Inactive invoice found.'}}</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="loadingbody">
@@ -164,8 +173,8 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visible" [modal]="true" (onHide)="onCloseDialog()" [style]="{ width: '70vw' }" class="customDialogExcel"
-        [draggable]="false" [resizable]="false">
+    <p-dialog [(visible)]="visible" [modal]="true" (onHide)="onCloseDialog()" [style]="{ width: '70vw' }"
+        class="customDialogExcel" [draggable]="false" [resizable]="false">
         <ng-template pTemplate="header">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 16px;">
                 <i class="pi pi-cloud-upload mr-3 custom-icon-upload" style="font-size: 2rem"></i>
@@ -181,11 +190,11 @@
                 <i class="pi pi-cloud-upload"></i>
                 <h5>Choose a file or drag & drop it here</h5>
                 <p>Only XLSX formats are allowed, up to 1MB</p>
-                <label class="fileInput" *ngIf="!uploadedSheet">
-                    <p class="fileUploadStyle">Browse File</p>
+                <label class="fileInput">
+                    <p class="fileUploadStyle">{{uploadedSheet ? 'Change File' : 'Browse File'}}</p>
                     <input type="file" (change)="onFileSelected($event)" accept=".xlsx">
                 </label>
-                <p class="fileUploadStyle" *ngIf="uploadedSheet">Upload File</p>
+                <a class="fileUploadStyle ml-2" *ngIf="uploadedSheet" (click)="uploadSheet()">Upload File</a>
             </div>
             <div class="upload-file-container flex justify-content-between align-items-center mt-3"
                 *ngIf="uploadedSheet">
@@ -199,14 +208,15 @@
                 </div>
                 <div>
                     <i class="pi pi-eye mx-2 uploaded-sheet-icon" (click)="viewExcelFile()"></i>
-                <i class="pi pi-times uploaded-sheet-icon" (click)="clearFileInput()"></i>
+                    <i class="pi pi-times uploaded-sheet-icon" (click)="clearFileInput()"></i>
                 </div>
             </div>
         </div>
     </p-dialog>
 
 
-    <p-dialog [(visible)]="excelViewDialog" [style]="{ width: '100vw', height: '100vh' }" maximizable="true" [modal]="true">
+    <p-dialog [(visible)]="excelViewDialog" [style]="{ width: '100vw', height: '100vh' }" maximizable="true"
+        [modal]="true">
         <app-invoice-excel-data [excelData]="excelData" [tableHeaders]="tableHeaders"></app-invoice-excel-data>
     </p-dialog>
 

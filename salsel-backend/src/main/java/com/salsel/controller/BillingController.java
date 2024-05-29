@@ -33,11 +33,11 @@ public class BillingController {
 
     @PostMapping("/billing")
     @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
-    public ResponseEntity<List<BillingAttachment>> createBilling(@RequestBody MultipartFile file){
+    public ResponseEntity<List<BillingAttachment>> createBilling(@RequestPart("file") MultipartFile file){
         return ResponseEntity.ok(billingService.save(file));
     }
 
-    @PostMapping("/upload-excel")
+    @PostMapping("/billing/upload-excel")
     @PreAuthorize("hasAuthority('CREATE_BILLING') and hasAuthority('READ_BILLING')")
     public ResponseEntity<List<BillingDto>> uploadExcelFile(@RequestPart("file") MultipartFile file){
         List<BillingDto> billingList = billingService.uploadDataExcel(file);

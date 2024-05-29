@@ -16,6 +16,27 @@ export class BillingService {
 
   url = environment.URL;
 
+  uploadExcelFileToGetData(file: File) {
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    return this.http.post<any>(`${this.url}billing`, formData);
+  }
+
+  downloadUploadExcelFormat(){
+    return this.http.get(`${this.url}file/Download/UploadInvoice.xlsx`, {
+      observe: "response",
+      responseType: "blob" as "json",
+    });
+  }
+
+  resendInvoice(id:any){
+    return this.http.get(`${this.url}billing/resend-invoice/${id}`, {
+      observe: "response",
+    });
+  }
+
   getAllInvoices(params: any): Observable<EntityBillingResponseType> {
     return this.http.get<IBilling[]>(`${this.url}billing`, {
       params,
@@ -43,8 +64,8 @@ export class BillingService {
     let url = `${this.url}billing/status/${id}`;
     return this.http.put<any>(url, { observe: "response" });
   }
-  
-    getBillingReports() {
+
+  getBillingReports() {
     return this.http.get(`${this.url}download-billing`, {
       responseType: "blob" as "json",
     });

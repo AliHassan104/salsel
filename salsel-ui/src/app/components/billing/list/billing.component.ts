@@ -1,13 +1,13 @@
-import { DatePipe } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { finalize } from 'rxjs';
-import { DropdownService } from 'src/app/layout/service/dropdown.service';
-import { SessionStorageService } from '../../auth/service/session-storage.service';
-import { IBilling } from '../model/billingDto';
-import { BillingService } from '../service/billing.service';
+import { DatePipe } from "@angular/common";
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { MessageService } from "primeng/api";
+import { Table } from "primeng/table";
+import { catchError, finalize, of, tap } from "rxjs";
+import { DropdownService } from "src/app/layout/service/dropdown.service";
+import { SessionStorageService } from "../../auth/service/session-storage.service";
+import { IBilling } from "../model/billingDto";
+import { BillingService } from "../service/billing.service";
 import * as XLSX from "xlsx";
 
 @Component({
@@ -57,7 +57,7 @@ export class BillingComponent {
     //   fromDate: new FormControl(null, Validators.required),
     // });
 
-    this.getEmployees();
+    this.getInvoices();
     this.getAllProductFields();
     // this.getMinMax();
   }
@@ -70,7 +70,7 @@ export class BillingComponent {
   //   }
 
   //   Get all Employees
-  getEmployees() {
+  getInvoices() {
     const queryParams = {
       status: this.activeStatus,
     };
@@ -89,6 +89,7 @@ export class BillingComponent {
         .subscribe((res: any) => {
           if (res.status == 200) {
             this.invoices = res.body;
+            console.log(res.body);
           }
         });
     } else {
@@ -102,15 +103,20 @@ export class BillingComponent {
         .subscribe((res: any) => {
           if (res.status == 200) {
             this.invoices = res.body;
+            console.log(res.body);
           }
         });
     }
   }
 
   onFileSelected(event: any) {
+    this.fileInput = null;
     this.fileInput = event.target;
     if (this.fileInput.files && this.fileInput.files.length > 0) {
       const selectedFile = this.fileInput.files[0];
+
+      // Reset the input value to ensure the change event is triggered even if the same file is selected again
+      event.target.value = "";
 
       if (selectedFile.name.toLowerCase().endsWith(".xlsx")) {
         this.fileName = selectedFile.name;
@@ -127,6 +133,34 @@ export class BillingComponent {
         });
       }
     }
+  }
+
+
+  //   uploadSheet() {
+  //     this.billingService
+  //       .uploadExcelFileToGetData(this.uploadedSheet)
+  //       .subscribe((res: any) => {
+  //         console.log(res);
+  //       });
+  //     console.log(this.uploadedSheet);
+  //   }
+
+  uploadSheet() {
+    this.billingService.uploadExcelFileToGetData(this.uploadedSheet).subscribe(
+      (res: any) => {
+        console.log(res);
+        this.visible = false;
+        this.uploadedSheet = null;
+        this.getInvoices();
+      },
+      (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: error?.error?.error,
+        });
+      }
+    );
   }
 
   openExcelDialog() {
@@ -159,13 +193,30 @@ export class BillingComponent {
   }
 
   clearFileInput() {
-    this.fileInput.value = null;
+    this.fileInput = null;
     this.fileName = null;
     this.uploadedSheet = null;
 
     // Manually trigger the change event
     const inputChangeEvent = new Event("change", { bubbles: true });
-    this.fileInput.dispatchEvent(inputChangeEvent);
+    this.fileInput?.dispatchEvent(inputChangeEvent);
+  }
+
+  getExcelFormatSheet() {
+    this.billingService.downloadUploadExcelFormat().subscribe((res: any) => {
+      this.billingService.downloadExcelFile(res.body, "UploadInvoice.xlsx");
+    });
+  }
+
+  onResendInvoice(id: any) { 
+    this.billingService.resendInvoice(id).subscribe((res: any) => {
+      console.log(res.body);
+      this.messageService.add({
+        severity: "success",
+        summary: "Success",
+        detail: res.body,
+      });
+    });
   }
 
   onCloseDialog() {
@@ -174,12 +225,12 @@ export class BillingComponent {
 
   onRefresh() {
     this.refresh = true;
-    this.getEmployees();
+    this.getInvoices();
   }
 
   onPageChange(event?: any) {
     this.page = event.page;
-    this.getEmployees();
+    this.getInvoices();
   }
 
   //   For table filtering purpose
@@ -195,10 +246,10 @@ export class BillingComponent {
   onStatusChange(data) {
     if (data == "Active") {
       this.activeStatus = true;
-      this.getEmployees();
+      this.getInvoices();
     } else {
       this.activeStatus = false;
-      this.getEmployees();
+      this.getInvoices();
     }
   }
 
@@ -216,7 +267,7 @@ export class BillingComponent {
   confirmDeleteSelected() {
     this.billingService.removeInvoice(this.deleteId).subscribe((res) => {
       this.alert();
-      this.getEmployees();
+      this.getInvoices();
       this.deleteProductsDialog = false;
     });
   }

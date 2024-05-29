@@ -247,6 +247,7 @@ public class HelperUtils {
 
     public void updateBillingStatus(Long accountNumber) {
         // Find and update billing status
+
         List<Billing> updatedBillings = billingRepository.findByCustomerAccountNumber(accountNumber);
         updatedBillings.forEach(billing -> {
             billing.setIsEmailSend(true);
