@@ -250,6 +250,29 @@ p.timeline-opposite-content {
     display: none;
 }
 
+.data-table{
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.data-table::-webkit-scrollbar {
+  width: 0px; /* Width of the entire scrollbar */
+}
+
+.data-table::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the track */
+}
+
+.data-table::-webkit-scrollbar-thumb {
+  background-color: #93003c; /* Color of the thumb */
+  border-radius: 10px; /* Roundness of the thumb */
+  border: 2px solid #f1f1f1; /* Space around the thumb */
+}
+
+.data-table:hover::-webkit-scrollbar{
+    width: 8px;
+}
+
 .refresh {
   cursor: pointer;
   color: #000000;
