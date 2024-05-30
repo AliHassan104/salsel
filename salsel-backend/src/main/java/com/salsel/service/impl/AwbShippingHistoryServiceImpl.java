@@ -144,8 +144,6 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
         }
     }
 }
-
-
         }
 
         return awbShippingHistoryDtoList;
@@ -167,7 +165,7 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
             shippingMap.put("Tracking Number", awbShippingHistoryDto.getAwb().getUniqueNumber());
             shippingMap.put("Scan Date", awbShippingHistoryDto.getTimestamp().format(dateFormatter));
             shippingMap.put("Scan Time", awbShippingHistoryDto.getTimestamp().format(timeFormatter));
-            shippingMap.put("scanned By", awbShippingHistoryDto.getStatusUpdateByUser().getName());
+            shippingMap.put("Scanned By", awbShippingHistoryDto.getStatusUpdateByUser().getName());
             shippingMap.put("Current Status", awbShippingHistoryDto.getAwbStatus());
             shippingMap.put("Location", awbShippingHistoryDto.getStatusUpdateByUser().getCountry());
 

@@ -514,20 +514,22 @@ public class AwbServiceImpl implements AwbService {
     @Override
     public List<AwbDto> getAwbListByAccountNumbers(List<String> awbNumbers) {
         List<AwbDto> awbDtoList = new ArrayList<>();
-        Set<String> processedTrackingNumbers = new HashSet<>();
+        Set<String> processedAccountNumbers  = new HashSet<>();
 
         for (String accountNumber : awbNumbers) {
             // Check if the tracking number has already been processed
-            if (processedTrackingNumbers.contains(accountNumber)) {
+            if (processedAccountNumbers .contains(accountNumber)) {
                 continue;
             }
 
-            Awb awb = awbRepository.findByAccountNumber(accountNumber);
+            List<Awb> awbs = awbRepository.findByAccountNumber(accountNumber);
 
-            if (awb != null) {
-                AwbDto awbDto = toDto(awb);
-                awbDtoList.add(awbDto);
-                processedTrackingNumbers.add(accountNumber);
+            if (awbs != null && !awbs.isEmpty()) {
+                for (Awb awb : awbs) {
+                    AwbDto awbDto = toDto(awb);
+                    awbDtoList.add(awbDto);
+                }
+                processedAccountNumbers.add(accountNumber);
             }
         }
 
