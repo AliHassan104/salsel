@@ -523,7 +523,6 @@ public class AwbServiceImpl implements AwbService {
             }
 
             List<Awb> awbs = awbRepository.findByAccountNumber(accountNumber);
-            
 
             if (awbs != null && !awbs.isEmpty()) {
                 for (Awb awb : awbs) {
