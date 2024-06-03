@@ -89,6 +89,7 @@ export class TicketsdataComponent implements OnInit {
         .subscribe((res: any) => {
           if (res.status == 200) {
             this.tickets = res.body;
+
           }
         });
     } else {
