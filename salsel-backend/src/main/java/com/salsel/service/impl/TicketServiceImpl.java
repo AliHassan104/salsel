@@ -260,6 +260,14 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.countByLoggedInUser();
     }
 
+    @Override
+    public List<TicketDto> findTicketsForExcel(LocalDate startDate, LocalDate endDate, String ticketNumber, String ticketStatus, String ticketCategory, String ticketSubCategory, String department, String assignedTo) {
+        List<Ticket> tickets = ticketRepository.findTickets(startDate, endDate, ticketNumber, ticketStatus, ticketCategory, ticketSubCategory, department, assignedTo);
+        return tickets.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     private String getLoggedInUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof CustomUserDetail) {

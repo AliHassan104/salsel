@@ -32,4 +32,14 @@ public interface TicketService {
     Map<String, Long> getStatusCounts();
     Map<String, Long> getStatusCountsBasedOnLoggedInUser();
     Long getTicketCount();
+    List<TicketDto> findTicketsForExcel(
+            LocalDate startDate,
+            LocalDate endDate,
+            String ticketNumber,
+            String ticketStatus,
+            String ticketCategory,
+            String ticketSubCategory,
+            String department,
+            String assignedTo
+    );
 }

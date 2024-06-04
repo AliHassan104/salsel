@@ -137,6 +137,13 @@ public class TicketController {
         return ResponseEntity.ok().build();
     }
 
+
+//    ticket status
+//    tickt number
+//    category
+//    sub category
+//    department
+//    assign
     @GetMapping("/download-ticket-excel")
     public void downloadTicketsBetweenDates(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -147,6 +154,31 @@ public class TicketController {
         response.setHeader("Content-Disposition", "attachment; filename=tickets.xlsx");
 
         List<TicketDto> tickets = ticketService.getTicketsBetweenDates(startDate, endDate);
+        List<Map<String, Object>> excelData = excelGenerationService.convertTicketsToExcelData(tickets);
+
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(excelData, outputStream, TICKET_TYPE);
+        outputStream.close();
+    }
+
+
+//    http://localhost:8080/api/download-ticket-excel/by-criteria?startDate=2023-01-01&endDate=2024-05-31&ticketNumber=12345&ticketStatus=Open&ticketCategory=bug&ticketSubCategory=UI&department=Shipping&assignedTo=ROLE_ADMIN
+    @GetMapping("/download-ticket-excel/by-criteria")
+    public void downloadTicketsExcelByCriteria(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) String ticketNumber,
+            @RequestParam(required = false) String ticketStatus,
+            @RequestParam(required = false) String ticketCategory,
+            @RequestParam(required = false) String ticketSubCategory,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) String assignedTo,
+            HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=tickets.xlsx");
+
+        List<TicketDto> tickets = ticketService.findTicketsForExcel(startDate, endDate, ticketNumber, ticketStatus, ticketCategory, ticketSubCategory, department, assignedTo);
         List<Map<String, Object>> excelData = excelGenerationService.convertTicketsToExcelData(tickets);
 
         OutputStream outputStream = response.getOutputStream();

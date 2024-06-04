@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.criteria.CustomTicketRepository;
 import com.salsel.model.Awb;
 import com.salsel.model.Ticket;
 import com.salsel.model.User;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecificationExecutor<Ticket> {
+public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecificationExecutor<Ticket>, CustomTicketRepository {
 
     Optional<Ticket> findByShipperName(String name);
 
