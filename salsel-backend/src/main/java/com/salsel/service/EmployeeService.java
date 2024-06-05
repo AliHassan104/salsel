@@ -14,6 +14,7 @@ public interface EmployeeService {
     void setToActiveById(Long id);
     EmployeeDto update(Long id, EmployeeDto employeeDto, List<MultipartFile> pdfFiles, List<String> fileNames, MultipartFile passportFile, MultipartFile idFile);
 
-    List<Map<String,Object>> getAllEmployeeDataByExcel();
+    List<Map<String,Object>> getAllEmployeeDataByExcel(String department, String Country);
+
 
 }

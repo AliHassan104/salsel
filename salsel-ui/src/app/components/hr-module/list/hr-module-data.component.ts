@@ -12,6 +12,8 @@ import { HrModuleService } from '../service/hr-module.service';
 import { IEmployee } from '../model/employeeDto';
 import { FormvalidationService } from '../../Tickets/service/formvalidation.service';
 import { TicktingService } from '../../Tickets/service/tickting.service';
+import { DepartmentService } from '../../department/service/department.service';
+import { CountryService } from '../../country/service/country.service';
 
 @Component({
   selector: "app-hr-module-data",
@@ -31,6 +33,9 @@ export class HrModuleDataComponent {
   deleteProductsDialog: any;
   serachText?: string;
   refresh: boolean = true;
+  department?;
+  countries?;
+  isAnyFieldFilled: boolean = false;
 
   constructor(
     private _ticktingService: TicktingService,
@@ -41,7 +46,9 @@ export class HrModuleDataComponent {
     public sessionStorageService: SessionStorageService,
     private accountService: AccountService,
     private datePipe: DatePipe,
-    private formService: FormvalidationService
+    private formService: FormvalidationService,
+    private departmentService: DepartmentService,
+    private countryService: CountryService
   ) {}
 
   loading: any;
@@ -53,22 +60,29 @@ export class HrModuleDataComponent {
   totalRecords?: number;
 
   ngOnInit(): void {
-    // this.excelDataForm = new FormGroup({
-    //   toDate: new FormControl(null, Validators.required),
-    //   fromDate: new FormControl(null, Validators.required),
-    // });
+    this.excelDataForm = new FormGroup({
+      department: new FormControl(null),
+      country: new FormControl(null),
+    });
 
     this.getEmployees();
     this.getAllProductFields();
-    // this.getMinMax();
+
+    this.checkFields();
+
+    this.excelDataForm.valueChanges.subscribe(() => {
+      console.log("hello");
+      console.log(this.isAnyFieldFilled);
+
+      this.checkFields();
+    });
   }
 
-  //   getMinMax() {
-  //     this._ticktingService.getMinMax().subscribe((res: any) => {
-  //       this.minDate = new Date(res.minDate);
-  //       this.maxDate = new Date(res.maxDate);
-  //     });
-  //   }
+  checkFields() {
+    this.isAnyFieldFilled = Object.values(this.excelDataForm.controls).some(
+      (control) => control.value !== null && control.value !== ""
+    );
+  }
 
   //   Get all Employees
   getEmployees() {
@@ -138,6 +152,38 @@ export class HrModuleDataComponent {
     }
   }
 
+  onDownloadExcel(data: any) {
+    const formData = this.excelDataForm.value;
+    
+    const params = {
+        department:formData?.department,
+        country:formData?.country?.name
+    };
+
+    console.log(params);
+    
+
+    this.employeeService.getEmployeeReports(params).subscribe(
+      (res: any) => {
+        this._ticktingService.downloadExcelFile(res, `EmployeeData.xlsx`);
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Download Successfull",
+        });
+        this.excelDataForm.reset();
+        this.visible = false;
+      },
+      (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No Data Found",
+        });
+      }
+    );
+  }
+
   //   Get All Product Fields
   getAllProductFields() {
     this.dropdownService.getAllProductFields().subscribe((res) => {
@@ -147,6 +193,17 @@ export class HrModuleDataComponent {
           .productFieldValuesList
       );
     });
+
+    this.departmentService.getDepartments({ status: true }).subscribe((res) => {
+      this.department = res.body;
+      this.department = this.dropdownService.extractNames(this.department);
+    });
+
+    this.countryService.getAllCountries({status:true}).subscribe((res:any)=>{
+        this.countries = res;
+        console.log(res);
+        
+    })
   }
 
   confirmDeleteSelected() {
@@ -157,48 +214,12 @@ export class HrModuleDataComponent {
     });
   }
 
-  //   onDownloadExcel(data: any) {
-  //     if (this.excelDataForm.valid) {
-  //       const formattedDates = {
-  //         startDate: this.datePipe.transform(data.fromDate, "yyyy-MM-dd"),
-  //         endDate: this.datePipe.transform(data.toDate, "yyyy-MM-dd"),
-  //       };
-  //       console.log(formattedDates);
 
-  //       this._ticktingService.downloadEmployeeDataInExcel(formattedDates).subscribe(
-  //         (res: any) => {
-  //           this._ticktingService.downloadExcelFile(
-  //             res,
-  //             `Employee${formattedDates.startDate}_to_${formattedDates.endDate}.xlsx`
-  //           );
-  //           this.messageService.add({
-  //             severity: "success",
-  //             summary: "Success",
-  //             detail: "Download Successfull",
-  //           });
-  //           this.excelDataForm.reset();
-  //           this.visible = false;
-  //         },
-  //         (error) => {
-  //           this.messageService.add({
-  //             severity: "error",
-  //             summary: "Error",
-  //             detail: "No Data Found",
-  //           });
-  //         }
-  //       );
-  //     } else {
-  //       this.formService.markFormGroupTouched(this.excelDataForm);
-  //       this.messageService.add({
-  //         severity: "error",
-  //         summary: "Error",
-  //         detail: "Please Fill All The Fields.",
-  //       });
-  //     }
-  //   }
 
   onCancel() {
     this.visible = false;
+    this.excelDataForm.reset();
+    this.isAnyFieldFilled = false
   }
 
   //   Delete Employee
@@ -228,11 +249,6 @@ export class HrModuleDataComponent {
     );
   }
 
-  onDownloadEmployeeExcel() {
-    this.employeeService.getEmployeeReports().subscribe((res: any) => {
-      this.employeeService.downloadExcelFile(res, "EmployeeData.xlsx");
-    });
-  }
 
   downloadError() {
     this.messageService.add({

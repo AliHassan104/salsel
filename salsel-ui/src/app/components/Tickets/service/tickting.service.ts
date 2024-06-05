@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { Ticket } from "../model/ticketValuesDto";
@@ -34,8 +34,19 @@ export class TicktingService {
   }
 
   downloadTicketDataInExcel(params: any) {
-    return this.http.get(`${this.url}download-ticket-excel`, {
-      params,
+    let httpParams = new HttpParams();
+
+    for (const key in params) {
+      if (params[key] !== null && params[key] !== "") {
+        httpParams = httpParams.set(key, params[key]);
+      }
+    }
+
+    console.log(httpParams);
+    
+    
+    return this.http.get(`${this.url}download-ticket-excel/by-criteria`, {
+      params:httpParams,
       responseType: "blob" as "json", // Set the response type to 'blob'
     });
   }

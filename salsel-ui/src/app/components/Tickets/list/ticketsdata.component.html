@@ -172,10 +172,10 @@
                     <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
                         [maxDate]="maxDate" formControlName="fromDate" appendTo="body"
                         [ngClass]="{'ng-dirty':excelDataForm.get('fromDate')?.touched && excelDataForm.get('fromDate')?.invalid}"></p-calendar>
-                    <small *ngIf="!excelDataForm.get('fromDate')?.valid && excelDataForm.get('fromDate')?.touched"
+                    <!-- <small *ngIf="!excelDataForm.get('fromDate')?.valid && excelDataForm.get('fromDate')?.touched"
                         class="text-red-500">
                         Required
-                    </small>
+                    </small> -->
                 </div>
 
                 <div class="field col-6">
@@ -183,14 +183,89 @@
                     <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" class="customCalender" [minDate]="minDate"
                         [maxDate]="maxDate" formControlName="toDate" appendTo="body"
                         [ngClass]="{'ng-dirty':excelDataForm.get('toDate')?.touched && excelDataForm.get('toDate')?.invalid}"></p-calendar>
-                    <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
+                    <!-- <small *ngIf="!excelDataForm.get('toDate')?.valid && excelDataForm.get('toDate')?.touched"
                         class="text-red-500">
                         Required
-                    </small>
+                    </small> -->
+                </div>
+                <!-- Department -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="department"><strong>Department</strong></label>
+                    <p-dropdown appendTo="body" [options]="department" placeholder="Enter department" formControlName="department"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('department')?.touched && excelDataForm.get('department')?.invalid}"
+                        (onChange)="getDepartment($event)"></p-dropdown>
+                    <!-- <small *ngIf="!excelDataForm.get('department')?.valid && excelDataForm.get('department')?.touched" class="text-red-500">
+                        Required
+                    </small> -->
+                </div>
+                <!-- Department Category -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="departmentCategory"><strong>Department Category</strong></label>
+                    <p-dropdown appendTo="body" [options]="departmentCategory" placeholder="Enter department category"
+                        formControlName="departmentCategory" (onChange)="getDepartmentCategory($event.value)"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('departmentCategory')?.touched && excelDataForm.get('departmentCategory')?.invalid}"></p-dropdown>
+                    <!-- <small
+                        *ngIf="!excelDataForm.get('departmentCategory')?.valid && excelDataForm.get('departmentCategory')?.touched && !excelDataForm.get('departmentCategory')?.disabled"
+                        class="text-red-500">
+                        Required
+                    </small> -->
+                </div>
+                <!-- Ticket Category -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="category"><strong>Category</strong></label>
+                    <p-dropdown appendTo="body" [options]="categories" placeholder="Select category" formControlName="category"
+                        (onChange)="getTicketCategory($event.value)"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('category')?.touched && excelDataForm.get('category')?.invalid}"></p-dropdown>
+                    <!-- <small
+                        *ngIf="!excelDataForm.get('category')?.valid && excelDataForm.get('category')?.touched && !excelDataForm.get('category')?.disabled"
+                        class="text-red-500">
+                        Required
+                    </small> -->
+                </div>
+
+                <!-- Ticket Sub Category -->
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="category"><strong>Sub Category</strong></label>
+                    <p-dropdown appendTo="body" [options]="subCategories" placeholder="Select Sub category" formControlName="subCategory"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('subCategory')?.touched && excelDataForm.get('subCategory')?.invalid}"></p-dropdown>
+                    <!-- <small
+                        *ngIf="!excelDataForm.get('subCategory')?.valid && excelDataForm.get('subCategory')?.touched && !excelDataForm.get('subCategory')?.disabled"
+                        class="text-red-500">
+                        Required
+                    </small> -->
+                </div>
+                <!-- Assigned to -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="assignedTo"><strong>Assigned To</strong></label>
+                    <p-dropdown appendTo="body" [options]="assignedTo" placeholder="Assigned To" formControlName="assignedTo"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('assignedTo')?.touched && excelDataForm.get('assignedTo')?.invalid}"></p-dropdown>
+                    <!-- <small *ngIf="!excelDataForm.get('assignedTo')?.valid && excelDataForm.get('assignedTo')?.touched" class="text-red-500">
+                        Required
+                    </small> -->
+                </div>
+                <!-- Status -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="status"><strong>Ticket Status</strong></label>
+                    <p-dropdown appendTo="body" [options]="ticketStatus" placeholder="Select Ticket Status"
+                        formControlName="ticketStatus"
+                        [ngClass]="{'ng-dirty':excelDataForm.get('status')?.touched && excelDataForm.get('status')?.invalid}"></p-dropdown>
+                    <!-- <small *ngIf="!excelDataForm.get('status')?.valid && excelDataForm.get('status')?.touched" class="text-red-500">
+                        Required
+                    </small> -->
+                </div>
+                <!-- Ticket Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="status"><strong>Ticket Number</strong></label>
+                    <input pInputText id="email" type="text" formControlName="ticketNumber"
+                        placeholder="Enter Ticket Number" [required]="true" />
+                    <!-- <textarea #trackingField pInputTextarea type="number" cols="4" rows="3" class="w-full"></textarea> -->
+                    <!-- <small *ngIf="!excelDataForm.get('status')?.valid && excelDataForm.get('status')?.touched" class="text-red-500">
+                        Required
+                    </small> -->
                 </div>
             </div>
             <div class="flex justify-content-center w-full mt-5">
-                <button pButton label="Download" type="Submit" class="mx-3 submit-btn add-btn"></button>
+                <button pButton label="Download" type="Submit" class="mx-3 submit-btn add-btn" [disabled]="!isAnyFieldFilled"></button>
                 <button pButton label="Cancel" (click)="onCancel()" type="button" class="mx-3 p-button-outlined"></button>
             </div>
         </form>

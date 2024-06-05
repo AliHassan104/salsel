@@ -1,5 +1,6 @@
 package com.salsel.repository;
 
+import com.salsel.criteria.CustomEmployeeRepository;
 import com.salsel.model.Employee;
 import com.salsel.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<Employee, Long>, CustomEmployeeRepository {
     @Modifying
     @Query("UPDATE Employee e SET e.status = false WHERE e.id = :id")
     void setStatusInactive(@Param("id") Long id);

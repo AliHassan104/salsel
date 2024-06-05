@@ -99,7 +99,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/download-employee-excel")
-    public void downloadAccountsBetweenDates(HttpServletResponse response) throws IOException {
+    public void downloadAccountsBetweenDates(HttpServletResponse response, @RequestParam(required = false) String department,
+                                             @RequestParam(required = false) String country) throws IOException {
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=accounts.xlsx");
@@ -108,7 +109,7 @@ public class EmployeeController {
         OutputStream outputStream = response.getOutputStream();
 
         // Generate the billing report Excel data
-        ByteArrayOutputStream excelData = excelGenerationService.generateEmployeeReport(employeeService.getAllEmployeeDataByExcel());
+        ByteArrayOutputStream excelData = excelGenerationService.generateEmployeeReport(employeeService.getAllEmployeeDataByExcel(department,country));
 
         // Write the generated Excel data to the response OutputStream
         excelData.writeTo(outputStream);

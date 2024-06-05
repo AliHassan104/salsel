@@ -259,8 +259,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Map<String, Object>> getAllEmployeeDataByExcel() {
-        List<Employee> employeeList = employeeRepository.findAllInDesOrderByIdAndStatus(true);
+    public List<Map<String, Object>> getAllEmployeeDataByExcel(String department,String country) {
+        List<Employee> employeeList = employeeRepository.findEmployee(department,country);
         List<Map<String, Object>> result = new ArrayList<>();
         int count = 1;
 

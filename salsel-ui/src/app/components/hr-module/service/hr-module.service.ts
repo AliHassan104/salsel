@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Employee, IEmployee } from "../model/employeeDto";
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
 
@@ -110,8 +110,19 @@ export class HrModuleService {
     return this.http.put<any>(url, { observe: "response" });
   }
 
-  getEmployeeReports() {
+  getEmployeeReports(params:any) {
+    let httpParams = new HttpParams();
+
+    for (const key in params) {
+      if (params[key] !== null && params[key] !== "") {
+        httpParams = httpParams.set(key, params[key]);
+      }
+    }
+
+    console.log(httpParams);
+
     return this.http.get(`${this.url}download-employee-excel`, {
+    params:httpParams,
       responseType: "blob" as "json",
     });
   }
