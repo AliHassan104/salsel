@@ -119,7 +119,6 @@ export class HrModuleService {
       }
     }
 
-    console.log(httpParams);
 
     return this.http.get(`${this.url}download-employee-excel`, {
     params:httpParams,

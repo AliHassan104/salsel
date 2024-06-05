@@ -71,8 +71,6 @@ export class HrModuleDataComponent {
     this.checkFields();
 
     this.excelDataForm.valueChanges.subscribe(() => {
-      console.log("hello");
-      console.log(this.isAnyFieldFilled);
 
       this.checkFields();
     });
@@ -159,8 +157,6 @@ export class HrModuleDataComponent {
         department:formData?.department,
         country:formData?.country?.name
     };
-
-    console.log(params);
     
 
     this.employeeService.getEmployeeReports(params).subscribe(
@@ -201,7 +197,6 @@ export class HrModuleDataComponent {
 
     this.countryService.getAllCountries({status:true}).subscribe((res:any)=>{
         this.countries = res;
-        console.log(res);
         
     })
   }
