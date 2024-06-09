@@ -16,13 +16,9 @@ public interface ExcelGenerationService {
     List<Map<String,Object>> convertAirBillsToExcelData(List<AwbDto> airbills);
     ByteArrayOutputStream generateAwbStatusReport(String status) throws IOException;
     ByteArrayOutputStream generateAwbTransitStatusReport() throws IOException;
-
     Map<Long, List<ByteArrayOutputStream>> generateBillingReports(List<Map<String, Object>> billingMaps);
-
     ByteArrayOutputStream generateEmployeeReport(List<Map<String, Object>> transitStatusReportData) throws IOException;
-
     ByteArrayOutputStream generateShipmentTrackingReport(List<Map<String, Object>> transitStatusReportData) throws IOException;
-
 
     void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
 }

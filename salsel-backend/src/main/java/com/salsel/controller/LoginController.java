@@ -8,25 +8,31 @@ import com.salsel.dto.WebUserHistoryDto;
 import com.salsel.service.UserService;
 import com.salsel.service.WebUserHistoryService;
 import com.salsel.service.impl.MyUserDetailServiceImplementation;
+import com.salsel.utils.HelperUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class LoginController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final HelperUtils helperUtils;
     private final MyUserDetailServiceImplementation myUserDetailService;
     private final UserService userService;
     private final WebUserHistoryService webUserHistoryService;
 
-    public LoginController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, MyUserDetailServiceImplementation myUserDetailService, UserService userService, WebUserHistoryService webUserHistoryService) {
+    public LoginController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, HelperUtils helperUtils, MyUserDetailServiceImplementation myUserDetailService, UserService userService, WebUserHistoryService webUserHistoryService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.helperUtils = helperUtils;
         this.myUserDetailService = myUserDetailService;
         this.userService = userService;
         this.webUserHistoryService = webUserHistoryService;
@@ -62,6 +68,34 @@ public class LoginController {
             String jwtToken = jwtUtil.generateToken(userDetails);
             return ResponseEntity.ok(new AuthenticationResponse(jwtToken,user.getEmail()));
         }
+    }
+
+    @PostMapping("/login-app")
+    public ResponseEntity<?> createAuthenticationTokenForApp(@RequestBody LoginCredentials loginCredentials) throws Exception {
+
+        String email = loginCredentials.getEmail();
+        String password = loginCredentials.getPassword();
+        UserDetails userDetails;
+
+        try {
+            if (email.contains("@")) {
+                userDetails = helperUtils.authenticate(email, password);
+            } else {
+                UserDto user = userService.findByEmployeeId(email);
+                userDetails = helperUtils.authenticate(user.getEmail(), password);
+            }
+
+            helperUtils.checkRole(userDetails);
+
+        } catch (BadCredentialsException e) {
+            log.error("Authentication failed: {}", e.getMessage());
+            throw e; // Rethrow the exception after logging
+        } catch (Exception e) {
+            log.error("Unexpected error during authentication: {}", e.getMessage());
+            throw new BadCredentialsException("Authentication failed due to unexpected error", e);
+        }
+        String jwtToken = jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthenticationResponse(jwtToken, email));
     }
 
     @PostMapping("/login/web-user")

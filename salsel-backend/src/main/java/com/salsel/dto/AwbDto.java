@@ -60,5 +60,6 @@ public class AwbDto {
     private Boolean emailFlag;
     private String awbUrl;
     private String awbStatus;
+    private String pdaScan;
     private User assignedToUser;
 }

@@ -71,6 +71,13 @@ public class AwbController {
         return ResponseEntity.ok(awbDtoList);
     }
 
+    @GetMapping("/awb/assigned-user/id")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity<List<AwbDto>> getAllAwbByAssignedUserId(@RequestParam(value = "id") Long id) {
+        List<AwbDto> awbDtoList = awbService.getAllAwbByAssignedUser(id);
+        return ResponseEntity.ok(awbDtoList);
+    }
+
     @GetMapping("/awb/logged-in-user-role")
     @PreAuthorize("hasAuthority('READ_AWB')")
     public ResponseEntity<List<AwbDto>> getAllAwbByLoggedInUserRole(@RequestParam(value = "status") Boolean status) {
@@ -174,6 +181,15 @@ public class AwbController {
                                                             @RequestParam() Long uniqueNumber,
                                                             @RequestParam() String comment) {
         AwbDto updatedAwbDto = awbService.updateAwbStatusAndCommentOnScan(uniqueNumber,status,comment);
+        return ResponseEntity.ok(updatedAwbDto);
+    }
+
+    @PutMapping("/awb/pda-scan/unique-number/comment")
+    @PreAuthorize("hasAuthority('CREATE_AWB') and hasAuthority('READ_AWB')")
+    public ResponseEntity<AwbDto> updatePdaScanStatusAndComment(@RequestParam() String status,
+                                                            @RequestParam() Long uniqueNumber,
+                                                            @RequestParam() String comment) {
+        AwbDto updatedAwbDto = awbService.updatePdaScanStatusAndCommentOnScan(uniqueNumber,status,comment);
         return ResponseEntity.ok(updatedAwbDto);
     }
 

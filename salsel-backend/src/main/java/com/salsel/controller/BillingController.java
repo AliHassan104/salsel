@@ -1,5 +1,6 @@
 package com.salsel.controller;
 
+import com.salsel.dto.AwbDto;
 import com.salsel.dto.BillingDto;
 import com.salsel.model.BillingAttachment;
 import com.salsel.service.BillingService;
@@ -16,13 +17,15 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+import static com.salsel.constants.ExcelConstants.SALASSIL_STATEMENT;
+import static com.salsel.constants.ExcelConstants.SCANS;
+
 @RestController
 @RequestMapping("/api")
 public class BillingController {
 
     private final BillingService billingService;
     private final ExcelGenerationService excelGenerationService;
-
     private final PdfGenerationService pdfGenerationService;
 
     public BillingController(BillingService billingService, ExcelGenerationService excelGenerationService, PdfGenerationService pdfGenerationService) {
@@ -80,32 +83,6 @@ public class BillingController {
         return ResponseEntity.ok().build();
     }
 
-//    @GetMapping("/billings")
-//    @PreAuthorize("hasAuthority('READ_BILLING')")
-//    public ResponseEntity<Map<Long, List<BillingDto>>> getAllBillingsGroupedByInvoice(@RequestParam(value = "status") Boolean status) {
-//        Map<Long, List<BillingDto>> billingGroupedByInvoice = billingService.getAllGroupedByInvoice(status);
-//        return ResponseEntity.ok(billingGroupedByInvoice);
-//    }
-
-    @PostMapping("/download-billing-xl")
-    public void downloadBillingExcel(@RequestBody List<BillingDto> billingDtoList,HttpServletResponse response) throws IOException {
-
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=billingExcel.xlsx");
-
-        // Get the OutputStream from the response
-        OutputStream outputStream = response.getOutputStream();
-
-        // Generate the billing report Excel data
-//        ByteArrayOutputStream excelData = excelGenerationService.generateBillingReport(billingDtoList);
-
-        // Write the generated Excel data to the response OutputStream
-//        excelData.writeTo(outputStream);
-
-        // Close the OutputStream
-        outputStream.close();
-    }
-
     @GetMapping("/billing/resend-invoice/{id}")
     @PreAuthorize("hasAuthority('READ_BILLING')")
     public ResponseEntity<Void> resendInvoice(@PathVariable Long id){
@@ -113,6 +90,18 @@ public class BillingController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/billing/salassil-statement")
+    @PreAuthorize("hasAuthority('READ_BILLING')")
+    public void getMultipleAwbStatusOnScanReport(HttpServletResponse response) throws IOException {
+
+        List<Map<String, Object>> data = billingService.getSalaasilStatmentForAllTheInvoices();
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=Salassil_Statement.xlsx");
+
+        OutputStream outputStream = response.getOutputStream();
+        excelGenerationService.createExcelFile(data, outputStream, SALASSIL_STATEMENT);
+        outputStream.close();
+    }
 }
 
-//http://localhost:8080/api/file/Download/UploadInvoice.xlsx

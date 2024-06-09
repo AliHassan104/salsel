@@ -6,11 +6,17 @@ import com.lowagie.text.pdf.PdfReader;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.*;
+import com.salsel.model.Awb;
+import com.salsel.model.AwbShippingHistory;
+import com.salsel.model.Role;
+import com.salsel.model.User;
 import com.salsel.repository.AwbRepository;
 import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.repository.UserRepository;
-import com.salsel.service.*;
+import com.salsel.service.AwbService;
+import com.salsel.service.AwbShippingHistoryService;
+import com.salsel.service.CodeGenerationService;
+import com.salsel.service.PdfGenerationService;
 import com.salsel.utils.AssignmentEmailsUtils;
 import com.salsel.utils.HelperUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +30,6 @@ import org.springframework.ui.Model;
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -230,6 +235,18 @@ public class AwbServiceImpl implements AwbService {
         return awbDtoList;
     }
 
+    @Override
+    public List<AwbDto> getAllAwbByAssignedUser(Long userId) {
+        List<Awb> awbList = awbRepository.findAllInDesOrderByAssignedUserId(userId);
+        List<AwbDto> awbDtoList = new ArrayList<>();
+
+        for (Awb awb : awbList) {
+            AwbDto awbDto = toDto(awb);
+            awbDtoList.add(awbDto);
+        }
+        return awbDtoList;
+    }
+
 
     @Override
     public List<AwbDto> getAwbByLoggedInUserRole(Boolean status) {
@@ -421,6 +438,25 @@ public class AwbServiceImpl implements AwbService {
         sendEmailAsync(updatedAwb);
         return toDto(updatedAwb);
     }
+
+    @Override
+    public AwbDto updatePdaScanStatusAndCommentOnScan(Long uniqueNumber, String pdaScan, String comment) {
+        Awb existingAwb = awbRepository.findByUniqueNumber(uniqueNumber)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Awb not found for Tracking Number => %d", uniqueNumber)));
+
+        User currentUser = helperUtils.getCurrentUser();
+        existingAwb.setAssignedToUser(currentUser);
+        existingAwb.setCreatedBy(currentUser.getEmail());
+        existingAwb.setPdaScan(pdaScan);
+
+        Awb updatedAwb = awbRepository.save(existingAwb);
+        awbShippingHistoryService.addAwbShippingHistory(updatedAwb);
+        awbShippingHistoryService.addCommentToAwbShippingHistory(comment, updatedAwb.getId());
+
+        sendEmailAsync(updatedAwb);
+        return toDto(updatedAwb);
+    }
+
 
     @Override
     @Transactional
@@ -816,6 +852,7 @@ public class AwbServiceImpl implements AwbService {
                 .createdBy(awb.getCreatedBy())
                 .assignedTo(awb.getAssignedTo())
                 .assignedToUser(awb.getAssignedToUser())
+                .pdaScan(awb.getPdaScan())
                 .build();
     }
 
@@ -859,6 +896,7 @@ public class AwbServiceImpl implements AwbService {
                 .createdBy(awbDto.getCreatedBy())
                 .assignedTo(awbDto.getAssignedTo())
                 .assignedToUser(awbDto.getAssignedToUser())
+                .pdaScan(awbDto.getPdaScan())
                 .build();
     }
 }
