@@ -30,6 +30,12 @@ export class BillingService {
       responseType: "blob" as "json",
     });
   }
+  downloadStatementExcelFormat(){
+    return this.http.get(`${this.url}billing/salassil-statement`, {
+      observe: "response",
+      responseType: "blob" as "json",
+    });
+  }
 
   resendInvoice(id:any){
     return this.http.get(`${this.url}billing/resend-invoice/${id}`, {

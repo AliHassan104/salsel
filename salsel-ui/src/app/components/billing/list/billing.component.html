@@ -18,6 +18,8 @@
                                 (click)="clear(dt1)"></button> -->
                             <button pButton label="Excel Format" class="p-button-outlined" icon="pi pi-download"
                                 (click)="getExcelFormatSheet()"></button>
+                            <button pButton label="Statement" class="p-button-outlined ml-3 " icon="pi pi-download"
+                                (click)="getBillingStatement()"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
                             <!-- <button pButton label="Excel" class="p-button-outlined ml-3" icon="pi pi-download"
@@ -104,10 +106,10 @@
                                 type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveEmployee(data.id)"></button>
-                            <button pTooltip="Download Invoice" tooltipPosition="bottom" *ngIf="activeStatus" pButton
+                            <!-- <button pTooltip="Download Invoice" tooltipPosition="bottom" *ngIf="activeStatus" pButton
                                 pRipple type="button" icon="pi pi-download"
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
-                                (click)="onDownlaodBill()"></button>
+                                (click)="onDownlaodBill()"></button> -->
                             <button pTooltip="Resend Invoice" tooltipPosition="bottom" *ngIf="activeStatus" pButton
                                 pRipple type="button" icon="pi pi-send"
                                 class="p-button-rounded p-button-primary p-button-outlined mx-1"

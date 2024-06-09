@@ -203,7 +203,13 @@ export class BillingComponent {
     });
   }
 
-  onResendInvoice(id: any) { 
+  getBillingStatement(){
+    this.billingService.downloadStatementExcelFormat().subscribe((res: any) => {
+      this.billingService.downloadExcelFile(res.body, "Billing_Statement.xlsx");
+    });
+  }
+
+  onResendInvoice(id: any) {
     this.billingService.resendInvoice(id).subscribe((res: any) => {
       this.messageService.add({
         severity: "success",
