@@ -15,7 +15,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.salsel.service.impl.bucketServiceImpl.EMPLOYEE;
@@ -37,6 +45,8 @@ public class HelperUtils {
     private final AmazonS3 s3Client;
     private final BucketService bucketService;
     private final BillingRepository billingRepository;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
     @Value("${application.bucket.name}")
     String bucketName;
@@ -44,10 +54,12 @@ public class HelperUtils {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public HelperUtils(AmazonS3 s3Client, BucketService bucketService, BillingRepository billingRepository, UserRepository userRepository) {
+    public HelperUtils(AmazonS3 s3Client, BucketService bucketService, BillingRepository billingRepository, AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserRepository userRepository) {
         this.s3Client = s3Client;
         this.bucketService = bucketService;
         this.billingRepository = billingRepository;
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
     }
 
@@ -271,4 +283,26 @@ public class HelperUtils {
         connection.setRequestMethod("GET");
         return connection.getInputStream();
     }
+
+    public UserDetails authenticate(String email, String password) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            return userDetailsService.loadUserByUsername(email);
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Incorrect Username or Password!", e);
+        }
+    }
+
+    public void checkRole(UserDetails userDetails) {
+        Set<String> allowedRoles = Set.of("ROLE_ADMIN", "ROLE_COURIER");
+
+        boolean hasRequiredRole = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(allowedRoles::contains);
+
+        if (!hasRequiredRole) {
+            throw new BadCredentialsException("User does not have the required role. Access denied.");
+        }
+    }
+
 }

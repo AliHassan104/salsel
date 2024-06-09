@@ -48,7 +48,9 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/download-billing",
             "/api/reset-code-check",
             "/api/awb/status-report/{status}",
-            "/api/awb/transit-status-report"
+            "/api/awb/transit-status-report",
+            "/api/billing/salassil-statement",
+            "/api/login-app",
     };
 
     @Autowired

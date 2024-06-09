@@ -255,6 +255,52 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
+    public List<Map<String, Object>> getSalaasilStatmentForAllTheInvoices() {
+        LocalDate date = LocalDate.now();
+        List<Billing> billings = billingRepository.findAllBillingsUpToDate(date);
+        List<Map<String, Object>> result = new ArrayList<>();
+        int count = 0;
+
+        Set<String> processedInvoices = new HashSet<>();
+
+        for (Billing billing : billings) {
+            String invoiceNo = billing.getInvoiceNo();
+            if (processedInvoices.contains(invoiceNo)) {
+                continue; // Skip already processed invoices
+            }
+
+            List<Billing> sameInvoiceBillings = billings.stream()
+                    .filter(b -> b.getInvoiceNo().equals(invoiceNo))
+                    .collect(Collectors.toList());
+
+            double totalAmountBeforeTax = sameInvoiceBillings.stream()
+                    .mapToDouble(Billing::getCharges)
+                    .sum();
+
+            // Calculate VAT/tax (assuming 5%)
+            double vat = totalAmountBeforeTax * 0.05;
+            double totalAmount = totalAmountBeforeTax + vat;
+            count++;
+
+            Map<String, Object> billingMap = new LinkedHashMap<>();
+            billingMap.put(SNo, count);
+            billingMap.put(ACCOUNT_NUMBER, billing.getCustomerAccountNumber());
+            billingMap.put(INVOICE_NO, invoiceNo);
+            billingMap.put(CUSTOMER_NAME, billing.getTaxInvoiceTo());
+            billingMap.put(INVOICE_DATE, billing.getInvoiceDate());
+            billingMap.put(INVOICE_TYPE, "Standard");
+            billingMap.put(CUSTOMER_REF, billing.getCustomerRef());
+            billingMap.put(NET, totalAmount);
+            billingMap.put(STATUS, billing.getBillingStatus());
+
+            result.add(billingMap);
+            processedInvoices.add(invoiceNo);
+        }
+
+        return result;
+    }
+
+    @Override
     public List<Map<String, Object>> getBillingInvoiceDataByExcel() {
         List<Billing> billingList = billingRepository.getAllBillingsWhereStatusIsNotClosed();
         List<Map<String, Object>> result = new ArrayList<>();

@@ -48,6 +48,8 @@ public interface AwbRepository extends JpaRepository<Awb, Long> {
 
     @Query("SELECT a FROM Awb a WHERE a.awbStatus = :status And a.assignedToUser.id = :userId And a.status = true ORDER BY a.id DESC")
     List<Awb> findAllInDesOrderByAssignedUserAndIdAndAwbStatus(@Param("status") String status, @Param("userId") Long userId);
+    @Query("SELECT a FROM Awb a WHERE a.assignedToUser.id = :userId And a.status = true ORDER BY a.id DESC")
+    List<Awb> findAllInDesOrderByAssignedUserId(@Param("userId") Long userId);
 
     @Query("SELECT a FROM Awb a WHERE a.status = :status And a.assignedTo = :assignedTo ORDER BY a.id DESC")
     List<Awb> findAllInDesOrderByRoleAndStatus(@Param("status") boolean status, @Param("assignedTo") String assignedTo);

@@ -287,7 +287,9 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Employee Report");
         }else if(type.equalsIgnoreCase(TRACKING)){
             sheet = workbook.createSheet("Tracking Report");
-        }else {
+        } else if(type.equalsIgnoreCase(SALASSIL_STATEMENT)) {
+            sheet = workbook.createSheet("salassil statment");
+        } else {
             throw new RecordNotFoundException("Type not valid");
         }
 
@@ -303,7 +305,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
         int dataStartRow = 0;
 
-        if (type.equalsIgnoreCase(BILLING)) {
+        if (type.equalsIgnoreCase(BILLING) || type.equalsIgnoreCase(SALASSIL_STATEMENT)) {
             // Add the logo to the first row and first cell
             InputStream logoInputStream = helperUtils.getInputStreamFromUrl("https://api.salassilexpress.com/api/file/Logo/logo.jpeg");
             byte[] logoBytes = IOUtils.toByteArray(logoInputStream);
@@ -392,7 +394,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet.autoSizeColumn(i);
         }
 
-       if(type.equalsIgnoreCase(BILLING)){
+       if(type.equalsIgnoreCase(BILLING) || type.equalsIgnoreCase(SALASSIL_STATEMENT)){
            // Add additional information at the right corner
            Row infoRow = sheet.createRow(1); // Skipping one row from the top
            Font boldFont = workbook.createFont();

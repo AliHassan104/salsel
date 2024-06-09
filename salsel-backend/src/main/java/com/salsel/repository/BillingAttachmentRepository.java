@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface BillingAttachmentRepository extends JpaRepository<BillingAttachment, Long> {
     Optional<BillingAttachment> findFirstByAccountNumberOrderByCreatedAtDesc(Long accountNumber);
+
 }

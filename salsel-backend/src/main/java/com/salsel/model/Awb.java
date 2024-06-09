@@ -69,6 +69,7 @@ public class Awb {
     private Boolean emailFlag;
     private String awbUrl;
     private String awbStatus;
+    private String pdaScan;
 
     @ManyToOne
     @JoinColumn(name = "assigned_to_user_id")

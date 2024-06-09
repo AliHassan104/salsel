@@ -2,10 +2,7 @@ package com.salsel.service;
 
 
 import com.salsel.dto.AwbDto;
-import com.salsel.dto.AwbShippingHistoryDto;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +13,7 @@ public interface AwbService {
     List<AwbDto> getAwbByLoggedInUser(Boolean status);
     List<AwbDto> getAwbByAssignedUser(String user, Boolean status);
     List<AwbDto> getAwbByAssignedUserAndStatus(Long userId, String status);
+    List<AwbDto> getAllAwbByAssignedUser(Long userId);
     List<AwbDto> getAwbByLoggedInUserRole(Boolean status);
     List<AwbDto> getAwbByLoggedInUserAndRole(Boolean status);
     List<AwbDto> getAll(Boolean status);
@@ -25,10 +23,10 @@ public interface AwbService {
     AwbDto update(Long id, AwbDto awbDto);
     AwbDto updateAwbStatusOnScan(Long uniqueNumber, String awbStatus);
     AwbDto updateAwbStatusAndCommentOnScan(Long uniqueNumber, String awbStatus, String comment);
+    AwbDto updatePdaScanStatusAndCommentOnScan(Long uniqueNumber, String pdaScan, String comment);
     List<AwbDto> updateMultipleAwbStatusOnScan(Map<Long,String> statusMap);
     List<AwbDto> getAwbBetweenDates(LocalDate startDate, LocalDate endDate);
     List<AwbDto> getAwbListByAwbNumbers(List<Long> awbNumbers);
-
     List<AwbDto> getAwbListByAccountNumbers(List<String> awbNumbers);
     List<AwbDto> getAllAwbListByCreatedBy();
     AwbDto findByUniqueNumber(Long id);
@@ -42,6 +40,5 @@ public interface AwbService {
     AwbDto assignAwbToUser(Long userId, Long awbId);
     List<Map<String,Object>> getAwbByStatusChangedOnPreviousDay(String status);
     List<Map<String,Object>> getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
-
-     List<AwbDto> findAwbByTrackingNumbers(List<Long> awbIds);
+    List<AwbDto> findAwbByTrackingNumbers(List<Long> awbIds);
 }

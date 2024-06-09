@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,5 +32,8 @@ public interface BillingRepository extends JpaRepository<Billing,Long> {
 
     @Query("SELECT b from Billing b WHERE b.customerAccountNumber = :accountNumber")
     List<Billing> findByCustomerAccountNumber(Long accountNumber);
+
+    @Query("SELECT b FROM Billing b WHERE b.invoiceDate <= :givenDate")
+    List<Billing> findAllBillingsUpToDate(@Param("givenDate") LocalDate givenDate);
 
 }
