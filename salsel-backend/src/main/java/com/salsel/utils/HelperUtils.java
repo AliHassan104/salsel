@@ -33,10 +33,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.salsel.service.impl.bucketServiceImpl.EMPLOYEE;
 
@@ -294,7 +291,7 @@ public class HelperUtils {
     }
 
     public void checkRole(UserDetails userDetails) {
-        Set<String> allowedRoles = Set.of("ROLE_ADMIN", "ROLE_COURIER");
+        List<String> allowedRoles = Arrays.asList("ROLE_ADMIN", "ROLE_COURIER");
 
         boolean hasRequiredRole = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -304,5 +301,6 @@ public class HelperUtils {
             throw new BadCredentialsException("User does not have the required role. Access denied.");
         }
     }
+
 
 }
