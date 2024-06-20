@@ -3,11 +3,9 @@ package com.salsel.utils;
 import com.amazonaws.services.s3.AmazonS3;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.Billing;
-import com.salsel.model.Employee;
-import com.salsel.model.Otp;
-import com.salsel.model.User;
+import com.salsel.model.*;
 import com.salsel.repository.BillingRepository;
+import com.salsel.repository.StatementRepository;
 import com.salsel.repository.UserRepository;
 import com.salsel.service.BucketService;
 import com.salsel.service.impl.bucketServiceImpl;
@@ -42,6 +40,7 @@ public class HelperUtils {
     private final AmazonS3 s3Client;
     private final BucketService bucketService;
     private final BillingRepository billingRepository;
+    private final StatementRepository statementRepository;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
@@ -51,10 +50,11 @@ public class HelperUtils {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public HelperUtils(AmazonS3 s3Client, BucketService bucketService, BillingRepository billingRepository, AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserRepository userRepository) {
+    public HelperUtils(AmazonS3 s3Client, BucketService bucketService, BillingRepository billingRepository, StatementRepository statementRepository, AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserRepository userRepository) {
         this.s3Client = s3Client;
         this.bucketService = bucketService;
         this.billingRepository = billingRepository;
+        this.statementRepository = statementRepository;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
@@ -236,6 +236,21 @@ public class HelperUtils {
         return savedExcelUrls;
     }
 
+    public List<String> saveStatementExcelListToS3(List<byte[]> excelFiles, String folderName, String folderType) {
+        List<String> savedExcelUrls = new ArrayList<>();
+
+        for (byte[] excelContent : excelFiles) {
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
+            String newFileName = "Statement_Excel_" + timestamp + ".xlsx"; // You can adjust the naming convention as needed
+
+            // Save to S3 bucket
+            String savedExcelUrl = bucketService.save(excelContent, folderName, newFileName, folderType);
+            savedExcelUrls.add(savedExcelUrl);
+        }
+
+        return savedExcelUrls;
+    }
+
     public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof CustomUserDetail) {
@@ -256,12 +271,18 @@ public class HelperUtils {
     }
 
     public void updateBillingStatus(Long accountNumber) {
-        // Find and update billing status
-
         List<Billing> updatedBillings = billingRepository.findByCustomerAccountNumber(accountNumber);
         updatedBillings.forEach(billing -> {
             billing.setIsEmailSend(true);
             billingRepository.save(billing);
+        });
+    }
+
+    public void updateStatementStatus(Long accountNumber) {
+        List<Statement> updatedStatements = statementRepository.findAllByAccountNumber(accountNumber);
+        updatedStatements.forEach(statement -> {
+            statement.setIsEmailSend(true);
+            statementRepository.save(statement);
         });
     }
 

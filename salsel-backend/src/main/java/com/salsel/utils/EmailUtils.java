@@ -217,6 +217,34 @@ public class EmailUtils {
     }
 
     @Async
+    public void sendStatementEmail(String toAddress, byte[] excel){
+        try {
+            // Create the email message
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(sender);
+            helper.setTo(toAddress);
+            helper.setSubject("Salassil Customer Statement");
+
+            // Set the email body with the formatted date
+            String emailBody = "Gents,\n"
+                    + "Please find attached Salassil Statement.\n\n"
+                    + "Salassil System Alert\n"
+                    + "Salassilexpress.com";
+            helper.setText(emailBody);
+
+            helper.addAttachment("Statement.xlsx", new ByteArrayResource(excel));
+
+            // Send the email
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Async
     public void sendPasswordResetEmail(User user, String resetCode) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

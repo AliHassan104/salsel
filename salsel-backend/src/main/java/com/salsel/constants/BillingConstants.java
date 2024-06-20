@@ -18,6 +18,10 @@ public class BillingConstants {
     public static final String SERVICE_DETAILS = "Service Details";
     public static final String CHARGES = "Charges";
     public static final String NET = "Net";
+    public static final String DEBIT = "Debit";
+    public static final String CREDIT = "Credit";
     public static final String STATUS = "status";
+    public static final String STATEMENT = "Statement";
+    public static final String STATEMENT_OF_ACCOUNT_AS_OF = "Statement of Account as of";
 
 }

@@ -35,5 +35,6 @@ public interface BillingRepository extends JpaRepository<Billing,Long> {
 
     @Query("SELECT b FROM Billing b WHERE b.invoiceDate <= :givenDate")
     List<Billing> findAllBillingsUpToDate(@Param("givenDate") LocalDate givenDate);
-
+    List<Billing> findAllByStatementIdIsNull();
+    Optional<List<Billing>> findByInvoiceNo(String invoiceNo);
 }

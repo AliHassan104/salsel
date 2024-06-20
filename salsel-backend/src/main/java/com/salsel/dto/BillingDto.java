@@ -34,4 +34,5 @@ public class BillingDto {
     private Double vatTax;
     private Double taxAmount;
     private Boolean isEmailSend;
+    private Long statementId;
 }

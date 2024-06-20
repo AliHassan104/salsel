@@ -10,5 +10,6 @@ public class ExcelConstants {
     public static final String BILLING = "billing";
     public static final String EMPLOYEE = "employee";
     public static final String TRACKING = "tracking";
+    public static final String STATEMENT = "statement";
     public static final String SALASSIL_STATEMENT = "salassil statment";
 }

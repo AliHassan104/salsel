@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 @Slf4j
 public class bucketServiceImpl implements BucketService {
@@ -32,6 +33,7 @@ public class bucketServiceImpl implements BucketService {
     public static final String TICKET = "Ticket";
     public static final String EMPLOYEE = "Employee";
     public static final String INVOICE = "Invoice";
+    public static final String STATEMENT = "Statement";
     @Autowired
     private AmazonS3 s3Client;
     @Value("${application.bucket.name}")
@@ -58,6 +60,8 @@ public class bucketServiceImpl implements BucketService {
                 folderKey = EMPLOYEE + "/" + folderName;
             } else if (folderType.equalsIgnoreCase(INVOICE)) {
                 folderKey = INVOICE + "/" + folderName;
+            } else if (folderType.equalsIgnoreCase(STATEMENT)) {
+                folderKey = STATEMENT + "/" + folderName;
             }
             else {
                 throw new RecordNotFoundException("Invalid folder type: " + folderType);

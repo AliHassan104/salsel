@@ -176,17 +176,6 @@ public class BillingServiceImpl implements BillingService {
         return billingDtoList;
     }
 
-//    @Override
-//    public Map<Long, List<BillingDto>> getAllGroupedByInvoice(Boolean status) {
-//        List<Billing> billings = billingRepository.findAllInDesOrderByIdAndStatus(status);
-//
-//        Map<Long, List<BillingDto>> result = billings.stream()
-//                .collect(Collectors.groupingBy(Billing::getInvoiceNo,
-//                        Collectors.mapping(this::toDto, Collectors.toList())));
-//
-//        return result;
-//    }
-
     @Override
     public List<BillingDto> getAllBillingsWhereStatusIsNotClosed() {
         List<Billing> billings = billingRepository.getAllBillingsWhereStatusIsNotClosed();
@@ -455,6 +444,7 @@ public class BillingServiceImpl implements BillingService {
                 .vatTax(billing.getVatTax())
                 .taxAmount(billing.getTaxAmount())
                 .isEmailSend(billing.getIsEmailSend())
+                .statementId(billing.getStatementId())
                 .build();
     }
 
@@ -480,6 +470,7 @@ public class BillingServiceImpl implements BillingService {
                 .vatTax(billingDto.getVatTax())
                 .taxAmount(billingDto.getTaxAmount())
                 .isEmailSend(billingDto.getIsEmailSend())
+                .statementId(billingDto.getStatementId())
                 .build();
     }
 }

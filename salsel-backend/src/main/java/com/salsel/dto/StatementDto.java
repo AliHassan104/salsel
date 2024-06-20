@@ -1,24 +1,17 @@
-package com.salsel.model;
+package com.salsel.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-public class Statement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class StatementDto {
     private Long id;
     private LocalDate createdAt;
     private String customerName;
