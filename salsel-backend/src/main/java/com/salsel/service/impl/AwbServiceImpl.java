@@ -450,7 +450,7 @@ public class AwbServiceImpl implements AwbService {
         existingAwb.setPdaScan(pdaScan);
 
         Awb updatedAwb = awbRepository.save(existingAwb);
-        awbShippingHistoryService.addAwbShippingHistory(updatedAwb);
+        awbShippingHistoryService.addAwbShippingHistoryForMobileApp(updatedAwb);
         awbShippingHistoryService.addCommentToAwbShippingHistory(comment, updatedAwb.getId());
 
         sendEmailAsync(updatedAwb);

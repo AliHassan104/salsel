@@ -1,11 +1,9 @@
 package com.salsel.service.impl;
 
-import com.salsel.dto.AwbDto;
 import com.salsel.dto.AwbShippingHistoryDto;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Awb;
 import com.salsel.model.AwbShippingHistory;
-import com.salsel.model.Employee;
 import com.salsel.repository.AwbRepository;
 import com.salsel.repository.AwbShippingHistoryRepository;
 import com.salsel.service.AwbShippingHistoryService;
@@ -41,7 +39,6 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
         if (latestHistoryOptional.isPresent()) {
             AwbShippingHistory latestHistory = latestHistoryOptional.get();
             if (latestHistory.getAwbStatus().equals(awb.getAwbStatus())) {
-                // The latest shipping history entry already has the same status, so return its DTO
                 return toDto(latestHistory);
             }
         }
@@ -49,6 +46,31 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
         AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
         awbShippingHistory.setStatus(true);
         awbShippingHistory.setAwbStatus(awb.getAwbStatus());
+        awbShippingHistory.setPdaScan(awb.getPdaScan());
+        awbShippingHistory.setAwb(awb);
+        awbShippingHistory.setStatusUpdateByUser(helperUtils.getCurrentUser());
+
+        AwbShippingHistory createdHistory = awbShippingHistoryRepository.save(awbShippingHistory);
+        return toDto(createdHistory);
+    }
+
+    @Transactional
+    public AwbShippingHistoryDto addAwbShippingHistoryForMobileApp(Awb awb) {
+        // Retrieve the latest shipping history entry for the AWB
+        Optional<AwbShippingHistory> latestHistoryOptional = awbShippingHistoryRepository.findTop1ByAwbIdOrderByTimestampDesc(awb.getId());
+
+        // Check if the latest history entry exists and has the same status as the current AWB
+        if (latestHistoryOptional.isPresent()) {
+            AwbShippingHistory latestHistory = latestHistoryOptional.get();
+            if (latestHistory.getPdaScan().equals(awb.getPdaScan())) {
+                return toDto(latestHistory);
+            }
+        }
+
+        AwbShippingHistory awbShippingHistory = new AwbShippingHistory();
+        awbShippingHistory.setStatus(true);
+        awbShippingHistory.setAwbStatus(awb.getAwbStatus());
+        awbShippingHistory.setPdaScan(awb.getPdaScan());
         awbShippingHistory.setAwb(awb);
         awbShippingHistory.setStatusUpdateByUser(helperUtils.getCurrentUser());
 
@@ -175,8 +197,6 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
         return result;
     }
 
-
-
     public AwbShippingHistoryDto toDto(AwbShippingHistory awbShippingHistory) {
         return AwbShippingHistoryDto.builder()
                 .id(awbShippingHistory.getId())
@@ -185,6 +205,7 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
                 .awbStatus(awbShippingHistory.getAwbStatus())
                 .comment(awbShippingHistory.getComment())
                 .statusUpdateByUser(awbShippingHistory.getStatusUpdateByUser())
+                .pdaScan(awbShippingHistory.getPdaScan())
                 .awb(awbShippingHistory.getAwb())
                 .build();
     }
@@ -197,6 +218,7 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
                 .comment(awbShippingHistoryDto.getComment())
                 .statusUpdateByUser(awbShippingHistoryDto.getStatusUpdateByUser())
                 .awbStatus(awbShippingHistoryDto.getAwbStatus())
+                .pdaScan(awbShippingHistoryDto.getPdaScan())
                 .awb(awbShippingHistoryDto.getAwb())
                 .build();
     }

@@ -251,32 +251,32 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     public Map<Long, List<ByteArrayOutputStream>> generateBillingStatements(List<Map<String, Object>> statementsMap) {
         Map<Long, List<ByteArrayOutputStream>> accountInvoicesMap = new LinkedHashMap<>();
 
-        if (statementsMap == null || statementsMap.isEmpty()) {
-            throw new RecordNotFoundException("Records not found for Statements.");
-        }
+        if (statementsMap != null) {
+            // Group statements by account number
+            Map<Long, List<Map<String, Object>>> groupedStatements = statementsMap.stream()
+                    .filter(statementDataMap -> statementDataMap.containsKey(ACCOUNT_NUMBER))
+                    .collect(Collectors.groupingBy(statementDataMap -> (Long) statementDataMap.get(ACCOUNT_NUMBER)));
 
-        // Group statements by account number
-        Map<Long, List<Map<String, Object>>> groupedStatements = statementsMap.stream()
-                .filter(statementDataMap -> statementDataMap.containsKey(ACCOUNT_NUMBER))
-                .collect(Collectors.groupingBy(statementDataMap -> (Long) statementDataMap.get(ACCOUNT_NUMBER)));
+            for (Map.Entry<Long, List<Map<String, Object>>> entry : groupedStatements.entrySet()) {
+                Long accountNumber = entry.getKey();
+                List<Map<String, Object>> filteredStatements = entry.getValue();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        for (Map.Entry<Long, List<Map<String, Object>>> entry : groupedStatements.entrySet()) {
-            Long accountNumber = entry.getKey();
-            List<Map<String, Object>> filteredStatements = entry.getValue();
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                // Generate the Excel file for the current account number
+                try {
+                    createExcelFileForCustomerStatement(filteredStatements, outputStream, STATEMENT);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to create Excel file for account: " + accountNumber, e);
+                }
 
-            // Generate the Excel file for the current account number
-            try {
-                createExcelFileForCustomerStatement(filteredStatements, outputStream, STATEMENT);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to create Excel file for account: " + accountNumber, e);
+                // Add the generated Excel file to the map
+                accountInvoicesMap.computeIfAbsent(accountNumber, k -> new ArrayList<>()).add(outputStream);
             }
 
-            // Add the generated Excel file to the map
-            accountInvoicesMap.computeIfAbsent(accountNumber, k -> new ArrayList<>()).add(outputStream);
-        }
+            return accountInvoicesMap;
 
-        return accountInvoicesMap;
+        }
+    return null;
     }
 
 

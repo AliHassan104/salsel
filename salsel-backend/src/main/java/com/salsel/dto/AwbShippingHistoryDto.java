@@ -27,6 +27,7 @@ public class AwbShippingHistoryDto {
     private User statusUpdateByUser;
     private String comment;
     private String awbStatus;
+    private String pdaScan;
     private Boolean status;
     private Awb awb;
 }

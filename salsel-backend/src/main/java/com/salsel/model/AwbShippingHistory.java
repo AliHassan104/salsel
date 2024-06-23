@@ -33,6 +33,7 @@ public class AwbShippingHistory {
 
     private String comment;
     private String awbStatus;
+    private String pdaScan;
     private Boolean status;
 
     @ManyToOne
