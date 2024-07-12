@@ -330,6 +330,7 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setTextarea(ticketDto.getTextarea());
         existingTicket.setAirwayNumber(ticketDto.getAirwayNumber());
         existingTicket.setTicketType(ticketDto.getTicketType());
+        existingTicket.setTicketSource(ticketDto.getTicketSource());
 
 
         if (pdfFiles != null && !pdfFiles.isEmpty()) {
@@ -439,6 +440,7 @@ public class TicketServiceImpl implements TicketService {
                 .airwayNumber(ticket.getAirwayNumber())
                 .ticketType(ticket.getTicketType())
                 .attachments(ticket.getAttachments())
+                .ticketSource(ticket.getTicketSource())
                 .build();
     }
 
@@ -482,6 +484,7 @@ public class TicketServiceImpl implements TicketService {
                 .airwayNumber(ticketDto.getAirwayNumber())
                 .ticketType(ticketDto.getTicketType())
                 .attachments(ticketDto.getAttachments())
+                .ticketSource(ticketDto.getTicketSource())
                 .build();
     }
 }

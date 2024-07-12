@@ -49,6 +49,12 @@
                         Required
                     </small>
                 </div>
+                <!-- Ticket Source -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="source"><strong>Ticket Source</strong></label>
+                    <p-dropdown [options]="ticketSource" filter="false" placeholder="Select Ticket Source"
+                        formControlName="ticketSource"></p-dropdown>
+                </div>
                 <!-- Text Box -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="textarea"><strong>Details</strong></label>

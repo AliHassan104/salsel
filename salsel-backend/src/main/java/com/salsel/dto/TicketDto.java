@@ -43,6 +43,7 @@ public class TicketDto {
     private String ticketType;
     private String ticketUrl;
     private String ticketSubCategory;
+    private String ticketSource;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickupDate;

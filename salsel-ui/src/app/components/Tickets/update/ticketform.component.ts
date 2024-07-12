@@ -67,6 +67,7 @@ export class TicketformComponent implements OnInit {
   ticketAttachment?: File[] = [];
   ticketEditParams?;
   todayDate = new Date();
+  ticketSource:any
 
   //   FORM GROUP TICKET FORM
   ticketForm!: FormGroup;
@@ -202,6 +203,7 @@ export class TicketformComponent implements OnInit {
       phone: new FormControl(null, Validators.required),
       textarea: new FormControl(null),
       airwayNumber: new FormControl(null),
+      ticketSource: new FormControl(null,Validators.required)
     });
   }
 
@@ -297,6 +299,7 @@ export class TicketformComponent implements OnInit {
           phone: this.singleTicket.phone,
           textarea: this.singleTicket.textarea,
           airwayNumber: this.singleTicket.airwayNumber,
+          ticketSource: this.singleTicket.ticketSource
         });
       });
     }
@@ -322,6 +325,12 @@ export class TicketformComponent implements OnInit {
         this.productFields.filter((data) => data.name == "Ticket Type")[0]
           .productFieldValuesList
       );
+
+      this.ticketSource = this.dropdownService.extractNames(
+        this.productFields.filter((data) => data.name == "Ticket Source")[0]
+          .productFieldValuesList
+      );
+
     });
 
     // Get All Countries
@@ -531,6 +540,7 @@ export class TicketformComponent implements OnInit {
         textarea: this.ticketForm.get("textarea")?.value,
         airwayNumber: formValue.airwayNumber,
         createdBy: localStorage.getItem("loginUserEmail"),
+        ticketSource:formValue.ticketSource,
       };
 
       if (this.ticketForm.get("ticketType")?.value === "Pickup Request") {
