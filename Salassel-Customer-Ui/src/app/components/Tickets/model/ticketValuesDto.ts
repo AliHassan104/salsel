@@ -35,6 +35,7 @@ export interface Ticket {
   textarea?: string;
   ticketType?: string;
   ticketUrl?: string;
+  ticketSource?:String;
   attachments?: [
     {
       id?: any;

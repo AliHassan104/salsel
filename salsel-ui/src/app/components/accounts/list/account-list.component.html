@@ -52,6 +52,11 @@
                         </th>
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-center align-items-center">
+                                Account Status
+                            </div>
+                        </th>
+                        <th style="min-width: 12rem">
+                            <div class="flex justify-content-center align-items-center">
                                 Business Activity
                             </div>
                         </th>
@@ -121,6 +126,9 @@
                         </td>
                         <td class="text-center">
                             {{data?.accountType}}
+                        </td>
+                        <td class="text-center">
+                            {{data?.status ?'Active': 'Inactive'}}
                         </td>
                         <td class="text-center">
                             {{data?.businessActivity}}

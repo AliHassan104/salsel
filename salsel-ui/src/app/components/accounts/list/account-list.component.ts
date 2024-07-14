@@ -87,6 +87,8 @@ export class AccountListComponent implements OnInit {
         .subscribe((res: any) => {
           if (res && res.body) {
             this.accounts = res.body;
+            console.log(this.accounts);
+
           }
         });
     } else {
