@@ -25,6 +25,7 @@ public class Employee {
     private String firstname;
     private String lastname;
     private String phone;
+    private String personalEmail;
 
     @Column(unique = true)
     private String employeeNumber;

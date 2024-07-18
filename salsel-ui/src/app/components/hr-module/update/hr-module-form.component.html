@@ -54,6 +54,17 @@
                         Required
                     </small>
                 </div>
+                <!-- Email -->
+                <div class="field col-6">
+                    <label htmlFor="email"><strong>Email</strong></label>
+                    <input pInputText id="address" type="text" formControlName="personalEmail"
+                        [ngClass]="{'ng-dirty':employeeForm.get('personalEmail')?.touched && employeeForm.get('personalEmail')?.invalid}"
+                        placeholder="Enter Address" [required]="true" />
+                    <small *ngIf="!employeeForm.get('personalEmail')?.valid && employeeForm.get('personalEmail')?.touched && editMode == false"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
                 <!-- Country -->
                 <div class="field col-12 md:col-6">
                     <label htmlFor="ocountry"><strong>Country</strong></label>
@@ -242,10 +253,10 @@
 
                 <!-- Email -->
                 <div class="field col-12 md:col-6" *ngIf="employeeForm.get('createdAsUser')?.value == true && editMode == false">
-                    <label htmlFor="email"><strong>Email</strong></label>
+                    <label htmlFor="email"><strong>Personal Email</strong></label>
                     <input pInputText id="email" type="email" formControlName="email"
                         [ngClass]="{'ng-dirty':employeeForm.get('email')?.touched && employeeForm.get('email')?.invalid && employeeForm.get('createdAsUser')?.value == true}"
-                        placeholder="Enter Email" />
+                        placeholder="Enter Personal Email" />
                     <small *ngIf="!employeeForm.get('email')?.valid && employeeForm.get('email')?.touched && editMode == false && employeeForm.get('createdAsUser')?.value == true"
                         class="text-red-500">
                         Required

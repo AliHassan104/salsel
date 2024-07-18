@@ -132,6 +132,7 @@ export class HrModuleFormComponent {
       workingDays:new FormControl(null,Validators.required),
       noOfAbsents:new FormControl(null,Validators.required),
       position: new FormControl(null),
+      personalEmail: new FormControl(null,[Validators.required,Validators.email])
     });
   }
 
@@ -223,6 +224,7 @@ export class HrModuleFormComponent {
             workingDays:this.singleEmployee?.workingDays,
             noOfAbsents:this.singleEmployee?.noOfAbsents,
             dateOfJoining:this.singleEmployee?.dateOfJoining,
+            personalEmail:this.singleEmployee?.personalEmail
           });
         });
     }
@@ -311,6 +313,7 @@ export class HrModuleFormComponent {
         dateOfJoining:formValue?.dateOfJoining,
         workingDays:formValue?.workingDays,
         noOfAbsents:formValue?.noOfAbsents,
+        personalEmail:formValue?.personalEmail
       };
 
       if (this.editMode) {

@@ -24,6 +24,7 @@ public class EmployeeDto {
     private Double noOfAbsents;
     private String name;
     private String firstname;
+    private String personalEmail;
     private String lastname;
     private String phone;
     private String email;

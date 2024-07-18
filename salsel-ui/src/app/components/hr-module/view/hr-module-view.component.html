@@ -17,7 +17,7 @@
                 <div class="col-12 md:col-6">
                     <h4>Personal Infomation</h4>
                     <p><strong>Name:</strong> {{singleEmployee?.name}}</p>
-                    <p *ngIf="singleEmployee?.email"><strong>Email:</strong> {{singleEmployee?.email}}</p>
+                    <p *ngIf="singleEmployee?.email"><strong>Personal Email:</strong> {{singleEmployee?.email}}</p>
                     <p><strong>Nationality:</strong> {{singleEmployee?.nationality}}</p>
                     <p><strong>Mobile:</strong> {{singleEmployee?.mobile}}</p>
                     <p><strong>Address:</strong> {{singleEmployee?.address}}</p>
@@ -27,6 +27,7 @@
                 <div class="col-12 md:col-6">
                     <h4>Job Infomation</h4>
                     <p><strong>Employee Number:</strong> {{singleEmployee?.employeeNumber}}</p>
+                    <p><strong>Email:</strong> {{singleEmployee?.personalEmail}}</p>
                     <p><strong>Department:</strong> {{singleEmployee?.department}}</p>
                     <p><strong>Date Of Joining:</strong> {{singleEmployee?.dateOfJoining}}</p>
                     <p><strong>Job Title:</strong> {{singleEmployee?.jobTitle}}</p>

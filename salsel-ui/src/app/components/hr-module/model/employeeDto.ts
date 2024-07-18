@@ -26,7 +26,8 @@ export interface IEmployee {
   totalAmount?:any;
   workingDays?:number;
   noOfAbsents?:number;
-  dateOfJoining:Date;
+  dateOfJoining?:Date;
+  personalEmail?:String
 }
 
  export class Employee implements IEmployee {
@@ -58,5 +59,6 @@ export interface IEmployee {
    totalAmount?: any;
    workingDays?: number;
    noOfAbsents?: number;
-   dateOfJoining: Date;
+   dateOfJoining?: Date;
+   personalEmail?: String;
  }
