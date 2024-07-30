@@ -6,7 +6,9 @@ import com.salsel.dto.AwbDto;
 import com.salsel.dto.TicketDto;
 import com.salsel.dto.UserDto;
 import com.salsel.exception.RecordNotFoundException;
+import com.salsel.model.Pricing;
 import com.salsel.model.Role;
+import com.salsel.repository.PricingRepository;
 import com.salsel.service.AwbService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.utils.HelperUtils;
@@ -14,7 +16,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,10 +38,12 @@ import static com.salsel.constants.ExcelConstants.*;
 public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
     private final AwbService awbService;
+    private final PricingRepository pricingRepository;
     private final HelperUtils helperUtils;
 
-    public ExcelGenerationServiceImpl(AwbService awbService, HelperUtils helperUtils) {
+    public ExcelGenerationServiceImpl(AwbService awbService, PricingRepository pricingRepository, HelperUtils helperUtils) {
         this.awbService = awbService;
+        this.pricingRepository = pricingRepository;
         this.helperUtils = helperUtils;
     }
 
@@ -219,7 +225,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     public Map<Long, List<ByteArrayOutputStream>> generateBillingReports(List<Map<String, Object>> billingDataMaps) {
         Map<Long, List<ByteArrayOutputStream>> accountInvoicesMap = new LinkedHashMap<>();
 
-        if(billingDataMaps == null){
+        if (billingDataMaps == null) {
             throw new RecordNotFoundException("Records not found for invoices.");
         }
 
@@ -276,9 +282,8 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             return accountInvoicesMap;
 
         }
-    return null;
+        return null;
     }
-
 
 
     @Override
@@ -319,11 +324,11 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             sheet = workbook.createSheet("Billing Report");
         } else if (type.equalsIgnoreCase(SCANS)) {
             sheet = workbook.createSheet("Scan Report");
-        }else if(type.equalsIgnoreCase(EMPLOYEE)){
+        } else if (type.equalsIgnoreCase(EMPLOYEE)) {
             sheet = workbook.createSheet("Employee Report");
-        }else if(type.equalsIgnoreCase(TRACKING)){
+        } else if (type.equalsIgnoreCase(TRACKING)) {
             sheet = workbook.createSheet("Tracking Report");
-        } else if(type.equalsIgnoreCase(SALASSIL_STATEMENT)) {
+        } else if (type.equalsIgnoreCase(SALASSIL_STATEMENT)) {
             sheet = workbook.createSheet("Salassil Statement");
         } else {
             throw new RecordNotFoundException("Type not valid");
@@ -391,152 +396,152 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
             for (Object value : rowData.values()) {
                 Cell cell = row.createCell(colIndex++);
                 if (value != null) {
-                if (value instanceof String) {
-                    cell.setCellValue((String) value);
-                } else if (value instanceof Long) {
-                    cell.setCellValue((Long) value);
-                } else if (value instanceof Integer) {
-                    cell.setCellValue((Integer) value);
-                } else if (value instanceof Double) {
-                    cell.setCellValue((Double) value);
-                } else if (value instanceof Boolean) {
-                    cell.setCellValue((Boolean) value);
-                } else if (value instanceof Date) {
-                    cell.setCellValue((Date) value);
-                } else if (value instanceof Calendar) {
-                    cell.setCellValue((Calendar) value);
+                    if (value instanceof String) {
+                        cell.setCellValue((String) value);
+                    } else if (value instanceof Long) {
+                        cell.setCellValue((Long) value);
+                    } else if (value instanceof Integer) {
+                        cell.setCellValue((Integer) value);
+                    } else if (value instanceof Double) {
+                        cell.setCellValue((Double) value);
+                    } else if (value instanceof Boolean) {
+                        cell.setCellValue((Boolean) value);
+                    } else if (value instanceof Date) {
+                        cell.setCellValue((Date) value);
+                    } else if (value instanceof Calendar) {
+                        cell.setCellValue((Calendar) value);
+                    } else {
+                        cell.setCellValue(value.toString());
+                    }
                 } else {
-                    cell.setCellValue(value.toString());
+                    cell.setCellValue("N/A");
                 }
-            } else {
-                cell.setCellValue("N/A");
             }
         }
-    }
 
-    // Apply center alignment for all rows except header row
+        // Apply center alignment for all rows except header row
         for (int r = dataStartRow + 1; r < rowIndex; r++) {
-        Row currentRow = sheet.getRow(r);
-        for (int c = 0; c < excelData.get(0).size(); c++) {
-            Cell currentCell = currentRow.getCell(c);
-            if (currentCell != null) {
-                currentCell.setCellStyle(centerStyle);
+            Row currentRow = sheet.getRow(r);
+            for (int c = 0; c < excelData.get(0).size(); c++) {
+                Cell currentCell = currentRow.getCell(c);
+                if (currentCell != null) {
+                    currentCell.setCellStyle(centerStyle);
+                }
             }
         }
-    }
 
-    // Auto-size columns
+        // Auto-size columns
         for (int i = 0; i < excelData.get(0).size(); i++) {
-        sheet.autoSizeColumn(i);
-    }
+            sheet.autoSizeColumn(i);
+        }
 
-        if(type.equalsIgnoreCase(BILLING) || type.equalsIgnoreCase(SALASSIL_STATEMENT)){
-        // Add additional information at the right corner
-        Row infoRow = sheet.createRow(1); // Skipping one row from the top
-        Font boldFont = workbook.createFont();
-        boldFont.setBold(true);
-        Cell firstLineCell = infoRow.createCell(excelData.get(0).size() - 2); // Adjust the column position for the right corner
-        firstLineCell.setCellValue("Salassil Express Shipping LLC");
-        CellStyle boldStyle = workbook.createCellStyle();
-        boldStyle.setFont(boldFont);
-        firstLineCell.setCellStyle(boldStyle);
-
-        Row secondLineRow = sheet.createRow(2); // Move to the next row
-        Cell secondLineCell = secondLineRow.createCell(excelData.get(0).size() - 2); // Adjust the column position for the right corner
-        secondLineCell.setCellValue("Dubai, UAE");
-        secondLineCell.setCellStyle(boldStyle);
-    }
-
-        workbook.write(outputStream);
-        workbook.close();
-}
-
-@Override
-public void createExcelFileForCustomerStatement(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
-    Workbook workbook = new XSSFWorkbook();
-    Sheet sheet = workbook.createSheet(type);
-
-    if (excelData == null || excelData.isEmpty()) {
-        Row emptyRow = sheet.createRow(0);
-        Cell emptyCell = emptyRow.createCell(0);
-        emptyCell.setCellValue("No data available");
-        workbook.write(outputStream);
-        workbook.close();
-        return;
-    }
-
-    int dataStartRow = 0;
-
-    // Add logo and headers if the type is specific reports
-    if (type.equalsIgnoreCase(STATEMENT)) {
-        // Add the logo
-        InputStream logoInputStream = new URL("https://api.salassilexpress.com/api/file/Logo/logo.jpeg").openStream();
-        byte[] logoBytes = IOUtils.toByteArray(logoInputStream);
-        int pictureIdx = workbook.addPicture(logoBytes, Workbook.PICTURE_TYPE_JPEG);
-        logoInputStream.close();
-
-        Drawing drawing = sheet.createDrawingPatriarch();
-        ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
-        anchor.setCol1(0);
-        anchor.setRow1(0);
-        anchor.setCol2(2);
-        anchor.setRow2(4);
-
-        drawing.createPicture(anchor, pictureIdx);
-
-        // Shift rows for logo
-        sheet.shiftRows(0, sheet.getLastRowNum(), 10);
-        dataStartRow = 11;
-
-        if (type.equalsIgnoreCase(STATEMENT)) {
-            // Merging cells and adding statement headers
-            // Calculate the number of columns to merge based on the first row's size
-            int numberOfColumns = ((List<Map<String, Object>>) excelData.get(0).get(STATEMENT)).get(0).size();
-            int mergeStartColumn = 0;
-            int mergeEndColumn = Math.max(6, numberOfColumns - 1); // Ensure at least 7 columns for merge
-
-            // Merging cells and adding statement headers
-            sheet.addMergedRegion(new CellRangeAddress(6, 6, mergeStartColumn, mergeEndColumn));
-            Row titleRow = sheet.createRow(6);
-            Cell titleCell = titleRow.createCell(mergeStartColumn);
-            titleCell.setCellValue("Statement of Account as of: " + excelData.get(0).get(STATEMENT_OF_ACCOUNT_AS_OF));
-
-            // Set the style for the title
-            CellStyle titleStyle = workbook.createCellStyle();
-            Font titleFont = workbook.createFont();
-            titleFont.setBold(true);
-            titleFont.setFontHeightInPoints((short) 12);
-            titleStyle.setFont(titleFont);
-            titleStyle.setAlignment(CellStyle.ALIGN_CENTER);
-            titleStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
-            titleCell.setCellStyle(titleStyle);
-
-            // Create a bold style for the labels
-            CellStyle boldStyle = workbook.createCellStyle();
+        if (type.equalsIgnoreCase(BILLING) || type.equalsIgnoreCase(SALASSIL_STATEMENT)) {
+            // Add additional information at the right corner
+            Row infoRow = sheet.createRow(1); // Skipping one row from the top
             Font boldFont = workbook.createFont();
             boldFont.setBold(true);
+            Cell firstLineCell = infoRow.createCell(excelData.get(0).size() - 2); // Adjust the column position for the right corner
+            firstLineCell.setCellValue("Salassil Express Shipping LLC");
+            CellStyle boldStyle = workbook.createCellStyle();
             boldStyle.setFont(boldFont);
+            firstLineCell.setCellStyle(boldStyle);
 
-            // Create a centered style for the data cells
-            CellStyle centeredStyle = workbook.createCellStyle();
-            centeredStyle.setAlignment(CellStyle.ALIGN_CENTER);
+            Row secondLineRow = sheet.createRow(2); // Move to the next row
+            Cell secondLineCell = secondLineRow.createCell(excelData.get(0).size() - 2); // Adjust the column position for the right corner
+            secondLineCell.setCellValue("Dubai, UAE");
+            secondLineCell.setCellStyle(boldStyle);
+        }
 
-            // Adding customer details
-            Row customerNameRow = sheet.createRow(8);
-            Cell customerNameLabel = customerNameRow.createCell(0);
-            customerNameLabel.setCellValue("Customer Name:");
-            customerNameLabel.setCellStyle(boldStyle); // Make label bold
+        workbook.write(outputStream);
+        workbook.close();
+    }
 
-            Cell customerNameValue = customerNameRow.createCell(1);
-            customerNameValue.setCellValue((String) excelData.get(0).get(CUSTOMER_NAME));
-            customerNameValue.setCellStyle(centeredStyle); // Centrally align the data
+    @Override
+    public void createExcelFileForCustomerStatement(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(type);
 
-            Row accountNoRow = sheet.createRow(9);
-            Cell accountNoLabel = accountNoRow.createCell(0);
-            accountNoLabel.setCellValue("Account No:");
-            accountNoLabel.setCellStyle(boldStyle); // Make label bold
+        if (excelData == null || excelData.isEmpty()) {
+            Row emptyRow = sheet.createRow(0);
+            Cell emptyCell = emptyRow.createCell(0);
+            emptyCell.setCellValue("No data available");
+            workbook.write(outputStream);
+            workbook.close();
+            return;
+        }
 
-            Cell accountNoValue = accountNoRow.createCell(1);
+        int dataStartRow = 0;
+
+        // Add logo and headers if the type is specific reports
+        if (type.equalsIgnoreCase(STATEMENT)) {
+            // Add the logo
+            InputStream logoInputStream = new URL("https://api.salassilexpress.com/api/file/Logo/logo.jpeg").openStream();
+            byte[] logoBytes = IOUtils.toByteArray(logoInputStream);
+            int pictureIdx = workbook.addPicture(logoBytes, Workbook.PICTURE_TYPE_JPEG);
+            logoInputStream.close();
+
+            Drawing drawing = sheet.createDrawingPatriarch();
+            ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
+            anchor.setCol1(0);
+            anchor.setRow1(0);
+            anchor.setCol2(2);
+            anchor.setRow2(4);
+
+            drawing.createPicture(anchor, pictureIdx);
+
+            // Shift rows for logo
+            sheet.shiftRows(0, sheet.getLastRowNum(), 10);
+            dataStartRow = 11;
+
+            if (type.equalsIgnoreCase(STATEMENT)) {
+                // Merging cells and adding statement headers
+                // Calculate the number of columns to merge based on the first row's size
+                int numberOfColumns = ((List<Map<String, Object>>) excelData.get(0).get(STATEMENT)).get(0).size();
+                int mergeStartColumn = 0;
+                int mergeEndColumn = Math.max(6, numberOfColumns - 1); // Ensure at least 7 columns for merge
+
+                // Merging cells and adding statement headers
+                sheet.addMergedRegion(new CellRangeAddress(6, 6, mergeStartColumn, mergeEndColumn));
+                Row titleRow = sheet.createRow(6);
+                Cell titleCell = titleRow.createCell(mergeStartColumn);
+                titleCell.setCellValue("Statement of Account as of: " + excelData.get(0).get(STATEMENT_OF_ACCOUNT_AS_OF));
+
+                // Set the style for the title
+                CellStyle titleStyle = workbook.createCellStyle();
+                Font titleFont = workbook.createFont();
+                titleFont.setBold(true);
+                titleFont.setFontHeightInPoints((short) 12);
+                titleStyle.setFont(titleFont);
+                titleStyle.setAlignment(CellStyle.ALIGN_CENTER);
+                titleStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+                titleCell.setCellStyle(titleStyle);
+
+                // Create a bold style for the labels
+                CellStyle boldStyle = workbook.createCellStyle();
+                Font boldFont = workbook.createFont();
+                boldFont.setBold(true);
+                boldStyle.setFont(boldFont);
+
+                // Create a centered style for the data cells
+                CellStyle centeredStyle = workbook.createCellStyle();
+                centeredStyle.setAlignment(CellStyle.ALIGN_CENTER);
+
+                // Adding customer details
+                Row customerNameRow = sheet.createRow(8);
+                Cell customerNameLabel = customerNameRow.createCell(0);
+                customerNameLabel.setCellValue("Customer Name:");
+                customerNameLabel.setCellStyle(boldStyle); // Make label bold
+
+                Cell customerNameValue = customerNameRow.createCell(1);
+                customerNameValue.setCellValue((String) excelData.get(0).get(CUSTOMER_NAME));
+                customerNameValue.setCellStyle(centeredStyle); // Centrally align the data
+
+                Row accountNoRow = sheet.createRow(9);
+                Cell accountNoLabel = accountNoRow.createCell(0);
+                accountNoLabel.setCellValue("Account No:");
+                accountNoLabel.setCellStyle(boldStyle); // Make label bold
+
+                Cell accountNoValue = accountNoRow.createCell(1);
                 accountNoValue.setCellValue((Long) excelData.get(0).get(ACCOUNT_NUMBER));
                 accountNoValue.setCellStyle(centeredStyle);
             }
@@ -636,4 +641,47 @@ public void createExcelFileForCustomerStatement(List<Map<String, Object>> excelD
         workbook.close();
     }
 
+    @Override
+    @Transactional
+    public void savePricingExcelData(MultipartFile file) {
+        try (InputStream is = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(is)) {
+
+            int numberOfSheets = workbook.getNumberOfSheets();
+
+            for (int i = 0; i < numberOfSheets; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+
+                for (Row row : sheet) {
+                    if (row.getRowNum() == 0) { // Skip header row
+                        continue;
+                    }
+
+                    Pricing pricing = Pricing.builder()
+                            .country(row.getCell(0).getStringCellValue())
+                            .product(row.getCell(1).getStringCellValue())
+                            .code(row.getCell(2).getStringCellValue())
+                            .weightRangeFrom(row.getCell(3).getNumericCellValue())
+                            .weightRangeTo(row.getCell(4).getNumericCellValue())
+                            .charges(row.getCell(5).getNumericCellValue())
+                            .additionalCharges(getAdditionalCharges(row.getCell(6)))
+                            .build();
+
+                    pricingRepository.save(pricing);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Double getAdditionalCharges(Cell cell) {
+        if (cell.getCellType() == Cell.CELL_TYPE_STRING && cell.getStringCellValue().equalsIgnoreCase("N/A")) {
+            return 0.0;
+        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            return cell.getNumericCellValue();
+        } else {
+            return 0.0; // Default to 0.0 if any other cell type
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.salsel.service;
 
 import com.salsel.constants.ExcelConstants;
 import com.salsel.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,5 +23,5 @@ public interface ExcelGenerationService {
     ByteArrayOutputStream generateShipmentTrackingReport(List<Map<String, Object>> transitStatusReportData) throws IOException;
     void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
     void createExcelFileForCustomerStatement(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
-
+    void savePricingExcelData(MultipartFile file);
 }
