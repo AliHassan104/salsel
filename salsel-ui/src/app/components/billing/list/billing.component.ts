@@ -89,6 +89,7 @@ export class BillingComponent {
         .subscribe((res: any) => {
           if (res.status == 200) {
             this.invoices = res.body;
+            console.log(this.invoices);
           }
         });
     } else {
@@ -102,6 +103,7 @@ export class BillingComponent {
         .subscribe((res: any) => {
           if (res.status == 200) {
             this.invoices = res.body;
+            console.log(this.invoices);
           }
         });
     }
@@ -132,7 +134,6 @@ export class BillingComponent {
       }
     }
   }
-
 
   //   uploadSheet() {
   //     this.billingService
@@ -203,26 +204,29 @@ export class BillingComponent {
     });
   }
 
-  getBillingStatement(){
+  getBillingStatement() {
     this.billingService.downloadStatementExcelFormat().subscribe((res: any) => {
       this.billingService.downloadExcelFile(res.body, "Billing_Statement.xlsx");
     });
   }
 
   onResendInvoice(id: any) {
-    this.billingService.resendInvoice(id).subscribe((res: any) => {
-      this.messageService.add({
-        severity: "success",
-        summary: "Success",
-        detail: "Email Sent Successfully.",
-      });
-    },(error)=>{
+    this.billingService.resendInvoice(id).subscribe(
+      (res: any) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Email Sent Successfully.",
+        });
+      },
+      (error) => {
         this.messageService.add({
           severity: "error",
           summary: "Error",
           detail: error?.error?.error,
         });
-    });
+      }
+    );
   }
 
   onCloseDialog() {
@@ -295,6 +299,18 @@ export class BillingComponent {
       this.billingService.getBillingReportsxl().subscribe((res: any) => {
         this.billingService.downloadExcelFile(res, "bill.xlsx");
       });
+    });
+  }
+
+  onDownlaodBillingStatement(id: any) {
+    this.billingService.getBillingStatement(id).subscribe((res: any) => {
+      this.billingService.downloadExcelFile(res, "billing_statement.xlsx");
+    });
+  }
+
+  onDownlaodBillingInvoice(id: any) {
+    this.billingService.getBillingInvoice(id).subscribe((res: any) => {
+      this.billingService.downloadFile(res, "billing.pdf");
     });
   }
 
