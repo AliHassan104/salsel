@@ -4,14 +4,8 @@ import com.amazonaws.services.cloudwatch.model.InvalidFormatException;
 import com.salsel.dto.BillingDto;
 import com.salsel.exception.BillingException;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.Account;
-import com.salsel.model.Awb;
-import com.salsel.model.Billing;
-import com.salsel.model.BillingAttachment;
-import com.salsel.repository.AccountRepository;
-import com.salsel.repository.AwbRepository;
-import com.salsel.repository.BillingAttachmentRepository;
-import com.salsel.repository.BillingRepository;
+import com.salsel.model.*;
+import com.salsel.repository.*;
 import com.salsel.service.BillingService;
 import com.salsel.service.ExcelGenerationService;
 import com.salsel.service.PdfGenerationService;
@@ -36,6 +30,7 @@ import static com.salsel.service.impl.bucketServiceImpl.INVOICE;
 public class BillingServiceImpl implements BillingService {
 
     private final BillingRepository billingRepository;
+    private final StatementRepository statementRepository;
     private final AccountRepository accountRepository;
     private final AwbRepository awbRepository;
     private final BillingAttachmentRepository billingAttachmentRepository;
@@ -44,8 +39,9 @@ public class BillingServiceImpl implements BillingService {
     private final PdfGenerationService pdfGenerationService;
     private final ExcelGenerationService excelGenerationService;
 
-    public BillingServiceImpl(BillingRepository billingRepository, AccountRepository accountRepository, AwbRepository awbRepository, BillingAttachmentRepository billingAttachmentRepository, HelperUtils helperUtils, EmailUtils emailUtils, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
+    public BillingServiceImpl(BillingRepository billingRepository, StatementRepository statementRepository, AccountRepository accountRepository, AwbRepository awbRepository, BillingAttachmentRepository billingAttachmentRepository, HelperUtils helperUtils, EmailUtils emailUtils, PdfGenerationService pdfGenerationService, ExcelGenerationService excelGenerationService) {
         this.billingRepository = billingRepository;
+        this.statementRepository = statementRepository;
         this.accountRepository = accountRepository;
         this.awbRepository = awbRepository;
         this.billingAttachmentRepository = billingAttachmentRepository;
@@ -212,6 +208,8 @@ public class BillingServiceImpl implements BillingService {
         billingRepository.setStatusActive(billing.getId());
     }
 
+
+
     @Override
     public void resendBillingInvoice(Long billingId) {
         Billing billing = billingRepository.findById(billingId)
@@ -287,6 +285,45 @@ public class BillingServiceImpl implements BillingService {
         }
 
         return result;
+    }
+
+    @Override
+    public byte[] downloadBillingInvoice(Long billingId) {
+        Billing billing = billingRepository.findById(billingId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Billing not found for id => %d", billingId)));
+
+        BillingAttachment billingAttachment = billingAttachmentRepository.findFirstByAccountNumberOrderByCreatedAtDesc(billing.getCustomerAccountNumber())
+                .orElseThrow(() -> new RecordNotFoundException(String.format("BillingAttachments not found for account number => %d", billing.getCustomerAccountNumber())));
+
+        String pdfUrl = billingAttachment.getPdfUrl();
+
+        if (pdfUrl == null) {
+            throw new RecordNotFoundException(String.format("PDF URL is null for account: %d", billing.getCustomerAccountNumber()));
+        }
+
+        return helperUtils.downloadAttachment(pdfUrl);
+    }
+
+    @Override
+    public byte[] downloadBillingStatement(Long billingId) {
+        Billing billing = billingRepository.findById(billingId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Billing not found for id => %d", billingId)));
+
+        Account account = accountRepository.findByAccountNumber(billing.getCustomerAccountNumber());
+        if (account != null) {
+            Statement statement = statementRepository.findFirstByAccountNumberOrderByCreatedAtDesc(account.getAccountNumber())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Statement not found for accountNumber ==> %d", account.getAccountNumber())));
+
+            String statementUrl = statement.getUrl();
+
+            if (statementUrl == null) {
+                throw new RecordNotFoundException(String.format("Statement URL is null for account: %d", billing.getCustomerAccountNumber()));
+            }
+
+            return helperUtils.downloadAttachment(statementUrl);
+        } else {
+            throw new RecordNotFoundException(String.format("Account not found for accountNumber: %d", billing.getCustomerAccountNumber()));
+        }
     }
 
     @Override

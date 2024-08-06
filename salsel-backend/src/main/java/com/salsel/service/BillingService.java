@@ -19,4 +19,6 @@ public interface BillingService {
     void setToActiveById(Long id);
     void resendBillingInvoice(Long billingId);
     List<Map<String, Object>> getSalaasilStatmentForAllTheInvoices();
+    byte[] downloadBillingInvoice(Long billingId);
+    byte[] downloadBillingStatement(Long billingId);
 }
