@@ -77,6 +77,17 @@ export class BillingService {
     });
   }
 
+  getBillingInvoice(id:any) {
+    return this.http.get(`${this.url}billing/download-invoice/${id}`, {
+      responseType: "blob" as "json",
+    });
+  }
+  getBillingStatement(id:any) {
+    return this.http.get(`${this.url}billing/download-statement/${id}`, {
+      responseType: "blob" as "json",
+    });
+  }
+
   getBillingReportsxl() {
     return this.http.get(`${this.url}download-billing-xl`, {
       responseType: "blob" as "json",

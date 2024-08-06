@@ -37,7 +37,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="min-width: 18rem">
+                        <th style="min-width: 24rem">
                             <div class="flex justify-content-center align-items-center">
                                 Actions
                             </div>
@@ -106,10 +106,14 @@
                                 type="button" icon="pi pi-check"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveEmployee(data.id)"></button>
-                            <!-- <button pTooltip="Download Invoice" tooltipPosition="bottom" *ngIf="activeStatus" pButton
-                                pRipple type="button" icon="pi pi-download"
+                            <button pTooltip="Download Statement" tooltipPosition="bottom" *ngIf="activeStatus" pButton
+                                pRipple type="button" icon="pi pi-file-export"
                                 class="p-button-rounded p-button-success p-button-outlined mx-1"
-                                (click)="onDownlaodBill()"></button> -->
+                                (click)="onDownlaodBillingStatement(data?.id)"></button>
+                            <button pTooltip="Download Invoice" tooltipPosition="bottom" *ngIf="activeStatus" pButton
+                                pRipple type="button" icon="pi pi-file-edit"
+                                class="p-button-rounded p-button-success p-button-outlined mx-1"
+                                (click)="onDownlaodBillingInvoice(data?.id)"></button>
                             <button pTooltip="Resend Invoice" tooltipPosition="bottom" *ngIf="activeStatus" pButton
                                 pRipple type="button" icon="pi pi-send"
                                 class="p-button-rounded p-button-primary p-button-outlined mx-1"
