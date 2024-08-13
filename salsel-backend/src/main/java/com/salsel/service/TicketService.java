@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public interface TicketService {
     Map<String, Long> getStatusCounts();
     Map<String, Long> getStatusCountsBasedOnLoggedInUser();
     Long getTicketCount();
+    HashMap<String,Integer> getTicketCountBasedOnStatus();
     List<TicketDto> findTicketsForExcel(
             LocalDate startDate,
             LocalDate endDate,

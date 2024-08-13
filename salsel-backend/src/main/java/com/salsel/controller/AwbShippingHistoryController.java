@@ -64,7 +64,6 @@ public class AwbShippingHistoryController {
     }
 
     @GetMapping("/awb-shipping-history/tracking-number/{tracking-number}")
-    @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
     public ResponseEntity <List<AwbShippingHistoryDto>> getAwbTrackingHistoryByTrackingNumber(@PathVariable(value = "tracking-number") Long trackingNumber) {
         List<AwbShippingHistoryDto> awbShippingHistoryDto = awbShippingHistoryService.findAllAwbHistoryByAwbNumber(trackingNumber);
         return ResponseEntity.ok(awbShippingHistoryDto);

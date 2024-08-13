@@ -261,6 +261,28 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public HashMap<String, Integer> getTicketCountBasedOnStatus() {
+        // Assuming you have a method to get all tickets from the repository
+        List<Ticket> tickets = ticketRepository.findAll();
+
+        // Grouping tickets by status and counting them
+        Map<String, Long> ticketCountMap = tickets.stream()
+                .collect(Collectors.groupingBy(
+                        Ticket::getTicketStatus,      // Group by ticket status
+                        Collectors.counting()         // Count the number of tickets per status
+                ));
+
+        // Converting to HashMap<String, Integer>
+        return ticketCountMap.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().intValue(), // Convert Long to Integer
+                        (e1, e2) -> e1, // Merge function, though there should be no conflict
+                        HashMap::new     // Specify the map type to be returned
+                ));
+    }
+
+    @Override
     public List<TicketDto> findTicketsForExcel(LocalDate startDate, LocalDate endDate, String ticketNumber, String ticketStatus, String ticketCategory, String ticketSubCategory, String department, String assignedTo) {
         List<Ticket> tickets = ticketRepository.findTickets(startDate, endDate, ticketNumber, ticketStatus, ticketCategory, ticketSubCategory, department, assignedTo);
         return tickets.stream()
