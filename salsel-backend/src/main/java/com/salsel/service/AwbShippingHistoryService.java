@@ -12,6 +12,7 @@ public interface AwbShippingHistoryService {
     AwbShippingHistoryDto addCommentToAwbShippingHistory(String comment, Long awbId);
     AwbShippingHistoryDto findLatestAwbShippingHistoryByAwb(Long awbId);
     List<AwbShippingHistoryDto> findByAwbId(Long awbId);
+    List<AwbShippingHistoryDto> findAllAwbHistoryByAwbNumber(Long awbId);
 
     Map<Long, List<AwbShippingHistoryDto>> findShippingByAwbIds(List<Long> awbIds);
 
