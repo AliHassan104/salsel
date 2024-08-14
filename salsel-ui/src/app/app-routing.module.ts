@@ -145,6 +145,7 @@ import { VerificationComponent } from "./components/auth/verification/verificati
                 import(
                   "./components/tracking/module/scan-and-tracking.module"
                 ).then((m) => m.ScanAndTrackingModule),
+              canActivate: [AuthGuardService],
             },
             {
               path: "country/list",

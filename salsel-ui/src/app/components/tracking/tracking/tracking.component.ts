@@ -51,9 +51,19 @@ export class TrackingComponent {
     });
   }
 
+  ngOnInit(){
+    this.onClick()
+  }
+
   onClickTracking(trackingNumber: any) {
     window.scrollTo({ top: 0, behavior: "smooth" });
     this.onGettingUniqueNum(trackingNumber);
+  }
+
+  onClick(){
+    this.trackingService.getTracking("900000751").subscribe((res: any) => {
+      console.log(res);
+    });
   }
 
   getTrackingHistory(id: any) {

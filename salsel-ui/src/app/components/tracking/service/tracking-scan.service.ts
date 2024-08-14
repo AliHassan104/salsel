@@ -21,4 +21,10 @@ export class TrackingService {
       responseType: "blob" as "json", // Set the response type to 'blob'
     });
   }
+
+  getTracking(trackingId:any){
+    return this.http.get(
+      `${this.url}awb-shipping-history/trackig-number/${trackingId}`
+    );
+  }
 }
