@@ -35,6 +35,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   pieAwbOptions
   pieDataAwb;
   pieDataAccount;
+
+  barOptions
+  barData
   items!: MenuItem[];
 
   products!: Product[];
@@ -105,6 +108,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.totalTickets = this.activeTicketsCount + this.inActiveTicketsCount;
       });
 
+     this.ticketService.getTicketStatusCount().subscribe((res: any) => {
+       const labels = Object.keys(res);
+       const values = Object.values(res);
+
+       this.barChartTicketSetup(labels, values);
+     });
+
       //   Account
       this.accountsService.getStatusCount().subscribe((account: any) => {
         this.pieChartAccountSetup(account?.active, account?.inactive);
@@ -161,6 +171,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.activeTicketsCount + this.inActiveTicketsCount;
         });
 
+              this.ticketService
+                .getTicketStatusCount()
+                .subscribe((res: any) => {
+                  const labels = Object.keys(res);
+                  const values = Object.values(res);
+
+                  this.barChartTicketSetup(labels,values)
+                });
+
       //   Account
       this.accountsService
         .getStatusCountByLoggedInUser()
@@ -200,6 +219,77 @@ export class DashboardComponent implements OnInit, OnDestroy {
           labels: {
             usePointStyle: true,
             color: textColor,
+          },
+        },
+      },
+    };
+  }
+
+
+  barChartTicketSetup(dataLabels:string[],dataSet:any[]){
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue("--text-color");
+    const textColorSecondary = documentStyle.getPropertyValue(
+      "--text-color-secondary"
+    );
+    const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
+
+    this.barData = {
+      labels: dataLabels,
+      datasets: [
+        {
+          label: "Count",
+          backgroundColor: [
+            documentStyle.getPropertyValue("--blue-500"), // Open
+            documentStyle.getPropertyValue("--pink-500"), // Closed
+            documentStyle.getPropertyValue("--green-500"), // On-Hold
+            documentStyle.getPropertyValue("--purple-500"), // Under Process
+            documentStyle.getPropertyValue("--orange-500"), // Overdue
+            documentStyle.getPropertyValue("--red-500"), // Escalation
+            documentStyle.getPropertyValue("--yellow-500"), // Held-Fi
+          ],
+          borderColor: [
+            documentStyle.getPropertyValue("--blue-500"), // Open
+            documentStyle.getPropertyValue("--pink-500"), // Closed
+            documentStyle.getPropertyValue("--green-500"), // On-Hold
+            documentStyle.getPropertyValue("--purple-500"), // Under Process
+            documentStyle.getPropertyValue("--orange-500"), // Overdue
+            documentStyle.getPropertyValue("--red-500"), // Escalation
+            documentStyle.getPropertyValue("--yellow-500"), // Held-Fi
+          ],
+          data: dataSet,
+        },
+      ],
+    };
+
+    this.barOptions = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: {
+            display:false
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColor,
+            font: {
+              weight: 500,
+            },
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false,
+          },
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false,
           },
         },
       },

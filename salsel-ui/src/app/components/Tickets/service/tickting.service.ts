@@ -43,8 +43,8 @@ export class TicktingService {
     }
 
     console.log(httpParams);
-    
-    
+
+
     return this.http.get(`${this.url}download-ticket-excel/by-criteria`, {
       params:httpParams,
       responseType: "blob" as "json", // Set the response type to 'blob'
@@ -115,6 +115,10 @@ export class TicktingService {
       return `${year}-${month}-${day}`;
     }
     return null;
+  }
+
+  getTicketStatusCount(){
+     return this.http.get(`${this.url}ticket/count-by-status`);
   }
 
   formatCreatedAt(date: Date): string {
