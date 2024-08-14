@@ -18,7 +18,8 @@ public interface AwbShippingHistoryRepository extends JpaRepository<AwbShippingH
     List<AwbShippingHistory> findByTimestampBetweenAndAwbStatusNotIn(LocalDateTime startDateTime, LocalDateTime endDateTime, List<String> status);
     Optional<AwbShippingHistory> findTop1ByAwbIdOrderByTimestampDesc(Long awbId);
 
-
+    @Query("SELECT h FROM AwbShippingHistory h WHERE h.awb.uniqueNumber = :uniqueNumber")
+    List<AwbShippingHistory> findAllByAwbUniqueNumber(@Param("uniqueNumber") Long uniqueNumber);
 
 
 

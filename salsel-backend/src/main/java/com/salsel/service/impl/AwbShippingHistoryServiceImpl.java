@@ -108,6 +108,21 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
     }
 
     @Override
+    public List<AwbShippingHistoryDto> findAllAwbHistoryByAwbNumber(Long uniqueNumber) {
+        List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findAllByAwbUniqueNumber(uniqueNumber);
+        return awbShippingHistoryList.stream()
+                .collect(Collectors.toMap(
+                        AwbShippingHistory::getAwbStatus,   // Use awbStatus as the key
+                        history -> history,                 // Use the whole object as the value
+                        (existing, replacement) -> existing // In case of duplicate keys, keep the existing (earliest) entry
+                ))
+                .values()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Map<Long, List<AwbShippingHistoryDto>> findShippingByAwbIds(List<Long> awbIds) {
         Map<Long, List<AwbShippingHistoryDto>> shippingHistoryMap = new HashMap<>();
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -188,5 +189,16 @@ public class TicketController {
     public ResponseEntity<Map<String, Long>> getStatusCounts() {
         Map<String, Long> statusCounts = ticketService.getStatusCounts();
         return ResponseEntity.ok(statusCounts);
+    }
+
+    @GetMapping("/ticket/count-by-status")
+    public ResponseEntity<HashMap<String, Integer>> getTicketCountByStatus() {
+        HashMap<String, Integer> ticketCounts = ticketService.getTicketCountBasedOnStatus();
+
+        if (ticketCounts.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(ticketCounts, HttpStatus.OK);
+        }
     }
 }
