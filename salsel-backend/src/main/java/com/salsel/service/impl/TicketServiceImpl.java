@@ -4,10 +4,8 @@ import com.salsel.criteria.SearchCriteria;
 import com.salsel.dto.CustomUserDetail;
 import com.salsel.dto.TicketDto;
 import com.salsel.exception.RecordNotFoundException;
-import com.salsel.model.Role;
-import com.salsel.model.Ticket;
-import com.salsel.model.TicketAttachment;
-import com.salsel.model.User;
+import com.salsel.model.*;
+import com.salsel.repository.ProductFieldValuesRepository;
 import com.salsel.repository.TicketAttachmentRepository;
 import com.salsel.repository.TicketRepository;
 import com.salsel.repository.UserRepository;
@@ -16,8 +14,6 @@ import com.salsel.service.TicketService;
 import com.salsel.specification.FilterSpecification;
 import com.salsel.utils.HelperUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.jcajce.provider.symmetric.AES;
-import org.bouncycastle.jcajce.provider.symmetric.util.PBE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +34,16 @@ import java.util.stream.Collectors;
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
+    private final ProductFieldValuesRepository productFieldValuesRepository;
     private final TicketAttachmentRepository ticketAttachmentRepository;
     private final UserRepository userRepository;
     private final HelperUtils helperUtils;
     private final BucketService bucketService;
     private static final Logger logger = LoggerFactory.getLogger(bucketServiceImpl.class);
 
-    public TicketServiceImpl(TicketRepository ticketRepository, TicketAttachmentRepository ticketAttachmentRepository, UserRepository userRepository, HelperUtils helperUtils, BucketService bucketService){
+    public TicketServiceImpl(TicketRepository ticketRepository, ProductFieldValuesRepository productFieldValuesRepository, TicketAttachmentRepository ticketAttachmentRepository, UserRepository userRepository, HelperUtils helperUtils, BucketService bucketService){
         this.ticketRepository = ticketRepository;
+        this.productFieldValuesRepository = productFieldValuesRepository;
         this.ticketAttachmentRepository = ticketAttachmentRepository;
         this.userRepository = userRepository;
         this.helperUtils = helperUtils;
@@ -262,24 +260,34 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public HashMap<String, Integer> getTicketCountBasedOnStatus() {
-        // Assuming you have a method to get all tickets from the repository
+        // Fetch all possible ticket statuses
+        List<ProductFieldValues> ticketStatusList = productFieldValuesRepository.findByProductFieldName("Ticket Status");
+
+        // Fetch all tickets
         List<Ticket> tickets = ticketRepository.findAll();
 
-        // Grouping tickets by status and counting them
+        // Group tickets by status and count them
         Map<String, Long> ticketCountMap = tickets.stream()
                 .collect(Collectors.groupingBy(
                         Ticket::getTicketStatus,      // Group by ticket status
                         Collectors.counting()         // Count the number of tickets per status
                 ));
 
-        // Converting to HashMap<String, Integer>
-        return ticketCountMap.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().intValue(), // Convert Long to Integer
-                        (e1, e2) -> e1, // Merge function, though there should be no conflict
-                        HashMap::new     // Specify the map type to be returned
-                ));
+        // Initialize the final result map with all statuses and their counts
+        HashMap<String, Integer> result = new HashMap<>();
+
+        for (ProductFieldValues status : ticketStatusList) {
+            // Get the status name
+            String statusName = status.getName();
+
+            // Get the count from the map or default to 0
+            int count = ticketCountMap.getOrDefault(statusName, 0L).intValue();
+
+            // Put the status and count into the result map
+            result.put(statusName, count);
+        }
+
+        return result;
     }
 
     @Override
