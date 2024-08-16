@@ -110,17 +110,27 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
     @Override
     public List<AwbShippingHistoryDto> findAllAwbHistoryByAwbNumber(Long uniqueNumber) {
         List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findAllByAwbUniqueNumber(uniqueNumber);
-        return awbShippingHistoryList.stream()
+
+        // First, filter the entries to get only the first occurrence of each status
+        List<AwbShippingHistory> filteredHistoryList = awbShippingHistoryList.stream()
                 .collect(Collectors.toMap(
                         AwbShippingHistory::getAwbStatus,   // Use awbStatus as the key
                         history -> history,                 // Use the whole object as the value
-                        (existing, replacement) -> existing // In case of duplicate keys, keep the existing (earliest) entry
+                        (existing, replacement) -> existing // Keep the first (earliest) occurrence of each status
                 ))
                 .values()
                 .stream()
+                .collect(Collectors.toList());
+
+        // Then, sort the filtered list by timestamp
+        filteredHistoryList.sort(Comparator.comparing(AwbShippingHistory::getTimestamp));
+
+        // Finally, map the sorted list to DTOs and return
+        return filteredHistoryList.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public Map<Long, List<AwbShippingHistoryDto>> findShippingByAwbIds(List<Long> awbIds) {
