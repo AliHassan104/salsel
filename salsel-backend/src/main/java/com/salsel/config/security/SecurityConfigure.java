@@ -55,6 +55,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/billing/download-statement/{id}",
             "/api/pricing",
             "/api/login-app",
+            "/api/download-awb-history-excel",
             "/api/awb-shipping-history/tracking-number/{tracking-number}",
     };
 

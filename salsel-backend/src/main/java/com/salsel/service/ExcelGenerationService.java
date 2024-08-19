@@ -21,6 +21,7 @@ public interface ExcelGenerationService {
     Map<Long, List<ByteArrayOutputStream>> generateBillingStatements(List<Map<String, Object>> statementsMap);
     ByteArrayOutputStream generateEmployeeReport(List<Map<String, Object>> transitStatusReportData) throws IOException;
     ByteArrayOutputStream generateShipmentTrackingReport(List<Map<String, Object>> transitStatusReportData) throws IOException;
+    ByteArrayOutputStream generateAwbHistoryReport(List<AwbShippingHistoryDto>  awbHistoryData) throws IOException;
     void createExcelFile(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
     void createExcelFileForCustomerStatement(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
     void savePricingExcelData(MultipartFile file);

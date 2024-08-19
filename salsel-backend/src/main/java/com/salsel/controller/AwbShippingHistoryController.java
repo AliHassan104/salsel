@@ -58,10 +58,14 @@ public class AwbShippingHistoryController {
 
     @PostMapping("/awb-shipping-history/multiple-shipping")
     @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
-    public ResponseEntity <List<AwbShippingHistoryDto>> getAwbTrackingHistoryByMultipleAwb(@RequestBody List<Long> awbIds) {
-        List<AwbShippingHistoryDto> awbShippingHistoryDto = awbShippingHistoryService.findTrackingByAwbIds(awbIds);
+    public ResponseEntity<List<AwbShippingHistoryDto>> getAwbTrackingHistoryByMultipleAwb(
+            @RequestBody List<Long> awbIds,
+            @RequestParam(value = "awbStatus", required = false) String awbStatus) {
+
+        List<AwbShippingHistoryDto> awbShippingHistoryDto = awbShippingHistoryService.findTrackingByAwbIdsAndStatus(awbIds, awbStatus);
         return ResponseEntity.ok(awbShippingHistoryDto);
     }
+
 
     @GetMapping("/awb-shipping-history/tracking-number/{tracking-number}")
     public ResponseEntity <List<AwbShippingHistoryDto>> getAwbTrackingHistoryByTrackingNumber(@PathVariable(value = "tracking-number") Long trackingNumber) {
@@ -81,6 +85,25 @@ public class AwbShippingHistoryController {
 
         // Generate the billing report Excel data
         ByteArrayOutputStream excelData = excelGenerationService.generateShipmentTrackingReport(awbShippingHistoryService.getAllShippingDataByExcel(trackingNumbers));
+
+        // Write the generated Excel data to the response OutputStream
+        excelData.writeTo(outputStream);
+
+        // Close the OutputStream
+        outputStream.close();
+    }
+
+    @GetMapping("/download-awb-history-excel")
+    public void downloadAwbHistoryExcel(@RequestParam Long trackingNumber, HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=awbhistory.xlsx");
+
+        // Get the OutputStream from the response
+        OutputStream outputStream = response.getOutputStream();
+
+        // Generate the billing report Excel data
+        ByteArrayOutputStream excelData = excelGenerationService.generateAwbHistoryReport(awbShippingHistoryService.findAllAwbHistoryByAwbNumber(trackingNumber));
 
         // Write the generated Excel data to the response OutputStream
         excelData.writeTo(outputStream);

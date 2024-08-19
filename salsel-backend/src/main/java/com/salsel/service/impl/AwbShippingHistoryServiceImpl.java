@@ -110,17 +110,25 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
     @Override
     public List<AwbShippingHistoryDto> findAllAwbHistoryByAwbNumber(Long uniqueNumber) {
         List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findAllByAwbUniqueNumber(uniqueNumber);
-        return awbShippingHistoryList.stream()
+
+        // First, filter the entries to get only the first occurrence of each status
+        List<AwbShippingHistory> filteredHistoryList = new ArrayList<>(awbShippingHistoryList.stream()
                 .collect(Collectors.toMap(
                         AwbShippingHistory::getAwbStatus,   // Use awbStatus as the key
                         history -> history,                 // Use the whole object as the value
-                        (existing, replacement) -> existing // In case of duplicate keys, keep the existing (earliest) entry
+                        (existing, replacement) -> existing // Keep the first (earliest) occurrence of each status
                 ))
-                .values()
-                .stream()
+                .values());
+
+        // Then, sort the filtered list by timestamp
+        filteredHistoryList.sort(Comparator.comparing(AwbShippingHistory::getTimestamp));
+
+        // Finally, map the sorted list to DTOs and return
+        return filteredHistoryList.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public Map<Long, List<AwbShippingHistoryDto>> findShippingByAwbIds(List<Long> awbIds) {
@@ -185,6 +193,51 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
 
         return awbShippingHistoryDtoList;
     }
+
+    @Override
+    public List<AwbShippingHistoryDto> findTrackingByAwbIdsAndStatus(List<Long> awbIds, String awbStatus) {
+        List<AwbShippingHistoryDto> awbShippingHistoryDtoList = new ArrayList<>();
+        Set<Long> processedTrackingNumbers = new HashSet<>();
+
+        if (awbIds == null) {
+            throw new IllegalArgumentException("AWB IDs list cannot be null");
+        }
+
+        for (Long awbId : awbIds) {
+            Awb awb = awbRepository.findByTrackingNumber(awbId);
+            if (awb != null) {
+                if (processedTrackingNumbers.contains(awbId)) {
+                    continue;
+                }
+
+                List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findByAwbId(awb.getId());
+
+                // Filter by awbStatus if provided
+                if (awbStatus != null && !awbStatus.isEmpty()) {
+                    awbShippingHistoryList = awbShippingHistoryList.stream()
+                            .filter(history -> awbStatus.equals(history.getAwbStatus()))
+                            .collect(Collectors.toList());
+                }
+
+                if (awbShippingHistoryList != null && !awbShippingHistoryList.isEmpty()) {
+                    // Find the AwbShippingHistory with the latest timestamp
+                    AwbShippingHistory latestHistory = awbShippingHistoryList.stream()
+                            .filter(Objects::nonNull)
+                            .max(Comparator.comparing(AwbShippingHistory::getTimestamp))
+                            .orElse(null);
+
+                    if (latestHistory != null) {
+                        AwbShippingHistoryDto awbShippingHistoryDto = toDto(latestHistory);
+                        awbShippingHistoryDtoList.add(awbShippingHistoryDto);
+                        processedTrackingNumbers.add(awbId);
+                    }
+                }
+            }
+        }
+
+        return awbShippingHistoryDtoList;
+    }
+
 
     @Override
     public List<Map<String, Object>> getAllShippingDataByExcel(List<Long> awbIds) {

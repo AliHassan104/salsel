@@ -1,10 +1,7 @@
 package com.salsel.service.impl;
 
 import com.amazonaws.util.IOUtils;
-import com.salsel.dto.AccountDto;
-import com.salsel.dto.AwbDto;
-import com.salsel.dto.TicketDto;
-import com.salsel.dto.UserDto;
+import com.salsel.dto.*;
 import com.salsel.exception.RecordNotFoundException;
 import com.salsel.model.Pricing;
 import com.salsel.model.Role;
@@ -298,6 +295,31 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         createExcelFile(transitStatusReportData, outputStream, TRACKING);
         return outputStream;
+    }
+
+    @Override
+    public ByteArrayOutputStream generateAwbHistoryReport(List<AwbShippingHistoryDto> awbHistoryData) throws IOException {
+        // Convert List<AwbShippingHistoryDto> to List<Map<String, Object>>
+        List<Map<String, Object>> awbHistoryMapList = awbHistoryData.stream()
+                .map(this::convertDtoToMap)
+                .collect(Collectors.toList());
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(awbHistoryMapList, outputStream, AWB_TYPE);
+        return outputStream;
+    }
+
+    private Map<String, Object> convertDtoToMap(AwbShippingHistoryDto dto) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", dto.getId());
+        map.put("timestamp", dto.getTimestamp());
+        map.put("statusUpdateByUser", dto.getStatusUpdateByUser().getEmail());
+        map.put("comment", dto.getComment());
+        map.put("awbStatus", dto.getAwbStatus());
+        map.put("status", dto.getStatus());
+        map.put("awbId", dto.getAwb().getId());
+        // Add other fields as needed
+        return map;
     }
 
 
