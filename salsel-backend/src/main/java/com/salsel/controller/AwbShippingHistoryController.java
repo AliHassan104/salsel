@@ -92,4 +92,23 @@ public class AwbShippingHistoryController {
         // Close the OutputStream
         outputStream.close();
     }
+
+    @GetMapping("/download-awb-history-excel")
+    public void downloadAwbHistoryExcel(@RequestParam Long trackingNumber, HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=awbhistory.xlsx");
+
+        // Get the OutputStream from the response
+        OutputStream outputStream = response.getOutputStream();
+
+        // Generate the billing report Excel data
+        ByteArrayOutputStream excelData = excelGenerationService.generateAwbHistoryReport(awbShippingHistoryService.findAllAwbHistoryByAwbNumber(trackingNumber));
+
+        // Write the generated Excel data to the response OutputStream
+        excelData.writeTo(outputStream);
+
+        // Close the OutputStream
+        outputStream.close();
+    }
 }

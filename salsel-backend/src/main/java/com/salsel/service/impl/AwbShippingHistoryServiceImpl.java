@@ -112,15 +112,13 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
         List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findAllByAwbUniqueNumber(uniqueNumber);
 
         // First, filter the entries to get only the first occurrence of each status
-        List<AwbShippingHistory> filteredHistoryList = awbShippingHistoryList.stream()
+        List<AwbShippingHistory> filteredHistoryList = new ArrayList<>(awbShippingHistoryList.stream()
                 .collect(Collectors.toMap(
                         AwbShippingHistory::getAwbStatus,   // Use awbStatus as the key
                         history -> history,                 // Use the whole object as the value
                         (existing, replacement) -> existing // Keep the first (earliest) occurrence of each status
                 ))
-                .values()
-                .stream()
-                .collect(Collectors.toList());
+                .values());
 
         // Then, sort the filtered list by timestamp
         filteredHistoryList.sort(Comparator.comparing(AwbShippingHistory::getTimestamp));
