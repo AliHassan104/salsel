@@ -4,11 +4,13 @@ import { TrackingAndScanComponent } from '../tracking-and-scan/tracking-and-scan
 import { Route, RouterModule } from "@angular/router";
 import { ScanComponent } from '../scan/scan.component';
 import { TrackingComponent } from '../tracking/tracking.component';
+import { TrackingDetailComponent } from '../tracking-detail/tracking-detail.component';
 
 const routes: Route[] = [
   { path: "", component: TrackingAndScanComponent },
   { path: "scan", component: ScanComponent },
   { path: "tracking", component: TrackingComponent },
+  { path: "tracking/:id", component: TrackingDetailComponent },
 ];
 
 @NgModule({

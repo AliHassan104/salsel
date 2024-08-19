@@ -1,22 +1,18 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
-import { MessageService } from "primeng/api";
-import { DropdownService } from "src/app/layout/service/dropdown.service";
-import { FormvalidationService } from "../../Tickets/service/formvalidation.service";
-import { AirbillService } from "../../awb/service/airbill.service";
-import { DatePipe } from "@angular/common";
-import { Table } from "primeng/table";
-import { TrackingService } from "../service/tracking-scan.service";
-import { Router } from "@angular/router";
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
+import { AirbillService } from '../../awb/service/airbill.service';
+import { TrackingService } from '../service/tracking-scan.service';
+import { ActivatedRoute } from '@angular/router';
 
 declare var onScan: any;
 
 @Component({
-  selector: "app-tracking",
-  templateUrl: "./tracking.component.html",
-  styleUrls: ["./tracking.component.scss"],
-  providers: [MessageService, DatePipe],
+  selector: "app-tracking-detail",
+  templateUrl: "./tracking-detail.component.html",
+  styleUrls: ["./tracking-detail.component.scss"],
 })
-export class TrackingComponent {
+export class TrackingDetailComponent {
   trackingNumber;
   trackingMode: boolean = false;
   uniqueScanNum;
@@ -29,8 +25,8 @@ export class TrackingComponent {
   updatedStatuses: any = {};
   selectedStatus;
   id;
+  paramsId:any
   latestData:any
-  dataAwb:any
 
   loading: any;
 
@@ -43,7 +39,7 @@ export class TrackingComponent {
     private messageService: MessageService,
     private trackingService: TrackingService,
     private _airbillService: AirbillService,
-    private router: Router
+    private route: ActivatedRoute
   ) {
     onScan.attachTo(document, {
       onScan: (sScanned, iQty) => {
@@ -55,7 +51,38 @@ export class TrackingComponent {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.paramsId = params.get("id");
+      this.getTrackingHistory(this.paramsId)
+    });
+  }
+
+  onClickTracking(trackingNumber: any) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    this.onGettingUniqueNum(trackingNumber);
+  }
+
+  getTrackingHistory(id: any) {
+    this._airbillService.getBillTrackingHistory({ awbId: id }).subscribe(
+      (res: any) => {
+        this.history = res;
+        this.latestData = res[res.length - 1]
+        console.log(res);
+        console.log(this.latestData);
+
+        this.history = this.history.reverse();
+        this.trackingMode = true;
+      },
+      (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: error?.error?.error,
+        });
+      }
+    );
+  }
 
   //   For table filtering purpose
   onGlobalFilter(table: Table, event: any) {
@@ -72,28 +99,8 @@ export class TrackingComponent {
       .getSingleBillByUniqueNumber(uniqueNumber)
       .subscribe((res: any) => {
         this.singleBill = res;
+        this.getTrackingHistory(res?.id);
       });
-  }
-
-  getTrackingHistory(id: any) {
-    this._airbillService.getBillTrackingHistory({ awbId: id }).subscribe(
-      (res: any) => {
-        this.history = res;
-        this.latestData = res[res.length - 1];
-        console.log(this.history);
-        console.log(this.latestData);
-
-        this.history = this.history.reverse();
-        this.trackingMode = true;
-      },
-      (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error",
-          detail: error?.error?.error,
-        });
-      }
-    );
   }
 
   getShippingLatestData(multipleTracking: any) {
@@ -113,8 +120,8 @@ export class TrackingComponent {
     this._airbillService
       .getShippingByTrackingNumbers(this.trackingNumbers)
       .subscribe(
-        (res: any) => {
-          if (res != null && res.length > 1) {
+        (res: any[]) => {
+          if (res != null && res.length > 0) {
             console.log(res);
 
             res.forEach((awb: any) => {
@@ -134,15 +141,7 @@ export class TrackingComponent {
                 this.trackingField.nativeElement.value = "";
               }
             });
-          }else if(res.length == 1){
-            this.trackingMode = true
-            if(res){
-                this.airBills.push(res[0])
-                this.getTrackingHistory(res[0]?.awb?.id)
-            }
-
-
-          }else {
+          } else {
             this.messageService.add({
               severity: "error",
               summary: "Error",
@@ -209,6 +208,81 @@ export class TrackingComponent {
 
   onRefresh() {
     this.onGettingUniqueNum(this.trackingNumber);
+  }
+
+  getIcon(status: any): string {
+    switch (status) {
+      case "AWB Created":
+        return "pi pi-credit-card";
+      case "Picked Up":
+        return "pi pi-shopping-bag";
+      case "Arrived in Station":
+        return "pi pi-car";
+      case "Held in Station":
+        return "pi pi-building";
+      case "Depart from Station":
+        return "pi pi-car";
+      case "Arrived in Hub":
+        return "pi pi-building";
+      case "Depart from Hub":
+        return "pi pi-car";
+      case "Out for Delivery":
+        return "pi pi-truck";
+      case "Delivered":
+        return "pi pi-check";
+      default:
+        return "";
+    }
+  }
+
+  getColor(status: any): string {
+    switch (status) {
+      case "AWB Created":
+        return "#9C27B0";
+      case "Picked Up":
+        return "#673AB7";
+      case "Arrived in Station":
+        return "#FF9800";
+      case "Held in Station":
+        return "#607D8B";
+      case "Depart from Station":
+        return "#9C27B0";
+      case "Arrived in Hub":
+        return "#673AB7";
+      case "Depart from Hub":
+        return "#FF9800";
+      case "Out for Delivery":
+        return "#607D8B";
+      case "Delivered":
+        return "#9C27B0";
+      default:
+        return "";
+    }
+  }
+
+  getImage(status: any): string {
+    switch (status) {
+      case "AWB Created":
+        return "paper_2.png";
+      case "Picked Up":
+        return "3697568.png";
+      case "Arrived in Station":
+        return "6333.png";
+      case "Held in Station":
+        return "8085.png";
+      case "Depart from Station":
+        return "3697568.png";
+      case "Arrived in Hub":
+        return "8085.png";
+      case "Depart from Hub":
+        return "3697568.png";
+      case "Out for Delivery":
+        return "Loading workman carrying boxes.png";
+      case "Delivered":
+        return "6233230.png";
+      default:
+        return "";
+    }
   }
 
   onBack() {

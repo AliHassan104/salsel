@@ -291,7 +291,6 @@ import { VerificationComponent } from "./components/auth/verification/verificati
             {
               path: "profile",
               component: UserProfileComponent,
-              canActivate: [AuthGuardService],
             },
           ],
         },
