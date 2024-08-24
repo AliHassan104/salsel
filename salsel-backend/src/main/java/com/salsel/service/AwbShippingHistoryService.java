@@ -13,12 +13,8 @@ public interface AwbShippingHistoryService {
     AwbShippingHistoryDto findLatestAwbShippingHistoryByAwb(Long awbId);
     List<AwbShippingHistoryDto> findByAwbId(Long awbId);
     List<AwbShippingHistoryDto> findAllAwbHistoryByAwbNumber(Long awbId);
-
     Map<Long, List<AwbShippingHistoryDto>> findShippingByAwbIds(List<Long> awbIds);
-
     List<AwbShippingHistoryDto> findTrackingByAwbIds(List<Long> awbIds);
-    List<AwbShippingHistoryDto> findTrackingByAwbIdsAndStatus(List<Long> awbIds, String awbStatus);
-
     List<Map<String,Object>> getAllShippingDataByExcel(List<Long> awbIds);
 
 }

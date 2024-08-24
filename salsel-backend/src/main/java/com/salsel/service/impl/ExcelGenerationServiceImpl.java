@@ -20,7 +20,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -211,6 +215,67 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     }
 
     @Override
+    public ByteArrayOutputStream generateAwbByTrackingReport(Long trackingNumber) throws IOException {
+        // Fetch the AwbDto by tracking number
+        AwbDto awbDto = awbService.findByUniqueNumber(trackingNumber);
+
+        if (awbDto == null) {
+            throw new RecordNotFoundException("No AWB found with the provided tracking number.");
+        }
+
+        // Convert the single AwbDto to a Map<String, Object>
+        Map<String, Object> awbDataMap = convertAwbDtoToMap(awbDto);
+
+        // Wrap the map in a List
+        List<Map<String, Object>> excelData = Collections.singletonList(awbDataMap);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        createExcelFile(excelData, outputStream, AWB_TYPE);
+        return outputStream;
+    }
+
+    private Map<String, Object> convertAwbDtoToMap(AwbDto dto) {
+
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("id", dto.getId());
+        map.put("Awb Number", dto.getUniqueNumber());
+        map.put("Shipper Name", dto.getShipperName());
+        map.put("Shipper Contact Number", dto.getShipperContactNumber());
+        map.put("Pickup Address", dto.getPickupAddress());
+        map.put("Shipper Street Name", dto.getAwbStatus());
+        map.put("Shipper District", dto.getPickupDistrict());
+        map.put("Shipper Ref Number", dto.getShipperRefNumber());
+        map.put("Origin Country", dto.getOriginCountry());
+        map.put("Origin City", dto.getOriginCity());
+        map.put("Account Number", dto.getAccountNumber());
+        map.put("Created At", dto.getCreatedAt());
+        map.put("Duty and Taxes Bill to", dto.getDutyAndTaxesBillTo());
+        map.put("Product Type", dto.getProductType());
+        map.put("Service Type", dto.getServiceType());
+        map.put("Assigned To", dto.getAssignedToUser().getEmail());
+        map.put("Request Type", dto.getRequestType());
+        map.put("Recipient Name", dto.getRecipientsName());
+        map.put("Recipient Contact Number", dto.getRecipientsContactNumber());
+        map.put("Delivery Address", dto.getDeliveryAddress());
+        map.put("Recipient Street Name", dto.getDeliveryStreetName());
+        map.put("Recipient District", dto.getDeliveryDistrict());
+        map.put("Destination Country", dto.getDestinationCountry());
+        map.put("Destination City", dto.getDestinationCity());
+        map.put("Status", dto.getAwbStatus());
+        map.put("Pickup Date", dto.getPickupDate());
+        map.put("Pickup Time", dto.getPickupTime());
+        map.put("Pieces", dto.getPieces());
+        map.put("Content", dto.getContent());
+        map.put("Weight", dto.getWeight());
+        map.put("Currency", dto.getCurrency());
+        map.put("Amount", dto.getAmount());
+        // Add other fields as needed
+
+        return map;
+    }
+
+    @Override
     public ByteArrayOutputStream generateAwbTransitStatusReport() throws IOException {
         List<Map<String, Object>> transitStatusReportData = awbService.getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -311,16 +376,24 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
 
     private Map<String, Object> convertDtoToMap(AwbShippingHistoryDto dto) {
         Map<String, Object> map = new HashMap<>();
+
+        // Assuming the timestamp is a LocalDateTime
+        LocalDateTime timestamp = dto.getTimestamp();
+        LocalDate scanDate = timestamp.toLocalDate();
+        LocalTime scanTime = timestamp.toLocalTime();
+
         map.put("id", dto.getId());
-        map.put("timestamp", dto.getTimestamp());
-        map.put("statusUpdateByUser", dto.getStatusUpdateByUser().getEmail());
-        map.put("comment", dto.getComment());
-        map.put("awbStatus", dto.getAwbStatus());
-        map.put("status", dto.getStatus());
-        map.put("awbId", dto.getAwb().getId());
+        map.put("Tracking Number", dto.getAwb().getUniqueNumber());
+        map.put("Scan Date", scanDate);
+        map.put("Scan Time", scanTime);
+        map.put("Scanned By", dto.getStatusUpdateByUser().getEmail());
+        map.put("Status", dto.getAwbStatus());
+        map.put("Location", dto.getAwb().getDestinationCountry());
         // Add other fields as needed
+
         return map;
     }
+
 
 
     @Override

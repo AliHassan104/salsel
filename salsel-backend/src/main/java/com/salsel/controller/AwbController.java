@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDate;
@@ -305,6 +306,26 @@ public class AwbController {
     public ResponseEntity <List<AwbDto>> getAwbByTrackingNumbers(@RequestBody List<Long> trackingNumbers) {
        List<AwbDto> awbDtoList = awbService.findAwbByTrackingNumbers(trackingNumbers);
         return ResponseEntity.ok(awbDtoList);
+    }
+
+    @PostMapping("/awb/multiple-shipping")
+    @PreAuthorize("hasAuthority('READ_AWB')")
+    public ResponseEntity<List<AwbDto>> getAwbByAwbStatus(
+            @RequestBody List<Long> awbIds,
+            @RequestParam(value = "awbStatus", required = false) String awbStatus) {
+
+        List<AwbDto> awbDto = awbService.findAwbByAwbIdsAndStatus(awbIds, awbStatus);
+        return ResponseEntity.ok(awbDto);
+    }
+
+    @GetMapping("/download-awb-excel-by-tracking-id")
+    public void downloadAwbExcelByTrackingNumber(@RequestParam Long trackingNumber, HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=awb.xlsx");
+        OutputStream outputStream = response.getOutputStream();
+        ByteArrayOutputStream excelData = excelGenerationService.generateAwbByTrackingReport(trackingNumber);
+        excelData.writeTo(outputStream);
+        outputStream.close();
     }
 
 }
