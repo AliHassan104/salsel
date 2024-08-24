@@ -195,51 +195,6 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
     }
 
     @Override
-    public List<AwbShippingHistoryDto> findTrackingByAwbIdsAndStatus(List<Long> awbIds, String awbStatus) {
-        List<AwbShippingHistoryDto> awbShippingHistoryDtoList = new ArrayList<>();
-        Set<Long> processedTrackingNumbers = new HashSet<>();
-
-        if (awbIds == null) {
-            throw new IllegalArgumentException("AWB IDs list cannot be null");
-        }
-
-        for (Long awbId : awbIds) {
-            Awb awb = awbRepository.findByTrackingNumber(awbId);
-            if (awb != null) {
-                if (processedTrackingNumbers.contains(awbId)) {
-                    continue;
-                }
-
-                List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findByAwbId(awb.getId());
-
-                // Filter by awbStatus if provided
-                if (awbStatus != null && !awbStatus.isEmpty()) {
-                    awbShippingHistoryList = awbShippingHistoryList.stream()
-                            .filter(history -> awbStatus.equals(history.getAwbStatus()))
-                            .collect(Collectors.toList());
-                }
-
-                if (awbShippingHistoryList != null && !awbShippingHistoryList.isEmpty()) {
-                    // Find the AwbShippingHistory with the latest timestamp
-                    AwbShippingHistory latestHistory = awbShippingHistoryList.stream()
-                            .filter(Objects::nonNull)
-                            .max(Comparator.comparing(AwbShippingHistory::getTimestamp))
-                            .orElse(null);
-
-                    if (latestHistory != null) {
-                        AwbShippingHistoryDto awbShippingHistoryDto = toDto(latestHistory);
-                        awbShippingHistoryDtoList.add(awbShippingHistoryDto);
-                        processedTrackingNumbers.add(awbId);
-                    }
-                }
-            }
-        }
-
-        return awbShippingHistoryDtoList;
-    }
-
-
-    @Override
     public List<Map<String, Object>> getAllShippingDataByExcel(List<Long> awbIds) {
         List<AwbShippingHistoryDto> awbShippingHistoryDtoList = findTrackingByAwbIds(awbIds);
 

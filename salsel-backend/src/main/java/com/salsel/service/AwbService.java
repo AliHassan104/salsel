@@ -2,6 +2,7 @@ package com.salsel.service;
 
 
 import com.salsel.dto.AwbDto;
+import com.salsel.dto.AwbShippingHistoryDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,4 +42,5 @@ public interface AwbService {
     List<Map<String,Object>> getAwbByStatusChangedOnPreviousDay(String status);
     List<Map<String,Object>> getAwbByStatusChangedLastDayExcludingPickedUpAndDelivered();
     List<AwbDto> findAwbByTrackingNumbers(List<Long> awbIds);
+    List<AwbDto> findAwbByAwbIdsAndStatus(List<Long> awbIds, String awbStatus);
 }
