@@ -21,7 +21,6 @@ import { HrModuleDataComponent } from './components/hr-module/list/hr-module-dat
 import { HrModuleFormComponent } from './components/hr-module/update/hr-module-form.component';
 import { HrModuleViewComponent } from './components/hr-module/view/hr-module-view.component';
 import { BillingComponent } from './components/billing/list/billing.component';
-import { TrackingDetailComponent } from './components/tracking/tracking-detail/tracking-detail.component';
 
 @NgModule({
   declarations: [

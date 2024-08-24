@@ -208,7 +208,6 @@ export class AuthGuardService implements CanActivate {
         "/tracking-and-scan",
         "/tracking-and-scan/scan",
         "/tracking-and-scan/tracking",
-        "/tracking-and-scan/tracking/:id",
       ],
       permissions: "TRACKING_AND_SCAN",
     };

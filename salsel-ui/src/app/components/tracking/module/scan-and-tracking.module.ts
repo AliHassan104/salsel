@@ -24,7 +24,6 @@ import { MultipleScanComponent } from '../scan/multiple-scan/multiple-scan.compo
 import { DividerModule } from 'primeng/divider';
 import { TimelineModule } from 'primeng/timeline';
 import { CardModule } from 'primeng/card';
-import { TrackingDetailComponent } from '../tracking-detail/tracking-detail.component';
 
 
 @NgModule({
@@ -34,7 +33,6 @@ import { TrackingDetailComponent } from '../tracking-detail/tracking-detail.comp
     TrackingComponent,
     SingleScanComponent,
     MultipleScanComponent,
-    TrackingDetailComponent
   ],
   imports: [
     CommonModule,

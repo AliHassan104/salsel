@@ -18,9 +18,13 @@
                     <p class="text m-0">Multiple Tracking Number</p>
                     <textarea #trackingField pInputTextarea type="number" cols="4" rows="3" class="w-full"></textarea>
                 </div>
+                <div class="flex justify-content-center align-items-center">
+                    <p class="text text-single m-0">Status</p>
+                    <p-dropdown #statusDropdown [(ngModel)]="selectedStatusDropdown" [options]="statusToSend" placeholder="Select Status" class="w-full"></p-dropdown>
+                </div>
                 <div class="text-right">
                     <button pButton label="Search" class="input-btn"
-                        (click)="onTrackTrackingNumber(trackingField?.value,singleTrackingField?.value)"></button>
+                        (click)="onTrackTrackingNumber(trackingField?.value,singleTrackingField?.value, selectedStatusDropdown)"></button>
                 </div>
             </ng-container>
 
@@ -88,7 +92,7 @@
                                 {{i}}
                             </td>
                             <td>
-                                <a (click)="getTrackingHistory(data?.awb?.id)">{{data?.awb?.uniqueNumber}}</a>
+                                <a (click)="getTrackingHistory(data?.awb?.id,data?.awb?.uniqueNumber)">{{data?.awb?.uniqueNumber}}</a>
                             </td>
                             <td>
                                 {{data?.timestamp | date:'MMMM d, y'}}
@@ -324,7 +328,7 @@
                         <div class="flex justify-content-between flex-column sm:flex-row">
                             <div class="mb-2">
                                 <button pButton label="Excel" class="ml-3" icon="pi pi-download"
-                                    (click)="onDownloadEmployeeExcel()"></button>
+                                    (click)="onDownloadHistoryExcel()"></button>
                             </div>
 
                             <span class="p-input-icon-left mb-2">

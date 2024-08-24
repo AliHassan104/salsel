@@ -105,9 +105,14 @@ export class AirbillService {
     return this.http.post<any>(`${this.url}awb/tracking-numbers`, data);
   }
 
-  getShippingByTrackingNumbers(data: any): Observable<any> {
+  getShippingByTrackingNumbers(data: any,awbStatus:any): Observable<any> {
+
+    let url = `${this.url}awb-shipping-history/multiple-shipping`;
+    if (awbStatus != undefined) {
+      url = `${this.url}awb-shipping-history/multiple-shipping?awbStatus=${awbStatus}`;
+    }
     return this.http.post<any>(
-      `${this.url}awb-shipping-history/multiple-shipping`,
+      url,
       data
     );
   }

@@ -256,6 +256,16 @@ p.timeline-opposite-content {
     color: #495057;
 }
 
+p-dropdown::ng-deep .p-dropdown{
+    width:300px !important;
+    padding: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-left: 3px;
+}
+
 .mobile-card::ng-deep .p-card .p-card-body {
   text-align: center;
   margin-bottom: 20px;
