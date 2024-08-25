@@ -220,6 +220,53 @@ public class AwbShippingHistoryServiceImpl implements AwbShippingHistoryService 
         return result;
     }
 
+    @Override
+    public List<AwbShippingHistoryDto> findTrackingByAwbIdsAndStatus(List<Long> awbIds, String awbStatus) {
+        List<AwbShippingHistoryDto> awbShippingHistoryDtoList = new ArrayList<>();
+        Set<Long> processedTrackingNumbers = new HashSet<>();
+
+        if (awbIds == null) {
+            throw new IllegalArgumentException("AWB IDs list cannot be null");
+        }
+
+        for (Long awbId : awbIds) {
+            Awb awb = awbRepository.findByTrackingNumber(awbId);
+            if (awb != null) {
+                // Ensure we haven't already processed this tracking number
+                if (processedTrackingNumbers.contains(awbId)) {
+                    continue;
+                }
+
+                // Filter AWB by status
+                if (awbStatus != null && !awbStatus.isEmpty()) {
+                    if (!awbStatus.equalsIgnoreCase(awb.getAwbStatus())) {
+                        continue; // Skip this AWB if the status doesn't match
+                    }
+                }
+
+                // Retrieve the shipping history for the AWB
+                List<AwbShippingHistory> awbShippingHistoryList = awbShippingHistoryRepository.findByAwbId(awb.getId());
+
+                if (awbShippingHistoryList != null && !awbShippingHistoryList.isEmpty()) {
+                    // Find the AwbShippingHistory with the latest timestamp
+                    AwbShippingHistory latestHistory = awbShippingHistoryList.stream()
+                            .filter(Objects::nonNull)
+                            .max(Comparator.comparing(AwbShippingHistory::getTimestamp))
+                            .orElse(null);
+
+                    if (latestHistory != null) {
+                        AwbShippingHistoryDto awbShippingHistoryDto = toDto(latestHistory);
+                        awbShippingHistoryDtoList.add(awbShippingHistoryDto);
+                        processedTrackingNumbers.add(awbId);
+                    }
+                }
+            }
+        }
+
+        return awbShippingHistoryDtoList;
+    }
+
+
     public AwbShippingHistoryDto toDto(AwbShippingHistory awbShippingHistory) {
         return AwbShippingHistoryDto.builder()
                 .id(awbShippingHistory.getId())
