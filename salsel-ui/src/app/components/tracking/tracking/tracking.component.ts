@@ -159,6 +159,8 @@ export class TrackingComponent {
             });
           } else if (res.length == 1) {
             this.trackingMode = true;
+            console.log(res);
+
             this.selectedStatusDropdown = null;
             if (res) {
               this.airBills.push(res[0]);
@@ -209,6 +211,26 @@ export class TrackingComponent {
           });
         }
       );
+  }
+
+  onDownloadAwbExcel() {
+    this.trackingService.downloadAwbDataInExcel("900000041").subscribe(
+      (res: any) => {
+        this._airbillService.downloadExcelFile(res, "Awb_Detail.xlsx");
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Download Successfull",
+        });
+      },
+      (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No Airbill found",
+        });
+      }
+    );
   }
 
   onDownloadHistoryExcel() {

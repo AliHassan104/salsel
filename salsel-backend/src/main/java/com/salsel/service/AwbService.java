@@ -4,6 +4,8 @@ package com.salsel.service;
 import com.salsel.dto.AwbDto;
 import com.salsel.dto.AwbShippingHistoryDto;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;

@@ -107,9 +107,9 @@ export class AirbillService {
 
   getShippingByTrackingNumbers(data: any,awbStatus:any): Observable<any> {
 
-    let url = `${this.url}awb-shipping-history/multiple-shipping`;
+    let url = `${this.url}awb/multiple-shipping`;
     if (awbStatus != undefined) {
-      url = `${this.url}awb-shipping-history/multiple-shipping?awbStatus=${awbStatus}`;
+      url = `${this.url}awb/multiple-shipping?awbStatus=${awbStatus}`;
     }
     return this.http.post<any>(
       url,

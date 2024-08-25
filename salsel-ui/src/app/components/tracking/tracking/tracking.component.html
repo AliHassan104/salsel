@@ -92,7 +92,7 @@
                                 {{i}}
                             </td>
                             <td>
-                                <a (click)="getTrackingHistory(data?.awb?.id,data?.awb?.uniqueNumber)">{{data?.awb?.uniqueNumber}}</a>
+                                <a (click)="getTrackingHistory(data?.id,data?.awb?.uniqueNumber)">{{data?.awb?.uniqueNumber}}</a>
                             </td>
                             <td>
                                 {{data?.timestamp | date:'MMMM d, y'}}
@@ -122,6 +122,11 @@
 
 
         <ng-container *ngIf="trackingMode">
+            <div class="flex justify-content-between flex-column sm:flex-row">
+                <div class="mt-2">
+                    <button pButton label="Excel" class="ml-3" icon="pi pi-download" (click)="onDownloadAwbExcel()"></button>
+                </div>
+            </div>
             <div class="grid row mt-4">
                 <div class="col-12 md:col-6">
                     <div class="grid row justify-content-center">

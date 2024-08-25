@@ -32,6 +32,16 @@ export class TrackingService {
     );
   }
 
+  downloadAwbDataInExcel(awbNumbers: any) {
+
+    return this.http.get(
+      `${this.url}download-awb-excel-by-tracking-id?trackingNumber=${awbNumbers}`,
+      {
+        responseType: "blob" as "json", // Set the response type to 'blob'
+      }
+    );
+  }
+
   getTracking(trackingId:any){
     return this.http.get(
       `${this.url}awb-shipping-history/trackig-number/${trackingId}`
