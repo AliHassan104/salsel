@@ -375,7 +375,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     }
 
     private Map<String, Object> convertDtoToMap(AwbShippingHistoryDto dto) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
 
         // Assuming the timestamp is a LocalDateTime
         LocalDateTime timestamp = dto.getTimestamp();
@@ -388,7 +388,7 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
         map.put("Scan Time", scanTime);
         map.put("Scanned By", dto.getStatusUpdateByUser().getEmail());
         map.put("Status", dto.getAwbStatus());
-        map.put("Location", dto.getAwb().getDestinationCountry());
+        map.put("Location", dto.getStatusUpdateByUser().getCountry());
         // Add other fields as needed
 
         return map;
