@@ -92,7 +92,7 @@
                                 {{i}}
                             </td>
                             <td>
-                                <a (click)="getTrackingHistory(data?.id,data?.awb?.uniqueNumber)">{{data?.awb?.uniqueNumber}}</a>
+                                <a (click)="getTrackingHistory(data?.awb?.id,data?.awb?.uniqueNumber)">{{data?.awb?.uniqueNumber}}</a>
                             </td>
                             <td>
                                 {{data?.timestamp | date:'MMMM d, y'}}

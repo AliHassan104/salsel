@@ -214,23 +214,25 @@ export class TrackingComponent {
   }
 
   onDownloadAwbExcel() {
-    this.trackingService.downloadAwbDataInExcel("900000041").subscribe(
-      (res: any) => {
-        this._airbillService.downloadExcelFile(res, "Awb_Detail.xlsx");
-        this.messageService.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Download Successfull",
-        });
-      },
-      (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error",
-          detail: "No Airbill found",
-        });
-      }
-    );
+    this.trackingService
+      .downloadAwbDataInExcel(this.uniqueNumberForExcel)
+      .subscribe(
+        (res: any) => {
+          this._airbillService.downloadExcelFile(res, "Awb_Detail.xlsx");
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Download Successfull",
+          });
+        },
+        (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "No Airbill found",
+          });
+        }
+      );
   }
 
   onDownloadHistoryExcel() {

@@ -27,5 +27,4 @@ public interface ExcelGenerationService {
     void createExcelFileForCustomerStatement(List<Map<String, Object>> excelData, OutputStream outputStream, String type) throws IOException;
     void savePricingExcelData(MultipartFile file);
 
-    ByteArrayOutputStream generateAwbByTrackingReport(Long trackingNumber) throws IOException;
 }
