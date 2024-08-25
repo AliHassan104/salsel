@@ -1,6 +1,5 @@
 package com.salsel.controller;
 
-import com.salsel.dto.AddressBookDto;
 import com.salsel.dto.AwbShippingHistoryDto;
 import com.salsel.service.AwbShippingHistoryService;
 import com.salsel.service.ExcelGenerationService;
@@ -38,7 +37,7 @@ public class AwbShippingHistoryController {
     @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
     public ResponseEntity<AwbShippingHistoryDto> updateCommentInAwbShippingHistory(@RequestParam(value = "awbId") Long awbId,
                                                                                    @RequestParam(value = "comment") String comment) {
-        AwbShippingHistoryDto awbShippingHistoryDto = awbShippingHistoryService.addCommentToAwbShippingHistory(comment,awbId);
+        AwbShippingHistoryDto awbShippingHistoryDto = awbShippingHistoryService.addCommentToAwbShippingHistory(comment, awbId);
         return ResponseEntity.ok(awbShippingHistoryDto);
     }
 
@@ -51,13 +50,13 @@ public class AwbShippingHistoryController {
 
     @PostMapping("/awb-shipping-history/multiple-awb")
     @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
-    public ResponseEntity <Map<Long, List<AwbShippingHistoryDto>>> getAwbShippingHistoryByMultipleAwb(@RequestBody List<Long> awbIds) {
+    public ResponseEntity<Map<Long, List<AwbShippingHistoryDto>>> getAwbShippingHistoryByMultipleAwb(@RequestBody List<Long> awbIds) {
         Map<Long, List<AwbShippingHistoryDto>> awbShippingHistoryDto = awbShippingHistoryService.findShippingByAwbIds(awbIds);
         return ResponseEntity.ok(awbShippingHistoryDto);
     }
 
     @GetMapping("/awb-shipping-history/tracking-number/{tracking-number}")
-    public ResponseEntity <List<AwbShippingHistoryDto>> getAwbTrackingHistoryByTrackingNumber(@PathVariable(value = "tracking-number") Long trackingNumber) {
+    public ResponseEntity<List<AwbShippingHistoryDto>> getAwbTrackingHistoryByTrackingNumber(@PathVariable(value = "tracking-number") Long trackingNumber) {
         List<AwbShippingHistoryDto> awbShippingHistoryDto = awbShippingHistoryService.findAllAwbHistoryByAwbNumber(trackingNumber);
         return ResponseEntity.ok(awbShippingHistoryDto);
     }
@@ -99,5 +98,15 @@ public class AwbShippingHistoryController {
 
         // Close the OutputStream
         outputStream.close();
+    }
+
+    @PostMapping("/awb-shipping-history/multiple-shipping")
+    @PreAuthorize("hasAuthority('READ_AWB_SHIPPING_HISTORY')")
+    public ResponseEntity<List<AwbShippingHistoryDto>> getAwbTrackingHistoryByMultipleAwb(
+            @RequestBody List<Long> awbIds,
+            @RequestParam(value = "awbStatus", required = false) String awbStatus) {
+
+        List<AwbShippingHistoryDto> awbShippingHistoryDto = awbShippingHistoryService.findTrackingByAwbIdsAndStatus(awbIds, awbStatus);
+        return ResponseEntity.ok(awbShippingHistoryDto);
     }
 }

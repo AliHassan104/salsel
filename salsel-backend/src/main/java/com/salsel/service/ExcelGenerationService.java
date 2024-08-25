@@ -16,6 +16,7 @@ public interface ExcelGenerationService {
     List<Map<String, Object>> convertAccountsToExcelData(List<AccountDto> accounts);
     List<Map<String,Object>> convertAirBillsToExcelData(List<AwbDto> airbills);
     ByteArrayOutputStream generateAwbStatusReport(String status) throws IOException;
+    ByteArrayOutputStream generateAwbByTrackingReport(Long trackingNumber) throws IOException;
     ByteArrayOutputStream generateAwbTransitStatusReport() throws IOException;
     Map<Long, List<ByteArrayOutputStream>> generateBillingReports(List<Map<String, Object>> billingMaps);
     Map<Long, List<ByteArrayOutputStream>> generateBillingStatements(List<Map<String, Object>> statementsMap);
