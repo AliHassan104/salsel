@@ -71,9 +71,9 @@ export class AppMenuComponent implements OnInit {
           },
           {
             label: "Rates",
-            icon: "pi pi-money-bill",
+            icon: "pi pi-dollar",
             routerLink: "rate/list",
-            permission: "CREATE_ADDRESS_BOOK",
+            permission: "CREATE_RATES",
           },
           {
             label: "Scan And Tracking",

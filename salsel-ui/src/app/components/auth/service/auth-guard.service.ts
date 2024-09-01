@@ -201,11 +201,11 @@ export class AuthGuardService implements CanActivate {
     };
     const readwebRateObj = {
       url: ["/rate/list", "/rate/list/:id"],
-      permissions: "READ_ADDRESS_BOOK",
+      permissions: "READ_RATES",
     };
     const createWebRate = {
       url: ["/create-rate"],
-      permissions: "CREATE_ADDRESS_BOOK",
+      permissions: "CREATE_RATES",
     };
     const createAddressBookObj = {
       url: ["/create-address-book"],
