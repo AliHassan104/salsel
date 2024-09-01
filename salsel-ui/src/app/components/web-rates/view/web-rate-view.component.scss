@@ -1,0 +1,38 @@
+.custom-modal p {
+  font-size: 16px;
+}
+
+.custom-modal h2 {
+  text-decoration: underline;
+}
+
+.custom-h {
+  color: #93003c;
+}
+
+@media screen and (max-width: 500px) {
+  .downloadBtn {
+    margin-top: 26px;
+  }
+}
+
+h4 {
+  color: #93003c;
+  font-size: 17px;
+  text-decoration: underline;
+}
+
+p {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+
+.p-inputtext:enabled:focus,input:focus,input:focus-visible{
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+}
+
+.p-inputtext:hover,input:hover{
+    border-color: #ced4da !important;
+}

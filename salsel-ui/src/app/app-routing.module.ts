@@ -252,6 +252,22 @@ import { VerificationComponent } from "./components/auth/verification/verificati
               canActivate: [AuthGuardService],
             },
             {
+              path: "rate/list",
+              loadChildren: () =>
+                import("./components/web-rates/web-rates.module").then(
+                  (m) => m.WebRatesModule
+                ),
+              canActivate: [AuthGuardService],
+            },
+            {
+              path: "create-rate",
+              loadChildren: () =>
+                import(
+                  "./components/web-rates/update/module/web-rate-update.module"
+                ).then((m) => m.WebRateUpdateModule),
+              canActivate: [AuthGuardService],
+            },
+            {
               path: "create-address-book",
               loadChildren: () =>
                 import(

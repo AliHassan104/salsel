@@ -235,45 +235,45 @@ public class ExcelGenerationServiceImpl implements ExcelGenerationService {
     }
 
     private Map<String, Object> convertAwbDtoToMap(AwbDto dto) {
-
         Map<String, Object> map = new LinkedHashMap<>();
 
-        map.put("id", dto.getId());
-        map.put("Awb Number", dto.getUniqueNumber());
-        map.put("Shipper Name", dto.getShipperName());
-        map.put("Shipper Contact Number", dto.getShipperContactNumber());
-        map.put("Pickup Address", dto.getPickupAddress());
-        map.put("Shipper Street Name", dto.getAwbStatus());
-        map.put("Shipper District", dto.getPickupDistrict());
-        map.put("Shipper Ref Number", dto.getShipperRefNumber());
-        map.put("Origin Country", dto.getOriginCountry());
-        map.put("Origin City", dto.getOriginCity());
-        map.put("Account Number", dto.getAccountNumber());
-        map.put("Created At", dto.getCreatedAt());
-        map.put("Duty and Taxes Bill to", dto.getDutyAndTaxesBillTo());
-        map.put("Product Type", dto.getProductType());
-        map.put("Service Type", dto.getServiceType());
-        map.put("Assigned To", dto.getAssignedToUser().getEmail());
-        map.put("Request Type", dto.getRequestType());
-        map.put("Recipient Name", dto.getRecipientsName());
-        map.put("Recipient Contact Number", dto.getRecipientsContactNumber());
-        map.put("Delivery Address", dto.getDeliveryAddress());
-        map.put("Recipient Street Name", dto.getDeliveryStreetName());
-        map.put("Recipient District", dto.getDeliveryDistrict());
-        map.put("Destination Country", dto.getDestinationCountry());
-        map.put("Destination City", dto.getDestinationCity());
-        map.put("Status", dto.getAwbStatus());
-        map.put("Pickup Date", dto.getPickupDate());
-        map.put("Pickup Time", dto.getPickupTime());
-        map.put("Pieces", dto.getPieces());
-        map.put("Content", dto.getContent());
-        map.put("Weight", dto.getWeight());
-        map.put("Currency", dto.getCurrency());
-        map.put("Amount", dto.getAmount());
+        map.put("id", dto.getId() != null ? dto.getId() : "");
+        map.put("Awb Number", dto.getUniqueNumber() != null ? dto.getUniqueNumber() : "");
+        map.put("Shipper Name", dto.getShipperName() != null ? dto.getShipperName() : "");
+        map.put("Shipper Contact Number", dto.getShipperContactNumber() != null ? dto.getShipperContactNumber() : "");
+        map.put("Pickup Address", dto.getPickupAddress() != null ? dto.getPickupAddress() : "");
+        map.put("Shipper Street Name", dto.getAwbStatus() != null ? dto.getAwbStatus() : "");
+        map.put("Shipper District", dto.getPickupDistrict() != null ? dto.getPickupDistrict() : "");
+        map.put("Shipper Ref Number", dto.getShipperRefNumber() != null ? dto.getShipperRefNumber() : "");
+        map.put("Origin Country", dto.getOriginCountry() != null ? dto.getOriginCountry() : "");
+        map.put("Origin City", dto.getOriginCity() != null ? dto.getOriginCity() : "");
+        map.put("Account Number", dto.getAccountNumber() != null ? dto.getAccountNumber() : "");
+        map.put("Created At", dto.getCreatedAt() != null ? dto.getCreatedAt() : "");
+        map.put("Duty and Taxes Bill to", dto.getDutyAndTaxesBillTo() != null ? dto.getDutyAndTaxesBillTo() : "");
+        map.put("Product Type", dto.getProductType() != null ? dto.getProductType() : "");
+        map.put("Service Type", dto.getServiceType() != null ? dto.getServiceType() : "");
+        map.put("Assigned To", dto.getAssignedToUser() != null && dto.getAssignedToUser().getEmail() != null ? dto.getAssignedToUser().getEmail() : "");
+        map.put("Request Type", dto.getRequestType() != null ? dto.getRequestType() : "");
+        map.put("Recipient Name", dto.getRecipientsName() != null ? dto.getRecipientsName() : "");
+        map.put("Recipient Contact Number", dto.getRecipientsContactNumber() != null ? dto.getRecipientsContactNumber() : "");
+        map.put("Delivery Address", dto.getDeliveryAddress() != null ? dto.getDeliveryAddress() : "");
+        map.put("Recipient Street Name", dto.getDeliveryStreetName() != null ? dto.getDeliveryStreetName() : "");
+        map.put("Recipient District", dto.getDeliveryDistrict() != null ? dto.getDeliveryDistrict() : "");
+        map.put("Destination Country", dto.getDestinationCountry() != null ? dto.getDestinationCountry() : "");
+        map.put("Destination City", dto.getDestinationCity() != null ? dto.getDestinationCity() : "");
+        map.put("Status", dto.getAwbStatus() != null ? dto.getAwbStatus() : "");
+        map.put("Pickup Date", dto.getPickupDate() != null ? dto.getPickupDate() : "");
+        map.put("Pickup Time", dto.getPickupTime() != null ? dto.getPickupTime() : "");
+        map.put("Pieces", dto.getPieces() != null ? dto.getPieces() : "");
+        map.put("Content", dto.getContent() != null ? dto.getContent() : "");
+        map.put("Weight", dto.getWeight() != null ? dto.getWeight() : "");
+        map.put("Currency", dto.getCurrency() != null ? dto.getCurrency() : "");
+        map.put("Amount", dto.getAmount() != null ? dto.getAmount() : "");
         // Add other fields as needed
 
         return map;
     }
+
 
     @Override
     public ByteArrayOutputStream generateAwbTransitStatusReport() throws IOException {

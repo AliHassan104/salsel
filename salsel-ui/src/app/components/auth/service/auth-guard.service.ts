@@ -199,6 +199,14 @@ export class AuthGuardService implements CanActivate {
       url: ["/address-book/list", "/address-book/list/:id"],
       permissions: "READ_ADDRESS_BOOK",
     };
+    const readwebRateObj = {
+      url: ["/rate/list", "/rate/list/:id"],
+      permissions: "READ_ADDRESS_BOOK",
+    };
+    const createWebRate = {
+      url: ["/create-rate"],
+      permissions: "CREATE_ADDRESS_BOOK",
+    };
     const createAddressBookObj = {
       url: ["/create-address-book"],
       permissions: "CREATE_ADDRESS_BOOK",
@@ -246,7 +254,9 @@ export class AuthGuardService implements CanActivate {
       trackingAndScanObj,
       createEmployeeObj,
       readEmployeeObj,
-      readBillingObj
+      readBillingObj,
+      createWebRate,
+      readwebRateObj,
     ];
   }
   private urlMatches(pattern: string, url: string): boolean {
