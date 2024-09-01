@@ -1,6 +1,7 @@
 package com.salsel.controller;
 
 import com.salsel.dto.RatesDto;
+import com.salsel.model.Rates;
 import com.salsel.service.RatesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,6 +51,13 @@ public class RatesController {
     public ResponseEntity<Void> updateRatesStatusToActive(@PathVariable Long id) {
         ratesService.setToActiveById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/rates/{id}")
+    @PreAuthorize("hasAuthority('CREATE_RATES') and hasAuthority('READ_RATES')")
+    public ResponseEntity<RatesDto> updateRates(@PathVariable Long id, @RequestBody RatesDto ratesDto) {
+        RatesDto rates = ratesService.updateRates(id, ratesDto);
+        return ResponseEntity.ok(rates);
     }
 
     @GetMapping("/rates/web")
