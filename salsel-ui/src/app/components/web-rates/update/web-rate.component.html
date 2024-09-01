@@ -2,122 +2,77 @@
     <div class="card">
         <h1 class="mb-5"
             style="color: #93003c; font-size: 17.5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
-            {{mode == 'Add'? "Add Address" :"Update Address" }}</h1>
+            {{mode == 'Add'? "Add Rate" :"Update Rate" }}</h1>
         <form action="" [formGroup]="addressBookForm" (ngSubmit)="onSubmit()">
             <div class="p-fluid p-formgrid grid">
-                <!-- User Type -->
                 <div class="field col-12 md:col-6">
-                    <label><strong>User Type</strong></label>
-                    <p-dropdown [options]="userTypes" formControlName="userType" placeholder="Select User Type"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('userType')?.touched && addressBookForm.get('userType')?.invalid}"
-                        [readonly]="mode == 'Update'"></p-dropdown>
-                    <small *ngIf="!addressBookForm.get('userType')?.valid && addressBookForm.get('userType')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <!-- Account Number -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="accountNumber">Account Number</label>
-                    <p-dropdown #dropdown2 [options]="accountNumbers" placeholder="Select Account Number" filter="true"
-                        formControlName="accountNumber"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('accountNumber')?.touched && addressBookForm.get('accountNumber')?.invalid}"
-                        [required]="true"></p-dropdown>
-                    <small
-                        *ngIf="!addressBookForm.get('accountNumber')?.valid && addressBookForm.get('accountNumber')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <!-- Name -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="name"><strong>Name</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="name" placeholder="Enter Name"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('name')?.touched && addressBookForm.get('name')?.invalid}" />
-                    <small *ngIf="!addressBookForm.get('name')?.valid && addressBookForm.get('name')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <!-- Contact Number -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="name"><strong>Contact Number</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="contactNumber"
-                        placeholder="Enter Contact Number"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('contactNumber')?.touched && addressBookForm.get('contactNumber')?.invalid}" />
-                    <small
-                        *ngIf="!addressBookForm.get('contactNumber')?.valid && addressBookForm.get('contactNumber')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <!-- Ref Number -->
-                <div class="field col-12 md:col-6" *ngIf="addressBookForm.get('userType')?.value == 'Shipper'">
-                    <label htmlFor="name"><strong>Ref Number</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="refNumber" placeholder="Enter Ref Number"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('refNumber')?.touched && addressBookForm.get('refNumber')?.invalid}" />
-                    <small *ngIf="!addressBookForm.get('refNumber')?.valid && addressBookForm.get('refNumber')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <!-- Address -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="name"><strong>Address</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="address" placeholder="Enter Address"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('address')?.touched && addressBookForm.get('address')?.invalid}" />
-                    <small *ngIf="!addressBookForm.get('address')?.valid && addressBookForm.get('address')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <!-- Street Name -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="name"><strong>Street Name</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="streetName"
-                        placeholder="Enter Street Name"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('streetName')?.touched && addressBookForm.get('streetName')?.invalid}" />
-                    <small
-                        *ngIf="!addressBookForm.get('streetName')?.valid && addressBookForm.get('streetName')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <!-- District -->
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="name"><strong>District</strong></label>
-                    <input pInputTextarea id="name" rows="4" formControlName="district" placeholder="Enter District"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('district')?.touched && addressBookForm.get('district')?.invalid}" />
-                    <small *ngIf="!addressBookForm.get('district')?.valid && addressBookForm.get('district')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <div class="field col-12 md:col-6">
-                    <label><strong>Country</strong></label>
-                    <p-dropdown #dropdown1 [options]="countries" formControlName="country" placeholder="Select Country"
-                        [filter]="true" (onChange)="onSelectCountry($event)"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('country')?.touched && addressBookForm.get('country')?.invalid}"></p-dropdown>
-                    <small *ngIf="!addressBookForm.get('country')?.valid && addressBookForm.get('country')?.touched"
-                        class="text-red-500">
-                        Required
-                    </small>
-                </div>
-
-                <div class="field col-12 md:col-6">
-                    <label><strong>City</strong></label>
-                    <p-dropdown #dropdown2 [options]="cities" formControlName="city" placeholder="Select City"
+                    <label><strong>From Country</strong></label>
+                    <p-dropdown #dropdown1 [options]="countries" formControlName="fromCountry" placeholder="Select Country"
                         [filter]="true"
-                        [ngClass]="{'ng-dirty':addressBookForm.get('city')?.touched && addressBookForm.get('city')?.invalid}"></p-dropdown>
-                    <small *ngIf="!addressBookForm.get('city')?.valid && addressBookForm.get('city')?.touched"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('fromCountry')?.touched && addressBookForm.get('fromCountry')?.invalid}"></p-dropdown>
+                    <small *ngIf="!addressBookForm.get('fromCountry')?.valid && addressBookForm.get('fromCountry')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
+                <div class="field col-12 md:col-6">
+                    <label><strong>To Country</strong></label>
+                    <p-dropdown #dropdown2 [options]="countries" formControlName="toCountry" placeholder="Select Country"
+                        [filter]="true"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('toCountry')?.touched && addressBookForm.get('toCountry')?.invalid}"></p-dropdown>
+                    <small *ngIf="!addressBookForm.get('toCountry')?.valid && addressBookForm.get('toCountry')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+
+                <div class="field col-12 md:col-6">
+                    <label><strong>Product</strong></label>
+                    <p-dropdown #dropdown3 [options]="products" formControlName="product" placeholder="Select Country"
+                        [filter]="true"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('product')?.touched && addressBookForm.get('product')?.invalid}"></p-dropdown>
+                    <small *ngIf="!addressBookForm.get('product')?.valid && addressBookForm.get('product')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Ref Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="name"><strong>Weight Range From</strong></label>
+                    <input pInputTextarea id="name" type="number" rows="4" formControlName="weightRangeFrom" placeholder="Enter Weight Range From"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('weightRangeFrom')?.touched && addressBookForm.get('weightRangeFrom')?.invalid}" />
+                    <small *ngIf="!addressBookForm.get('weightRangeFrom')?.valid && addressBookForm.get('weightRangeFrom')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Ref Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="name"><strong>Weight Range To</strong></label>
+                    <input pInputTextarea id="name" type="number" rows="4" formControlName="weightRangeTo" placeholder="Enter weight range to"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('weightRangeTo')?.touched && addressBookForm.get('weightRangeTo')?.invalid}" />
+                    <small *ngIf="!addressBookForm.get('weightRangeTo')?.valid && addressBookForm.get('weightRangeTo')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Ref Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="name"><strong>Charges</strong></label>
+                    <input pInputTextarea id="name" type="number" rows="4" formControlName="charges" placeholder="Enter weight range to"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('charges')?.touched && addressBookForm.get('charges')?.invalid}" />
+                    <small *ngIf="!addressBookForm.get('charges')?.valid && addressBookForm.get('charges')?.touched"
+                        class="text-red-500">
+                        Required
+                    </small>
+                </div>
+                <!-- Ref Number -->
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="name"><strong>Additional Charges</strong></label>
+                    <input pInputTextarea id="name" type="number" rows="4" formControlName="additionalCharges" placeholder="Enter weight range to"
+                        [ngClass]="{'ng-dirty':addressBookForm.get('additionalCharges')?.touched && addressBookForm.get('additionalCharges')?.invalid}" />
+                    <small *ngIf="!addressBookForm.get('additionalCharges')?.valid && addressBookForm.get('additionalCharges')?.touched"
                         class="text-red-500">
                         Required
                     </small>

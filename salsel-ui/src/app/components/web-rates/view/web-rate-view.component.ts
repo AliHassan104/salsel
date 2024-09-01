@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { AddressBookService } from '../../addressBook/service/address-book.service';
 import { IAddressBook } from '../../addressBook/model/addressBookDto';
+import { WebRatesService } from '../web-rates.service';
+import { IWebRate } from '../model/webRateDto';
 
 @Component({
   selector: "app-web-rate-view",
@@ -10,13 +11,13 @@ import { IAddressBook } from '../../addressBook/model/addressBookDto';
   styleUrls: ["./web-rate-view.component.scss"],
 })
 export class WebRateViewComponent {
-  singleAddress?: IAddressBook;
+  singleAddress?: IWebRate;
   id: any;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private addressBookService: AddressBookService,
+    private addressBookService: WebRatesService,
     private messageService: MessageService
   ) {}
 

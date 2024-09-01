@@ -8,6 +8,8 @@ import { IAddressBook } from '../../addressBook/model/addressBookDto';
 import { AddressBookService } from '../../addressBook/service/address-book.service';
 import { SessionStorageService } from '../../auth/service/session-storage.service';
 import { CountryService } from '../../country/service/country.service';
+import { WebRatesService } from '../web-rates.service';
+import { IWebRate } from '../model/webRateDto';
 
 @Component({
   selector: "app-web-rate-list",
@@ -25,12 +27,12 @@ export class WebRateListComponent {
   refresh: boolean = false;
 
   deleteDialog: any;
-  addressBooks?: IAddressBook[];
+  addressBooks?: IWebRate[];
   deleteId: any;
 
   constructor(
     private countryService: CountryService,
-    private adddressBookService: AddressBookService,
+    private adddressBookService: WebRatesService,
     private router: Router,
     private messageService: MessageService,
     private dropdownService: DropdownService,
@@ -60,67 +62,18 @@ export class WebRateListComponent {
       });
   }
 
-  getAddressBookByUserType() {
-    const params = {
-      userType: this.selectedUserType,
-      status: this.activeStatus,
-    };
-    this.adddressBookService
-      .getAddressBooksByUserType(params)
-      .pipe(
-        finalize(() => {
-          this.refresh = false;
-        })
-      )
-      .subscribe((res) => {
-        if (res && res.body) {
-          this.addressBooks = res.body;
-        }
-      });
-  }
-
   onRefresh() {
-    if (this.selectedUserType == "Both") {
-      this.refresh = true;
-      this.getAddressBooks();
-    } else {
-      this.refresh = true;
-      this.getAddressBookByUserType();
-    }
-  }
-
-  onUserTypeChange(data) {
-    if (data == "Both") {
-      this.activeStatus = true;
-      this.getAddressBooks();
-    } else if (data == "Shipper") {
-      this.activeStatus = true;
-      this.getAddressBookByUserType();
-    } else {
-      this.activeStatus = true;
-      this.getAddressBookByUserType();
-    }
+    this.refresh = true;
+    this.getAddressBooks();
   }
 
   onStatusChange(data) {
-    if (data == "Active" && this.selectedUserType == "Both") {
+    if (data == "Active") {
       this.activeStatus = true;
       this.getAddressBooks();
-    } else if (data == "In Active" && this.selectedUserType == "Both") {
+    } else {
       this.activeStatus = false;
       this.getAddressBooks();
-    } else if (data == "Active" && this.selectedUserType == "Shipper") {
-      this.activeStatus = true;
-      this.getAddressBookByUserType();
-    } else if (data == "In Active" && this.selectedUserType == "Shipper") {
-      this.activeStatus = false;
-      this.getAddressBookByUserType();
-    } else if (data == "Active" && this.selectedUserType == "Recipient") {
-      this.activeStatus = true;
-      this.getAddressBookByUserType();
-    } else if (data == "In Active" && this.selectedUserType == "Recipient") {
-      this.activeStatus = false;
-      this.getAddressBookByUserType();
     }
   }
 
@@ -133,10 +86,6 @@ export class WebRateListComponent {
           .productFieldValuesList
       );
 
-      this.userType = this.dropdownService.extractNames(
-        this.productField.filter((data) => data.name == "User Type List")[0]
-          .productFieldValuesList
-      );
     });
   }
 
@@ -148,18 +97,14 @@ export class WebRateListComponent {
     table.clear();
     this.filter.nativeElement.value = "";
   }
+
   confirmDeleteSelected() {
     this.adddressBookService
       .removeAddressBook(this.deleteId)
       .subscribe((res) => {
         if (res.status == 200) {
-          if (this.selectedUserType == "Both") {
             this.getAddressBooks();
             this.deleteDialog = false;
-          } else {
-            this.getAddressBookByUserType();
-            this.deleteDialog = false;
-          }
         }
       });
   }
@@ -171,7 +116,7 @@ export class WebRateListComponent {
 
   editAddressBook(id?: any) {
     const queryParams = { id: id };
-    this.router.navigate(["create-address-book"], {
+    this.router.navigate(["create-rate"], {
       queryParams: queryParams,
     });
   }

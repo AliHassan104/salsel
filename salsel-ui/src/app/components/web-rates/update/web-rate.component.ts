@@ -12,6 +12,8 @@ import { CityService } from '../../City/service/city.service';
 import { CountryService } from '../../country/service/country.service';
 import { FormvalidationService } from '../../Tickets/service/formvalidation.service';
 import { IAddressBook } from '../../addressBook/model/addressBookDto';
+import { IWebRate } from '../model/webRateDto';
+import { WebRatesService } from '../web-rates.service';
 
 @Component({
   selector: "app-web-rate",
@@ -23,21 +25,23 @@ export class WebRateComponent {
   @ViewChild("dropdown") dropdown?: Dropdown;
   @ViewChild("dropdown1") dropdown1?: Dropdown;
   @ViewChild("dropdown2") dropdown2?: Dropdown;
+  @ViewChild("dropdown3") dropdown3?: Dropdown;
 
   addressBookForm!: FormGroup;
-  addressBook?: IAddressBook;
+  addressBook?: IWebRate;
   addressBookId?: any;
   mode?: string = "Add";
   userTypes?;
   accountNumbers;
   preprocessedAccountNumbers;
+  products;
 
   productFields?;
   countries;
   cities;
 
   constructor(
-    private addressBookService: AddressBookService,
+    private addressBookService: WebRatesService,
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -52,16 +56,13 @@ export class WebRateComponent {
 
   ngOnInit(): void {
     this.addressBookForm = this.fb.group({
-      name: [null, Validators.required],
-      contactNumber: [null, Validators.required],
-      address: [null, Validators.required],
-      streetName: [null, Validators.required],
-      district: [null, Validators.required],
-      refNumber: [null],
-      country: [null, Validators.required],
-      city: [null, Validators.required],
-      userType: [null, Validators.required],
-      accountNumber: [null, Validators.required],
+      fromCountry: [null, Validators.required],
+      toCountry: [null, Validators.required],
+      product: [null, Validators.required],
+      weightRangeFrom: [null, Validators.required],
+      weightRangeTo: [null, Validators.required],
+      charges: [null, Validators.required],
+      additionalCharges: [null],
     });
 
     this.getProductFieldValues();
@@ -76,7 +77,7 @@ export class WebRateComponent {
   }
 
   ngAfterViewInit(): void {
-    const dropdowns = [this.dropdown, this.dropdown1, this.dropdown2];
+    const dropdowns = [this.dropdown, this.dropdown1, this.dropdown2,this.dropdown3];
 
     dropdowns.forEach((dropdown, index) => {
       if (dropdown) {
@@ -91,8 +92,8 @@ export class WebRateComponent {
     this.dropDownService.getAllProductFields().subscribe((res: any) => {
       this.productFields = res;
 
-      this.userTypes = this.dropDownService.extractNames(
-        this.productFields.filter((data: any) => data?.name == "User Type")[0]
+      this.products = this.dropDownService.extractNames(
+        this.productFields.filter((data: any) => data?.name == "products")[0]
           ?.productFieldValuesList
       );
     });
@@ -129,7 +130,7 @@ export class WebRateComponent {
           .update(this.addressBook, this.addressBookId)
           .subscribe(
             (res: any) => {
-              this.router.navigate(["address-book/list"]);
+              this.router.navigate(["rate/list"]);
             },
             (error) => {
               this.error(error);
@@ -139,7 +140,7 @@ export class WebRateComponent {
         this.addressBookService.create(this.addressBook).subscribe(
           (res) => {
             if (res && res.body) {
-              this.router.navigate(["address-book/list"]);
+              this.router.navigate(["rate/list"]);
               console.log(res, res.body);
             }
           },
@@ -164,7 +165,7 @@ export class WebRateComponent {
       if (res && res.body) {
         this.addressBook = res.body;
 
-        this.patchCity(this.addressBook?.country);
+        // this.patchCity(this.addressBook?.country);
         this.patchFormWithDto();
       }
     });
@@ -172,44 +173,37 @@ export class WebRateComponent {
 
   patchFormWithDto() {
     this.addressBookForm.patchValue({
-      name: this.addressBook?.name,
-      contactNumber: this.addressBook?.contactNumber,
-      refNumber: this.addressBook?.refNumber,
-      streetName: this.addressBook?.streetName,
-      district: this.addressBook?.district,
-      address: this.addressBook?.address,
-      country: this.addressBook?.country,
-      city: this.addressBook?.city,
-      userType: this.addressBook?.userType,
-      accountNumber: this.addressBook?.accountNumber,
+      fromCountry: this.addressBook?.fromCountry,
+      toCountry: this.addressBook?.toCountry,
+      product: this.addressBook?.product,
+      weightRangeFrom: this.addressBook?.weightRangeFrom,
+      weightRangeTo: this.addressBook?.weightRangeTo,
+      charges: this.addressBook?.charges,
+      additionalCharges: this.addressBook?.additionalCharges,
     });
   }
 
-  patchCity(country?: any) {
-    this.cityService.getAllCitiesByCountryName(country).subscribe((res) => {
-      if (res) {
-        this.cities = res;
-        this.cities = this.dropDownService.extractNames(this.cities);
-      }
-    });
-  }
+  //   patchCity(country?: any) {
+  //     this.cityService.getAllCitiesByCountryName(country).subscribe((res) => {
+  //       if (res) {
+  //         this.cities = res;
+  //         this.cities = this.dropDownService.extractNames(this.cities);
+  //       }
+  //     });
+  //   }
 
   createFromForm() {
     const formValue = this.addressBookForm.value;
 
-    const addressBook: IAddressBook = {
+    const addressBook: IWebRate = {
       id: this.addressBookId ? this.addressBookId : undefined,
-      name: formValue.name,
-      contactNumber: formValue.contactNumber,
-      refNumber: formValue.refNumber,
-      streetName: formValue.streetName,
-      district: formValue.district,
-      address: formValue.address,
-      country: formValue.country,
-      city: formValue.city,
-      userType: formValue.userType,
-      accountNumber: formValue.accountNumber,
-      createdBy: localStorage.getItem("loginUserEmail"),
+      fromCountry: formValue.fromCountry,
+      toCountry: formValue.toCountry,
+      product: formValue.product,
+      weightRangeFrom: formValue.weightRangeFrom,
+      weightRangeTo: formValue.weightRangeTo,
+      charges: formValue.charges,
+      additionalCharges: formValue.additionalCharges,
     };
 
     return addressBook;
@@ -243,6 +237,6 @@ export class WebRateComponent {
   }
 
   onCancel() {
-    this.router.navigate(["address-book/list"]);
+    this.router.navigate(["rate/list"]);
   }
 }

@@ -5,13 +5,13 @@
                 style="color: #93003c; font-size: 23px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">
                 Rates</h1>
             <div class="flex justify-content-end">
-                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_ADDRESS_BOOK')" pButton
-                    label="Add Rate" class="mb-2 addBtn" routerLink="/create-address-book"></button>
+                <button *ngIf="this.sessionStorageService.hasPermission('CREATE_RATES')" pButton
+                    label="Add Rate" class="mb-2 addBtn" routerLink="/create-rate"></button>
             </div>
             <hr>
             <p-table #dt1 [value]="addressBooks" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
                 styleClass="p-datatable-gridlines" [paginator]="true"
-                [globalFilterFields]="['name','contactNumber','country','city','userType','address','streetName','district']"
+                [globalFilterFields]="['fromCountry','toCountry','product']"
                 responsiveLayout="scroll">
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -20,8 +20,6 @@
                                 (click)="clear(dt1)"></button>
                             <p-dropdown class="ml-3 custom-dropdown" [options]="status" [(ngModel)]="selectedStatus"
                                 (ngModelChange)="onStatusChange($event)" placeholder="Select"></p-dropdown>
-                            <p-dropdown class="ml-3 custom-dropdown" [options]="userType" [(ngModel)]="selectedUserType"
-                                (ngModelChange)="onUserTypeChange($event)" placeholder="Select"></p-dropdown>
                             <i class="refresh ml-3 pi pi-sync" (click)="onRefresh()" [ngClass]="{'pi-spin': refresh }"
                                 style="font-weight: bold;"></i>
                         </div>
@@ -44,53 +42,39 @@
 
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                Name
+                                From Country
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                Contact Number
-                            </div>
-                        </th>
-
-
-                        <th style="min-width: 10rem">
-                            <div class="flex justify-content-center align-items-center">
-                                Address
+                                To Country
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                Street Name
+                                Product
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                District
+                                Weight Range From
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                City
+                                Weight Range To
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                Country
+                                Charges
                             </div>
                         </th>
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-center align-items-center">
-                                User Type
+                                Additional Charges
                             </div>
                         </th>
-                        <th style="min-width: 10rem">
-                            <div class="flex justify-content-center align-items-center">
-                                Account Number
-                            </div>
-                        </th>
-
-
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-addressBook>
@@ -101,63 +85,57 @@
                                 class="p-button-rounded p-button-secondary p-button-outlined mx-2"
                                 routerLink="{{addressBook.id}}"></button>
                             <button pTooltip="Edit" tooltipPosition="bottom"
-                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_ADDRESS_BOOK')"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('CREATE_RATES')"
                                 pButton pRipple type="button" icon="pi pi-file-edit"
                                 class="p-button-rounded p-button-outlined mx-2"
                                 (click)="editAddressBook(addressBook?.id)"></button>
 
                             <button pTooltip="Deactivate" tooltipPosition="bottom"
-                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_ADDRESS_BOOK')"
+                                *ngIf="activeStatus && this.sessionStorageService.hasPermission('DELETE_RATES')"
                                 pButton pRipple type="button" icon="pi pi-times"
                                 class="p-button-rounded p-button-danger p-button-outlined mx-2"
                                 (click)="deleteAddressBook(addressBook?.id)"></button>
 
                             <button pTooltip="Activate" tooltipPosition="bottom" *ngIf="!activeStatus" pButton pRipple
                                 type="button" icon="pi pi-check"
-                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_ADDRESS_BOOK')"
+                                [disabled]="!this.sessionStorageService.hasPermission('DELETE_RATES')"
                                 class="p-button-rounded p-button-success p-button-outlined mx-2"
                                 (click)="onActiveAddressBook(addressBook.id)"></button>
 
                         </td>
                         <td>
-                            {{addressBook?.name}}
+                            {{addressBook?.fromCountry}}
                         </td>
                         <td>
-                            {{addressBook?.contactNumber}}
+                            {{addressBook?.toCountry}}
                         </td>
 
                         <td>
-                            {{addressBook?.address}}
+                            {{addressBook?.product}}
                         </td>
                         <td>
-                            {{addressBook?.streetName}}
+                            {{addressBook?.weightRangeFrom}}
                         </td>
                         <td>
-                            {{addressBook?.district}}
+                            {{addressBook?.weightRangeTo}}
                         </td>
                         <td>
-                            {{addressBook?.city}}
+                            {{addressBook?.charges}}
                         </td>
                         <td>
-                            {{addressBook?.country}}
-                        </td>
-                        <td>
-                            {{addressBook?.userType}}
-                        </td>
-                        <td>
-                            {{addressBook?.accountNumber}}
+                            {{addressBook?.additionalCharges ? addressBook?.additionalCharges : "-"}}
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td style="text-align: start !important;" colspan="8">No Address
+                        <td style="text-align: start !important;" colspan="8">No Rates
                             found.</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="loadingbody">
                     <tr>
-                        <td style="text-align: start !important;" colspan="8">Loading Address Book Data. Please
+                        <td style="text-align: start !important;" colspan="8">Loading Rates Data. Please
                             wait.</td>
                     </tr>
                 </ng-template>
@@ -169,7 +147,7 @@
     <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
         <div class="flex align-items-center justify-content-center">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-            <span>Are you sure you want to delete selected Address?</span>
+            <span>Are you sure you want to delete selected Rate?</span>
         </div>
         <ng-template pTemplate="footer">
             <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
